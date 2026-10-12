@@ -16,10 +16,10 @@ const QUALITY = {
   low: { steps: 16, lightSteps: 1, bloom: false, dpr: 1 },
 };
 
-const CAM_START = new THREE.Vector3(0, 4.6, 14);
-const CAM_DIVE = new THREE.Vector3(0, 2.8, 11);
-const LOOK_START = new THREE.Vector3(0, 0.2, 0);
-const LOOK_DIVE = new THREE.Vector3(0, 1.7, 0);
+const CAM_START = new THREE.Vector3(0, 3.8, 15);
+const CAM_DIVE = new THREE.Vector3(0, 2.9, 11.5);
+const LOOK_START = new THREE.Vector3(0, 1.5, 0);
+const LOOK_DIVE = new THREE.Vector3(0, 1.9, 0);
 const CLOUD_TOP = 1.1;
 const LOGO_HIDDEN_Y = -3.2;
 const LOGO_Y = 2.1;
@@ -233,7 +233,7 @@ export class Storm {
       const u = b.mesh.material.uniforms;
       u.uReveal.value = Math.min(1, b.age / 0.08);
       // Кілька повторних спалахів у затухаючому каналі, як у справжньої блискавки
-      const flicker = 0.65 + 0.35 * Math.sin(b.age * 55 + b.seed);
+      const flicker = 0.85 + 0.15 * Math.sin(b.age * 30 + b.seed);
       u.uAlpha.value = Math.pow(1 - t, 1.6) * flicker;
       const f = u.uAlpha.value * b.power;
       if (f > flash) {

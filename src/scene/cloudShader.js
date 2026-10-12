@@ -47,15 +47,15 @@ export const cloudFragment = /* glsl */ `
     float h = (p.y - Y_BOTTOM) / (Y_TOP - Y_BOTTOM);   // 0 внизу, 1 угорі
     vec3 wind = vec3(uTime * 0.045, uTime * 0.006, uTime * 0.02) * (0.6 + uStorm);
 
-    vec4 n = texture(uNoise, p * 0.055 + wind);
-    float shape = n.r * 0.65 + n.g * 0.35;
+    vec4 n = texture(uNoise, p * 0.034 + wind);
+    float shape = n.r * 0.55 + n.g * 0.45;
 
     // Купчасті вершини: верх хмар рваний, низ щільний і темний
-    float top = 1.0 - smoothstep(0.5, 1.0, h + (shape - 0.5) * 1.3);
+    float top = 1.0 - smoothstep(0.45, 1.0, h + (shape - 0.5) * 1.7);
     float bottom = smoothstep(0.0, 0.25, h);
     // Що глибше, то суцільніша хмара: наскрізних дірок у шарі немає
-    float coverage = mix(0.42, 0.33, uStorm) - (1.0 - h) * 0.35;
-    float d = smoothstep(coverage, coverage + 0.26, shape) * top * bottom;
+    float coverage = mix(0.47, 0.4, uStorm) - (1.0 - h) * 0.35;
+    float d = smoothstep(coverage, coverage + 0.14, shape) * top * bottom;
 
     if (detail > 0.5 && d > 0.01) {
       vec4 n2 = texture(uNoise, p * 0.23 + wind * 2.0);
@@ -65,7 +65,7 @@ export const cloudFragment = /* glsl */ `
     // Просвіт навколо логотипа, щоб він вийшов із хмар
     float clear = exp(-length((p - uClearPos) * vec3(0.32, 0.55, 0.32)));
     d *= 1.0 - uClear * clear * 1.4;
-    return clamp(d, 0.0, 1.0) * mix(2.2, 3.2, uStorm);
+    return clamp(d, 0.0, 1.0) * mix(3.0, 4.0, uStorm);
   }
 
   // Скільки світла від блискавки доходить до точки крізь хмару
@@ -115,12 +115,12 @@ export const cloudFragment = /* glsl */ `
     if (tf > tn && abs(rd.y) > 0.001) {
       float len = tf - tn;
       float stepLen = len / float(STEPS);
-      float jitter = hash12(gl_FragCoord.xy + fract(uTime * 7.0) * 100.0);
+      float jitter = hash12(gl_FragCoord.xy);
       float t = tn + stepLen * jitter;
 
-      vec3 skyCol = vec3(0.5, 0.54, 0.95);
-      vec3 ambientTop = vec3(0.1, 0.1, 0.26);
-      vec3 ambientBottom = vec3(0.01, 0.008, 0.03);
+      vec3 skyCol = vec3(0.46, 0.5, 0.98);
+      vec3 ambientTop = vec3(0.055, 0.055, 0.16);
+      vec3 ambientBottom = vec3(0.004, 0.003, 0.014);
       vec3 flashCol = vec3(0.5, 0.56, 1.0);
       vec3 up = vec3(0.0, 1.0, 0.0);
 
@@ -134,7 +134,7 @@ export const cloudFragment = /* glsl */ `
 
           // Світло неба зверху із самозатіненням: виділяє купчасті вершини
           float skyShadow = exp(-(density(p + up * 0.5, 0.0) + density(p + up * 1.2, 0.0)) * 0.9);
-          vec3 lit = amb + skyCol * skyShadow * h * (0.38 - 0.22 * uStorm);
+          vec3 lit = amb + skyCol * skyShadow * h * h * (0.42 - 0.2 * uStorm);
           if (uFlash > 0.01) {
             float dl = length(p - uFlashPos);
             float att = 9.0 / (1.0 + dl * dl * 0.35);
@@ -146,6 +146,7 @@ export const cloudFragment = /* glsl */ `
           float powder = 1.0 - exp(-d * 2.0);
           vec3 s = lit * powder;
           float a = 1.0 - exp(-d * stepLen);
+          s *= exp(-t * 0.045);
           col += T * s * a;
           T *= 1.0 - a;
           if (T < 0.02) break;
@@ -156,7 +157,7 @@ export const cloudFragment = /* glsl */ `
 
     vec3 result = scene * T + col;
     // Дизеринг проти смуг у темних градієнтах
-    result += (hash12(gl_FragCoord.xy) - 0.5) / 255.0;
+    result += (hash12(gl_FragCoord.xy + 7.0) - 0.5) / 255.0;
     fragColor = vec4(result, 1.0);
   }
 `;
