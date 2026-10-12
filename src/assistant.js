@@ -5,18 +5,22 @@ import { t, getLang, onLangChange } from './i18n.js';
 // без нього – демо-режим зі сценарними відповідями, щоб показати механіку.
 const DEMO = {
   uk: [
-    [/@|\+?\d{9,}/, 'Дякую! Записав контакт. Команда відповість протягом 15 хвилин у робочий час.'],
-    [/ціна|кошту|бюджет|скільки/i, 'Фіксованих пакетів у нас немає: рахуємо ціну під задачу. Перший розрахунок безкоштовний. Розкажіть, що потрібно, і орієнтовний бюджет – до $500, $500–2000 чи більше?'],
-    [/сайт|лендинг|магазин/i, 'Сайт або лендинг робимо за 1–3 тижні: ШІ генерує тексти й креативи, команда збирає структуру, дизайн і код. Для якого бізнесу потрібен сайт?'],
-    [/бот|telegram|автомат|ші|ai/i, 'ШІ-боти – наша сильна сторона: бот відповідає клієнтам 24/7, записує, нагадує, а звіти надсилає вам у Telegram. Яку рутину хочете зняти з себе?'],
-    [/реклам|таргет|трафік/i, 'Запускаємо Meta, TikTok і Google Ads за 3 дні після погодження креативів. ШІ готує варіанти креативів, ми масштабуємо переможців. Який продукт рекламуємо?'],
+    [/@|\+?\d{9,}/, 'Дякую! Записав контакт. Команда надішле точний розрахунок протягом години в робочий час.'],
+    [/crm|срм|црм/i, 'CRM під ваш бізнес – від $1 000, готова за кілька днів: клієнти, угоди, задачі, звіти, ролі, інтеграція з сайтом і ботом. Точна ціна залежить від ТЗ. Який у вас бізнес і скільки людей працюватиме в системі?'],
+    [/магазин|shop|товар/i, 'Інтернет-магазин – від $400, 2–4 дні: до 100 товарів, оплата, доставка, адмінка. Скільки товарів плануєте?'],
+    [/кав|салон|візитівк|сайт|лендинг/i, 'Сайт для бізнесу – $100, готовий за кілька годин: до 5 екранів, мобільна версія, кнопка в Telegram, хостинг на рік. Якщо є тексти й фото – запустимо сьогодні. Лишите контакт для розрахунку?'],
+    [/бот|telegram|запис/i, 'Telegram-бот для запису чи замовлень – від $150, за 1–2 дні: сценарій, база клієнтів, сповіщення вам. ШІ-асистент, що сам відповідає клієнтам – від $300. Що з цього ближче?'],
+    [/реклам|таргет|трафік/i, 'Запуск Meta або Google Ads – $150 плюс бюджет, старт за 1–2 дні. ШІ готує креативи, ми масштабуємо ті, що дають заявки. Який продукт рекламуємо?'],
+    [/ціна|кошту|бюджет|скільки|дешев/i, 'Сайт – $100, бот – від $150, ШІ-асистент – від $300, магазин – від $400, CRM – від $1 000. Усе залежить від ТЗ, точну ціну назвемо за годину. Що саме потрібно?'],
   ],
   en: [
-    [/@|\+?\d{9,}/, 'Thank you! I saved your contact. The team will reply within 15 minutes during business hours.'],
-    [/price|cost|budget|how much/i, 'We have no fixed packages: every task is priced individually and the first estimate is free. Tell me what you need and a rough budget – under $500, $500–2,000 or more?'],
-    [/site|landing|store|shop/i, 'A website or landing page takes 1–3 weeks: AI generates copy and creatives, the team builds structure, design and code. What business is it for?'],
-    [/bot|telegram|automat|ai/i, 'AI bots are our strength: a bot answers customers 24/7, books, reminds and reports to you in Telegram. Which routine do you want to offload?'],
-    [/ads|target|traffic/i, 'We launch Meta, TikTok and Google Ads within 3 days after creatives are approved. AI drafts creative variants, we scale the winners. What product are we promoting?'],
+    [/@|\+?\d{9,}/, 'Thank you! Contact saved. The team will send an exact quote within an hour during business hours.'],
+    [/crm/i, 'A custom CRM is from $1,000 and ready in a few days: customers, deals, tasks, reports, roles, integrated with your site and bot. The exact price depends on the brief. What is your business and how many people will use it?'],
+    [/store|shop|product/i, 'An online store is from $400, 2–4 days: up to 100 products, payments, delivery, admin panel. How many products do you plan?'],
+    [/coffee|salon|site|landing|website/i, 'A business website is $100 and ready in a few hours: up to 5 screens, mobile version, Telegram button, hosting for a year. With copy and photos ready we launch today. Leave a contact for the quote?'],
+    [/bot|telegram|book/i, 'A Telegram bot for booking or orders is from $150, 1–2 days: flow, customer base, notifications. An AI assistant that answers customers itself is from $300. Which is closer?'],
+    [/ads|target|traffic/i, 'A Meta or Google Ads launch is $150 plus budget, live in 1–2 days. AI drafts creatives, we scale the ones that bring leads. What are we promoting?'],
+    [/price|cost|budget|how much|cheap/i, 'Website $100, bot from $150, AI assistant from $300, store from $400, CRM from $1,000. It all depends on the brief; we give an exact price within an hour. What do you need?'],
   ],
 };
 
