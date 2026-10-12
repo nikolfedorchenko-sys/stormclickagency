@@ -42,17 +42,25 @@
         <svg viewBox="0 0 100 140" aria-hidden="true"><path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z"/></svg>
         <span>StormClick</span>
       </a>
+      <nav class="nav" id="nav">
+        <a href="#services" data-i18n="nav.services">Послуги</a>
+        <a href="#cases" data-i18n="nav.cases">Кейси</a>
+        <a href="#faq" data-i18n="nav.faq">FAQ</a>
+        <a href="#contact" data-i18n="nav.contact">Контакти</a>
+      </nav>
       <div class="header-actions">
         <div class="lang-switch" role="group" aria-label="Language">
           <button type="button" data-lang="uk" aria-pressed="true">UA</button>
           <button type="button" data-lang="en" aria-pressed="false">EN</button>
         </div>
-        <a href="#" class="btn btn-primary btn-sm" data-link="telegram" target="_blank" rel="noopener" data-i18n="cta.discuss">Обговорити проєкт</a>
+        <a href="#contact" class="btn btn-primary btn-sm hide-mobile" data-i18n="cta.discuss">Обговорити проєкт</a>
+        <button type="button" class="nav-toggle" aria-controls="nav" aria-expanded="false" aria-label="Menu"><span></span><span></span></button>
       </div>
     </div>
   </header>
 
   <main>
+    <!-- Перший екран: скляний моноліт, удар, напис -->
     <section class="hero" id="hero">
       <div class="hero-sticky">
         <div class="stage stage-1">
@@ -64,41 +72,248 @@
             </h1>
             <p class="hero-subtitle" data-i18n="hero.subtitle"></p>
             <div class="hero-actions">
-              <a href="#" class="btn btn-primary" data-link="telegram" target="_blank" rel="noopener" data-i18n="cta.discuss">Обговорити проєкт</a>
-              <a href="#" class="btn btn-ghost" data-link="whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+              <a href="#contact" class="btn btn-primary" data-i18n="cta.discuss">Обговорити проєкт</a>
+              <a href="#" class="btn btn-ghost" data-link="telegram" target="_blank" rel="noopener">Telegram</a>
             </div>
           </div>
         </div>
-
         <div class="stage stage-2" aria-hidden="true">
           <p class="eyebrow" data-i18n="stage2.eyebrow">Удар блискавки = клік</p>
           <p class="stage-title" data-i18n="stage2.title">Один удар. Точно в ціль.</p>
         </div>
-
         <div class="stage stage-3" aria-hidden="true">
+          <p class="eyebrow" data-i18n="stage3.eyebrow">Повний цикл</p>
           <p class="stage-title" data-i18n="stage3.title">5 напрямків. Одна система.</p>
-          <ul class="chips">
-            <li class="chip" data-i18n="service.ads">Реклама і трафік</li>
-            <li class="chip" data-i18n="service.web">Сайти і розробка</li>
-            <li class="chip" data-i18n="service.automation">Telegram і автоматизація</li>
-            <li class="chip" data-i18n="service.smm">SMM і контент</li>
-            <li class="chip" data-i18n="service.branding">Брендинг і дизайн</li>
-          </ul>
         </div>
+        <div class="hero-scroll"><span class="hero-scroll-line"></span><span data-i18n="hero.scroll">Гортайте</span></div>
+      </div>
+    </section>
 
-        <div class="hero-scroll">
-          <span class="hero-scroll-line"></span>
-          <span data-i18n="hero.scroll">Гортайте, щоб зібрати шторм</span>
+    <!-- Послуги: горизонтальна стрічка карток -->
+    <section class="services" id="services">
+      <div class="services-pin">
+        <div class="container services-head">
+          <p class="eyebrow" data-i18n="services.eyebrow">Послуги</p>
+          <h2 class="section-title" data-i18n="services.title">Беремо окрему задачу або будуємо всю систему залучення клієнтів</h2>
+        </div>
+        <div class="services-track">
+          <article class="card" data-tilt><span class="card-num">01</span><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg></div><h3 data-i18n="s1.title"></h3><p data-i18n="s1.text"></p><span class="card-tags" data-i18n="s1.tags"></span></article>
+          <article class="card" data-tilt><span class="card-num">02</span><div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div><h3 data-i18n="s2.title"></h3><p data-i18n="s2.text"></p><span class="card-tags" data-i18n="s2.tags"></span></article>
+          <article class="card" data-tilt><span class="card-num">03</span><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 4 3 11l7 2 2 7 9-16Z"/></svg></div><h3 data-i18n="s3.title"></h3><p data-i18n="s3.text"></p><span class="card-tags" data-i18n="s3.tags"></span></article>
+          <article class="card" data-tilt><span class="card-num">04</span><div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></div><h3 data-i18n="s4.title"></h3><p data-i18n="s4.text"></p><span class="card-tags" data-i18n="s4.tags"></span></article>
+          <article class="card" data-tilt><span class="card-num">05</span><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 3 4 9l8 12 8-12-8-6Z"/><path d="M4 9h16"/></svg></div><h3 data-i18n="s5.title"></h3><p data-i18n="s5.text"></p><span class="card-tags" data-i18n="s5.tags"></span></article>
+          <a href="#contact" class="card card-accent" data-tilt><span class="card-num">+</span><h3 data-i18n="s6.title"></h3><p data-i18n="s6.text"></p><span class="card-link" data-i18n="s6.cta"></span></a>
+        </div>
+        <p class="services-hint" data-i18n="services.hint">Гортайте далі</p>
+      </div>
+    </section>
+
+    <!-- Трафік → заявки -->
+    <section class="section traffic" id="traffic">
+      <div class="container traffic-grid">
+        <div class="traffic-copy reveal">
+          <p class="eyebrow" data-i18n="traffic.eyebrow">Трафік → заявки</p>
+          <h2 class="section-title" data-i18n="traffic.title"></h2>
+          <p class="section-text" data-i18n="traffic.text"></p>
+          <div class="counters">
+            <div class="counter"><span class="counter-num" data-count="12480">0</span><span class="counter-label" data-i18n="traffic.visitors"></span></div>
+            <div class="counter"><span class="counter-num" data-count="384">0</span><span class="counter-label" data-i18n="traffic.leads"></span></div>
+          </div>
+          <p class="demo-note" data-i18n="traffic.demo"></p>
+        </div>
+        <div class="traffic-viz reveal">
+          <canvas class="funnel" aria-hidden="true"></canvas>
+          <figure class="chart">
+            <figcaption data-i18n="traffic.chart"></figcaption>
+            <svg class="chart-svg" viewBox="0 0 320 140" role="img" aria-label="Leads per week"></svg>
+            <div class="chart-tip" hidden></div>
+          </figure>
         </div>
       </div>
     </section>
 
-    <section class="next">
+    <!-- Чесні факти -->
+    <section class="section facts">
       <div class="container">
-        <p data-i18n="next.note">Концепт першого екрана. Далі тут буде блок послуг.</p>
+        <h2 class="section-title reveal" data-i18n="facts.title"></h2>
+        <div class="facts-grid">
+          <div class="fact reveal"><span class="fact-num" data-i18n="f1.num"></span><span class="fact-label" data-i18n="f1.label"></span></div>
+          <div class="fact reveal"><span class="fact-num" data-i18n="f2.num"></span><span class="fact-label" data-i18n="f2.label"></span></div>
+          <div class="fact reveal"><span class="fact-num" data-i18n="f3.num"></span><span class="fact-label" data-i18n="f3.label"></span></div>
+          <div class="fact reveal"><span class="fact-num" data-i18n="f4.num"></span><span class="fact-label" data-i18n="f4.label"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Кейси (демо) -->
+    <section class="section cases" id="cases">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="cases.eyebrow"></p>
+          <h2 class="section-title" data-i18n="cases.title"></h2>
+          <p class="section-text" data-i18n="cases.note"></p>
+        </div>
+        <div class="cases-grid">
+          <article class="case reveal" data-tilt>
+            <div class="case-visual chat">
+              <div class="bubble in"><span data-i18n="c1.m1"></span></div>
+              <div class="bubble out"><span data-i18n="c1.m2"></span></div>
+              <div class="bubble in"><span data-i18n="c1.m3"></span></div>
+              <div class="bubble out"><span data-i18n="c1.m4"></span></div>
+            </div>
+            <div class="case-body">
+              <span class="case-kind"><span data-i18n="c1.kind"></span> · <span data-i18n="cases.demo"></span></span>
+              <h3 data-i18n="c1.title"></h3>
+              <p data-i18n="c1.text"></p>
+            </div>
+          </article>
+          <article class="case reveal" data-tilt>
+            <div class="case-visual browser">
+              <div class="browser-bar"><i></i><i></i><i></i></div>
+              <div class="browser-page">
+                <div class="mock-title" data-i18n="c2.ui1"></div>
+                <div class="mock-lines"><i></i><i></i></div>
+                <div class="mock-btn" data-i18n="c2.ui2"></div>
+              </div>
+            </div>
+            <div class="case-body">
+              <span class="case-kind"><span data-i18n="c2.kind"></span> · <span data-i18n="cases.demo"></span></span>
+              <h3 data-i18n="c2.title"></h3>
+              <p data-i18n="c2.text"></p>
+            </div>
+          </article>
+          <article class="case reveal" data-tilt>
+            <div class="case-visual bars">
+              <div class="bars-legend" data-i18n="c3.legend"></div>
+              <div class="bars-plot">
+                <i style="--h:22%"></i><i style="--h:30%"></i><i style="--h:28%"></i><i style="--h:46%"></i><i style="--h:58%"></i><i style="--h:71%"></i><i style="--h:88%"></i>
+              </div>
+            </div>
+            <div class="case-body">
+              <span class="case-kind"><span data-i18n="c3.kind"></span> · <span data-i18n="cases.demo"></span></span>
+              <h3 data-i18n="c3.title"></h3>
+              <p data-i18n="c3.text"></p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Інструменти: стрічка -->
+    <section class="tech">
+      <div class="container"><p class="eyebrow reveal" data-i18n="tech.title"></p></div>
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <span>Meta Ads</span><span>Google Ads</span><span>TikTok Ads</span><span>GA4</span><span>Telegram Bot API</span><span>n8n</span><span>OpenAI</span><span>Cloudflare</span><span>Three.js</span><span>GSAP</span><span>Figma</span><span>Shopify</span><span>WordPress</span><span>Stripe</span><span>Notion</span>
+          <span>Meta Ads</span><span>Google Ads</span><span>TikTok Ads</span><span>GA4</span><span>Telegram Bot API</span><span>n8n</span><span>OpenAI</span><span>Cloudflare</span><span>Three.js</span><span>GSAP</span><span>Figma</span><span>Shopify</span><span>WordPress</span><span>Stripe</span><span>Notion</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Відгуки (демо) -->
+    <section class="section reviews">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="reviews.eyebrow"></p>
+          <h2 class="section-title" data-i18n="reviews.title"></h2>
+          <p class="section-text" data-i18n="reviews.note"></p>
+        </div>
+        <div class="reviews-grid">
+          <blockquote class="review reveal"><p data-i18n="r1.text"></p><footer data-i18n="r1.name"></footer></blockquote>
+          <blockquote class="review reveal"><p data-i18n="r2.text"></p><footer data-i18n="r2.name"></footer></blockquote>
+          <blockquote class="review reveal"><p data-i18n="r3.text"></p><footer data-i18n="r3.name"></footer></blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section faq" id="faq">
+      <div class="container faq-grid">
+        <h2 class="section-title reveal" data-i18n="faq.title"></h2>
+        <div class="faq-list reveal">
+          <details><summary data-i18n="q1.q"></summary><p data-i18n="q1.a"></p></details>
+          <details><summary data-i18n="q2.q"></summary><p data-i18n="q2.a"></p></details>
+          <details><summary data-i18n="q3.q"></summary><p data-i18n="q3.a"></p></details>
+          <details><summary data-i18n="q4.q"></summary><p data-i18n="q4.a"></p></details>
+          <details><summary data-i18n="q5.q"></summary><p data-i18n="q5.a"></p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Контакти + квіз -->
+    <section class="section contact" id="contact">
+      <div class="container contact-grid">
+        <div class="contact-copy reveal">
+          <p class="eyebrow" data-i18n="contact.eyebrow"></p>
+          <h2 class="section-title" data-i18n="contact.title"></h2>
+          <p class="section-text" data-i18n="contact.text"></p>
+          <div class="messengers">
+            <a href="#" class="btn btn-ghost" data-link="telegram" target="_blank" rel="noopener">Telegram</a>
+            <a href="#" class="btn btn-ghost" data-link="whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+          </div>
+          <p class="contact-email"><span data-i18n="contact.email"></span>: <a href="#" data-link="email"></a></p>
+        </div>
+        <form class="quiz reveal" id="quiz" novalidate>
+          <div class="quiz-progress"><span class="quiz-step"><span data-i18n="quiz.step"></span> <b class="quiz-current">1</b> <span data-i18n="quiz.of"></span> 4</span><span class="quiz-bar"><i></i></span></div>
+          <fieldset class="quiz-pane" data-pane="0">
+            <legend data-i18n="quiz.q1"></legend>
+            <div class="choices">
+              <label><input type="radio" name="service" value="ads" required><span data-i18n="s1.title"></span></label>
+              <label><input type="radio" name="service" value="web"><span data-i18n="s2.title"></span></label>
+              <label><input type="radio" name="service" value="automation"><span data-i18n="s3.title"></span></label>
+              <label><input type="radio" name="service" value="smm"><span data-i18n="s4.title"></span></label>
+              <label><input type="radio" name="service" value="branding"><span data-i18n="s5.title"></span></label>
+              <label><input type="radio" name="service" value="custom"><span data-i18n="s6.title"></span></label>
+            </div>
+          </fieldset>
+          <fieldset class="quiz-pane" data-pane="1" hidden>
+            <legend data-i18n="quiz.q2"></legend>
+            <div class="choices">
+              <label><input type="radio" name="budget" value="b1" required><span data-i18n="quiz.b1"></span></label>
+              <label><input type="radio" name="budget" value="b2"><span data-i18n="quiz.b2"></span></label>
+              <label><input type="radio" name="budget" value="b3"><span data-i18n="quiz.b3"></span></label>
+              <label><input type="radio" name="budget" value="b4"><span data-i18n="quiz.b4"></span></label>
+            </div>
+          </fieldset>
+          <fieldset class="quiz-pane" data-pane="2" hidden>
+            <legend data-i18n="quiz.q3"></legend>
+            <div class="choices">
+              <label><input type="radio" name="timing" value="t1" required><span data-i18n="quiz.t1"></span></label>
+              <label><input type="radio" name="timing" value="t2"><span data-i18n="quiz.t2"></span></label>
+              <label><input type="radio" name="timing" value="t3"><span data-i18n="quiz.t3"></span></label>
+              <label><input type="radio" name="timing" value="t4"><span data-i18n="quiz.t4"></span></label>
+            </div>
+          </fieldset>
+          <fieldset class="quiz-pane" data-pane="3" hidden>
+            <legend data-i18n="quiz.q4"></legend>
+            <label class="field"><span data-i18n="quiz.name"></span><input type="text" name="name" id="quiz-name" required autocomplete="name"></label>
+            <label class="field"><span data-i18n="quiz.contact"></span><input type="text" name="contact" id="quiz-contact" required autocomplete="tel"></label>
+            <label class="field"><span data-i18n="quiz.comment"></span><textarea name="message" id="quiz-message" rows="3"></textarea></label>
+            <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          </fieldset>
+          <div class="quiz-nav">
+            <button type="button" class="btn btn-ghost quiz-back" data-i18n="quiz.back" hidden></button>
+            <button type="button" class="btn btn-primary quiz-next" data-i18n="quiz.next"></button>
+            <button type="submit" class="btn btn-primary quiz-submit" data-i18n="quiz.submit" hidden></button>
+          </div>
+          <p class="quiz-status" role="status"></p>
+        </form>
       </div>
     </section>
   </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> StormClick. <span data-i18n="footer.rights"></span></span>
+      <span class="footer-links">
+        <a href="#" data-link="telegram" target="_blank" rel="noopener">Telegram</a>
+        <a href="#" data-link="whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="#" data-i18n="footer.privacy"></a>
+      </span>
+    </div>
+  </footer>
+
+  <a href="#contact" class="sticky-cta btn btn-primary" data-i18n="cta.quote"></a>
 
   <script type="module" src="/src/main.js"></script>
 </body>

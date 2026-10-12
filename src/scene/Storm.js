@@ -188,13 +188,22 @@ export class Storm {
     this.viewH = viewH;
     this.row = aspect > 1.05;
     // На десктопі моноліт праворуч на 62% висоти кадру, на телефоні – зверху по центру
+    // Три стани скрол-сценарію: спокій, центр кадру перед ударом, емблема вгорі
     this.monolithH = this.row ? viewH * 0.56 : viewH * 0.27;
-    this.monolith.scale.setScalar(this.monolithH);
-    this.innerBolts.forEach((b) => b.mesh.scale.setScalar(this.monolithH));
-    this.restPos = this.row
-      ? new THREE.Vector3(viewW * 0.19, -this.monolithH * 0.56, 0)
-      : new THREE.Vector3(0, viewH * 0.03, 0);
-    this.bgUniforms.uSpot.value.set(this.row ? 0.3 : 0, this.row ? 0.0 : 0.17);
+    this.states = this.row
+      ? {
+        rest: { pos: new THREE.Vector3(viewW * 0.19, -this.monolithH * 0.56, 0), scale: this.monolithH, rotY: -0.35 },
+        center: { pos: new THREE.Vector3(0, -viewH * 0.27, 0), scale: viewH * 0.54, rotY: 0.3 },
+        crown: { pos: new THREE.Vector3(0, viewH * 0.12, -1), scale: viewH * 0.3, rotY: 0 },
+      }
+      : {
+        rest: { pos: new THREE.Vector3(0, viewH * 0.03, 0), scale: this.monolithH, rotY: -0.35 },
+        center: { pos: new THREE.Vector3(0, -viewH * 0.17, 0), scale: viewH * 0.34, rotY: 0.3 },
+        crown: { pos: new THREE.Vector3(0, viewH * 0.2, -1), scale: viewH * 0.2, rotY: 0 },
+      };
+    this.wordW = this.row ? Math.min(viewW * 0.6, 9) : viewW * 0.86;
+    this.wordmark.scale.setScalar(this.wordW);
+    this.wordmark.position.set(0, -(this.wordW * this.wordmark.userData.aspect) / 2 - viewH * 0.05, 0.2);
   }
 
   resize() {
@@ -284,13 +293,31 @@ export class Storm {
     this.camera.position.y = this.pointerSmooth.y * 0.15;
     this.camera.lookAt(0, 0, 0);
 
-    // Моноліт: повільне «дихання» і легкий нахил за курсором
-    const p = this.restPos;
-    this.logoRoot.position.set(p.x, p.y + Math.sin(time * 0.5) * 0.05, p.z);
+    // Моноліт: зі скролом виходить у центр і обертається до глядача,
+    // після удару відходить угору як емблема, під ним з'являється напис
+    const { rest, center, crown } = this.states;
+    const pos = new THREE.Vector3().lerpVectors(rest.pos, center.pos, form).lerp(crown.pos, burst);
+    const scale = THREE.MathUtils.lerp(THREE.MathUtils.lerp(rest.scale, center.scale, form), crown.scale, burst);
+    const rotY = THREE.MathUtils.lerp(THREE.MathUtils.lerp(rest.rotY, center.rotY, form), crown.rotY, burst);
+    this.monolith.scale.setScalar(scale);
+    this.innerBolts.forEach((b) => b.mesh.scale.setScalar(scale));
+    this.monolithH = scale;
+    this.logoRoot.position.set(pos.x, pos.y + Math.sin(time * 0.5) * 0.05 * (1 - burst), pos.z);
     this.logoRoot.rotation.set(
-      this.pointerSmooth.y * -0.08 + Math.sin(time * 0.37) * 0.02,
-      -0.35 + this.pointerSmooth.x * 0.14 + Math.sin(time * 0.29) * 0.05,
-      0.02,
+      this.pointerSmooth.y * -0.08 * (1 - burst) + Math.sin(time * 0.37) * 0.02,
+      rotY + this.pointerSmooth.x * 0.14 * (1 - burst) + Math.sin(time * 0.29) * 0.05,
+      0.02 * (1 - burst),
+    );
+    const wordIn = smooth(0.1, 0.6, burst);
+    this.wordmark.visible = wordIn > 0.001;
+    this.wordmark.scale.setScalar(this.wordW * (0.9 + 0.1 * wordIn));
+    this.wordmark.rotation.x = (1 - wordIn) * 0.5;
+    // Спалах прозорості в момент удару: скло на мить показує розряд цілком
+    this.glass.attenuationDistance = 1.1 + this.hit * 0.9;
+    this.glass.roughness = 0.22 - this.hit * 0.06;
+    this.bgUniforms.uSpot.value.set(
+      THREE.MathUtils.lerp(this.row ? 0.3 : 0, 0, form),
+      THREE.MathUtils.lerp(this.row ? 0 : 0.17, 0.1, burst),
     );
 
     // Розряд усередині скла: повільне тління, час від часу спалах
@@ -307,11 +334,11 @@ export class Storm {
     }
     this.pulseTarget = Math.max(0, this.pulseTarget - dt * 1.4);
     this.pulse += (this.pulseTarget - this.pulse) * Math.min(1, dt * 9);
-    const ember = 0.45 + 0.1 * Math.sin(time * 1.3);
-    const glow = ember + this.pulse + this.hit * 0.8;
+    const ember = 0.45 + 0.1 * Math.sin(time * 1.3) + form * 0.25;
+    const glow = Math.min(1.3, ember + this.pulse + this.hit * 0.6);
     this.innerBolts.forEach((b, i) => {
       const flicker = 0.8 + 0.2 * Math.sin(time * 23 + b.seed);
-      b.mesh.material.uniforms.uAlpha.value = glow * flicker * (b.wide ? 0.35 : i === 0 ? 1 : 0.6);
+      b.mesh.material.uniforms.uAlpha.value = glow * flicker * (b.wide ? 0.22 : i === 0 ? 0.9 : 0.5);
     });
     this.inner.intensity = glow * 30;
     const c = this.spine[2].clone().multiplyScalar(this.monolithH).applyEuler(this.logoRoot.rotation).add(this.logoRoot.position);
@@ -327,7 +354,7 @@ export class Storm {
     this.updateBolts(dt);
 
     this.bgUniforms.uTime.value = time;
-    this.bgUniforms.uGlow.value = this.pulse * 0.5 + this.hit;
+    this.bgUniforms.uGlow.value = this.pulse * 0.3 + this.hit * 0.5;
 
     this.trackFps(dt);
   }
