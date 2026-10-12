@@ -2,24 +2,19 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import { bgVertex, bgFragment, floorVertex, floorFragment, boltVertex, boltFragment } from './shaders.js';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
+import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
+import { bgVertex, bgFragment, boltVertex, boltFragment } from './shaders.js';
 import { createBoltGeometry } from './bolt.js';
-import { createStudioEnvironment } from './studio.js';
-import { createLogo } from './logo3d.js';
+import { createBoltMonolith, createWordmark } from './logo3d.js';
 
 const QUALITY = {
-  high: { bloom: true, dpr: 1.75, msaa: 4 },
-  mid: { bloom: true, dpr: 1.5, msaa: 2 },
-  low: { bloom: false, dpr: 1, msaa: 0 },
+  high: { bloom: true, dpr: 2, msaa: 4, transmissionScale: 1 },
+  mid: { bloom: true, dpr: 1.5, msaa: 2, transmissionScale: 0.5 },
+  low: { bloom: false, dpr: 1, msaa: 0, transmissionScale: 0.5 },
 };
 
-const CAM_START = new THREE.Vector3(0, 2.4, 16);
-const CAM_FORMED = new THREE.Vector3(0, 2.1, 12.5);
-const LOOK_START = new THREE.Vector3(0, 1.2, 0);
-const LOOK_FORMED = new THREE.Vector3(0, 1.5, 0);
-const LOGO_Y = 1.9;
-const LOGO_CROWN_Y = 4.3;
-
+const CAMERA_Z = 9;
 const smooth = (a, b, x) => {
   const t = Math.min(Math.max((x - a) / (b - a), 0), 1);
   return t * t * (3 - 2 * t);
@@ -37,26 +32,25 @@ export class Storm {
     this.renderer.setClearColor(0x000000, 1);
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.0;
+    this.renderer.transmissionResolutionScale = this.quality.transmissionScale;
     this.dpr = Math.min(window.devicePixelRatio || 1, this.quality.dpr);
     this.renderer.setPixelRatio(this.dpr);
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(36, 1, 0.5, 80);
-    this.camera.position.copy(CAM_START);
+    this.camera = new THREE.PerspectiveCamera(32, 1, 0.5, 60);
+    this.camera.position.set(0, 0, CAMERA_Z);
 
     this.pointer = new THREE.Vector2();
     this.pointerSmooth = new THREE.Vector2();
-    this.look = new THREE.Vector3();
 
-    // target – куди веде скрол, cur – згладжене значення, яке бачить сцена
     this.target = { form: 0, burst: 0 };
     this.cur = { ...this.target };
 
-    this.flash = 0;
-    this.flashPos = new THREE.Vector3();
+    this.pulse = 0;
+    this.pulseTarget = 0;
+    this.nextPulse = 0.8;
     this.hit = 0;
     this.bolts = [];
-    this.nextArc = 1;
     this.bigStrikeDone = false;
     this.visible = true;
     this.frames = 0;
@@ -66,9 +60,8 @@ export class Storm {
 
   async init() {
     this.buildBackground();
-    this.buildLighting();
+    await this.buildEnvironment();
     this.buildLogo();
-    this.buildFloor();
     this.resize();
     this.buildComposer();
 
@@ -84,9 +77,9 @@ export class Storm {
   buildBackground() {
     this.bgUniforms = {
       uTime: { value: 0 },
-      uFlash: { value: 0 },
+      uGlow: { value: 0 },
       uRes: { value: new THREE.Vector2(1, 1) },
-      uSpot: { value: new THREE.Vector2(0, 0.05) },
+      uSpot: { value: new THREE.Vector2(0.3, 0) },
     };
     const bg = new THREE.Mesh(
       new THREE.PlaneGeometry(2, 2),
@@ -97,76 +90,111 @@ export class Storm {
     this.scene.add(bg);
   }
 
-  buildLighting() {
-    this.scene.environment = createStudioEnvironment(this.renderer);
-    this.scene.environmentIntensity = 1.3;
+  // Справжня студійна карта оточення: саме вона робить скло скляним
+  async buildEnvironment() {
+    const { default: url } = await import('@pmndrs/assets/hdri/studio.exr');
+    const exr = await new EXRLoader().loadAsync(url);
+    const pmrem = new THREE.PMREMGenerator(this.renderer);
+    this.scene.environment = pmrem.fromEquirectangular(exr).texture;
+    this.scene.environmentIntensity = 0.9;
+    exr.dispose();
+    pmrem.dispose();
 
-    // Ковзний контровий промінь: їздить по фасках і дає живі відблиски
-    this.sweep = new THREE.DirectionalLight(0xeef1ff, 1.6);
-    this.sweep.position.set(-8, 9, 6);
-    this.flashLight = new THREE.PointLight(0xdfe6ff, 0, 25, 2);
-    this.scene.add(this.sweep, this.flashLight, new THREE.AmbientLight(0x1a1c26, 0.4));
+    // Великий софтбокс зліва-зверху: м'який градієнт на лицьових гранях
+    RectAreaLightUniformsLib.init();
+    this.soft = new THREE.RectAreaLight(0xeef1ff, 6, 10, 6);
+    this.soft.position.set(-5, 5, 7);
+    this.soft.lookAt(0, 0, 0);
+    // Контровий промінь для гострих відблисків на фасках
+    this.key = new THREE.SpotLight(0xf4f6ff, 60, 40, 0.5, 0.6, 1.2);
+    this.key.position.set(-6, 7, 5);
+    this.rim = new THREE.DirectionalLight(0xc9d2ff, 1.2);
+    this.rim.position.set(6, -2, -4);
+    this.inner = new THREE.PointLight(0x8f9dff, 0, 6, 2);
+    this.scene.add(this.soft, this.key, this.rim, this.inner);
   }
 
   buildLogo() {
-    this.materials = {
-      // Графіт із лаковим покриттям
-      text: new THREE.MeshPhysicalMaterial({
-        color: 0x2b2d38,
-        metalness: 0.9,
-        roughness: 0.38,
-        clearcoat: 1,
-        clearcoatRoughness: 0.08,
-        envMapIntensity: 1.6,
-      }),
-      // Полірований хром
-      bolt: new THREE.MeshPhysicalMaterial({
-        color: 0xf2f4fa,
-        metalness: 1,
-        roughness: 0.1,
-        clearcoat: 1,
-        clearcoatRoughness: 0.03,
-        envMapIntensity: 1.3,
-        emissive: 0x9fb2ff,
-        emissiveIntensity: 0,
-      }),
-    };
+    // Димчасте скло: світло проходить крізь товщу, але гаситься і синіє в глибині
+    this.glass = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      metalness: 0,
+      roughness: 0.22,
+      transmission: 1,
+      thickness: 1.4,
+      ior: 1.5,
+      attenuationColor: new THREE.Color(0x3c4290),
+      attenuationDistance: 1.1,
+      clearcoat: 1,
+      clearcoatRoughness: 0.04,
+      specularIntensity: 1,
+      envMapIntensity: 1,
+    });
+
     this.logoRoot = new THREE.Group();
-    this.reflectionRoot = new THREE.Group();
-    this.scene.add(this.logoRoot, this.reflectionRoot);
-  }
+    const { mesh, spine, tip } = createBoltMonolith(this.glass);
+    this.monolith = mesh;
+    this.spine = spine;
+    this.tip = tip;
+    this.logoRoot.add(mesh);
 
-  buildFloor() {
-    this.floorUniforms = { uFade: { value: 2.2 }, uOpacity: { value: 1 } };
-    this.floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(120, 80),
-      new THREE.ShaderMaterial({ vertexShader: floorVertex, fragmentShader: floorFragment, uniforms: this.floorUniforms, transparent: true, depthWrite: false }),
-    );
-    this.floor.rotation.x = -Math.PI / 2;
-    this.floor.renderOrder = 5;
-    this.scene.add(this.floor);
-  }
-
-  // Перебудовує логотип під орієнтацію екрана
-  layoutLogo() {
-    const layout = this.camera.aspect > 0.9 ? 'row' : 'column';
-    if (layout !== this.logoLayout) {
-      this.logoLayout = layout;
-      if (this.logo) {
-        this.logoRoot.remove(this.logo.group);
-        this.reflectionRoot.clear();
-        this.logo.meshes.forEach((m) => m.geometry.dispose());
-      }
-      this.logo = createLogo(this.materials, layout);
-      this.logoRoot.add(this.logo.group);
-      this.reflection = this.logo.group.clone();
-      this.reflectionRoot.add(this.reflection);
+    // Розряд усередині скла: два переплетені канали вздовж хребта форми
+    this.innerBolts = [];
+    for (let i = 0; i < 3; i++) {
+      const material = new THREE.ShaderMaterial({
+        vertexShader: boltVertex,
+        fragmentShader: boltFragment,
+        uniforms: { uAlpha: { value: 0 }, uReveal: { value: 1 }, uColor: { value: new THREE.Color(0x5f74ff) } },
+        // Не «прозорий» для three.js, щоб потрапити в буфер, який бачить скло крізь товщу
+        transparent: false,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      });
+      // Третій канал – широкий і тьмяний, дає розсіяне світіння в товщі скла
+      const wide = i === 2;
+      const m = new THREE.Mesh(this.innerGeometry(wide ? 0.09 : 0.018), material);
+      m.frustumCulled = false;
+      this.logoRoot.add(m);
+      this.innerBolts.push({ mesh: m, seed: Math.random() * 10, wide });
     }
-    const dist = CAM_FORMED.z;
-    const viewH = 2 * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2)) * dist;
-    const viewW = viewH * this.camera.aspect;
-    this.logoWidth = layout === 'row' ? Math.min(viewW * 0.7, 11) : viewW * 0.84;
-    this.logoHeight = this.logoWidth * this.logo.aspect;
+
+    this.wordmark = createWordmark(this.glass);
+    this.wordmark.visible = false;
+    this.logoRoot.add(this.wordmark);
+    this.scene.add(this.logoRoot);
+  }
+
+  // Ламаний канал через опорні точки хребта, трохи всередині товщі скла
+  innerGeometry(width = 0.018) {
+    const pts = [];
+    for (let i = 0; i < this.spine.length - 1; i++) {
+      const a = this.spine[i].clone();
+      const b = this.spine[i + 1].clone();
+      a.z = rand(-0.08, 0.08);
+      b.z = rand(-0.08, 0.08);
+      pts.push([a, b]);
+    }
+    const parts = pts.map(([a, b]) => createBoltGeometry(a, b, { width, branches: width > 0.05 ? 0 : 1 }));
+    const merged = mergeGeometries(parts);
+    parts.forEach((g) => g.dispose());
+    return merged;
+  }
+
+  layout() {
+    const aspect = this.camera.aspect;
+    const viewH = 2 * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2)) * CAMERA_Z;
+    const viewW = viewH * aspect;
+    this.viewW = viewW;
+    this.viewH = viewH;
+    this.row = aspect > 1.05;
+    // На десктопі моноліт праворуч на 62% висоти кадру, на телефоні – зверху по центру
+    this.monolithH = this.row ? viewH * 0.56 : viewH * 0.27;
+    this.monolith.scale.setScalar(this.monolithH);
+    this.innerBolts.forEach((b) => b.mesh.scale.setScalar(this.monolithH));
+    this.restPos = this.row
+      ? new THREE.Vector3(viewW * 0.19, -this.monolithH * 0.56, 0)
+      : new THREE.Vector3(0, viewH * 0.03, 0);
+    this.bgUniforms.uSpot.value.set(this.row ? 0.3 : 0, this.row ? 0.0 : 0.17);
   }
 
   resize() {
@@ -176,7 +204,7 @@ export class Storm {
     this.camera.aspect = this.width / this.height;
     this.camera.updateProjectionMatrix();
     this.bgUniforms.uRes.value.set(this.width, this.height);
-    this.layoutLogo();
+    this.layout();
     this.composer?.setSize(this.width, this.height);
   }
 
@@ -191,59 +219,40 @@ export class Storm {
 
   async addBloom() {
     const { UnrealBloomPass } = await import('three/examples/jsm/postprocessing/UnrealBloomPass.js');
-    this.bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.45, 0.5, 0.85);
+    this.bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.35, 0.7, 0.9);
     this.composer.insertPass(this.bloom, this.composer.passes.length - 1);
   }
 
-  // p – прогрес скролу першого екрана від 0 до 1
   setProgress(p) {
     if (this.reduced) return;
     this.target.form = smooth(0.08, 0.5, p);
     this.target.burst = smooth(0.68, 0.98, p);
   }
 
-  logoToWorld(local) {
-    return local.clone().multiplyScalar(this.logoScale).applyEuler(this.logoRoot.rotation).add(this.logoRoot.position);
-  }
-
-  strike({ from, to, width = 0.05, branches = 2, power = 0.5, life = 0.3 }) {
+  // Зовнішній удар у вершину моноліта
+  bigStrike() {
+    const to = this.tip.clone().multiplyScalar(this.monolithH).applyEuler(this.logoRoot.rotation).add(this.logoRoot.position);
+    const from = new THREE.Vector3(to.x + rand(-1, 1), to.y + 6, to.z + 0.4);
     const material = new THREE.ShaderMaterial({
       vertexShader: boltVertex,
       fragmentShader: boltFragment,
-      uniforms: { uAlpha: { value: 1 }, uReveal: { value: 0 } },
+      uniforms: { uAlpha: { value: 1 }, uReveal: { value: 0 }, uColor: { value: new THREE.Color(0xb9c4ff) } },
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
-    const mesh = new THREE.Mesh(createBoltGeometry(from, to, { width, branches }), material);
+    const mesh = new THREE.Mesh(createBoltGeometry(from, to, { width: 0.06, branches: 4 }), material);
     mesh.frustumCulled = false;
     this.scene.add(mesh);
-    this.bolts.push({ mesh, age: 0, life, power, seed: Math.random() * 10, end: to.clone() });
-    this.flashPos.copy(to);
-  }
-
-  // Дрібний розряд, що пробігає по контуру хромованої блискавки
-  arc() {
-    const a = this.logo.anchors;
-    const i = Math.floor(Math.random() * a.length);
-    const j = (i + 1 + Math.floor(Math.random() * 2)) % a.length;
-    const from = this.logoToWorld(a[i]);
-    const to = this.logoToWorld(a[j]);
-    const out = new THREE.Vector3(0, 0, this.logoHeight * 0.1);
-    from.add(out);
-    to.add(out);
-    this.strike({ from, to, width: 0.03 + Math.random() * 0.03, branches: 2, power: 0.25, life: rand(0.12, 0.25) });
-  }
-
-  bigStrike() {
-    const to = this.logoToWorld(this.logo.tip);
-    const from = new THREE.Vector3(to.x + rand(-1.2, 1.2), to.y + 7, to.z + 0.3);
-    this.strike({ from, to, width: 0.11, branches: 5, power: 1.2, life: 0.7 });
+    this.bolts.push({ mesh, age: 0, life: 0.7 });
     this.hit = 1;
   }
 
+  arc() {
+    this.pulseTarget = 1;
+  }
+
   updateBolts(dt) {
-    let flash = 0;
     for (let i = this.bolts.length - 1; i >= 0; i--) {
       const b = this.bolts[i];
       b.age += dt;
@@ -257,11 +266,8 @@ export class Storm {
       }
       const u = b.mesh.material.uniforms;
       u.uReveal.value = Math.min(1, b.age / 0.06);
-      const flicker = 0.85 + 0.15 * Math.sin(b.age * 40 + b.seed);
-      u.uAlpha.value = Math.pow(1 - t, 1.5) * flicker;
-      flash = Math.max(flash, u.uAlpha.value * b.power);
+      u.uAlpha.value = Math.pow(1 - t, 1.6) * (0.85 + 0.15 * Math.sin(b.age * 40));
     }
-    return flash;
   }
 
   update() {
@@ -273,74 +279,59 @@ export class Storm {
     for (const k of ['form', 'burst']) this.cur[k] += (this.target[k] - this.cur[k]) * Math.min(1, dt * 4.5);
     const { form, burst } = this.cur;
 
-    // Камера: наїзд на логотип зі скролом, легкий паралакс за курсором
-    this.pointerSmooth.lerp(this.pointer, Math.min(1, dt * 3));
-    this.camera.position.lerpVectors(CAM_START, CAM_FORMED, form);
-    this.camera.position.x += this.pointerSmooth.x * 0.5;
-    this.camera.position.y += this.pointerSmooth.y * 0.25;
-    this.camera.lookAt(this.look.lerpVectors(LOOK_START, LOOK_FORMED, form));
+    this.pointerSmooth.lerp(this.pointer, Math.min(1, dt * 2.5));
+    this.camera.position.x = this.pointerSmooth.x * 0.25;
+    this.camera.position.y = this.pointerSmooth.y * 0.15;
+    this.camera.lookAt(0, 0, 0);
 
-    // Логотип: на старті трохи далі й правіше, на скролі виходить у центр,
-    // після удару піднімається як емблема
-    const startX = this.camera.aspect > 1.2 ? this.logoWidth * 0.2 : 0;
-    const y = THREE.MathUtils.lerp(THREE.MathUtils.lerp(LOGO_Y + 1.6, LOGO_Y, form), LOGO_CROWN_Y, burst);
-    const z = THREE.MathUtils.lerp(THREE.MathUtils.lerp(-5, 0, form), -2, burst);
-    const x = THREE.MathUtils.lerp(startX, 0, form);
-    this.logoScale = THREE.MathUtils.lerp(this.logoWidth, this.logoWidth * 0.42, burst);
-    this.logoRoot.position.set(x, y, z);
-    this.logo.group.scale.setScalar(this.logoScale);
+    // Моноліт: повільне «дихання» і легкий нахил за курсором
+    const p = this.restPos;
+    this.logoRoot.position.set(p.x, p.y + Math.sin(time * 0.5) * 0.05, p.z);
     this.logoRoot.rotation.set(
-      this.pointerSmooth.y * -0.05 + Math.sin(time * 0.4) * 0.015,
-      THREE.MathUtils.lerp(-0.35, 0, form) + this.pointerSmooth.x * 0.1 + Math.sin(time * 0.3) * 0.03,
-      0,
+      this.pointerSmooth.y * -0.08 + Math.sin(time * 0.37) * 0.02,
+      -0.35 + this.pointerSmooth.x * 0.14 + Math.sin(time * 0.29) * 0.05,
+      0.02,
     );
 
-    // Відбиття у підлозі: дзеркальна копія під лінією контакту
-    const floorY = y - this.logoHeight * this.logoScale / this.logoWidth / 2 * (1 - burst) - 0.01;
-    this.floor.position.y = floorY;
-    this.floor.position.z = z;
-    this.reflectionRoot.position.set(x, 2 * floorY - y, z);
-    this.reflectionRoot.rotation.set(-this.logoRoot.rotation.x, this.logoRoot.rotation.y, 0);
-    this.reflection.scale.set(this.logoScale, -this.logoScale, this.logoScale);
-    // Відбиття з'являється, коли логотип виходить у центр, і зникає під час підйому
-    const grounded = (1 - smooth(0, 0.3, burst)) * smooth(0.45, 0.85, form);
-    this.reflectionRoot.visible = grounded > 0.01;
-    this.floor.visible = grounded > 0.01;
-    this.floorUniforms.uOpacity.value = grounded;
-
+    // Розряд усередині скла: повільне тління, час від часу спалах
     if (!this.reduced) {
-      this.nextArc -= dt;
-      if (this.nextArc <= 0 && burst < 0.5) {
-        this.arc();
-        if (Math.random() < 0.35) this.arc();
-        this.nextArc = rand(0.5, 2.2) * (1 - form * 0.5);
-      }
-      if (form > 0.94 && !this.bigStrikeDone) {
-        this.bigStrikeDone = true;
-        this.bigStrike();
-      } else if (form < 0.5) {
-        this.bigStrikeDone = false;
+      this.nextPulse -= dt;
+      if (this.nextPulse <= 0) {
+        this.pulseTarget = rand(0.6, 1);
+        this.nextPulse = rand(1.5, 4.5);
+        this.innerBolts.forEach((b) => {
+          b.mesh.geometry.dispose();
+          b.mesh.geometry = this.innerGeometry(b.wide ? 0.09 : 0.018);
+        });
       }
     }
+    this.pulseTarget = Math.max(0, this.pulseTarget - dt * 1.4);
+    this.pulse += (this.pulseTarget - this.pulse) * Math.min(1, dt * 9);
+    const ember = 0.45 + 0.1 * Math.sin(time * 1.3);
+    const glow = ember + this.pulse + this.hit * 0.8;
+    this.innerBolts.forEach((b, i) => {
+      const flicker = 0.8 + 0.2 * Math.sin(time * 23 + b.seed);
+      b.mesh.material.uniforms.uAlpha.value = glow * flicker * (b.wide ? 0.35 : i === 0 ? 1 : 0.6);
+    });
+    this.inner.intensity = glow * 30;
+    const c = this.spine[2].clone().multiplyScalar(this.monolithH).applyEuler(this.logoRoot.rotation).add(this.logoRoot.position);
+    this.inner.position.copy(c);
 
-    this.hit = Math.max(0, this.hit - dt * 0.5);
-    this.flash = Math.max(this.flash * Math.exp(-dt * 8), this.updateBolts(dt));
-
-    // Ковзний промінь повільно обходить логотип
-    this.sweep.position.set(Math.sin(time * 0.25) * 10, 8 + Math.cos(time * 0.2) * 2, 6);
-    this.materials.bolt.emissiveIntensity = this.hit * 0.9 + this.flash * 0.25;
-    this.flashLight.position.copy(this.flashPos);
-    this.flashLight.intensity = this.flash * 160;
+    if (!this.reduced && form > 0.94 && !this.bigStrikeDone) {
+      this.bigStrikeDone = true;
+      this.bigStrike();
+    } else if (form < 0.5) {
+      this.bigStrikeDone = false;
+    }
+    this.hit = Math.max(0, this.hit - dt * 0.6);
+    this.updateBolts(dt);
 
     this.bgUniforms.uTime.value = time;
-    this.bgUniforms.uFlash.value = this.flash;
-    const spot = this.logoRoot.position.clone().project(this.camera);
-    this.bgUniforms.uSpot.value.set(spot.x * 0.5 * this.camera.aspect, spot.y * 0.5);
+    this.bgUniforms.uGlow.value = this.pulse * 0.5 + this.hit;
 
     this.trackFps(dt);
   }
 
-  // Якщо пристрій не тягне – знижуємо роздільність, потім вимикаємо згладжування і bloom
   trackFps(dt) {
     if (this.fpsChecked) return;
     this.frames++;
@@ -352,9 +343,11 @@ export class Storm {
     if (fps >= 45) {
       this.fpsChecked = true;
     } else if (this.dpr > 1) {
-      this.dpr = 1;
-      this.renderer.setPixelRatio(1);
+      this.dpr = Math.max(1, this.dpr - 0.5);
+      this.renderer.setPixelRatio(this.dpr);
       this.resize();
+    } else if (this.renderer.transmissionResolutionScale > 0.5) {
+      this.renderer.transmissionResolutionScale = 0.5;
     } else if (this.bloom) {
       this.composer.removePass(this.bloom);
       this.bloom = null;
@@ -377,4 +370,26 @@ export class Storm {
     this.update();
     loop();
   }
+}
+
+// Склеює кілька геометрій із однаковими атрибутами в одну
+function mergeGeometries(list) {
+  const pos = [];
+  const side = [];
+  const along = [];
+  const index = [];
+  let base = 0;
+  for (const g of list) {
+    pos.push(...g.attributes.position.array);
+    side.push(...g.attributes.aSide.array);
+    along.push(...g.attributes.aAlong.array);
+    for (const i of g.index.array) index.push(i + base);
+    base += g.attributes.position.count;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('aSide', new THREE.Float32BufferAttribute(side, 1));
+  geo.setAttribute('aAlong', new THREE.Float32BufferAttribute(along, 1));
+  geo.setIndex(index);
+  return geo;
 }

@@ -17,76 +17,64 @@ function boltPoints() {
 }
 
 /**
- * Створює суцільний 3D-логотип: блискавка і напис із широкими округлими фасками,
- * на яких добре читаються студійні відблиски.
- * layout: 'row' – блискавка ліворуч від напису, 'column' – над ним.
- * Повертає групу шириною 1 (масштабується сценою), вершину блискавки
- * та точки на контурі блискавки для дрібних розрядів.
+ * Моноліт-блискавка: товстий скляний об'єкт висотою 1 з широкими округлими фасками.
+ * Повертає меш, центрований по X/Z, низ на y = 0, та опорні точки для внутрішнього розряду.
  */
-export function createLogo(materials, layout) {
-  const font = new FontLoader().parse(fontData);
-  const group = new THREE.Group();
+export function createBoltMonolith(material) {
+  const outline = boltPoints();
+  const depth = 0.3;
+  const bevel = 0.055;
+  const geo = new THREE.ExtrudeGeometry(new THREE.Shape(outline), {
+    depth,
+    bevelEnabled: true,
+    bevelThickness: bevel,
+    bevelSize: bevel * 0.9,
+    bevelSegments: 10,
+    curveSegments: 4,
+  });
+  geo.computeBoundingBox();
+  const bb = geo.boundingBox;
+  // Запам'ятовуємо зсув до переносу: translate() перераховує boundingBox
+  const cx = (bb.min.x + bb.max.x) / 2;
+  const minY = bb.min.y;
+  const size = new THREE.Vector3();
+  bb.getSize(size);
+  geo.translate(-cx, -minY, -(bb.min.z + bb.max.z) / 2);
+  const mesh = new THREE.Mesh(geo, material);
+  mesh.userData.width = size.x;
+  mesh.userData.height = size.y;
+  mesh.userData.depth = size.z;
 
-  const textGeo = new TextGeometry(TEXT, {
+  // Канал розряду всередині скла: від вершини вниз через середину форми
+  const spine = [
+    new THREE.Vector3(74 / 140 - cx, 0.96 - minY, 0),
+    new THREE.Vector3(66 / 140 - cx, 0.64 - minY, 0),
+    new THREE.Vector3(58 / 140 - cx, 0.5 - minY, 0),
+    new THREE.Vector3(40 / 140 - cx, 0.43 - minY, 0),
+    new THREE.Vector3(33 / 140 - cx, 0.04 - minY, 0),
+  ];
+  return { mesh, spine, tip: spine[0].clone() };
+}
+
+/** Напис зі скла, нормалізований до ширини 1, центрований. */
+export function createWordmark(material) {
+  const font = new FontLoader().parse(fontData);
+  const geo = new TextGeometry(TEXT, {
     font,
     size: 1,
-    depth: 0.26,
+    depth: 0.22,
     curveSegments: 16,
     bevelEnabled: true,
-    bevelThickness: 0.06,
-    bevelSize: 0.045,
-    bevelSegments: 7,
+    bevelThickness: 0.05,
+    bevelSize: 0.04,
+    bevelSegments: 8,
   });
-  textGeo.computeBoundingBox();
-  const tb = textGeo.boundingBox;
-  const textW = tb.max.x - tb.min.x;
-  const textH = tb.max.y - tb.min.y;
-  textGeo.translate(-tb.min.x, -tb.min.y, -(tb.min.z + tb.max.z) / 2);
-  const text = new THREE.Mesh(textGeo, materials.text);
-
-  const boltH = layout === 'row' ? textH * 1.6 : textH * 2.4;
-  const outline = boltPoints();
-  const boltShape = new THREE.Shape(outline);
-  const boltGeo = new THREE.ExtrudeGeometry(boltShape, {
-    depth: 0.3 / boltH,
-    bevelEnabled: true,
-    bevelThickness: 0.07 / boltH,
-    bevelSize: 0.05 / boltH,
-    bevelSegments: 7,
-  });
-  boltGeo.scale(boltH, boltH, boltH);
-  boltGeo.computeBoundingBox();
-  const bb = boltGeo.boundingBox;
-  boltGeo.translate(-bb.min.x, -bb.min.y, -(bb.min.z + bb.max.z) / 2);
-  const bolt = new THREE.Mesh(boltGeo, materials.bolt);
-  const boltW = bb.max.x - bb.min.x;
-
-  let totalW;
-  let totalH;
-  if (layout === 'row') {
-    const gap = textH * 0.42;
-    totalW = boltW + gap + textW;
-    totalH = boltH;
-    bolt.position.set(-totalW / 2, -boltH / 2, 0);
-    text.position.set(-totalW / 2 + boltW + gap, -textH / 2, 0);
-  } else {
-    const gap = textH * 0.9;
-    totalW = textW;
-    totalH = boltH + gap + textH;
-    bolt.position.set(-boltW / 2, totalH / 2 - boltH, 0);
-    text.position.set(-textW / 2, -totalH / 2, 0);
-  }
-
-  // Внутрішня група нормалізована до ширини 1, зовнішню масштабує сцена
-  const inner = new THREE.Group();
-  inner.add(bolt, text);
-  const s = 1 / totalW;
-  inner.scale.setScalar(s);
-  group.add(inner);
-
-  const local = (x, y) => new THREE.Vector3(bolt.position.x + x * boltH - bb.min.x, bolt.position.y + y * boltH - bb.min.y, 0).multiplyScalar(s);
-  const tip = local(76 / 140, 1);
-  const anchors = outline.map((p) => local(p.x, p.y));
-
-  return { group, tip, anchors, aspect: totalH / totalW, meshes: [bolt, text] };
+  geo.computeBoundingBox();
+  const bb = geo.boundingBox;
+  const w = bb.max.x - bb.min.x;
+  geo.translate(-(bb.min.x + bb.max.x) / 2, -(bb.min.y + bb.max.y) / 2, -(bb.min.z + bb.max.z) / 2);
+  geo.scale(1 / w, 1 / w, 1 / w);
+  const mesh = new THREE.Mesh(geo, material);
+  mesh.userData.aspect = (bb.max.y - bb.min.y) / w;
+  return mesh;
 }
