@@ -68,7 +68,7 @@ export const skyFragment = /* glsl */ `
 
 export const particleVertex = /* glsl */ `
   attribute vec3 aStorm;   // радіус, кут, висота у вихорі
-  attribute vec4 aLogo;    // xyz – точка логотипа, w – 1 для логотипа, 0 для пилу
+  attribute vec4 aLogo;    // xyz – точка логотипа, w: 0 – пил, 1 – заливка, 2 – контур
   attribute vec4 aRandom;
 
   uniform float uTime;
@@ -79,6 +79,7 @@ export const particleVertex = /* glsl */ `
   uniform float uShock;
   uniform float uStormScale;
   uniform float uSize;
+  uniform float uLogoSize;
   uniform float uPixelRatio;
   uniform vec3 uMouse;
   uniform vec3 uStormCenter;
@@ -102,8 +103,11 @@ export const particleVertex = /* glsl */ `
     // Перехід шторм → логотип з індивідуальною затримкою і дугою
     float delay = aRandom.x * 0.35;
     float f = smoothstep(delay, delay + 0.65, uForm);
+    float isLogo = step(0.5, aLogo.w);
+    float isEdge = step(1.5, aLogo.w);
     vec3 lp = aLogo.xyz;
-    lp += 0.015 * vec3(sin(uTime * 2.0 + aRandom.y * 40.0), cos(uTime * 1.7 + aRandom.z * 40.0), 0.0);
+    // Пил ледь дрейфує; логотип стоїть нерухомо, щоб літери були чіткими
+    lp += (1.0 - isLogo) * 0.2 * vec3(sin(uTime * 0.3 + aRandom.y * 40.0), cos(uTime * 0.25 + aRandom.z * 40.0), 0.0);
     vec3 pos = mix(sp, lp, f);
     vec3 travel = lp - sp;
     pos += sin(f * 3.14159) * normalize(vec3(-travel.y, travel.x, 0.0) + 0.001) * (0.6 + 1.6 * aRandom.y);
@@ -116,28 +120,34 @@ export const particleVertex = /* glsl */ `
     // Частинки розступаються від курсора
     vec2 md = pos.xy - uMouse.xy;
     float m = exp(-dot(md, md) * 0.9) * uMouse.z;
-    pos.xy += normalize(md + 0.0001) * m * mix(0.9, 0.22, f);
+    // У зібраному логотипі курсор не ламає форму, а лише підсвічує частинки
+    float hold = f * isLogo;
+    pos.xy += normalize(md + 0.0001) * m * 0.9 * (1.0 - hold);
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
 
-    float isLogo = aLogo.w;
-    float size = mix(0.6 + aRandom.w * 1.4, mix(0.9 + aRandom.w * 1.6, 0.55 + aRandom.w * 0.5, isLogo), f);
-    gl_PointSize = uSize * size * uPixelRatio * (12.0 / -mv.z) * (1.0 + uFlash * 0.4);
+    float stormSize = uSize * (0.6 + aRandom.w * 1.4);
+    float logoSize = mix(uSize * (0.9 + aRandom.w * 1.6), uLogoSize * (1.0 + isEdge * 0.15), isLogo);
+    gl_PointSize = mix(stormSize, logoSize, f) * uPixelRatio * (12.0 / -mv.z) * (1.0 + uFlash * 0.4);
 
     vec3 blue = vec3(0.22, 0.42, 1.0);
     vec3 violet = vec3(0.58, 0.36, 1.0);
     vec3 hot = vec3(0.82, 0.9, 1.0);
     vec3 col = mix(blue, violet, aRandom.y);
     col = mix(col, hot, step(0.94, aRandom.z));
-    col = mix(col, mix(hot, blue, 0.35 + 0.3 * aRandom.y), f * isLogo * 0.75);
+    // Градієнт по логотипу зліва направо: синій → фіолетовий, контур світліший
+    vec3 logoCol = mix(vec3(0.42, 0.55, 1.0), vec3(0.68, 0.5, 1.0), clamp(lp.x * 0.09 + 0.5, 0.0, 1.0));
+    logoCol = mix(logoCol, hot, isEdge * 0.45);
+    col = mix(col, logoCol, f * isLogo);
+    col += hot * m * hold * 0.8;
 
     // Ударна хвиля від великої блискавки
     float ring = exp(-pow(length(lp.xy) - uShock * 9.0, 2.0) * 1.5) * (1.0 - uShock);
     col += hot * ring * f * 1.5;
     col *= 1.0 + uFlash * 1.2;
 
-    float alpha = mix(0.5, mix(0.25, 0.95, isLogo), f);
+    float alpha = mix(0.5, mix(0.22, mix(0.38, 0.9, isEdge), isLogo), f);
     alpha *= 1.0 - b * 0.85;
     vColor = col;
     vAlpha = alpha;
@@ -153,6 +163,30 @@ export const particleFragment = /* glsl */ `
     a *= a;
     if (a < 0.01) discard;
     gl_FragColor = vec4(pow(vColor, vec3(2.2)) * a * vAlpha, 1.0);
+    #include <colorspace_fragment>
+  }
+`;
+
+export const plateVertex = /* glsl */ `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+export const plateFragment = /* glsl */ `
+  uniform sampler2D uMap;
+  uniform sampler2D uGlow;
+  uniform float uOpacity;
+  uniform float uFlash;
+  varying vec2 vUv;
+  void main() {
+    float shape = texture2D(uMap, vUv).a;
+    float halo = texture2D(uGlow, vUv).a;
+    vec3 tint = mix(vec3(0.3, 0.42, 1.0), vec3(0.55, 0.36, 1.0), vUv.x);
+    vec3 col = tint * (shape * 0.35 + halo * 0.3) * (1.0 + uFlash);
+    gl_FragColor = vec4(pow(col, vec3(2.2)) * uOpacity, 1.0);
     #include <colorspace_fragment>
   }
 `;

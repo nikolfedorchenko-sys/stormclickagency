@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {
   skyVertex, skyFragment,
+  plateVertex, plateFragment,
   particleVertex, particleFragment,
   boltVertex, boltFragment,
 } from './shaders.js';
@@ -103,7 +104,6 @@ export class Storm {
     const n = this.count;
     const storm = new Float32Array(n * 3);
     const random = new Float32Array(n * 4);
-    this.logoPick = new Float32Array(n);
     this.isLogo = new Uint8Array(n);
 
     for (let i = 0; i < n; i++) {
@@ -115,9 +115,9 @@ export class Storm {
       storm[i * 3 + 1] = arm * ((Math.PI * 2) / 3) + Math.log(r + 1) * 2.4 + spread;
       storm[i * 3 + 2] = (Math.random() + Math.random() - 1) * 1.6;
       for (let k = 0; k < 4; k++) random[i * 4 + k] = Math.random();
-      this.logoPick[i] = Math.random();
       this.isLogo[i] = Math.random() < LOGO_SHARE ? 1 : 0;
     }
+    this.logoCount = this.isLogo.reduce((a, b) => a + b, 0);
 
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
@@ -136,6 +136,7 @@ export class Storm {
       uStormScale: { value: 1 },
       uStormCenter: { value: new THREE.Vector3(0, 0.6, -1) },
       uSize: { value: this.tier === 'high' ? 2.4 : 3 },
+      uLogoSize: { value: 2 },
       uPixelRatio: { value: this.dpr },
       uMouse: { value: new THREE.Vector3(99, 99, 0) },
     };
@@ -158,32 +159,83 @@ export class Storm {
     const layout = aspect > 0.9 ? 'row' : 'column';
     if (layout !== this.logoLayout) {
       this.logoLayout = layout;
-      this.logo = sampleLogo(layout);
+      this.logo = sampleLogo(layout, this.logoCount);
+      this.buildLogoPlate();
     }
-    const { points, icon } = this.logo;
-    const count = points.length / 2;
+    const { points, icon, spacing, height } = this.logo;
+    const count = points.length / 3;
     const logoW = layout === 'row' ? Math.min(this.viewW * 0.74, 11.5) : this.viewW * 0.78;
     const offsetY = layout === 'row' ? 0.35 : 0.9;
+    const gap = spacing * logoW;
 
     const attr = this.particleGeo.attributes.aLogo;
     const arr = attr.array;
+    let k = 0;
     for (let i = 0; i < this.count; i++) {
       if (this.isLogo[i]) {
-        const k = Math.floor(this.logoPick[i] * count) * 2;
-        arr[i * 4] = points[k] * logoW + (Math.random() - 0.5) * 0.02;
-        arr[i * 4 + 1] = points[k + 1] * logoW + offsetY + (Math.random() - 0.5) * 0.02;
-        arr[i * 4 + 2] = (Math.random() - 0.5) * 0.25;
-        arr[i * 4 + 3] = 1;
+        // Кожна частинка займає свою точку сітки; зайві – в проміжки між точками
+        const j = (k % count) * 3;
+        const extra = k >= count ? 0.5 : 0;
+        arr[i * 4] = points[j] * logoW + extra * gap;
+        arr[i * 4 + 1] = points[j + 1] * logoW + offsetY + extra * gap * 0.5;
+        arr[i * 4 + 2] = 0;
+        arr[i * 4 + 3] = 1 + points[j + 2];
+        k++;
       } else {
-        // Пил навколо логотипа – дає глибину сцені
-        arr[i * 4] = (Math.random() - 0.5) * this.viewW * 1.3;
-        arr[i * 4 + 1] = (Math.random() - 0.5) * this.viewH * 1.2;
-        arr[i * 4 + 2] = rand(-6, 3);
+        // Пил позаду логотипа – дає глибину, але не перекриває літери
+        arr[i * 4] = (Math.random() - 0.5) * this.viewW * 1.4;
+        arr[i * 4 + 1] = (Math.random() - 0.5) * this.viewH * 1.3;
+        arr[i * 4 + 2] = rand(-9, -1.5);
         arr[i * 4 + 3] = 0;
       }
     }
     attr.needsUpdate = true;
     this.iconWorld = new THREE.Vector3(icon.x * logoW, icon.y * logoW + offsetY, 0);
+
+    // Розмір частинки логотипа під крок сітки, щоб літери були суцільними
+    const formedZ = 12.8;
+    const pxPerUnit = this.height / (2 * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2)) * formedZ);
+    this.particleUniforms.uLogoSize.value = 1.9 * gap * pxPerUnit * (formedZ / 12);
+
+    this.plate.scale.set(logoW, logoW * height, 1);
+    this.plate.position.set(0, offsetY, -0.02);
+  }
+
+  // Світна підкладка у формі логотипа під частинками
+  buildLogoPlate() {
+    const { canvas } = this.logo;
+    const glow = document.createElement('canvas');
+    glow.width = canvas.width / 4;
+    glow.height = canvas.height / 4;
+    const g = glow.getContext('2d');
+    g.filter = 'blur(6px)';
+    g.drawImage(canvas, 0, 0, glow.width, glow.height);
+
+    if (!this.plate) {
+      this.plateUniforms = {
+        uMap: { value: null },
+        uGlow: { value: null },
+        uOpacity: { value: 0 },
+        uFlash: { value: 0 },
+      };
+      this.plate = new THREE.Mesh(
+        new THREE.PlaneGeometry(1, 1),
+        new THREE.ShaderMaterial({
+          vertexShader: plateVertex,
+          fragmentShader: plateFragment,
+          uniforms: this.plateUniforms,
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+        }),
+      );
+      this.plate.frustumCulled = false;
+      this.scene.add(this.plate);
+    }
+    this.plateUniforms.uMap.value?.dispose();
+    this.plateUniforms.uGlow.value?.dispose();
+    this.plateUniforms.uMap.value = new THREE.CanvasTexture(canvas);
+    this.plateUniforms.uGlow.value = new THREE.CanvasTexture(glow);
   }
 
   resize() {
@@ -326,6 +378,10 @@ export class Storm {
     pu.uBurst.value = burst;
     pu.uFlash.value = this.flash;
     pu.uShock.value = this.shock;
+
+    // Підкладка проявляється, коли частинки вже майже на місцях
+    this.plateUniforms.uOpacity.value = Math.pow(Math.max(0, (form - 0.75) / 0.25), 2) * (1 - burst);
+    this.plateUniforms.uFlash.value = this.flash;
 
     const su = this.skyUniforms;
     su.uTime.value = time;
