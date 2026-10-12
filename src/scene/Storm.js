@@ -12,7 +12,7 @@ import { createBoltMonolith, createWordmark } from './logo3d.js';
 // прямий рендер без постобробки (надійно на iOS і слабких Android)
 const QUALITY = {
   high: { bloom: true, dpr: 2, msaa: 4, transmission: true },
-  mid: { bloom: false, dpr: 1.5, msaa: 0, transmission: false },
+  mid: { bloom: false, dpr: 2, msaa: 0, transmission: false },
   low: { bloom: false, dpr: 1, msaa: 0, transmission: false },
 };
 
@@ -30,7 +30,8 @@ export class Storm {
     this.quality = { ...QUALITY[tier] };
     this.reduced = reducedMotion;
 
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+    // Без композера згладжування робить сам рендерер, інакше краї моноліта зубчасті
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: !this.quality.bloom, powerPreference: 'high-performance' });
     this.renderer.setClearColor(0x000000, 1);
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.0;
@@ -128,12 +129,12 @@ export class Storm {
     this.simpleGlass = !this.quality.transmission;
     this.glass = this.simpleGlass
       ? new THREE.MeshPhysicalMaterial({
-        color: 0x0c0e1c,
-        metalness: 0.1,
-        roughness: 0.2,
+        color: 0x090a14,
+        metalness: 0.15,
+        roughness: 0.28,
         clearcoat: 1,
-        clearcoatRoughness: 0.05,
-        envMapIntensity: 1.2,
+        clearcoatRoughness: 0.06,
+        envMapIntensity: 0.75,
         emissive: new THREE.Color(0x1c2490),
         emissiveIntensity: 0.2,
       })
@@ -337,7 +338,7 @@ export class Storm {
     this.wordmark.rotation.x = (1 - wordIn) * 0.5;
     // Спалах у момент удару: скло на мить показує розряд цілком
     if (this.simpleGlass) {
-      this.glass.emissiveIntensity = 0.16 + this.pulse * 0.4 + this.hit * 1.0 + form * 0.12;
+      this.glass.emissiveIntensity = (0.16 + this.pulse * 0.4 + this.hit * 1.0 + form * 0.12) * (1 - burst * 0.6);
     } else {
       this.glass.attenuationDistance = 1.1 + this.hit * 0.9;
       this.glass.roughness = 0.22 - this.hit * 0.06;

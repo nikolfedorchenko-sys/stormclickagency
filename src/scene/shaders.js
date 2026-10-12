@@ -29,8 +29,8 @@ export const bgFragment = /* glsl */ `
     col += vec3(0.1, 0.11, 0.2) * spot * (1.0 + uGlow * 2.0);
 
     col *= 1.0 - 0.5 * dot(p, p);
-    // Кінозерно
-    col += (hash(gl_FragCoord.xy + fract(uTime) * 37.0) - 0.5) * 0.012;
+    // Статичне зерно проти смуг у градієнті (рухоме мерехтить на телефонах)
+    col += (hash(gl_FragCoord.xy) - 0.5) * 0.008;
 
     gl_FragColor = vec4(pow(max(col, 0.0), vec3(2.2)), 1.0);
     #include <colorspace_fragment>
