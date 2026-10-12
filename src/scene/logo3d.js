@@ -8,24 +8,20 @@ import fontData from './unbounded-bold.json';
 const BOLT_PATH = 'M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z';
 const TEXT = 'STORMCLICK';
 
-function boltShape() {
-  const shape = new THREE.Shape();
+function boltPoints() {
   const nums = BOLT_PATH.match(/-?\d+(\.\d+)?/g).map(Number);
+  const pts = [];
   // Висота 140 → 1, вісь Y вгору
-  for (let i = 0; i < nums.length; i += 2) {
-    const x = nums[i] / 140;
-    const y = 1 - nums[i + 1] / 140;
-    if (i === 0) shape.moveTo(x, y);
-    else shape.lineTo(x, y);
-  }
-  shape.closePath();
-  return shape;
+  for (let i = 0; i < nums.length; i += 2) pts.push(new THREE.Vector2(nums[i] / 140, 1 - nums[i + 1] / 140));
+  return pts;
 }
 
 /**
- * Створює суцільний 3D-логотип: блискавка і напис з фасками.
+ * Створює суцільний 3D-логотип: блискавка і напис із широкими округлими фасками,
+ * на яких добре читаються студійні відблиски.
  * layout: 'row' – блискавка ліворуч від напису, 'column' – над ним.
- * Повертає групу шириною 1 (масштабується під екран) і точку вершини блискавки.
+ * Повертає групу шириною 1 (масштабується сценою), вершину блискавки
+ * та точки на контурі блискавки для дрібних розрядів.
  */
 export function createLogo(materials, layout) {
   const font = new FontLoader().parse(fontData);
@@ -34,27 +30,29 @@ export function createLogo(materials, layout) {
   const textGeo = new TextGeometry(TEXT, {
     font,
     size: 1,
-    depth: 0.32,
-    curveSegments: 10,
+    depth: 0.26,
+    curveSegments: 16,
     bevelEnabled: true,
-    bevelThickness: 0.05,
-    bevelSize: 0.035,
-    bevelSegments: 4,
+    bevelThickness: 0.06,
+    bevelSize: 0.045,
+    bevelSegments: 7,
   });
   textGeo.computeBoundingBox();
   const tb = textGeo.boundingBox;
   const textW = tb.max.x - tb.min.x;
   const textH = tb.max.y - tb.min.y;
-  textGeo.translate(-tb.min.x, -tb.min.y, -tb.min.z - 0.16);
+  textGeo.translate(-tb.min.x, -tb.min.y, -(tb.min.z + tb.max.z) / 2);
   const text = new THREE.Mesh(textGeo, materials.text);
 
-  const boltH = layout === 'row' ? textH * 1.55 : textH * 2.4;
-  const boltGeo = new THREE.ExtrudeGeometry(boltShape(), {
-    depth: 0.36 / boltH,
+  const boltH = layout === 'row' ? textH * 1.6 : textH * 2.4;
+  const outline = boltPoints();
+  const boltShape = new THREE.Shape(outline);
+  const boltGeo = new THREE.ExtrudeGeometry(boltShape, {
+    depth: 0.3 / boltH,
     bevelEnabled: true,
-    bevelThickness: 0.06 / boltH,
-    bevelSize: 0.04 / boltH,
-    bevelSegments: 4,
+    bevelThickness: 0.07 / boltH,
+    bevelSize: 0.05 / boltH,
+    bevelSegments: 7,
   });
   boltGeo.scale(boltH, boltH, boltH);
   boltGeo.computeBoundingBox();
@@ -86,8 +84,9 @@ export function createLogo(materials, layout) {
   inner.scale.setScalar(s);
   group.add(inner);
 
-  // Вершина блискавки (точка удару) у локальних координатах групи
-  const tip = new THREE.Vector3(bolt.position.x + (76 / 140) * boltH, bolt.position.y + boltH, 0).multiplyScalar(s);
+  const local = (x, y) => new THREE.Vector3(bolt.position.x + x * boltH - bb.min.x, bolt.position.y + y * boltH - bb.min.y, 0).multiplyScalar(s);
+  const tip = local(76 / 140, 1);
+  const anchors = outline.map((p) => local(p.x, p.y));
 
-  return { group, tip, aspect: totalH / totalW, meshes: [bolt, text] };
+  return { group, tip, anchors, aspect: totalH / totalW, meshes: [bolt, text] };
 }

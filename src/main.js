@@ -98,7 +98,7 @@ function intro(storm) {
     .from('.hero-badge', { autoAlpha: 0, y: 20, duration: 0.8 }, 0.1)
     .from('.hero-title .line > span', { yPercent: 110, duration: 1.1, stagger: 0.1 }, 0.15)
     .from('.hero-subtitle, .hero-actions, .hero-scroll', { autoAlpha: 0, y: 24, duration: 0.9, stagger: 0.08 }, 0.45);
-  if (storm && !reducedMotion) setTimeout(() => storm.strike({ power: 0.9, branches: 6 }), 250);
+  if (storm && !reducedMotion) setTimeout(() => { storm.arc(); storm.arc(); }, 300);
 }
 
 async function boot() {
