@@ -8,10 +8,12 @@ import { bgVertex, bgFragment, boltVertex, boltFragment } from './shaders.js';
 import { createBoltGeometry } from './bolt.js';
 import { createBoltMonolith, createWordmark } from './logo3d.js';
 
+// high – повне скло із заломленням і bloom; mid/low – просте глянцеве скло,
+// прямий рендер без постобробки (надійно на iOS і слабких Android)
 const QUALITY = {
-  high: { bloom: true, dpr: 2, msaa: 4, transmissionScale: 1 },
-  mid: { bloom: true, dpr: 1.5, msaa: 2, transmissionScale: 0.5 },
-  low: { bloom: false, dpr: 1, msaa: 0, transmissionScale: 0.5 },
+  high: { bloom: true, dpr: 2, msaa: 4, transmission: true },
+  mid: { bloom: false, dpr: 1.5, msaa: 0, transmission: false },
+  low: { bloom: false, dpr: 1, msaa: 0, transmission: false },
 };
 
 const CAMERA_Z = 9;
@@ -32,7 +34,6 @@ export class Storm {
     this.renderer.setClearColor(0x000000, 1);
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.0;
-    this.renderer.transmissionResolutionScale = this.quality.transmissionScale;
     this.dpr = Math.min(window.devicePixelRatio || 1, this.quality.dpr);
     this.renderer.setPixelRatio(this.dpr);
 
@@ -92,12 +93,19 @@ export class Storm {
 
   // Справжня студійна карта оточення: саме вона робить скло скляним
   async buildEnvironment() {
-    const { default: url } = await import('@pmndrs/assets/hdri/studio.exr');
-    const exr = await new EXRLoader().loadAsync(url);
     const pmrem = new THREE.PMREMGenerator(this.renderer);
-    this.scene.environment = pmrem.fromEquirectangular(exr).texture;
+    try {
+      const { default: url } = await import('@pmndrs/assets/hdri/studio.exr');
+      const exr = await new EXRLoader().loadAsync(url);
+      this.scene.environment = pmrem.fromEquirectangular(exr).texture;
+      exr.dispose();
+    } catch (err) {
+      // Якщо EXR не прочитався – синтетична кімната, щоб відблиски все одно були
+      console.warn('EXR environment failed, using RoomEnvironment', err);
+      const { RoomEnvironment } = await import('three/examples/jsm/environments/RoomEnvironment.js');
+      this.scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    }
     this.scene.environmentIntensity = 0.9;
-    exr.dispose();
     pmrem.dispose();
 
     // Великий софтбокс зліва-зверху: м'який градієнт на лицьових гранях
@@ -115,21 +123,34 @@ export class Storm {
   }
 
   buildLogo() {
-    // Димчасте скло: світло проходить крізь товщу, але гаситься і синіє в глибині
-    this.glass = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      metalness: 0,
-      roughness: 0.22,
-      transmission: 1,
-      thickness: 1.4,
-      ior: 1.5,
-      attenuationColor: new THREE.Color(0x3c4290),
-      attenuationDistance: 1.1,
-      clearcoat: 1,
-      clearcoatRoughness: 0.04,
-      specularIntensity: 1,
-      envMapIntensity: 1,
-    });
+    // Димчасте скло: світло проходить крізь товщу, але гаситься і синіє в глибині.
+    // Без заломлення – темне глянцеве скло зі світінням зсередини через emissive.
+    this.simpleGlass = !this.quality.transmission;
+    this.glass = this.simpleGlass
+      ? new THREE.MeshPhysicalMaterial({
+        color: 0x0c0e1c,
+        metalness: 0.1,
+        roughness: 0.2,
+        clearcoat: 1,
+        clearcoatRoughness: 0.05,
+        envMapIntensity: 1.2,
+        emissive: new THREE.Color(0x1c2490),
+        emissiveIntensity: 0.2,
+      })
+      : new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        metalness: 0,
+        roughness: 0.22,
+        transmission: 1,
+        thickness: 1.4,
+        ior: 1.5,
+        attenuationColor: new THREE.Color(0x3c4290),
+        attenuationDistance: 1.1,
+        clearcoat: 1,
+        clearcoatRoughness: 0.04,
+        specularIntensity: 1,
+        envMapIntensity: 1,
+      });
 
     this.logoRoot = new THREE.Group();
     const { mesh, spine, tip } = createBoltMonolith(this.glass);
@@ -197,7 +218,7 @@ export class Storm {
         crown: { pos: new THREE.Vector3(0, viewH * 0.12, -1), scale: viewH * 0.3, rotY: 0 },
       }
       : {
-        rest: { pos: new THREE.Vector3(0, viewH * 0.03, 0), scale: this.monolithH, rotY: -0.35 },
+        rest: { pos: new THREE.Vector3(0, viewH * 0.08, 0), scale: this.monolithH, rotY: -0.35 },
         center: { pos: new THREE.Vector3(0, -viewH * 0.17, 0), scale: viewH * 0.34, rotY: 0.3 },
         crown: { pos: new THREE.Vector3(0, viewH * 0.2, -1), scale: viewH * 0.2, rotY: 0 },
       };
@@ -218,6 +239,8 @@ export class Storm {
   }
 
   buildComposer() {
+    // Без bloom композер не потрібен: малюємо прямо на екран
+    if (!this.quality.bloom) return;
     const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
     const target = new THREE.WebGLRenderTarget(size.x, size.y, { type: THREE.HalfFloatType, samples: this.quality.msaa });
     this.composer = new EffectComposer(this.renderer, target);
@@ -312,9 +335,13 @@ export class Storm {
     this.wordmark.visible = wordIn > 0.001;
     this.wordmark.scale.setScalar(this.wordW * (0.9 + 0.1 * wordIn));
     this.wordmark.rotation.x = (1 - wordIn) * 0.5;
-    // Спалах прозорості в момент удару: скло на мить показує розряд цілком
-    this.glass.attenuationDistance = 1.1 + this.hit * 0.9;
-    this.glass.roughness = 0.22 - this.hit * 0.06;
+    // Спалах у момент удару: скло на мить показує розряд цілком
+    if (this.simpleGlass) {
+      this.glass.emissiveIntensity = 0.16 + this.pulse * 0.4 + this.hit * 1.0 + form * 0.12;
+    } else {
+      this.glass.attenuationDistance = 1.1 + this.hit * 0.9;
+      this.glass.roughness = 0.22 - this.hit * 0.06;
+    }
     this.bgUniforms.uSpot.value.set(
       THREE.MathUtils.lerp(this.row ? 0.3 : 0, 0, form),
       THREE.MathUtils.lerp(this.row ? 0 : 0.17, 0.1, burst),
@@ -373,8 +400,6 @@ export class Storm {
       this.dpr = Math.max(1, this.dpr - 0.5);
       this.renderer.setPixelRatio(this.dpr);
       this.resize();
-    } else if (this.renderer.transmissionResolutionScale > 0.5) {
-      this.renderer.transmissionResolutionScale = 0.5;
     } else if (this.bloom) {
       this.composer.removePass(this.bloom);
       this.bloom = null;
@@ -384,7 +409,8 @@ export class Storm {
   }
 
   render() {
-    this.composer.render();
+    if (this.composer) this.composer.render();
+    else this.renderer.render(this.scene, this.camera);
   }
 
   start() {

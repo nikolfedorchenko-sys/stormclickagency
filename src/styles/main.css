@@ -290,6 +290,7 @@ ul { list-style: none; }
   .choices { grid-template-columns: 1fr; }
   .quiz { padding: 22px; }
   .counters { gap: 24px; }
-  .sticky-cta { display: flex; position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 40; box-shadow: 0 8px 24px rgba(0, 0, 0, .4); }
+  .sticky-cta { display: flex; transition: transform 0.4s, opacity 0.4s; position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 40; box-shadow: 0 8px 24px rgba(0, 0, 0, .4); }
+  .in-hero .sticky-cta { opacity: 0; transform: translateY(20px); pointer-events: none; }
   .footer { padding-bottom: 96px; }
 }

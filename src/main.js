@@ -105,6 +105,8 @@ function initHero(storm) {
     onToggle: (self) => {
       if (storm) storm.visible = self.isActive;
       document.getElementById('scene').classList.toggle('is-off', !self.isActive);
+      // Закріплена кнопка на телефоні з'являється лише після першого екрана
+      document.body.classList.toggle('in-hero', self.isActive);
     },
   });
 }
@@ -204,6 +206,7 @@ async function boot() {
     initReveals();
     initTilt();
   }
+  document.body.classList.add('in-hero');
   initHeader();
   initFunnel(document.querySelector('.funnel'), { reducedMotion });
   initChart(document.querySelector('.chart'));
