@@ -6,20 +6,20 @@ import { t, getLang, onLangChange } from './i18n.js';
 const DEMO = {
   uk: [
     [/@|\+?\d{9,}/, 'Дякую! Записав контакт. Команда надішле точний розрахунок протягом години в робочий час.'],
-    [/crm|срм|црм/i, 'CRM під ваш бізнес – від $1 000, готова за кілька днів: клієнти, угоди, задачі, звіти, ролі, інтеграція з сайтом і ботом. Точна ціна залежить від ТЗ. Який у вас бізнес і скільки людей працюватиме в системі?'],
-    [/магазин|shop|товар/i, 'Інтернет-магазин – від $400, 2–4 дні: до 100 товарів, оплата, доставка, адмінка. Скільки товарів плануєте?'],
+    [/crm|срм|црм/i, 'CRM під ваш бізнес – від $1 000, готова за 2–3 дні: клієнти, угоди, задачі, звіти, ролі, інтеграція з сайтом і ботом. Точна ціна залежить від ТЗ. Який у вас бізнес і скільки людей працюватиме в системі?'],
+    [/магазин|shop|товар/i, 'Інтернет-магазин – від $400, 1–2 дні: до 100 товарів, оплата, доставка, адмінка. Скільки товарів плануєте?'],
     [/кав|салон|візитівк|сайт|лендинг/i, 'Сайт для бізнесу – $100, готовий за кілька годин: до 5 екранів, мобільна версія, кнопка в Telegram, хостинг на рік. Якщо є тексти й фото – запустимо сьогодні. Лишите контакт для розрахунку?'],
-    [/бот|telegram|запис/i, 'Telegram-бот для запису чи замовлень – від $150, за 1–2 дні: сценарій, база клієнтів, сповіщення вам. ШІ-асистент, що сам відповідає клієнтам – від $300. Що з цього ближче?'],
-    [/реклам|таргет|трафік/i, 'Запуск Meta або Google Ads – $150 плюс бюджет, старт за 1–2 дні. ШІ готує креативи, ми масштабуємо ті, що дають заявки. Який продукт рекламуємо?'],
+    [/бот|telegram|запис/i, 'Telegram-бот для запису чи замовлень – від $150, готовий за годину: сценарій, база клієнтів, сповіщення вам. ШІ-асистент, що сам відповідає клієнтам – від $300. Що з цього ближче?'],
+    [/реклам|таргет|трафік/i, 'Запуск Meta або Google Ads – $150 плюс бюджет, старт того ж дня. ШІ готує креативи, ми масштабуємо ті, що дають заявки. Який продукт рекламуємо?'],
     [/ціна|кошту|бюджет|скільки|дешев/i, 'Сайт – $100, бот – від $150, ШІ-асистент – від $300, магазин – від $400, CRM – від $1 000. Усе залежить від ТЗ, точну ціну назвемо за годину. Що саме потрібно?'],
   ],
   en: [
     [/@|\+?\d{9,}/, 'Thank you! Contact saved. The team will send an exact quote within an hour during business hours.'],
-    [/crm/i, 'A custom CRM is from $1,000 and ready in a few days: customers, deals, tasks, reports, roles, integrated with your site and bot. The exact price depends on the brief. What is your business and how many people will use it?'],
-    [/store|shop|product/i, 'An online store is from $400, 2–4 days: up to 100 products, payments, delivery, admin panel. How many products do you plan?'],
+    [/crm/i, 'A custom CRM is from $1,000 and ready in 2–3 days: customers, deals, tasks, reports, roles, integrated with your site and bot. The exact price depends on the brief. What is your business and how many people will use it?'],
+    [/store|shop|product/i, 'An online store is from $400, 1–2 days: up to 100 products, payments, delivery, admin panel. How many products do you plan?'],
     [/coffee|salon|site|landing|website/i, 'A business website is $100 and ready in a few hours: up to 5 screens, mobile version, Telegram button, hosting for a year. With copy and photos ready we launch today. Leave a contact for the quote?'],
-    [/bot|telegram|book/i, 'A Telegram bot for booking or orders is from $150, 1–2 days: flow, customer base, notifications. An AI assistant that answers customers itself is from $300. Which is closer?'],
-    [/ads|target|traffic/i, 'A Meta or Google Ads launch is $150 plus budget, live in 1–2 days. AI drafts creatives, we scale the ones that bring leads. What are we promoting?'],
+    [/bot|telegram|book/i, 'A Telegram bot for booking or orders is from $150, ready in an hour: flow, customer base, notifications. An AI assistant that answers customers itself is from $300. Which is closer?'],
+    [/ads|target|traffic/i, 'A Meta or Google Ads launch is $150 plus budget, live the same day. AI drafts creatives, we scale the ones that bring leads. What are we promoting?'],
     [/price|cost|budget|how much|cheap/i, 'Website $100, bot from $150, AI assistant from $300, store from $400, CRM from $1,000. It all depends on the brief; we give an exact price within an hour. What do you need?'],
   ],
 };
