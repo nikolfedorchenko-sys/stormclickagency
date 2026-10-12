@@ -1,26 +1,37 @@
 # StormClick
 
-Сайт-візитівка digital-агенції StormClick. Статичний HTML/CSS/JS без збірки – швидкий для платного трафіку.
+Сайт digital-агенції StormClick. Бриф – у [`docs/brief.md`](docs/brief.md).
+
+## Стек
+
+- [Vite](https://vite.dev) – збірка і dev-сервер
+- [Three.js](https://threejs.org) – 3D-сцена: шторм із частинок, блискавки, хмари (власні шейдери)
+- [GSAP ScrollTrigger](https://gsap.com) + [Lenis](https://lenis.darkroom.engineering) – анімації на скролі і плавний скрол
+- Шрифти Unbounded (заголовки) і Manrope (текст), вбудовані в збірку
 
 ## Структура
 
-- `index.html` – сторінка
-- `assets/css/style.css` – стилі (кольори у змінних `:root`)
-- `assets/js/i18n.js` – тексти українською та англійською
-- `assets/js/config.js` – контакти (Telegram, WhatsApp, email) і адреса для заявок
-- `assets/js/main.js` – перемикач мов, меню, форма
+- `index.html` – розмітка
+- `src/main.js` – запуск: прелоадер, сцена, скрол, мови
+- `src/scene/` – 3D-сцена (`Storm.js`), шейдери, генератор блискавок, логотип із частинок
+- `src/i18n.js` – тексти українською та англійською
+- `src/config.js` – контакти (Telegram, WhatsApp, email)
+- `src/styles/main.css` – стилі
+
+## Команди
+
+```
+npm install
+npm run dev       # локальна розробка
+npm run build     # збірка в dist/
+npm run preview   # перегляд зібраної версії
+```
 
 ## Мова
 
-Перемикач UA/EN у шапці. Мову можна задати посиланням: `?lang=en` або `?lang=uk` (зручно для окремих рекламних кампаній).
+Перемикач UA/EN у шапці. Мову можна задати посиланням: `?lang=en` або `?lang=uk`.
 
-## Заявки
+## Продуктивність
 
-Якщо `formEndpoint` у `config.js` порожній, форма відкриває Telegram з текстом заявки (і копіює його в буфер).
-Для збору заявок вкажіть URL сервісу, що приймає JSON POST (Formspree, Cloudflare Worker з пересиланням у Telegram-бота тощо).
-
-## Локальний запуск
-
-```
-python3 -m http.server 8000
-```
+Якість сцени підлаштовується під пристрій (кількість частинок, роздільність, bloom) і автоматично знижується,
+якщо FPS падає. Для системного налаштування «зменшити анімацію» показується спокійна версія без спалахів.

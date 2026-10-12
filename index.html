@@ -2,139 +2,104 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>StormClick – digital-агенція повного циклу</title>
-  <meta name="description" content="Сайти, реклама, Telegram-боти, автоматизація, SMM і брендинг. Від логотипу до заявок.">
+  <meta name="description" content="Сайти, реклама, автоматизація, SMM і брендинг. Від логотипу до заявок.">
+  <meta name="theme-color" content="#05060b">
   <meta property="og:title" content="StormClick">
   <meta property="og:type" content="website">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M18 2 6 18h8l-2 12 12-16h-8z' fill='%23facc15'/></svg>">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%236d8bff'/><stop offset='1' stop-color='%239b6bff'/></linearGradient></defs><path d='M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z' fill='url(%23g)'/></svg>">
+  <style>
+    /* Критичний стиль прелоадера – показується до завантаження CSS-бандла */
+    html, body { background: #05060b; margin: 0; }
+    .preloader { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #05060b; }
+  </style>
 </head>
 <body>
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader-inner">
+      <svg class="preloader-bolt" viewBox="0 0 100 140" width="64" height="90">
+        <defs>
+          <linearGradient id="bolt-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#6d8bff"/>
+            <stop offset="1" stop-color="#a77bff"/>
+          </linearGradient>
+          <clipPath id="bolt-clip"><rect class="preloader-fill" x="0" y="140" width="100" height="140"/></clipPath>
+        </defs>
+        <path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z" fill="none" stroke="rgba(160,175,255,.35)" stroke-width="2"/>
+        <path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z" fill="url(#bolt-grad)" clip-path="url(#bolt-clip)"/>
+      </svg>
+      <div class="preloader-value">0%</div>
+      <div class="preloader-label" data-i18n="preloader.label">Заряджаємо шторм</div>
+    </div>
+  </div>
+
+  <canvas id="scene" aria-hidden="true"></canvas>
+
   <header class="header">
     <div class="container header-inner">
       <a href="#" class="logo" aria-label="StormClick">
-        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M18 2 6 18h8l-2 12 12-16h-8z"/></svg>
-        StormClick
+        <svg viewBox="0 0 100 140" aria-hidden="true"><path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z"/></svg>
+        <span>StormClick</span>
       </a>
-      <nav class="nav" id="nav">
-        <a href="#services" data-i18n="nav.services">Послуги</a>
-        <a href="#process" data-i18n="nav.process">Як працюємо</a>
-        <a href="#why" data-i18n="nav.why">Чому ми</a>
-        <a href="#contact" data-i18n="nav.contact">Контакти</a>
-      </nav>
       <div class="header-actions">
         <div class="lang-switch" role="group" aria-label="Language">
           <button type="button" data-lang="uk" aria-pressed="true">UA</button>
           <button type="button" data-lang="en" aria-pressed="false">EN</button>
         </div>
-        <a href="#contact" class="btn btn-primary btn-sm hide-mobile" data-i18n="cta.request">Залишити заявку</a>
-        <button type="button" class="nav-toggle" aria-controls="nav" aria-expanded="false" aria-label="Menu">
-          <span></span><span></span>
-        </button>
+        <a href="#" class="btn btn-primary btn-sm" data-link="telegram" target="_blank" rel="noopener" data-i18n="cta.discuss">Обговорити проєкт</a>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="hero">
-      <div class="container">
-        <p class="badge" data-i18n="hero.badge">Україна · Європа · США</p>
-        <h1 data-i18n="hero.title">Від логотипу до заявок – під ключ</h1>
-        <p class="lead" data-i18n="hero.subtitle">Робимо сайти, запускаємо рекламу, автоматизуємо Telegram і соцмережі. Одна команда замість п'яти підрядників.</p>
-        <div class="hero-actions">
-          <a href="#contact" class="btn btn-primary" data-i18n="cta.request">Залишити заявку</a>
-          <a href="#" class="btn btn-ghost" data-link="telegram" target="_blank" rel="noopener" data-i18n="hero.secondary">Написати в Telegram</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="services">
-      <div class="container">
-        <h2 data-i18n="services.title">Що ми робимо</h2>
-        <p class="section-sub" data-i18n="services.subtitle">Беремо окрему задачу або будуємо всю систему залучення клієнтів.</p>
-        <div class="grid grid-3">
-          <article class="card"><span class="card-num">01</span><h3 data-i18n="s1.title">Реклама і трафік</h3><p data-i18n="s1.text"></p></article>
-          <article class="card"><span class="card-num">02</span><h3 data-i18n="s2.title">Сайти і розробка</h3><p data-i18n="s2.text"></p></article>
-          <article class="card"><span class="card-num">03</span><h3 data-i18n="s3.title">Telegram і автоматизація</h3><p data-i18n="s3.text"></p></article>
-          <article class="card"><span class="card-num">04</span><h3 data-i18n="s4.title">SMM і контент</h3><p data-i18n="s4.text"></p></article>
-          <article class="card"><span class="card-num">05</span><h3 data-i18n="s5.title">Брендинг і дизайн</h3><p data-i18n="s5.text"></p></article>
-          <a href="#contact" class="card card-accent"><span class="card-num">+</span><h3 data-i18n="s6.title">Нестандартна задача?</h3><p data-i18n="s6.text"></p></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-alt" id="process">
-      <div class="container">
-        <h2 data-i18n="process.title">Як ми працюємо</h2>
-        <ol class="steps">
-          <li><h3 data-i18n="p1.title"></h3><p data-i18n="p1.text"></p></li>
-          <li><h3 data-i18n="p2.title"></h3><p data-i18n="p2.text"></p></li>
-          <li><h3 data-i18n="p3.title"></h3><p data-i18n="p3.text"></p></li>
-          <li><h3 data-i18n="p4.title"></h3><p data-i18n="p4.text"></p></li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="section" id="why">
-      <div class="container">
-        <h2 data-i18n="why.title">Чому StormClick</h2>
-        <div class="grid grid-2">
-          <div class="feature"><h3 data-i18n="w1.title"></h3><p data-i18n="w1.text"></p></div>
-          <div class="feature"><h3 data-i18n="w2.title"></h3><p data-i18n="w2.text"></p></div>
-          <div class="feature"><h3 data-i18n="w3.title"></h3><p data-i18n="w3.text"></p></div>
-          <div class="feature"><h3 data-i18n="w4.title"></h3><p data-i18n="w4.text"></p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-alt" id="contact">
-      <div class="container contact">
-        <div>
-          <h2 data-i18n="contact.title">Обговоримо ваш проєкт</h2>
-          <p class="section-sub" data-i18n="contact.subtitle"></p>
-          <div class="messengers">
-            <a href="#" class="btn btn-telegram" data-link="telegram" target="_blank" rel="noopener">Telegram</a>
-            <a href="#" class="btn btn-whatsapp" data-link="whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+    <section class="hero" id="hero">
+      <div class="hero-sticky">
+        <div class="stage stage-1">
+          <div class="container">
+            <p class="hero-badge" data-i18n="hero.badge">Digital-агенція · Україна · Європа · США</p>
+            <h1 class="hero-title">
+              <span class="line"><span data-i18n="hero.title1">Від логотипу</span></span>
+              <span class="line"><span class="accent" data-i18n="hero.title2">до заявок</span></span>
+            </h1>
+            <p class="hero-subtitle" data-i18n="hero.subtitle"></p>
+            <div class="hero-actions">
+              <a href="#" class="btn btn-primary" data-link="telegram" target="_blank" rel="noopener" data-i18n="cta.discuss">Обговорити проєкт</a>
+              <a href="#" class="btn btn-ghost" data-link="whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+            </div>
           </div>
-          <p class="email"><a href="#" data-link="email"></a></p>
         </div>
-        <form id="lead-form" class="form">
-          <label><span data-i18n="form.name">Ім'я</span><input name="name" required autocomplete="name"></label>
-          <label><span data-i18n="form.contact">Telegram, WhatsApp або телефон</span><input name="contact" required autocomplete="tel"></label>
-          <label><span data-i18n="form.service">Що потрібно</span>
-            <select name="service">
-              <option value="any" data-i18n="form.service.any">Ще не знаю / кілька послуг</option>
-              <option value="ads" data-i18n="s1.title">Реклама і трафік</option>
-              <option value="web" data-i18n="s2.title">Сайти і розробка</option>
-              <option value="automation" data-i18n="s3.title">Telegram і автоматизація</option>
-              <option value="smm" data-i18n="s4.title">SMM і контент</option>
-              <option value="branding" data-i18n="s5.title">Брендинг і дизайн</option>
-            </select>
-          </label>
-          <label><span data-i18n="form.message">Коротко про задачу</span><textarea name="message" rows="4"></textarea></label>
-          <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <button type="submit" class="btn btn-primary" data-i18n="form.submit">Надіслати заявку</button>
-          <p id="form-status" class="form-status" role="status"></p>
-        </form>
+
+        <div class="stage stage-2" aria-hidden="true">
+          <p class="eyebrow" data-i18n="stage2.eyebrow">Удар блискавки = клік</p>
+          <p class="stage-title" data-i18n="stage2.title">Один удар. Точно в ціль.</p>
+        </div>
+
+        <div class="stage stage-3" aria-hidden="true">
+          <p class="stage-title" data-i18n="stage3.title">5 напрямків. Одна система.</p>
+          <ul class="chips">
+            <li class="chip" data-i18n="service.ads">Реклама і трафік</li>
+            <li class="chip" data-i18n="service.web">Сайти і розробка</li>
+            <li class="chip" data-i18n="service.automation">Telegram і автоматизація</li>
+            <li class="chip" data-i18n="service.smm">SMM і контент</li>
+            <li class="chip" data-i18n="service.branding">Брендинг і дизайн</li>
+          </ul>
+        </div>
+
+        <div class="hero-scroll">
+          <span class="hero-scroll-line"></span>
+          <span data-i18n="hero.scroll">Гортайте, щоб зібрати шторм</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="next">
+      <div class="container">
+        <p data-i18n="next.note">Концепт першого екрана. Далі тут буде блок послуг.</p>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="container footer-inner">
-      <span>© <span id="year"></span> StormClick. <span data-i18n="footer.rights">Усі права захищено.</span></span>
-      <span class="footer-links">
-        <a href="#" data-link="telegram" target="_blank" rel="noopener">Telegram</a>
-        <a href="#" data-link="whatsapp" target="_blank" rel="noopener">WhatsApp</a>
-      </span>
-    </div>
-  </footer>
-
-  <a href="#contact" class="sticky-cta btn btn-primary" data-i18n="cta.request">Залишити заявку</a>
-
-  <script src="assets/js/config.js"></script>
-  <script src="assets/js/i18n.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
