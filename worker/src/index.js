@@ -5,12 +5,12 @@ const MAX_TURNS = 24;
 const MAX_CHARS = 2000;
 
 const SERVICES = {
-  ai: 'ШІ-агенти та автоматизація / AI agents & automation',
-  ads: 'Реклама і трафік / Ads & traffic',
-  web: 'Сайти і розробка / Websites & development',
-  smm: 'SMM і контент / SMM & content',
-  branding: 'Брендинг і дизайн / Branding & design',
-  custom: 'Нестандартна задача / Custom',
+  audit: 'ШІ-аудит бізнесу / AI audit',
+  clients: 'Клієнти та відповіді: ШІ-асистент, секретар, бот запису, відгуки',
+  content: 'Контент і реклама: автопостинг, відео, Meta/Google, Google Business',
+  routine: 'Рутина: автоматизація, міні-CRM, документи, дашборд',
+  build: 'Розробка: сайт, магазин, CRM, переробка сайту',
+  other: 'Інше / Other',
 };
 
 // Стабільна частина системного промпту кешується; мова йде окремим блоком
@@ -20,16 +20,13 @@ Your job: answer questions about the agency briefly and helpfully, help the visi
 
 Positioning: we are a team of professionals working with AI tools, so we deliver below market price and much faster: a Telegram bot in an hour, a website in hours, a CRM in 2–3 days.
 
-Price list (indicative; the final price depends on the brief, always say so):
-- Business website (coffee shop, salon, freelancer): $100, a few hours. Up to 5 screens, mobile, Telegram button, hosting for a year.
-- Landing page for ads: $150, same day.
-- Telegram bot (booking, orders, reminders): from $150, about an hour.
-- AI assistant for a business (site or Telegram, answers 24/7, collects leads): from $300, 1 day.
-- Online store (up to 100 products, payments, delivery, admin): from $400, 1–2 days.
-- Custom CRM (customers, deals, tasks, reports, roles, integrations): from $1,000, 2–3 days.
-- Process automation (reports, auto-posting, service integrations): from $200, same day.
-- Ads launch Meta/Google: $150 + ad budget, same day.
-- Logo + identity: $80, 1 day. Monthly content: $120.
+Price list (indicative; the final price depends on the brief, always say so). Grouped by the client's pain:
+Entry product: AI business audit – $100, 1 day: what to automate, how much it saves, where to start; the $100 counts towards any next project. Offer it when the visitor is unsure.
+1. Can't keep up with customers: AI assistant in Telegram/Instagram/site (answers 24/7 from their data, books, collects leads) – from $300, 1 day; AI phone receptionist – from $400, 2 days; booking bot with reminders (fewer no-shows) – from $150, about an hour; automatic review collection – $100, an hour.
+2. No time for content and ads: social media on autopilot (plan, 12 posts + 8 stories, human-edited) – $120/month; Reels/Shorts with AI, 8 videos – $150/month; Meta/Google ads launch – $150 + ad budget, same day; Google Business Profile + local SEO – $120, 2 days.
+3. Routine eats time: process automation (Sheets, CRM, Telegram, email, payments) – from $200, same day; mini-CRM in Telegram/Sheets – from $250, 1 day; document generator (invoices, acts, contracts, proposals to PDF) – from $150, 1 day; business dashboard – from $250, 1–2 days.
+4. Need a website, store or CRM: business website (up to 5 screens, mobile, Telegram button, hosting for a year) – $100, a few hours; online store (up to 100 products, payments, delivery, admin) – from $400, 1–2 days; custom CRM (customers, deals, tasks, reports, roles, integrations) – from $1,000, 2–3 days; existing site that doesn't sell: audit + conversion rework – $150, 1 day.
+Also: logo + identity – $80; presentation or proposal – $60; landing page for ads – $150.
 - Small edits are free for a month after launch. An exact quote is free, within an hour during business hours.
 - Communication: Ukrainian and English; Telegram and WhatsApp; clients in Ukraine, Europe, USA.
 - The agency is new: say honestly that public case studies are coming and offer a free estimate instead of inventing results. Never invent numbers, clients or guarantees.

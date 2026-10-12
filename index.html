@@ -86,18 +86,13 @@
     <section class="services" id="services">
       <div class="container">
         <div class="services-head">
-          <p class="eyebrow" data-i18n="services.eyebrow">Послуги</p>
+          <p class="eyebrow" data-i18n="services.eyebrow"></p>
           <h2 class="section-title" data-i18n="services.title"></h2>
           <p class="section-text" data-i18n="services.note"></p>
         </div>
-        <div class="services-grid">
-          <article class="card" data-tilt><div class="card-top"><span class="card-num">01</span><span class="card-time" data-i18n="s1.time"></span></div><h3 data-i18n="s1.title"></h3><p data-i18n="s1.text"></p><div class="card-foot"><b class="card-price" data-i18n="s1.price"></b><span class="card-tags" data-i18n="s1.tags"></span></div></article>
-          <article class="card" data-tilt><div class="card-top"><span class="card-num">02</span><span class="card-time" data-i18n="s2.time"></span></div><h3 data-i18n="s2.title"></h3><p data-i18n="s2.text"></p><div class="card-foot"><b class="card-price" data-i18n="s2.price"></b><span class="card-tags" data-i18n="s2.tags"></span></div></article>
-          <article class="card" data-tilt><div class="card-top"><span class="card-num">03</span><span class="card-time" data-i18n="s3.time"></span></div><h3 data-i18n="s3.title"></h3><p data-i18n="s3.text"></p><div class="card-foot"><b class="card-price" data-i18n="s3.price"></b><span class="card-tags" data-i18n="s3.tags"></span></div></article>
-          <article class="card" data-tilt><div class="card-top"><span class="card-num">04</span><span class="card-time" data-i18n="s4.time"></span></div><h3 data-i18n="s4.title"></h3><p data-i18n="s4.text"></p><div class="card-foot"><b class="card-price" data-i18n="s4.price"></b><span class="card-tags" data-i18n="s4.tags"></span></div></article>
-          <article class="card" data-tilt><div class="card-top"><span class="card-num">05</span><span class="card-time" data-i18n="s5.time"></span></div><h3 data-i18n="s5.title"></h3><p data-i18n="s5.text"></p><div class="card-foot"><b class="card-price" data-i18n="s5.price"></b><span class="card-tags" data-i18n="s5.tags"></span></div></article>
-          <a href="#contact" class="card card-accent" data-tilt><div class="card-top"><span class="card-num">+</span></div><h3 data-i18n="s6.title"></h3><p data-i18n="s6.text"></p><span class="card-link" data-i18n="s6.cta"></span></a>
-        </div>
+        <div class="entry" id="entry"></div>
+        <div class="pains" id="pains"></div>
+        <p class="extras" id="extras"></p>
       </div>
     </section>
 
@@ -273,13 +268,8 @@
           <div class="quiz-progress"><span class="quiz-step"><span data-i18n="quiz.step"></span> <b class="quiz-current">1</b> <span data-i18n="quiz.of"></span> 4</span><span class="quiz-bar"><i></i></span></div>
           <fieldset class="quiz-pane" data-pane="0">
             <legend data-i18n="quiz.q1"></legend>
-            <div class="choices">
-              <label><input type="radio" name="service" value="ads" required><span data-i18n="s1.title"></span></label>
-              <label><input type="radio" name="service" value="web"><span data-i18n="s2.title"></span></label>
-              <label><input type="radio" name="service" value="automation"><span data-i18n="s3.title"></span></label>
-              <label><input type="radio" name="service" value="smm"><span data-i18n="s4.title"></span></label>
-              <label><input type="radio" name="service" value="branding"><span data-i18n="s5.title"></span></label>
-              <label><input type="radio" name="service" value="custom"><span data-i18n="s6.title"></span></label>
+            <div class="choices choices-service">
+              <!-- варіанти заповнює quiz.js із pricing.js -->
             </div>
           </fieldset>
           <fieldset class="quiz-pane" data-pane="1" hidden>

@@ -14,6 +14,7 @@ import { initFunnel } from './funnel.js';
 import { initChart } from './chart.js';
 import { initQuiz } from './quiz.js';
 import { initAssistant } from './assistant.js';
+import { initServices } from './services.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -73,7 +74,8 @@ function initReveals() {
 // 3D-нахил карток за курсором
 function initTilt() {
   if (!matchMedia('(pointer: fine)').matches) return;
-  document.querySelectorAll('[data-tilt]').forEach((card) => {
+  document.querySelectorAll('[data-tilt]:not([data-tilt-ready])').forEach((card) => {
+    card.dataset.tiltReady = '1';
     card.addEventListener('pointermove', (e) => {
       const r = card.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
@@ -136,8 +138,11 @@ async function boot() {
   }
   document.body.classList.add('in-hero');
   initHeader();
+  document.addEventListener('services:rendered', () => { initTilt(); ScrollTrigger.refresh(); });
+  initTilt();
   initFunnel(document.querySelector('.funnel'), { reducedMotion });
   initChart(document.querySelector('.chart'));
+  initServices();
   initQuiz(document.getElementById('quiz'));
   initAssistant(document.getElementById('assistant'));
 

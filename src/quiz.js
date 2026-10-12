@@ -1,5 +1,6 @@
 import { CONFIG } from './config.js';
-import { t } from './i18n.js';
+import { t, getLang, onLangChange } from './i18n.js';
+import { PAINS, ENTRY } from './pricing.js';
 
 // Квіз-заявка: послуга → бюджет → терміни → контакт. Поки немає сервера,
 // заявка відкривається готовим повідомленням у Telegram.
@@ -12,6 +13,31 @@ export function initQuiz(form) {
   const bar = form.querySelector('.quiz-bar i');
   const current = form.querySelector('.quiz-current');
   let step = 0;
+
+  // Варіанти першого кроку: вхідний продукт + болі (деталізацію уточнить команда)
+  const choices = form.querySelector('.choices-service');
+  const renderChoices = () => {
+    const lang = getLang();
+    const opts = [
+      { id: 'audit', label: ENTRY[lang][0] },
+      ...PAINS.map((p) => ({ id: p.id, label: p[lang].pain })),
+      { id: 'other', label: t('quiz.other') },
+    ];
+    choices.innerHTML = opts.map((o, i) => `<label><input type="radio" name="service" value="${o.id}"${i === 0 ? ' required' : ''}><span>${o.label}</span></label>`).join('');
+    choices.querySelectorAll('input').forEach((r) => r.addEventListener('change', () => setTimeout(() => go(1), 180)));
+  };
+  renderChoices();
+  onLangChange(renderChoices);
+
+  // Клік по послузі на сайті: одразу відмічаємо відповідний біль у квізі
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-service]');
+    if (!link) return;
+    const id = link.dataset.service;
+    const painId = id === 'audit' ? 'audit' : PAINS.find((p) => p.items.some((it) => it.id === id))?.id;
+    const radio = choices.querySelector(`input[value="${painId}"]`);
+    if (radio) { radio.checked = true; step = 1; show(); }
+  });
 
   const show = () => {
     panes.forEach((p, i) => { p.hidden = i !== step; });
@@ -44,7 +70,7 @@ export function initQuiz(form) {
   back.addEventListener('click', () => go(-1));
   next.addEventListener('click', () => go(1));
   // Вибір варіанта одразу веде далі
-  form.querySelectorAll('input[type=radio]').forEach((r) => r.addEventListener('change', () => setTimeout(() => go(1), 180)));
+  form.querySelectorAll('input[type=radio]:not([name=service])').forEach((r) => r.addEventListener('change', () => setTimeout(() => go(1), 180)));
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
