@@ -9,33 +9,9 @@
   <meta property="og:title" content="StormClick">
   <meta property="og:type" content="website">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%236d8bff'/><stop offset='1' stop-color='%239b6bff'/></linearGradient></defs><path d='M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z' fill='url(%23g)'/></svg>">
-  <style>
-    /* Критичний стиль прелоадера – показується до завантаження CSS-бандла */
-    html, body { background: #05060b; margin: 0; }
-    .preloader { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #05060b; }
-  </style>
+  <style>html, body { background: #0a0b10; margin: 0; }</style>
 </head>
 <body>
-  <div class="preloader" aria-hidden="true">
-    <div class="preloader-inner">
-      <svg class="preloader-bolt" viewBox="0 0 100 140" width="64" height="90">
-        <defs>
-          <linearGradient id="bolt-grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#6d8bff"/>
-            <stop offset="1" stop-color="#a77bff"/>
-          </linearGradient>
-          <clipPath id="bolt-clip"><rect class="preloader-fill" x="0" y="140" width="100" height="140"/></clipPath>
-        </defs>
-        <path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z" fill="none" stroke="rgba(160,175,255,.35)" stroke-width="2"/>
-        <path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z" fill="url(#bolt-grad)" clip-path="url(#bolt-clip)"/>
-      </svg>
-      <div class="preloader-value">0%</div>
-      <div class="preloader-label" data-i18n="preloader.label">Заряджаємо шторм</div>
-    </div>
-  </div>
-
-  <canvas id="scene" aria-hidden="true"></canvas>
-
   <header class="header">
     <div class="container header-inner">
       <a href="#" class="logo" aria-label="StormClick">
@@ -62,41 +38,58 @@
   <main>
     <!-- Перший екран: скляний моноліт, удар, напис -->
     <section class="hero" id="hero">
-      <div class="hero-sticky">
-        <div class="stage stage-1">
-          <div class="container">
-            <p class="hero-badge" data-i18n="hero.badge">Digital-агенція · Україна · Європа · США</p>
-            <h1 class="hero-title">
-              <span class="line"><span data-i18n="hero.title1">Від логотипу</span></span>
-              <span class="line"><span class="accent" data-i18n="hero.title2">до заявок</span></span>
-            </h1>
-            <p class="hero-subtitle" data-i18n="hero.subtitle"></p>
-            <div class="hero-actions">
-              <a href="#" class="btn btn-primary" data-assistant="" data-i18n="hero.ask">Спитати ШІ-асистента</a>
-              <a href="#contact" class="btn btn-ghost" data-i18n="cta.discuss">Обговорити проєкт</a>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <a href="#" class="hero-tag" data-assistant=""><b>NEW</b><span data-i18n="hero.badge"></span></a>
+        <h1 class="hero-title">
+          <span class="line"><span data-i18n="hero.title1"></span></span>
+          <span class="line"><span class="accent" data-i18n="hero.title2"></span></span>
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero.subtitle"></p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary" data-i18n="cta.launch"></a>
+          <a href="#" class="btn btn-ghost" data-assistant="" data-i18n="hero.ask"></a>
+        </div>
+      </div>
+      <!-- Панель: ШІ у дії -->
+      <div class="container">
+        <div class="panel">
+          <div class="pcard pcard-chat">
+            <h4><span data-i18n="assistant.label"></span><em data-i18n="panel.online"></em></h4>
+            <div class="pmsg in" data-i18n="panel.m1"></div>
+            <div class="pmsg out" data-i18n="panel.m2"></div>
+            <div class="pmsg in">@olena_k</div>
+          </div>
+          <div class="pcard">
+            <h4><span data-i18n="panel.ads"></span><em>auto</em></h4>
+            <div class="kpi">
+              <div><b data-count="384">0</b><span data-i18n="panel.leads"></span><small>+42%</small></div>
+              <div><b>$3.1</b><span data-i18n="panel.cpl"></span><small>−27%</small></div>
+            </div>
+            <div class="spark"><i style="--h:30%"></i><i style="--h:38%"></i><i style="--h:34%"></i><i style="--h:52%"></i><i style="--h:60%"></i><i style="--h:58%"></i><i style="--h:74%"></i><i style="--h:88%"></i><i style="--h:100%"></i></div>
+            <p class="demo-note" data-i18n="traffic.demo"></p>
+          </div>
+          <div class="pcard">
+            <h4><span data-i18n="panel.content"></span><em data-i18n="panel.done"></em></h4>
+            <div class="plist">
+              <div><span data-i18n="panel.c1"></span><i data-i18n="panel.who1"></i></div>
+              <div><span data-i18n="panel.c2"></span><i data-i18n="panel.who2"></i></div>
+              <div><span data-i18n="panel.c3"></span><i data-i18n="panel.who3"></i></div>
+              <div><span data-i18n="panel.c4"></span><i data-i18n="panel.who4"></i></div>
             </div>
           </div>
         </div>
-        <div class="stage stage-2" aria-hidden="true">
-          <p class="eyebrow" data-i18n="stage2.eyebrow">Удар блискавки = клік</p>
-          <p class="stage-title" data-i18n="stage2.title">Один удар. Точно в ціль.</p>
-        </div>
-        <div class="stage stage-3" aria-hidden="true">
-          <p class="eyebrow" data-i18n="stage3.eyebrow">Повний цикл</p>
-          <p class="stage-title" data-i18n="stage3.title">5 напрямків. Одна система.</p>
-        </div>
-        <div class="hero-scroll"><span class="hero-scroll-line"></span><span data-i18n="hero.scroll">Гортайте</span></div>
       </div>
     </section>
 
     <!-- Послуги: горизонтальна стрічка карток -->
     <section class="services" id="services">
-      <div class="services-pin">
-        <div class="container services-head">
+      <div class="container">
+        <div class="services-head">
           <p class="eyebrow" data-i18n="services.eyebrow">Послуги</p>
           <h2 class="section-title" data-i18n="services.title">Беремо окрему задачу або будуємо всю систему залучення клієнтів</h2>
         </div>
-        <div class="services-track">
+        <div class="services-grid">
           <article class="card" data-tilt><span class="card-num">01</span><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg></div><h3 data-i18n="s1.title"></h3><p data-i18n="s1.text"></p><span class="card-tags" data-i18n="s1.tags"></span></article>
           <article class="card" data-tilt><span class="card-num">02</span><div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div><h3 data-i18n="s2.title"></h3><p data-i18n="s2.text"></p><span class="card-tags" data-i18n="s2.tags"></span></article>
           <article class="card" data-tilt><span class="card-num">03</span><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 4 3 11l7 2 2 7 9-16Z"/></svg></div><h3 data-i18n="s3.title"></h3><p data-i18n="s3.text"></p><span class="card-tags" data-i18n="s3.tags"></span></article>
@@ -104,7 +97,6 @@
           <article class="card" data-tilt><span class="card-num">05</span><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 3 4 9l8 12 8-12-8-6Z"/><path d="M4 9h16"/></svg></div><h3 data-i18n="s5.title"></h3><p data-i18n="s5.text"></p><span class="card-tags" data-i18n="s5.tags"></span></article>
           <a href="#contact" class="card card-accent" data-tilt><span class="card-num">+</span><h3 data-i18n="s6.title"></h3><p data-i18n="s6.text"></p><span class="card-link" data-i18n="s6.cta"></span></a>
         </div>
-        <p class="services-hint" data-i18n="services.hint">Гортайте далі</p>
       </div>
     </section>
 

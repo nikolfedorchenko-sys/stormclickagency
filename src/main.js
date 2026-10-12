@@ -10,7 +10,6 @@ import Lenis from 'lenis';
 import { CONFIG } from './config.js';
 import { initI18n } from './i18n.js';
 import { initCursor } from './cursor.js';
-import { Preloader } from './preloader.js';
 import { initFunnel } from './funnel.js';
 import { initChart } from './chart.js';
 import { initQuiz } from './quiz.js';
@@ -20,16 +19,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isMobile = () => innerWidth < 720;
-
-function detectTier() {
-  const coarse = matchMedia('(pointer: coarse)').matches;
-  const small = innerWidth < 768;
-  const memory = navigator.deviceMemory || 8;
-  const cores = navigator.hardwareConcurrency || 8;
-  if (memory <= 2 || cores <= 2) return 'low';
-  if (coarse || small || memory <= 4 || cores <= 4) return 'mid';
-  return 'high';
-}
 
 function initLinks() {
   document.querySelectorAll('[data-link=telegram]').forEach((a) => { a.href = `https://t.me/${CONFIG.telegram}`; });
@@ -48,23 +37,6 @@ function initMenu() {
   nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => nav.classList.remove('open')));
 }
 
-async function initScene(preloader) {
-  const canvas = document.getElementById('scene');
-  try {
-    const { Storm } = await preloader.track(import('./scene/Storm.js'), 0.3);
-    const storm = new Storm(canvas, { tier: detectTier(), reducedMotion });
-    await preloader.track(storm.init(), 0.35);
-    storm.update();
-    storm.render();
-    preloader.add(0.15);
-    return storm;
-  } catch (err) {
-    console.error(err);
-    document.documentElement.classList.add('no-webgl');
-    return null;
-  }
-}
-
 function initSmoothScroll() {
   const lenis = new Lenis({ lerp: 0.085 });
   lenis.on('scroll', ScrollTrigger.update);
@@ -78,60 +50,6 @@ function initSmoothScroll() {
     lenis.scrollTo(target, { offset: -60 });
   }));
   return lenis;
-}
-
-function initHero(storm) {
-  const hero = document.getElementById('hero');
-  ScrollTrigger.create({
-    trigger: hero,
-    start: 'top top',
-    end: 'bottom bottom',
-    onUpdate: (self) => storm?.setProgress(self.progress),
-  });
-
-  // Тексти етапів синхронізовані зі сценою: 0.45–0.65 удар, 0.75+ напис і послуги
-  gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom bottom', scrub: 0.6 } })
-    .to('.hero-scroll', { autoAlpha: 0, duration: 0.04 }, 0.01)
-    .to('.stage-1', { autoAlpha: 0, y: -60, duration: 0.12, ease: 'power1.in' }, 0.05)
-    .fromTo('.stage-2', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.5)
-    .to('.stage-2', { autoAlpha: 0, y: -40, duration: 0.08 }, 0.66)
-    .fromTo('.stage-3', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.1 }, 0.84)
-    .set({}, {}, 1);
-
-  // Сцена не рендериться, коли перший екран далеко позаду
-  ScrollTrigger.create({
-    trigger: hero,
-    start: 'top bottom',
-    end: 'bottom+=60% top',
-    onToggle: (self) => {
-      if (storm) storm.visible = self.isActive;
-      document.getElementById('scene').classList.toggle('is-off', !self.isActive);
-      // Закріплена кнопка на телефоні з'являється лише після першого екрана
-      document.body.classList.toggle('in-hero', self.isActive);
-    },
-  });
-}
-
-function initServices() {
-  const section = document.querySelector('.services');
-  const track = document.querySelector('.services-track');
-  const pin = document.querySelector('.services-pin');
-  if (isMobile()) return; // На телефоні картки йдуть стовпчиком
-  const distance = () => track.scrollWidth - innerWidth + parseFloat(getComputedStyle(track).paddingLeft) * 2;
-  gsap.to(track, {
-    x: () => -distance(),
-    ease: 'none',
-    scrollTrigger: {
-      trigger: section,
-      start: 'top top',
-      end: () => `+=${distance()}`,
-      pin,
-      scrub: 0.8,
-      invalidateOnRefresh: true,
-      anticipatePin: 1,
-    },
-  });
-  gsap.to('.services-hint', { autoAlpha: 0, scrollTrigger: { trigger: section, start: 'top+=200 top', end: '+=200', scrub: true } });
 }
 
 function initReveals() {
@@ -179,13 +97,26 @@ function initHeader() {
   });
 }
 
-function intro(storm) {
+function intro() {
+  if (reducedMotion) return;
   gsap.timeline({ defaults: { ease: 'power3.out' } })
     .from('.header', { autoAlpha: 0, y: -20, duration: 0.8 }, 0)
-    .from('.hero-badge', { autoAlpha: 0, y: 20, duration: 0.8 }, 0.1)
-    .from('.hero-title .line > span', { yPercent: 110, duration: 1.1, stagger: 0.1 }, 0.15)
-    .from('.hero-subtitle, .hero-actions, .hero-scroll', { autoAlpha: 0, y: 24, duration: 0.9, stagger: 0.08 }, 0.45);
-  if (storm && !reducedMotion) setTimeout(() => storm.arc(), 600);
+    .from('.hero-tag', { autoAlpha: 0, y: 16, duration: 0.7 }, 0.1)
+    .from('.hero-title .line > span', { yPercent: 110, duration: 1, stagger: 0.1 }, 0.15)
+    .from('.hero-subtitle, .hero-actions', { autoAlpha: 0, y: 20, duration: 0.8, stagger: 0.08 }, 0.4)
+    .from('.panel', { autoAlpha: 0, y: 60, duration: 1.1 }, 0.55)
+    .from('.pcard', { autoAlpha: 0, y: 24, duration: 0.8, stagger: 0.12 }, 0.8)
+    .from('.pmsg', { autoAlpha: 0, y: 10, duration: 0.5, stagger: 0.35 }, 1.1)
+    .add(() => document.querySelector('.panel').classList.add('is-live'), 1.2);
+  // Панель ледь зміщується за курсором
+  if (matchMedia('(pointer: fine)').matches) {
+    const panel = document.querySelector('.panel');
+    window.addEventListener('pointermove', (e) => {
+      const x = (e.clientX / innerWidth - 0.5) * 6;
+      const y = (e.clientY / innerHeight - 0.5) * 4;
+      gsap.to(panel, { rotateY: x, rotateX: -y, duration: 1.2, ease: 'power2.out' });
+    });
+  }
 }
 
 async function boot() {
@@ -193,17 +124,13 @@ async function boot() {
   initLinks();
   initMenu();
   initCursor({ reducedMotion });
-  const preloader = new Preloader(document.querySelector('.preloader'));
-  preloader.track(document.fonts.ready, 0.2);
-  const storm = await initScene(preloader);
+  await document.fonts.ready;
 
   if (reducedMotion) {
     document.documentElement.classList.add('reduced-motion');
     document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
   } else {
     initSmoothScroll();
-    initHero(storm);
-    initServices();
     initReveals();
     initTilt();
   }
@@ -214,9 +141,7 @@ async function boot() {
   initQuiz(document.getElementById('quiz'));
   initAssistant(document.getElementById('assistant'));
 
-  storm?.start();
-  await preloader.finish();
-  intro(storm);
+  intro();
   ScrollTrigger.refresh();
 }
 
