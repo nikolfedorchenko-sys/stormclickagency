@@ -72,8 +72,8 @@
             </h1>
             <p class="hero-subtitle" data-i18n="hero.subtitle"></p>
             <div class="hero-actions">
-              <a href="#contact" class="btn btn-primary" data-i18n="cta.discuss">Обговорити проєкт</a>
-              <a href="#" class="btn btn-ghost" data-link="telegram" target="_blank" rel="noopener">Telegram</a>
+              <a href="#" class="btn btn-primary" data-assistant="" data-i18n="hero.ask">Спитати ШІ-асистента</a>
+              <a href="#contact" class="btn btn-ghost" data-i18n="cta.discuss">Обговорити проєкт</a>
             </div>
           </div>
         </div>
@@ -105,6 +105,28 @@
           <a href="#contact" class="card card-accent" data-tilt><span class="card-num">+</span><h3 data-i18n="s6.title"></h3><p data-i18n="s6.text"></p><span class="card-link" data-i18n="s6.cta"></span></a>
         </div>
         <p class="services-hint" data-i18n="services.hint">Гортайте далі</p>
+      </div>
+    </section>
+
+    <!-- ШІ – головний козир -->
+    <section class="section ai" id="ai">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="ai.eyebrow"></p>
+          <h2 class="section-title" data-i18n="ai.title"></h2>
+          <p class="section-text" data-i18n="ai.text"></p>
+        </div>
+        <div class="ai-grid">
+          <article class="ai-card reveal" data-tilt><span class="ai-num">01</span><h3 data-i18n="ai1.title"></h3><p data-i18n="ai1.text"></p></article>
+          <article class="ai-card reveal" data-tilt><span class="ai-num">02</span><h3 data-i18n="ai2.title"></h3><p data-i18n="ai2.text"></p></article>
+          <article class="ai-card reveal" data-tilt><span class="ai-num">03</span><h3 data-i18n="ai3.title"></h3><p data-i18n="ai3.text"></p></article>
+          <article class="ai-card reveal" data-tilt><span class="ai-num">04</span><h3 data-i18n="ai4.title"></h3><p data-i18n="ai4.text"></p></article>
+        </div>
+        <div class="ai-try reveal">
+          <div class="ai-try-pulse" aria-hidden="true"><i></i><i></i><i></i></div>
+          <p data-i18n="ai.try"></p>
+          <a href="#" class="btn btn-primary" data-assistant="" data-i18n="ai.cta"></a>
+        </div>
       </div>
     </section>
 
@@ -236,6 +258,7 @@
           <details><summary data-i18n="q3.q"></summary><p data-i18n="q3.a"></p></details>
           <details><summary data-i18n="q4.q"></summary><p data-i18n="q4.a"></p></details>
           <details><summary data-i18n="q5.q"></summary><p data-i18n="q5.a"></p></details>
+          <details><summary data-i18n="q6.q"></summary><p data-i18n="q6.a"></p></details>
         </div>
       </div>
     </section>
@@ -312,6 +335,26 @@
       </span>
     </div>
   </footer>
+
+  <div class="assistant" id="assistant">
+    <button type="button" class="assistant-toggle" aria-label="AI assistant">
+      <svg viewBox="0 0 100 140" aria-hidden="true"><path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z"/></svg>
+      <span data-i18n="assistant.label"></span>
+    </button>
+    <div class="assistant-panel" role="dialog" aria-label="AI assistant">
+      <div class="assistant-head">
+        <span class="assistant-title"><i></i><span data-i18n="assistant.label"></span></span>
+        <span class="assistant-badge" data-i18n="assistant.demo"></span>
+        <button type="button" class="assistant-close" aria-label="Close">×</button>
+      </div>
+      <div class="assistant-log"></div>
+      <div class="assistant-chips"></div>
+      <form class="assistant-form">
+        <input type="text" id="assistant-input" autocomplete="off" data-i18n-placeholder="assistant.placeholder">
+        <button type="submit" class="btn btn-primary btn-sm" data-i18n="assistant.send"></button>
+      </form>
+    </div>
+  </div>
 
   <a href="#contact" class="sticky-cta btn btn-primary" data-i18n="cta.quote"></a>
 

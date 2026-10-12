@@ -63,7 +63,20 @@ export function initQuiz(form) {
       data.message ? `${t('quiz.comment')}: ${data.message}` : '',
     ].filter(Boolean);
     const text = lines.join('\n');
-    // window.open до будь-якого await, інакше браузер може заблокувати вікно
+    if (CONFIG.apiBase) {
+      // Заявка летить у Telegram-бот і на email через Worker
+      submit.disabled = true;
+      fetch(`${CONFIG.apiBase}/lead`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, service: label('service'), budget: label('budget'), timing: label('timing') }),
+      })
+        .then((r) => { if (!r.ok) throw new Error(r.status); status.textContent = t('quiz.sent'); form.reset(); })
+        .catch(() => { status.textContent = t('assistant.error'); })
+        .finally(() => { submit.disabled = false; });
+      return;
+    }
+    // Без Worker: відкриваємо Telegram із готовим текстом заявки
     window.open(`https://t.me/${CONFIG.telegram}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
     navigator.clipboard?.writeText(text).catch(() => {});
     status.textContent = t('quiz.success');

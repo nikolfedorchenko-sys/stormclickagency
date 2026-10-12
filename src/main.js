@@ -14,6 +14,7 @@ import { Preloader } from './preloader.js';
 import { initFunnel } from './funnel.js';
 import { initChart } from './chart.js';
 import { initQuiz } from './quiz.js';
+import { initAssistant } from './assistant.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -211,6 +212,7 @@ async function boot() {
   initFunnel(document.querySelector('.funnel'), { reducedMotion });
   initChart(document.querySelector('.chart'));
   initQuiz(document.getElementById('quiz'));
+  initAssistant(document.getElementById('assistant'));
 
   storm?.start();
   await preloader.finish();

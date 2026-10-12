@@ -18,6 +18,12 @@
 - `src/config.js` – контакти (Telegram, WhatsApp, email)
 - `src/styles/main.css` – стилі
 
+## ШІ-асистент і заявки
+
+Чат на сайті працює через Cloudflare Worker у папці `worker/` (Claude, ключ лишається на сервері).
+Поки в `src/config.js` не вказано `apiBase`, асистент працює в демо-режимі зі сценарними відповідями,
+а квіз відкриває Telegram із текстом заявки. Інструкція з деплою – `worker/README.md`.
+
 ## Команди
 
 ```
