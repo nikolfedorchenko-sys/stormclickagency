@@ -1,92 +1,98 @@
-# Промпти для генерації образу NOVA
+# Промпти для генерації образу DAN
 
-Правило номер один: спочатку згенерувати **character sheet** (референсний сет), далі всі кадри робити з референсом обличчя і фіксованим seed. Три незмінні маркери: гетерохромія (ліве око крижано-блакитне, праве бурштинове), коротке платинове волосся, сережка-блискавка в лівому вусі.
+Головне правило: обличчя Дана ніколи не описуємо словами. Ідентичність дає навчений Soul-персонаж (`soul_id: 60a19c9a-cbef-4c9f-ad86-8f863f562e24`, модель `soul_2`) або елемент-референс для інших моделей. У промпті описуємо лише кадр, одяг, світло, емоцію та фон.
 
-## Опис персонажа (вставляти в будь-який промпт)
+## Як підставляти ідентичність
 
-```
-NOVA, a photorealistic AI news anchor, woman in her late 20s, tall athletic build,
-oval face with high cheekbones, almond-shaped eyes with heterochromia (left eye ice-blue,
-right eye amber), short sleek platinum-blonde pixie-bob haircut, light skin with natural
-texture, minimal makeup, a single small silver lightning-bolt earring in the left ear,
-a faint glowing electric-blue circuit pattern on her left temple, wearing a fitted
-near-black tailored jacket with thin electric-blue piping over a plain dark top.
-Confident, calm, slightly ironic expression.
-```
+| Інструмент | Як передати обличчя |
+|---|---|
+| Higgsfield Soul 2.0 / Soul Cinema | `model: soul_2` (або `soul_cinematic`) + `soul_id`. У промпті – «the man» |
+| Nano Banana Pro / GPT Image 2 / Seedream / Cinema Studio | елемент `<<<53afff07-bf92-46db-9e2d-dffad567f867>>>` у тексті промпта |
+| Kling 3.0 (відео) | затверджений студійний кадр як `start_image` + той самий елемент |
+| Інші генератори (Midjourney, Flux) | character reference / image prompt із затвердженого студійного кадру, вага референсу максимальна |
 
-## 1. Character sheet (референс)
+Сталі елементи одягу в кожному промпті:
 
 ```
-Character reference sheet of [ОПИС ПЕРСОНАЖА]. Four views on one image: front view,
-three-quarter view, profile view, and an extreme close-up of both eyes showing the
-heterochromia. Neutral dark grey studio background, soft even studio lighting,
-photorealistic, 8k, consistent identity across all views, no text.
---ar 16:9 --style raw
+wearing a fitted near-black tailored jacket with thin electric-blue piping over a plain dark
+crew-neck top, a small silver lightning-bolt pin on the left lapel
 ```
 
-Negative (для моделей із негативним промптом): `cartoon, anime, plastic skin, oversaturated, extra earrings, long hair, both eyes same color, logo, text, watermark, cleavage`.
-
-## 2. Аватар каналу (крупний план)
+## 1. Базовий студійний кадр (щоденний випуск)
 
 ```
-Close-up portrait of [ОПИС ПЕРСОНАЖА], looking straight into the camera, slight knowing
-half-smile, both different-colored eyes clearly visible, dark studio background with soft
-blue and violet rim light, shallow depth of field, photorealistic, editorial quality.
---ar 1:1
+Medium shot (chest up) of the man presenting news in a futuristic virtual newsroom, camera
+slightly below eye level, looking straight into the lens, calm confident slightly ironic
+expression, [ОДЯГ]. Background: dark studio with blurred vertical streams of data in electric
+blue (#00E5FF) and violet (#7C3AED), subtle depth, faint lightning flicker at the edges.
+Cold key light from the left, violet rim light from the back right. Empty space in the lower
+third for a name caption. Photorealistic, broadcast quality, natural skin texture.
 ```
+Формат: 16:9, якість 2k. Для Shorts – 9:16 і «medium close-up (shoulders up)».
+
+## 2. Аватар каналу
+
+```
+Close-up portrait of the man looking straight into the camera, slight knowing half-smile,
+[ОДЯГ], dark studio background with soft blue and violet rim light, shallow depth of field,
+photorealistic, editorial quality.
+```
+Формат: 1:1.
 
 ## 3. Банер каналу
 
 ```
-Wide cinematic shot of [ОПИС ПЕРСОНАЖА] standing in a futuristic dark newsroom, positioned
-on the right third of the frame, three-quarter view, arms relaxed. Background: near-black
-space with slow vertical streams of blurred data and text in electric blue (#00E5FF) and
-violet (#7C3AED), faint lightning flickers at the edges. Empty space on the left for text.
-Cold key light from the left, violet rim light from the back right. Photorealistic.
---ar 16:9
+Wide cinematic shot of the man standing in a futuristic dark newsroom, positioned on the
+right third of the frame, three-quarter view, arms relaxed, [ОДЯГ]. Background: near-black
+space with slow vertical streams of blurred data and text in electric blue and violet, faint
+lightning flickers at the edges. Empty space on the left for text. Cold key light from the
+left, violet rim light from the back right. Photorealistic.
+```
+Формат: 16:9.
+
+## 4. «Розбір» (недільний формат)
+
+```
+Medium shot of the man in a dark navy tailored suit with a crisp white shirt, no tie, small
+silver lightning-bolt pin on the lapel, standing beside a large translucent holographic
+screen with a timeline, one hand gesturing toward it, engaged explaining expression.
+Dark newsroom, blue and violet accent lighting. Photorealistic, broadcast quality.
 ```
 
-## 4. Студійний кадр для щоденного випуску
+## 5. Емоції для обкладинок
 
-```
-Medium shot (chest up) of [ОПИС ПЕРСОНАЖА] presenting news in a virtual studio, camera
-slightly below eye level, looking into the lens, neutral confident expression. Background:
-dark studio with blurred vertical data streams in blue and violet, subtle depth. Cold key
-light from the left, violet rim light. Space on the lower third for a name caption.
-Photorealistic, broadcast quality.
---ar 16:9
-```
-
-Для Shorts – той самий промпт з `--ar 9:16` і «medium close-up (shoulders up)».
-
-## 5. Емоції для обкладинок (однакова основа, міняється лише вираз)
+Основа – промпт № 2, міняється лише вираз:
 
 | Емоція | Фраза в промпті |
 |---|---|
 | Скепсис | `one eyebrow raised, skeptical half-smile, head slightly tilted` |
 | Здивування | `eyes slightly widened, lips parted, genuinely surprised` |
-| «Ну таке» | `warm amused smile, soft eyes, chin slightly down` |
+| «Ну таке» | `warm amused smile, relaxed eyes, chin slightly down` |
 | Серйозно | `serious calm expression, direct gaze, no smile` |
 | Пояснює | `mid-sentence, one hand raised explaining, engaged expression` |
 
 ```
-Close-up of [ОПИС ПЕРСОНАЖА], [ЕМОЦІЯ], dark background with a soft electric-blue glow,
+Close-up of the man, [ЕМОЦІЯ], [ОДЯГ], dark background with a soft electric-blue glow,
 high contrast, sharp focus on the eyes, photorealistic, thumbnail-ready, no text.
---ar 16:9
 ```
+Формат: 16:9. Генерувати по 4 варіанти на емоцію, відбирати один у бібліотеку обкладинок.
 
-## 6. Відео з аватаром (HeyGen, Higgsfield, Kling, Runway та аналоги)
+## 6. Відео з аватаром
 
-- Вхід: студійний кадр (п. 4) + аудіодоріжка з TTS.
-- Налаштування: мінімальні рухи голови, природні моргання, легкі кивки на межах речень, руки видно лише в «Розборі».
-- Промпт руху (де є): `subtle natural head movement, calm professional news anchor delivery, occasional small nod, steady eye contact with camera, no exaggerated gestures`.
-- Для Higgsfield: спершу character sheet через AI Influencer (параметри в `02-visual-identity.md`), потім анімація через рекомендований пресет з референсом персонажа.
+- Вхід: затверджений студійний кадр (№ 1) як стартовий кадр + аудіодоріжка з TTS.
+- Промпт руху: `subtle natural head movement, calm professional news anchor delivery, occasional small nod, steady eye contact with camera, natural blinking, lips synced to speech, no exaggerated gestures, static camera`.
+- Higgsfield: Kling 3.0 з `start_image` і елементом, або Cinema Studio Video з елементом. Для lip-sync – окремий інструмент синхронізації губ з аудіо.
+- Довжина кліпу – по одному блоку сценарію (20–60 с), склеювати на монтажі, між блоками – плашка або медіа новини.
 
 ## 7. Лого
 
 ```
-Minimalist wordmark logo "NOVA" in a geometric grotesque typeface, the letter V stylized
-as a lightning bolt, white on near-black background, flat vector style, no gradients,
-centered, no other elements.
---ar 1:1
+Minimalist wordmark logo "DAN" in a geometric grotesque typeface, the crossbar of the letter
+A stylized as a lightning bolt, white on near-black background, flat vector style,
+no gradients, centered, no other elements.
 ```
+Формат: 1:1.
+
+## Негативні підказки (де підтримуються)
+
+`cartoon, anime, plastic skin, oversaturated, different face, changed beard, long hair, logo text, watermark, extra people`

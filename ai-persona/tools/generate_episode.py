@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Генерує сценарій випуску голосом NOVA з JSON-добірки новин.
+"""Генерує сценарій випуску голосом DAN з JSON-добірки новин.
 
 Приклад:
     python generate_episode.py --news news.example.json --format digest --out episode.md
@@ -77,7 +77,7 @@ def generate(news: dict, fmt: str, extra: str | None, effort: str) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Сценарій випуску голосом NOVA")
+    parser = argparse.ArgumentParser(description="Сценарій випуску голосом DAN")
     parser.add_argument("--news", required=True, help="JSON-файл із добіркою новин")
     parser.add_argument("--format", default="digest", choices=sorted(FORMAT_HINTS))
     parser.add_argument("--out", help="Куди зберегти сценарій (.md). За замовчуванням – stdout")
