@@ -44,6 +44,12 @@
 | Озвучка репліки клонованим голосом «Mykola-2» | Seed Audio 1.0 | `261bb86a-3279-4e9b-b1be-f49209e184fd` | 1 кредит |
 | Відео з ліпсинком, 12 с, 2K | MiniMax H3 (`image_references` + `audio_references`) | `5886096b-8213-4177-a9e2-b87d404889d2` | 24 кредити |
 
+Результати тесту:
+- відео: https://d8j0ntlcm91z4.cloudfront.net/user_3ARLGQ8Q3K67yjjFAcuD6xq3f9I/hf_20261101_165546_5886096b-8213-4177-a9e2-b87d404889d2.mp4
+- аудіо: https://d8j0ntlcm91z4.cloudfront.net/user_3ARLGQ8Q3K67yjjFAcuD6xq3f9I/hf_20261101_164925_261bb86a-3279-4e9b-b1be-f49209e184fd.wav
+- кадр з усмішкою 1: https://d8j0ntlcm91z4.cloudfront.net/user_3ARLGQ8Q3K67yjjFAcuD6xq3f9I/hf_20261101_164822_6da70d58-0691-42a1-aeda-8385f0a18463.png
+- кадр з усмішкою 2: https://d8j0ntlcm91z4.cloudfront.net/user_3ARLGQ8Q3K67yjjFAcuD6xq3f9I/hf_20261101_164822_3c15ba26-43fa-482f-a5cb-f46483ae36a3.png
+
 Ціни інших маршрутів на момент тесту (12 с): Intone 1080p – 192, Intone 720p – 84, Seedance 2.5 720p – 84, Seedance 2.5 чернетка 480p – 36, Grok Video 1.5 720p – 54. MiniMax H3 не приймає `start_image` разом з аудіо: кадр передається як `image_references`.
 
 ## AI-маркери (не чіпають обличчя)
