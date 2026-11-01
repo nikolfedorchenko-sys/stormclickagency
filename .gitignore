@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+ai-persona/tools/*.md
+!ai-persona/tools/README.md
+.env
