@@ -23,6 +23,7 @@
         <a href="#cases" data-i18n="nav.cases">Кейси</a>
         <a href="#faq" data-i18n="nav.faq">FAQ</a>
         <a href="#contact" data-i18n="nav.contact">Контакти</a>
+        <a href="#contact" class="hero-cta nav-cta" data-i18n="cta.discuss" data-track="menu_discuss_click">Обговорити проєкт</a>
       </nav>
       <div class="lang-switch" role="group" data-i18n-aria="lang.label" aria-label="Мова сайту">
         <button type="button" data-lang="uk" aria-pressed="true">UA</button>
@@ -45,15 +46,15 @@
 
       <div class="hero-main">
         <div class="container">
-          <a href="#" class="hero-announce" data-assistant="" data-track="hero_audit_click"><b data-i18n="hero.new">Новинка</b> <span data-i18n="hero.badge">ШІ-аудит бізнесу за $100</span> <span class="arr" aria-hidden="true">→</span></a>
-          <h1 class="hero-title" id="hero-title"><span data-i18n="hero.title1">Сайт, бот або CRM</span> <span class="hl" data-i18n="hero.title2">за ціною нижче ринку</span></h1>
-          <p class="hero-lead" data-i18n-rich="hero.subtitle"></p>
+          <button type="button" class="hero-announce" aria-haspopup="dialog" aria-controls="assistant-panel" data-assistant="Розкажіть про ШІ-аудит бізнесу за $100" data-i18n-ask="hero.auditAsk" data-track="hero_audit_click"><b data-i18n="hero.new">Новинка</b> <span data-i18n="hero.badge">ШІ-аудит бізнесу за $100</span> <span class="arr" aria-hidden="true">→</span></button>
+          <h1 class="hero-title" id="hero-title"><span class="t1" data-i18n="hero.title1">Сайт, бот або CRM</span> <span class="hl" data-i18n="hero.title2">за ціною нижче ринку</span></h1>
+          <p class="hero-lead" data-i18n-rich="hero.subtitle">Команда професіоналів, яка працює з інструментами ШІ. Тому це коштує <strong>в рази менше</strong>, ніж у класичній агенції.</p>
           <div class="hero-actions">
             <a href="#contact" class="hero-cta" data-track="hero_quote_click">
               <svg viewBox="0 0 100 140" aria-hidden="true"><path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z"/></svg>
               <span data-i18n="cta.launch">Отримати розрахунок</span>
             </a>
-            <a href="#" class="ask" data-assistant="" data-track="hero_ask_click"><span class="dot" aria-hidden="true"></span><span class="u" data-i18n="hero.ask">Спитати ціну у ШІ-асистента</span></a>
+            <button type="button" class="ask" aria-haspopup="dialog" aria-controls="assistant-panel" data-assistant="" data-track="hero_ask_click"><span class="dot" aria-hidden="true"></span><span class="u" data-i18n="hero.ask">Спитати ціну у ШІ-асистента</span></button>
           </div>
         </div>
       </div>
@@ -62,9 +63,9 @@
       <section class="proof" data-i18n-aria="proof.label" aria-label="Орієнтовні ціни і терміни">
         <div class="container">
           <ul class="p-list">
-            <li class="p-item" data-proof="site"><span class="p-name"></span><span class="p-price"></span><span class="p-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span></span></span></li>
-            <li class="p-item" data-proof="bot"><span class="p-name"></span><span class="p-price"></span><span class="p-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span></span></span></li>
-            <li class="p-item" data-proof="crm"><span class="p-name"></span><span class="p-price"></span><span class="p-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span></span></span></li>
+            <li class="p-item" data-proof="site"><span class="p-name">Сайт для бізнесу</span><span class="p-price">$100</span><span class="p-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>кілька годин</span></span></li>
+            <li class="p-item" data-proof="bot"><span class="p-name">Telegram-бот</span><span class="p-price"><small>від</small> $150</span><span class="p-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>від години</span></span></li>
+            <li class="p-item" data-proof="crm"><span class="p-name">CRM під ваш бізнес</span><span class="p-price"><small>від</small> $1 000</span><span class="p-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>2–3 дні</span></span></li>
           </ul>
           <p class="p-note"><span data-i18n="proof.note">Ціни орієнтовні. Точний розрахунок – безкоштовно, протягом години в робочий час.</span>
             <a href="#services" data-track="hero_services_click"><span data-i18n="proof.all">Усі послуги</span> <span class="arr" aria-hidden="true">→</span></a></p>
@@ -310,15 +311,15 @@
   </footer>
 
   <div class="assistant" id="assistant">
-    <button type="button" class="assistant-toggle" aria-label="AI assistant">
+    <button type="button" class="assistant-toggle" aria-label="ШІ-асистент" data-i18n-aria="assistant.label" aria-controls="assistant-panel" aria-expanded="false">
       <svg viewBox="0 0 100 140" aria-hidden="true"><path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z"/></svg>
       <span data-i18n="assistant.label"></span>
     </button>
-    <div class="assistant-panel" role="dialog" aria-label="AI assistant">
+    <div class="assistant-panel" id="assistant-panel" role="dialog" aria-label="ШІ-асистент" data-i18n-aria="assistant.label">
       <div class="assistant-head">
         <span class="assistant-title"><i></i><span data-i18n="assistant.label"></span></span>
         <span class="assistant-badge" data-i18n="assistant.demo"></span>
-        <button type="button" class="assistant-close" aria-label="Close">×</button>
+        <button type="button" class="assistant-close" aria-label="Закрити" data-i18n-aria="assistant.close">×</button>
       </div>
       <div class="assistant-log"></div>
       <div class="assistant-chips"></div>

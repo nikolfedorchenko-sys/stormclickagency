@@ -48,8 +48,8 @@ export function initAssistant(root) {
   const live = Boolean(CONFIG.apiBase);
   root.classList.toggle('is-demo', !live);
 
-  const open = () => { root.classList.add('is-open'); setTimeout(() => input.focus(), 300); };
-  const close = () => root.classList.remove('is-open');
+  const open = () => { root.classList.add('is-open'); toggle.setAttribute('aria-expanded', 'true'); setTimeout(() => input.focus(), 300); };
+  const close = () => { root.classList.remove('is-open'); toggle.setAttribute('aria-expanded', 'false'); };
   toggle.addEventListener('click', () => (root.classList.contains('is-open') ? close() : open()));
   closeBtn.addEventListener('click', close);
   document.querySelectorAll('[data-assistant]').forEach((el) => el.addEventListener('click', (e) => {

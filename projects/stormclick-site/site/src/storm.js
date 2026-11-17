@@ -300,6 +300,41 @@ export function initStorm(hero) {
     return fallback;
   }
 
+  // Резервний удар: якщо за ліміт спроб не вдалося побудувати повноцінну форму (нестандартна ширина,
+  // довгий рядок заголовка) – короткий розряд з хмари у будь-якому вільному місці, щоб удар був завжди.
+  function shortBolt(rnd){
+    var k = L.mobile ? .62 : 1, best = null;
+    for (var tries = 0; tries < 120; tries++){
+      var sx = W * .4 + rnd() * (W * .6 - 16), sy = L.header + 6 + rnd() * Math.max(10, L.bottom - L.header - 60);
+      if (blocked(sx, sy)) continue;
+      var tgt = null;
+      for (var c = 0; c < 60; c++){
+        var tx = sx + (rnd() - .5) * 160 * k, ty = sy + 40 + rnd() * (L.bottom - sy - 40);
+        if (ty <= sy + 30 || tx < 8 || tx > W - 8 || blocked(tx, ty) || !segFree(sx, sy, tx, ty)) continue;
+        var sc = Math.hypot(tx - sx, ty - sy);
+        if (!tgt || sc > tgt.s) tgt = { x: tx, y: ty, s: sc };
+      }
+      if (!tgt) continue;
+      var main = walk(rnd, sx, sy, tgt.x, tgt.y, { sMin: 6 * k, sMax: 18 * k, jit: 1.4, maxSteps: 200, yMin: sy - 6, yMax: L.bottom, xMax: W - 8 });
+      if (main.pts.length < 3) continue;
+      var len = pathLen(main.pts);
+      if (!best || len > best.len) best = { pts: main.pts, len: len, sx: sx, sy: sy, t: tgt };
+      if (len >= 120) break;
+    }
+    if (!best) return null;
+    var branches = [], pts = best.pts;
+    for (var i = 1; i < pts.length - 1 && branches.length < 2; i++){
+      if (rnd() > .35) continue;
+      var a = Math.PI / 2 + (rnd() < .5 ? -1 : 1) * (.5 + rnd() * .5), bl = 24 + rnd() * 30;
+      var b = walk(rnd, pts[i][0], pts[i][1], pts[i][0] + Math.cos(a) * bl * 1.4, pts[i][1] + Math.sin(a) * bl * 1.4,
+        { sMin: 5 * k, sMax: 12 * k, jit: 1.4, maxSteps: 40, yMin: pts[i][1] - 4, yMax: L.bottom, budget: bl, xMax: W - 8, down: true });
+      if (b.pts.length > 2) branches.push({ pts: b.pts, w: .5, depth: 1 });
+    }
+    var res = finish(rnd, pts, branches, best.sx, best.sy, best.t);
+    res.short = true; res.low = best.sy > L.header + 20;
+    return res;
+  }
+
   // ---- Рендер удару в офскрін-канви (один раз на удар) ----
   var boltC = document.createElement('canvas'), litC = document.createElement('canvas');
   // Світіння малюється в canvas у 1/4 роздільності (розмиття там у ~16 разів дешевше) і масштабується
@@ -325,7 +360,7 @@ export function initStorm(hero) {
     // верх каналу виходить з хмари, а не обрізаний
     c.globalCompositeOperation = 'destination-in';
     // тип C (старт з основи хмари під плашкою): перші ~40 px проявляються плавно, а не обриваються
-    var g = c.createLinearGradient(0, b.sy, 0, b.sy + (b.sy > L.header + 20 ? FADE_IN_LOW : 70));
+    var g = c.createLinearGradient(0, b.sy, 0, b.sy + (b.short ? 24 : b.sy > L.header + 20 ? FADE_IN_LOW : 70));
     g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
     c.fillStyle = g; c.fillRect(0, 0, W, H);
     // знизу (360/768, де нема табло, за яке сховатись) – плавно гасне, а не обривається
@@ -429,7 +464,9 @@ export function initStorm(hero) {
     return { bolt: Math.min(1, env + resid), sky: env * P.skyMax, reveal: 1 };
   }
   function strike(rnd, b, type){
-    b = b || makeBolt(rnd, type); if (!b) return null;
+    // якщо цей тип тут не будується (довгі рядки, нестандартна ширина) – інші типи, потім резервний короткий удар
+    if (!b) { b = makeBolt(rnd, type); for (var ti = 0; !b && ti < TYPES.length; ti++) if (TYPES[ti] !== type) b = makeBolt(rnd, TYPES[ti]); }
+    b = b || shortBolt(rnd); if (!b) return null;
     renderBolt(b); renderLit(b);
     hero.__stormBolt = b;   // для перевірок скриншотами (довжина, тип, старт)
     return b;
@@ -451,7 +488,7 @@ export function initStorm(hero) {
   function schedule(ms){ clearTimeout(timer); if (running()) timer = setTimeout(fire, ms); }
   function stop(){ clearTimeout(timer); timer = 0; if (raf) cancelAnimationFrame(raf); raf = 0; cur = null; frame(0, 0, 1, null); }
   var inView = true;
-  function running(){ return MODE === 'live' && !reduceMQ.matches && !document.hidden && inView; }
+  function running(){ return started && MODE === 'live' && !reduceMQ.matches && !document.hidden && inView; }
 
   // ---- Статичні режими ----
   function renderStatic(){

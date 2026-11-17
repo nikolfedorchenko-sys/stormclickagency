@@ -65,7 +65,7 @@ ul { list-style: none; }
 
 /* Шапка: прозора над героєм, після прокрутки – темна з розмиттям і лінією */
 .header { position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: var(--header-h); border-bottom: 1px solid transparent; font-family: var(--f-body); transition: background var(--dur-base), border-color var(--dur-base); }
-.header.is-scrolled { background: rgba(5, 6, 11, .85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--c-line); }
+.header.is-scrolled { background: rgba(5, 6, 11, .92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--c-line); }
 .header-inner { height: 100%; display: flex; align-items: center; gap: var(--s-2); }
 .logo { display: flex; align-items: center; gap: 10px; min-height: var(--tap); margin-right: auto; font: 600 17px/1 var(--f-display); letter-spacing: -.01em; color: var(--c-text); }
 .logo svg { width: 16px; height: 22px; fill: var(--c-accent); }
@@ -77,10 +77,13 @@ ul { list-style: none; }
 .nav-toggle span { display: block; width: 18px; height: 2px; background: var(--c-text); border-radius: 2px; transition: transform var(--dur-fast) var(--ease-out); }
 .nav-toggle[aria-expanded="true"] span:first-child { transform: translateY(4px) rotate(45deg); }
 .nav-toggle[aria-expanded="true"] span:last-child { transform: translateY(-4px) rotate(-45deg); }
-/* Мобільне меню (не макетувалось): випадає під шапкою, непрозоре – блискавка під ним не видна */
-.nav { display: none; position: absolute; top: var(--header-h); left: 0; right: 0; flex-direction: column; background: var(--c-bg); border-bottom: 1px solid var(--c-line); box-shadow: var(--shadow-pop); }
+/* Мобільне меню (<1200): повноекранне під шапкою, непрозоре. Висота від шапки до низу екрана
+   (не position: fixed – шапка з backdrop-filter стає для нього контейнером). */
+.nav { display: none; position: absolute; top: 100%; left: 0; right: 0; height: calc(100vh - var(--header-h)); height: calc(100dvh - var(--header-h)); overflow-y: auto; overscroll-behavior: contain; flex-direction: column; padding: var(--s-2) var(--gutter) var(--s-6); background: var(--c-bg); }
 .nav.open { display: flex; }
-.nav a { display: flex; align-items: center; min-height: 56px; padding: 0 var(--gutter); border-top: 1px solid var(--c-line); font-size: var(--fs-body); font-weight: 500; color: var(--c-text); }
+.nav a:not(.nav-cta) { display: flex; align-items: center; min-height: 56px; border-bottom: 1px solid var(--c-line); font: 500 18px/1.3 var(--f-body); color: var(--c-text); }
+.nav-cta { margin-top: var(--s-6); width: 100%; }
+html.menu-open { overflow: hidden; }
 
 /* Перший екран */
 .hero { position: relative; z-index: 1; min-height: 100svh; display: flex; flex-direction: column; isolation: isolate; overflow: hidden; background: var(--c-bg); color: var(--c-text); font: 400 var(--fs-body)/var(--lh-body) var(--f-body); }
@@ -91,20 +94,25 @@ ul { list-style: none; }
 .storm::before { content: ""; position: absolute; inset: 0 0 auto; height: calc(var(--header-h) + 24px); background: linear-gradient(180deg, var(--c-bg) 35%, rgba(5, 6, 11, 0)); z-index: 1; }
 .hero-main { flex: 1; display: flex; align-items: flex-end; }
 .hero-main > .container { padding-top: calc(var(--header-h) + 52px); padding-bottom: var(--s-6); }
+.hero-announce, .ask { font-family: inherit; cursor: pointer; text-align: left; }
 .hero-announce { display: inline-flex; align-items: center; gap: var(--s-3); min-height: var(--tap); padding: 6px 16px 6px 6px; border-radius: var(--r-pill); border: 1px solid var(--c-line); background: rgba(14, 16, 24, .72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-size: var(--fs-small); font-weight: 500; line-height: 1.4; color: var(--c-text); margin-bottom: var(--s-5); transition: border-color var(--dur-fast); }
 .hero-announce b { font-weight: 700; font-size: var(--fs-small); padding: 4px 10px; border-radius: var(--r-pill); background: var(--c-surface-2); color: var(--c-accent-hi); }
 .hero-announce:hover { border-color: var(--c-line-strong); }
 .hero-announce .arr { color: var(--c-accent-hi); }
 .hero-title { font: 600 var(--fs-h1)/var(--lh-h1) var(--f-display); letter-spacing: var(--tracking-display); text-wrap: balance; max-width: 15ch; }
 .hero-title .hl { color: var(--c-accent); display: block; }
-.hero-lead { margin-top: var(--s-4); font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--c-muted); max-width: 34ch; }
+/* До 768 перша частина заголовка завжди в 2 рядки («Сайт, бот / або CRM»), як на 360: праворуч від
+   коротких рядків лишається кишеня, куди б'є блискавка. Без цього від 390 px рядок стає на всю ширину.
+   Те саме для акцентної частини (EN «below / market price»). */
+@media (max-width: 767px) { .hero-title .t1, .hero-title .hl { display: block; max-width: 10em; } }
+.hero-lead { margin-top: var(--s-4); font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--c-muted); max-width: 34ch; text-wrap: pretty; }
 .hero-lead strong { color: var(--c-text); font-weight: 600; }
 .hero-actions { margin-top: var(--s-6); display: flex; flex-direction: column; gap: var(--s-2); }
 .hero-cta { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-3); height: var(--btn-h); padding: 0 var(--s-5); border-radius: var(--r-md); font: 600 var(--fs-ui)/1 var(--f-body); background: var(--c-accent); color: var(--c-on-accent); box-shadow: var(--glow-accent); transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast), box-shadow var(--dur-base); }
 .hero-cta svg { width: 12px; height: 17px; fill: currentColor; flex: none; }
 .hero-cta:hover { background: var(--c-accent-hi); transform: translateY(-1px); }
 .hero-cta:active { transform: translateY(0) scale(.98); }
-.ask { display: inline-flex; align-items: center; justify-content: flex-start; align-self: flex-start; gap: var(--s-3); min-height: 48px; padding: 0 var(--s-1) 0 0; font-weight: 600; color: var(--c-text); border-radius: var(--r-md); }
+.ask { display: inline-flex; align-items: center; justify-content: flex-start; align-self: flex-start; gap: var(--s-3); min-height: 48px; padding: 0 var(--s-1) 0 0; background: none; border: 0; font-size: inherit; line-height: inherit; font-weight: 600; color: var(--c-text); border-radius: var(--r-md); }
 .ask .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--c-live); box-shadow: 0 0 0 4px rgba(92, 227, 154, .16); }
 .ask .u { border-bottom: 1px solid var(--c-line-strong); padding-bottom: 2px; transition: border-color var(--dur-fast); }
 .ask:hover .u { border-color: var(--c-text); }
@@ -137,8 +145,9 @@ ul { list-style: none; }
 }
 @media (min-width: 1200px) {
   .header, .hero { --gutter: 48px; }
-  .nav { display: flex; position: static; flex-direction: row; gap: var(--s-1); margin-right: var(--s-5); background: none; border: 0; box-shadow: none; }
-  .nav a { min-height: var(--tap); padding: 0 var(--s-3); border: 0; font-size: 15px; color: var(--c-muted); border-radius: var(--r-sm); transition: color var(--dur-fast); }
+  .nav { display: flex; position: static; height: auto; overflow: visible; flex-direction: row; gap: var(--s-1); margin-right: var(--s-5); padding: 0; background: none; }
+  .nav a:not(.nav-cta) { min-height: var(--tap); padding: 0 var(--s-3); border: 0; font: 500 15px/1 var(--f-body); color: var(--c-muted); border-radius: var(--r-sm); transition: color var(--dur-fast); }
+  .nav-cta { display: none; }
   .nav a:hover { color: var(--c-text); }
   .lang-toggle, .nav-toggle { display: none; }
   .lang-switch { display: flex; border: 1px solid var(--c-line); border-radius: var(--r-md); padding: 3px; margin-right: var(--s-3); }
@@ -266,7 +275,7 @@ ul { list-style: none; }
 .assistant-form input:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
 .assistant-toggle { transition: transform 0.3s, border-color 0.3s, opacity 0.3s, visibility 0.3s; }
 /* На першому екрані плаваюча кнопка прихована – асистент уже є в діях героя; панель, відкрита з героя, видна */
-.hero-visible .assistant:not(.is-open) .assistant-toggle { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(12px); }
+.in-hero .assistant:not(.is-open) .assistant-toggle { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(12px); }
 
 /* Трафік */
 .traffic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }

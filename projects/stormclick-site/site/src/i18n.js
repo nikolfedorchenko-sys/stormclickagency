@@ -16,6 +16,7 @@ const DICT = {
     'lang.switch': 'Перейти на українську',
     'hero.new': 'Новинка',
     'hero.badge': 'ШІ-аудит бізнесу за $100',
+    'hero.auditAsk': 'Розкажіть про ШІ-аудит бізнесу за $100',
     'hero.title1': 'Сайт, бот або CRM',
     'hero.title2': 'за ціною нижче ринку',
     // **…** – виділення в ліді (data-i18n-rich)
@@ -26,7 +27,6 @@ const DICT = {
     'proof.all': 'Усі послуги',
     'cta.launch': 'Отримати розрахунок',
     'hero.ask': 'Спитати ціну у ШІ-асистента',
-    'hero.scroll': 'Гортайте',
     'stage2.eyebrow': 'Удар блискавки = клік',
     'stage2.title': 'Один удар. Точно в ціль.',
     'stage3.eyebrow': 'Повний цикл',
@@ -181,6 +181,7 @@ const DICT = {
     'services.note': 'Ціни орієнтовні і залежать від технічного завдання. Точний розрахунок безкоштовно, протягом години.',
     'assistant.label': 'ШІ-асистент',
     'assistant.demo': 'Демо-режим',
+    'assistant.close': 'Закрити',
     'assistant.greeting': 'Привіт! Я ШІ-асистент StormClick. Скажіть, що потрібно: сайт, бот, CRM чи реклама – і я назву орієнтовну ціну й термін.',
     'assistant.placeholder': 'Напишіть, що потрібно…',
     'assistant.send': 'Надіслати',
@@ -208,7 +209,8 @@ const DICT = {
     'lang.switch': 'Switch to English',
     'hero.new': 'New',
     'hero.badge': 'AI business audit for $100',
-    'hero.title1': 'A website, a bot or a CRM',
+    'hero.auditAsk': 'Tell me about the $100 AI business audit',
+    'hero.title1': 'A website, a\u00A0bot or a\u00A0CRM', // нерозривні пробіли: без однолітерного «a» в кінці рядка
     'hero.title2': 'below market price',
     'hero.subtitle': 'A team of professionals working with AI tools. That is why it costs **a fraction** of what a classic agency charges.',
     'proof.label': 'Indicative prices and timelines',
@@ -217,7 +219,6 @@ const DICT = {
     'proof.all': 'All services',
     'cta.launch': 'Get a quote',
     'hero.ask': 'Ask the AI assistant for a price',
-    'hero.scroll': 'Scroll',
     'stage2.eyebrow': 'Lightning strike = click',
     'stage2.title': 'One strike. Right on target.',
     'stage3.eyebrow': 'Full cycle',
@@ -372,6 +373,7 @@ const DICT = {
     'services.note': 'Prices are indicative and depend on the brief. An exact quote is free, within an hour.',
     'assistant.label': 'AI assistant',
     'assistant.demo': 'Demo mode',
+    'assistant.close': 'Close',
     'assistant.greeting': 'Hi! I am the StormClick AI assistant. Tell me what you need: a website, a bot, a CRM or ads, and I will give you an indicative price and deadline.',
     'assistant.placeholder': 'Tell me what you need…',
     'assistant.send': 'Send',
@@ -422,6 +424,7 @@ function apply() {
   document.querySelector('meta[name="description"]')?.setAttribute('content', t('meta.description'));
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-rich]').forEach((el) => setRich(el, t(el.dataset.i18nRich)));
+  document.querySelectorAll('[data-i18n-ask]').forEach((el) => { el.dataset.assistant = t(el.dataset.i18nAsk); });
   document.querySelectorAll('[data-i18n-aria]').forEach((el) => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
   document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder); });
   document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));

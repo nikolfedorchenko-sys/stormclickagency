@@ -32,12 +32,18 @@ function initLinks() {
   document.getElementById('year').textContent = new Date().getFullYear();
 }
 
+let lenis = null;
+
+// Мобільне меню (<1200): повноекранне, прокрутка сторінки під ним заблокована
 function initMenu() {
   const nav = document.getElementById('nav');
   const toggle = document.querySelector('.nav-toggle');
   const set = (open) => {
+    if (open === nav.classList.contains('open')) return;
     nav.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', String(open));
+    document.documentElement.classList.toggle('menu-open', open);
+    if (lenis) { if (open) lenis.stop(); else lenis.start(); }
   };
   toggle.addEventListener('click', () => set(!nav.classList.contains('open')));
   nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => set(false)));
@@ -45,13 +51,13 @@ function initMenu() {
   matchMedia('(min-width: 1200px)').addEventListener('change', () => set(false));
 }
 
-// Плаваюча кнопка асистента ховається, поки видно перший екран (асистент уже є в діях героя),
-// і з'являється після прокрутки за нього. Клас in-hero (мобільна sticky-кнопка) лишається як був.
+// Поки видно перший екран, плаваюча кнопка асистента і мобільна липка «Отримати розрахунок» сховані
+// (обидві дії вже є в героєві); після прокрутки за перший екран – з'являються.
 function initHeroState() {
   const hero = document.getElementById('hero');
-  document.body.classList.add('in-hero', 'hero-visible');
+  document.body.classList.add('in-hero');
   if (!hero || !('IntersectionObserver' in window)) return;
-  new IntersectionObserver(([e]) => document.body.classList.toggle('hero-visible', e.isIntersecting)).observe(hero);
+  new IntersectionObserver(([e]) => document.body.classList.toggle('in-hero', e.isIntersecting)).observe(hero);
 }
 
 // Події аналітики: клік по елементу з data-track. Лічильники (GA4 / Meta / TikTok) на сайті ще не
@@ -66,7 +72,7 @@ function initTracking() {
 }
 
 function initSmoothScroll() {
-  const lenis = new Lenis({ lerp: 0.085 });
+  lenis = new Lenis({ lerp: 0.085 });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
@@ -75,7 +81,8 @@ function initSmoothScroll() {
     const target = a.getAttribute('href');
     if (target.length < 2) return;
     e.preventDefault();
-    lenis.scrollTo(target, { offset: -60 });
+    // відступ – висота фіксованої шапки (64 / 80), щоб заголовок секції не ховався під нею
+    lenis.scrollTo(target, { offset: -document.querySelector('.header').offsetHeight });
   }));
   return lenis;
 }
@@ -136,6 +143,8 @@ async function boot() {
   initMenu();
   initHeroState();
   initTracking();
+  // асистент підключається одразу: кнопки першого екрана не мають бути «мертвими», поки вантажаться шрифти
+  initAssistant(document.getElementById('assistant'));
   initCursor({ reducedMotion });
   await document.fonts.ready;
 
@@ -147,7 +156,6 @@ async function boot() {
     initReveals();
     initTilt();
   }
-  document.body.classList.add('in-hero');
   initHeader();
   document.addEventListener('services:rendered', () => { initTilt(); ScrollTrigger.refresh(); });
   initTilt();
@@ -155,7 +163,6 @@ async function boot() {
   initChart(document.querySelector('.chart'));
   initServices();
   initQuiz(document.getElementById('quiz'));
-  initAssistant(document.getElementById('assistant'));
 
   ScrollTrigger.refresh();
 }
