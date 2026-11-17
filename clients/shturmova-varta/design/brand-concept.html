@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Штурмова варта – концепція стилю</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0E1A2B; --navy:#1F3350; --brass:#C9A35A; --light:#F4F1EA;
+  --brass-ink:#7A5C26; --mist:#A9B6C8; --steel:#55657C; --line-dark:#34496A; --sand:#E4DCCB; --white:#FFFFFF;
+  --f:"IBM Plex Sans",system-ui,sans-serif; --m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--light);color:var(--night);font:400 17px/1.55 var(--f)}
+img{display:block;max-width:100%;height:auto}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+section{padding:64px 0;border-top:1px solid var(--sand)}
+h1,h2,h3{font-weight:700;line-height:1.1;margin:0 0 16px}
+h1{font-size:clamp(34px,5vw,60px);letter-spacing:-.01em}
+h2{font-size:clamp(26px,3.2vw,38px)}
+h3{font-size:21px}
+p{margin:0 0 14px;max-width:70ch}
+.lbl{font:500 14px/1.3 var(--m);letter-spacing:.08em;text-transform:uppercase;color:var(--brass-ink);margin:0 0 12px}
+.dark .lbl{color:var(--brass)}
+.dark{background:var(--night);color:var(--light)}
+.dark p{color:var(--light)}
+.muted{color:var(--steel)}
+.dark .muted{color:var(--mist)}
+.todo{background:#FFF3D6;color:#5A3F0E;padding:0 4px;font:500 15px var(--m)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+@media (max-width:800px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* шапка */
+.hero{background:var(--night);color:var(--light);padding:72px 0 56px;border:0}
+.hero p{color:var(--mist);font-size:19px}
+.hero .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.chip{border:1px solid var(--line-dark);padding:6px 12px;font:500 14px var(--m);color:var(--light)}
+.hero-marks{display:flex;gap:28px;margin:32px 0 8px;align-items:center}
+.hero-marks img{width:72px}
+
+/* що змінилось */
+.change{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.change div{background:var(--white);padding:18px;border-left:3px solid var(--brass)}
+.change b{display:block;margin-bottom:6px}
+@media (max-width:900px){.change{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.change{grid-template-columns:1fr}}
+
+/* палітра */
+.pal{display:grid;grid-template-columns:2fr 2fr 1fr 2fr;gap:0;min-height:150px}
+.pal div{padding:16px;display:flex;flex-direction:column;justify-content:flex-end;font:500 14px/1.4 var(--m)}
+.pal small{font:400 14px var(--f);opacity:.85}
+.pal2{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:0}
+.pal2 div{padding:12px 14px;font:500 14px/1.4 var(--m)}
+@media (max-width:700px){.pal{grid-template-columns:1fr 1fr}.pal2{grid-template-columns:1fr 1fr}}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--sand);vertical-align:top}
+th{font:500 14px var(--m);text-transform:uppercase;letter-spacing:.06em;color:var(--steel)}
+.sw{display:inline-block;width:14px;height:14px;vertical-align:-2px;margin-right:6px;border:1px solid rgba(0,0,0,.15)}
+.ok{color:#1F6B3A;font-weight:600}.no{color:#9A2B1E;font-weight:600}
+.tablewrap{overflow-x:auto}
+
+/* шрифти */
+.type-big{font:700 clamp(36px,6vw,72px)/1 var(--f);letter-spacing:-.01em;margin:0 0 12px}
+.type-mono{font:500 18px/1.4 var(--m);letter-spacing:.04em}
+
+/* варіанти */
+.variant{padding:72px 0}
+.v-head{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.v-letter{font:500 15px var(--m);background:var(--night);color:var(--brass);padding:4px 10px}
+.idea{font-size:21px;font-weight:500;max-width:60ch;margin-bottom:28px}
+.panel{padding:28px;display:flex;align-items:center;justify-content:center;min-height:220px}
+.panel.l{background:var(--white)}
+.panel.d{background:var(--night)}
+.panel img.mk{width:150px}
+.panel img.lk{width:min(100%,340px)}
+.sizes{display:flex;gap:22px;align-items:flex-end;flex-wrap:wrap}
+.sizes figure{margin:0;text-align:center}
+.sizes figcaption{font:500 14px var(--m);color:var(--steel);margin-top:6px}
+.dark .sizes figcaption{color:var(--mist)}
+.mono{display:flex;gap:0}
+.mono div{flex:1;padding:20px;display:flex;justify-content:center}
+.mono img{width:72px}
+.test{color:var(--night);background:var(--white);border-left:3px solid var(--brass);padding:18px 20px}
+.test h3{font-size:18px}
+.test ul{margin:0;padding-left:20px}
+.test li{margin-bottom:6px}
+.tab{display:flex;align-items:center;gap:8px;background:#DCE1E8;border-radius:8px 8px 0 0;padding:8px 12px;font:400 14px var(--f);color:#2A3443;width:max-content;max-width:100%}
+.tab img{width:16px;height:16px}
+
+/* носії */
+.carriers{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:24px;align-items:stretch}
+@media (max-width:800px){.carriers{grid-template-columns:minmax(0,1fr)}}
+figure{margin:0}
+.carrier{background:var(--sand);padding:clamp(16px,4vw,28px);min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.carrier figcaption{font:500 14px var(--m);color:var(--steel);text-align:center}
+.ava{width:150px;height:150px;border-radius:50%;background:var(--night);display:flex;align-items:center;justify-content:center}
+.ava img{width:84px}
+.ava-row{display:flex;gap:18px;align-items:center}
+.ava.sm{width:48px;height:48px}.ava.sm img{width:26px}
+
+.sticker{width:min(100%,360px);aspect-ratio:1/1;background:var(--night);color:var(--light);padding:clamp(18px,5vw,28px);display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.sticker .st-top{display:flex;justify-content:space-between;align-items:flex-start}
+.sticker .st-top img{width:64px}
+.sticker .st-247{font:500 14px var(--m);color:var(--brass);letter-spacing:.06em}
+.sticker .st-title{font:700 clamp(24px,7.4vw,34px)/1.02 var(--f);text-transform:uppercase;letter-spacing:.01em}
+.sticker .st-rule{height:6px;background:var(--brass);margin:4px 0 0;width:64px}
+.sticker .st-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.sticker .st-name{font:600 15px/1.25 var(--f);text-transform:uppercase;letter-spacing:.04em}
+.sticker .st-tel{font:500 16px var(--m);color:var(--brass);white-space:nowrap}
+.sticker.lightbg{background:var(--light);color:var(--night);border:6px solid var(--night)}
+.sticker.lightbg .st-247,.sticker.lightbg .st-tel{color:var(--brass-ink)}
+
+.van{width:100%;max-width:640px}
+
+/* настрій */
+.mood{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.mood figure{margin:0}
+.mood figcaption{font:400 14px var(--f);color:var(--mist);margin-top:6px}
+@media (max-width:700px){.mood{grid-template-columns:1fr}}
+
+/* порівняння і питання */
+.cmp td:first-child{font-weight:600;white-space:nowrap}
+.q{counter-reset:q;list-style:none;padding:0;margin:0}
+.q li{counter-increment:q;padding:16px 0 16px 52px;position:relative;border-bottom:1px solid var(--sand);max-width:80ch}
+.q li::before{content:counter(q,decimal-leading-zero);position:absolute;left:0;top:16px;font:500 16px var(--m);color:var(--brass-ink)}
+.rec{background:var(--navy);color:var(--light);padding:24px 28px;margin:24px 0}
+.rec b{color:var(--brass)}
+footer{padding:40px 0 60px;font-size:15px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="lbl">Етап 0 · концепція на погодження · версія 2</p>
+    <h1>Штурмова варта – новий напрям стилю</h1>
+    <p>Нічний синій і латунь, три нові ідеї знака, менше деталей. Це ще не брендбук: обираємо напрям, потім доводимо одну ідею до повного стилю.</p>
+    <div class="hero-marks" aria-hidden="true">
+      <img src="concept-logo/a-mark-inverse.svg" alt="">
+      <img src="concept-logo/b-mark-inverse.svg" alt="">
+      <img src="concept-logo/c-mark-inverse.svg" alt="">
+    </div>
+    <div class="chips"><span class="chip">A · Фундамент</span><span class="chip">B · КПП</span><span class="chip">C · Світло у вікні</span></div>
+  </div>
+</header>
+
+<main>
+<section>
+  <div class="wrap">
+    <p class="lbl">Що змінили після відгуку</p>
+    <h2>Відгук на першу версію – і що з ним зроблено</h2>
+    <div class="change">
+      <div><b>Кольори</b>Графіт і помаранч замінено на обраний напрям: нічний синій і латунь. Латунь – лише акцент, не фон.</div>
+      <div><b>Знак</b>Три нові ідеї з нуля. Кожну перевірено тестом «що читається в негативному просторі».</div>
+      <div><b>Простота</b>Один шрифт-родина, три базові кольори, жодних скосів і складних ефектів.</div>
+      <div><b>Візуал</b>Є ілюстрації настрою і носії, щоб оцінювати стиль на справжніх речах, а не на плашках.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="lbl">Палітра</p>
+    <h2>Нічний синій і латунь</h2>
+    <p>Основу дає нічний синій – колір ночі, коли працює варта. Латунь – світло ліхтаря на посту: тьмяна, матова, без блиску і без градієнтів «під золото». На кожному носії латуні не більше 10–15 % площі – тоді вона не тягне в «люкс-ресторан» чи «ювелірку».</p>
+    <div class="pal" role="img" aria-label="Основна палітра">
+      <div style="background:var(--night);color:var(--light)">Нічний синій<br>#0E1A2B<small>основний: фон, знак, текст</small></div>
+      <div style="background:var(--navy);color:var(--light)">Синій<br>#1F3350<small>другий рівень, картки, авто</small></div>
+      <div style="background:var(--brass);color:var(--night)">Латунь<br>#C9A35A<small>лише акцент</small></div>
+      <div style="background:var(--light);color:var(--night);border:1px solid var(--sand)">Світлий<br>#F4F1EA<small>світлий фон, текст на темному</small></div>
+    </div>
+    <div class="pal2" role="img" aria-label="Допоміжні кольори">
+      <div style="background:var(--brass-ink);color:var(--white)">Латунь-текст<br>#7A5C26</div>
+      <div style="background:var(--steel);color:var(--white)">Сталь<br>#55657C</div>
+      <div style="background:var(--mist);color:var(--night)">Туман<br>#A9B6C8</div>
+      <div style="background:var(--line-dark);color:var(--light)">Лінія<br>#34496A</div>
+      <div style="background:var(--sand);color:var(--night)">Пісок<br>#E4DCCB</div>
+    </div>
+    <p class="muted" style="margin-top:14px">Чотири основні кольори – ваш орієнтир без змін. Додано п'ять службових: для тексту, ліній і підкладок. Як палітра працює на речах – дивіться носії під кожним варіантом.</p>
+
+    <h3 style="margin-top:32px">Контраст тексту (WCAG 2.1)</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Текст</th><th>Фон</th><th>Контраст</th><th>Де можна</th></tr></thead>
+      <tbody>
+        <tr><td><span class="sw" style="background:#F4F1EA"></span>Світлий</td><td><span class="sw" style="background:#0E1A2B"></span>Нічний</td><td>15,5 : 1</td><td class="ok">будь-який текст</td></tr>
+        <tr><td><span class="sw" style="background:#F4F1EA"></span>Світлий</td><td><span class="sw" style="background:#1F3350"></span>Синій</td><td>11,3 : 1</td><td class="ok">будь-який текст</td></tr>
+        <tr><td><span class="sw" style="background:#C9A35A"></span>Латунь</td><td><span class="sw" style="background:#0E1A2B"></span>Нічний</td><td>7,4 : 1</td><td class="ok">будь-який текст, AAA</td></tr>
+        <tr><td><span class="sw" style="background:#C9A35A"></span>Латунь</td><td><span class="sw" style="background:#1F3350"></span>Синій</td><td>5,4 : 1</td><td class="ok">текст від 16 px</td></tr>
+        <tr><td><span class="sw" style="background:#0E1A2B"></span>Нічний</td><td><span class="sw" style="background:#C9A35A"></span>Латунь</td><td>7,4 : 1</td><td class="ok">кнопки, напис на латуні</td></tr>
+        <tr><td><span class="sw" style="background:#A9B6C8"></span>Туман</td><td><span class="sw" style="background:#0E1A2B"></span>Нічний</td><td>8,5 : 1</td><td class="ok">другорядний текст на темному</td></tr>
+        <tr><td><span class="sw" style="background:#55657C"></span>Сталь</td><td><span class="sw" style="background:#F4F1EA"></span>Світлий</td><td>5,3 : 1</td><td class="ok">другорядний текст на світлому</td></tr>
+        <tr><td><span class="sw" style="background:#7A5C26"></span>Латунь-текст</td><td><span class="sw" style="background:#F4F1EA"></span>Світлий</td><td>5,5 : 1</td><td class="ok">посилання і акценти на світлому</td></tr>
+        <tr><td><span class="sw" style="background:#C9A35A"></span>Латунь</td><td><span class="sw" style="background:#F4F1EA"></span>Світлий</td><td>2,1 : 1</td><td class="no">ніколи для тексту – лише смуги, знак, плашки</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="lbl">Шрифти</p>
+    <h2>IBM Plex Sans + IBM Plex Mono</h2>
+    <div class="grid2">
+      <div>
+        <p class="type-big">Охорона 24/7</p>
+        <p style="font-weight:600;font-size:22px;margin-bottom:8px">Ґанок, їжак, ґудзик, «Є» і «Ї» – українська повністю.</p>
+        <p>Plex Sans – заголовки (600–700) і текст (400–500). Plex Mono – мітки, номери об'єктів, телефон, «24/7».</p>
+        <p class="type-mono">ОБ'ЄКТ № 0417 · ПОСТ 2 · 23:40</p>
+      </div>
+      <div>
+        <h3>Чому саме вони</h3>
+        <ul>
+          <li>Інженерний, рівний характер: схоже на службу, а не на рекламу. Mono додає «технічного» – це на перспективу пульта і систем безпеки.</li>
+          <li>Одна родина на все: менше рішень, простіше в роботі – це прямо відповідає на «заскладно».</li>
+          <li>Повна українська кирилиця (перевірено: Ґ, Є, І, Ї, Й, Щ, Ь, апостроф ʼ). Google Fonts, ліцензія OFL – безкоштовно для сайту, друку і авто.</li>
+          <li>Не Fira Sans з першої версії і не Unbounded. Не заїжджена пара на кшталт Montserrat + Open Sans.</li>
+        </ul>
+        <p class="muted">Розглянули і відкинули: IBM Plex Sans Condensed – у Google Fonts немає базової кирилиці; Golos і Onest – добрі шрифти, але Plex дає родину з Mono і нейтральніше походження.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ВАРІАНТ A -->
+<section class="variant">
+  <div class="wrap">
+    <div class="v-head"><span class="v-letter">ВАРІАНТ A</span><h2>Фундамент</h2></div>
+    <p class="idea">«Ш» стоїть на латунній основі: охорона – це фундамент, на якому тримається спокій об'єкта.</p>
+    <div class="grid2">
+      <div class="panel l"><img class="mk" src="concept-logo/a-mark-color.svg" alt="Знак A на світлому"></div>
+      <div class="panel d"><img class="mk" src="concept-logo/a-mark-inverse.svg" alt="Знак A на темному"></div>
+      <div class="panel l"><img class="lk" src="concept-logo/a-lockup-color.svg" alt="Логотип A на світлому"></div>
+      <div class="panel d"><img class="lk" src="concept-logo/a-lockup-inverse.svg" alt="Логотип A на темному"></div>
+    </div>
+    <div class="grid2" style="margin-top:24px">
+      <div>
+        <p class="lbl">Розміри</p>
+        <div class="sizes">
+          <figure><img src="concept-logo/a-mark-color.svg" width="64" height="64" alt="64 px"><figcaption>64 px</figcaption></figure>
+          <figure><img src="concept-logo/a-mark-color.svg" width="32" height="32" alt="32 px"><figcaption>32 px</figcaption></figure>
+          <figure><img src="concept-logo/a-mark-color.svg" width="16" height="16" alt="16 px"><figcaption>16 px</figcaption></figure>
+          <figure><div class="tab"><img src="concept-logo/a-mark-color.svg" alt="">Штурмова варта</div><figcaption>вкладка браузера</figcaption></figure>
+        </div>
+        <p class="lbl" style="margin-top:22px">Монохром</p>
+        <div class="mono"><div style="background:#fff"><img src="concept-logo/a-mark-mono-black.svg" alt="Знак A чорний"></div><div style="background:#000"><img src="concept-logo/a-mark-mono-white.svg" alt="Знак A білий"></div></div>
+      </div>
+      <div class="test">
+        <h3>Тест негативного простору</h3>
+        <ul>
+          <li><b>Що видно:</b> два вертикальні прорізи згори і горизонтальна щілина над латунною смугою.</li>
+          <li><b>Що прочитає новий глядач:</b> «Ш» – одразу і однозначно: три стійки однакової висоти, спільна основа. На «Н» не схоже – немає середньої перекладини.</li>
+          <li><b>Ризики:</b> смугу можна прочитати як підкреслення («Ш_»). На 16 px щілина зникає – знак стає суцільною «Ш», це нормально. Середню стійку не можна робити вищою – вийде схоже на тризуб (державний символ).</li>
+          <li><b>Слабке місце:</b> найпростіший із трьох і з найслабшою історією – ближче до звичайної монограми.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="lbl" style="margin-top:36px">Носії</p>
+    <div class="carriers">
+      <figure class="carrier">
+        <div class="ava-row"><div class="ava"><img src="concept-logo/a-mark-inverse.svg" alt="Аватарка A"></div><div class="ava sm"><img src="concept-logo/a-mark-inverse.svg" alt=""></div></div>
+        <figcaption>Аватарка соцмереж · 150 і 48 px</figcaption>
+      </figure>
+      <figure class="carrier">
+        <div class="sticker">
+          <div class="st-top"><img src="concept-logo/a-mark-inverse.svg" alt=""><span class="st-247">24/7</span></div>
+          <div><div class="st-title">Об'єкт<br>під охороною</div><div class="st-rule"></div></div>
+          <div class="st-foot"><span class="st-name">Штурмова<br>варта</span><span class="st-tel">+380 67 549 5710</span></div>
+        </div>
+        <figcaption>Наліпка «Об'єкт під охороною» · 100 × 100 мм <span class="todo">[уточнити розмір]</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ВАРІАНТ B -->
+<section class="variant dark">
+  <div class="wrap">
+    <div class="v-head"><span class="v-letter">ВАРІАНТ B · РЕКОМЕНДУЄМО</span><h2>КПП</h2></div>
+    <p class="idea">«Ш» під смугастою стрілою шлагбаума: на об'єкт заходять лише ті, кого пропустила варта.</p>
+    <div class="grid2">
+      <div class="panel l"><img class="mk" src="concept-logo/b-mark-color.svg" alt="Знак B на світлому"></div>
+      <div class="panel d" style="background:var(--navy)"><img class="mk" src="concept-logo/b-mark-inverse.svg" alt="Знак B на темному"></div>
+      <div class="panel l"><img class="lk" src="concept-logo/b-lockup-color.svg" alt="Логотип B на світлому"></div>
+      <div class="panel d" style="background:var(--navy)"><img class="lk" src="concept-logo/b-lockup-inverse.svg" alt="Логотип B на темному"></div>
+    </div>
+    <div class="grid2" style="margin-top:24px">
+      <div>
+        <p class="lbl">Розміри</p>
+        <div class="sizes">
+          <figure><img src="concept-logo/b-mark-inverse.svg" width="64" height="64" alt="64 px"><figcaption>64 px</figcaption></figure>
+          <figure><img src="concept-logo/b-mark-inverse.svg" width="32" height="32" alt="32 px"><figcaption>32 px</figcaption></figure>
+          <figure><img src="concept-logo/b-mark-inverse.svg" width="16" height="16" alt="16 px"><figcaption>16 px</figcaption></figure>
+          <figure><div class="tab"><img src="concept-logo/b-mark-color.svg" alt="">Штурмова варта</div><figcaption>вкладка браузера</figcaption></figure>
+        </div>
+        <p class="lbl" style="margin-top:22px">Монохром</p>
+        <div class="mono"><div style="background:#fff"><img src="concept-logo/b-mark-mono-black.svg" alt="Знак B чорний"></div><div style="background:#000;outline:1px solid var(--line-dark)"><img src="concept-logo/b-mark-mono-white.svg" alt="Знак B білий"></div></div>
+      </div>
+      <div class="test">
+        <h3>Тест негативного простору</h3>
+        <ul>
+          <li><b>Що видно:</b> «Ш» з двома прорізами, над нею – горизонтальна щілина і стріла в смужку латунь / синій.</li>
+          <li><b>Що прочитає новий глядач:</b> «Ш» під перекладиною; у кольорі смугаста стріла впізнається як шлагбаум. На «Н» не схоже: прорізи відкриті вгору, у щілину під стрілою, а перекладини посередині немає.</li>
+          <li><b>Ризики:</b> у монохромі стріла стає суцільною – лишається «Ш під дахом», шлагбаум вгадується слабше. Окремий стовпчик шлагбаума справа ми свідомо не додали – тоді знак читався б як «ШІ» (штучний інтелект).</li>
+          <li><b>Плюс для стилю:</b> смуга «латунь / синій» стає фірмовим елементом – борт авто, краї наліпок, розділювачі на сайті.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="lbl" style="margin-top:36px">Носії</p>
+    <div class="carriers">
+      <figure class="carrier" style="background:var(--navy)">
+        <div class="ava-row"><div class="ava"><img src="concept-logo/b-mark-inverse.svg" alt="Аватарка B"></div><div class="ava sm"><img src="concept-logo/b-mark-inverse.svg" alt=""></div></div>
+        <figcaption style="color:var(--mist)">Аватарка соцмереж · 150 і 48 px</figcaption>
+      </figure>
+      <figure class="carrier" style="background:var(--navy)">
+        <svg class="van" viewBox="0 0 640 300" role="img" aria-label="Борт службового авто з логотипом B">
+          <title>Борт службового авто, варіант B</title>
+          <path d="M30 70 Q30 40 60 40 H440 Q470 40 490 62 L560 130 Q610 140 612 170 V228 Q612 240 600 240 H30 Z" fill="#F4F1EA"/>
+          <path d="M452 58 H480 L548 128 H452 Z" fill="#0E1A2B" opacity=".85"/>
+          <rect x="30" y="196" width="582" height="14" fill="#0E1A2B"/>
+          <g><rect x="30" y="196" width="40" height="14" fill="#C9A35A"/><rect x="110" y="196" width="40" height="14" fill="#C9A35A"/><rect x="190" y="196" width="40" height="14" fill="#C9A35A"/><rect x="270" y="196" width="40" height="14" fill="#C9A35A"/><rect x="350" y="196" width="40" height="14" fill="#C9A35A"/><rect x="430" y="196" width="40" height="14" fill="#C9A35A"/><rect x="510" y="196" width="40" height="14" fill="#C9A35A"/><rect x="590" y="196" width="22" height="14" fill="#C9A35A"/></g>
+          <image href="concept-logo/b-lockup-color.svg" x="56" y="72" width="270" height="76"/>
+          <g fill="#0E1A2B" font-family="IBM Plex Mono, monospace" font-weight="500"><text x="56" y="178" font-size="17" letter-spacing="1">+380 67 549 5710</text><text x="290" y="178" font-size="17" letter-spacing="1">ОХОРОНА 24/7</text></g>
+          <circle cx="130" cy="244" r="38" fill="#0E1A2B"/><circle cx="130" cy="244" r="16" fill="#55657C"/>
+          <circle cx="500" cy="244" r="38" fill="#0E1A2B"/><circle cx="500" cy="244" r="16" fill="#55657C"/>
+        </svg>
+        <figcaption style="color:var(--mist)">Борт службового авто – схема розміщення; модель авто <span class="todo">[уточнити]</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ВАРІАНТ C -->
+<section class="variant">
+  <div class="wrap">
+    <div class="v-head"><span class="v-letter">ВАРІАНТ C</span><h2>Світло у вікні</h2></div>
+    <p class="idea">«В» – будівля на два поверхи, а в нижньому вікні горить світло: на об'єкті хтось чергує, поки інші сплять.</p>
+    <div class="grid2">
+      <div class="panel l"><img class="mk" src="concept-logo/c-mark-color.svg" alt="Знак C на світлому"></div>
+      <div class="panel d"><img class="mk" src="concept-logo/c-mark-inverse.svg" alt="Знак C на темному"></div>
+      <div class="panel l"><img class="lk" src="concept-logo/c-lockup-color.svg" alt="Логотип C на світлому"></div>
+      <div class="panel d"><img class="lk" src="concept-logo/c-lockup-inverse.svg" alt="Логотип C на темному"></div>
+    </div>
+    <div class="grid2" style="margin-top:24px">
+      <div>
+        <p class="lbl">Розміри</p>
+        <div class="sizes">
+          <figure><img src="concept-logo/c-mark-color.svg" width="64" height="64" alt="64 px"><figcaption>64 px</figcaption></figure>
+          <figure><img src="concept-logo/c-mark-color.svg" width="32" height="32" alt="32 px"><figcaption>32 px</figcaption></figure>
+          <figure><img src="concept-logo/c-mark-color.svg" width="16" height="16" alt="16 px"><figcaption>16 px</figcaption></figure>
+          <figure><div class="tab"><img src="concept-logo/c-mark-color.svg" alt="">Штурмова варта</div><figcaption>вкладка браузера</figcaption></figure>
+        </div>
+        <p class="lbl" style="margin-top:22px">Монохром</p>
+        <div class="mono"><div style="background:#fff"><img src="concept-logo/c-mark-mono-black.svg" alt="Знак C чорний"></div><div style="background:#000"><img src="concept-logo/c-mark-mono-white.svg" alt="Знак C білий"></div></div>
+      </div>
+      <div class="test">
+        <h3>Тест негативного простору</h3>
+        <ul>
+          <li><b>Що видно:</b> два прямокутні «вікна»; у нижньому – світлий прямокутник у рамці.</li>
+          <li><b>Що прочитає новий глядач:</b> «В» (і латинське «B» – зручно, якщо буде англійська версія). Будинок із вікнами вгадується вже з ідеєю, але знак тримається і без неї.</li>
+          <li><b>Ризики:</b> на 16 px рамка навколо світла зливається – нижнє вікно стає суцільним, «В» лишається впізнаваною за силуетом. Можна сплутати з «8». Знаки-будинки з вікнами часто беруть забудовники – треба перевірити схожість у реєстрі знаків.</li>
+          <li><b>Відкинули:</b> квадрат із чотирма вікнами, одне світиться, – у негативному просторі виходить логотип Windows.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="lbl" style="margin-top:36px">Носії</p>
+    <div class="carriers">
+      <figure class="carrier">
+        <div class="ava-row"><div class="ava"><img src="concept-logo/c-mark-inverse.svg" alt="Аватарка C"></div><div class="ava sm"><img src="concept-logo/c-mark-inverse.svg" alt=""></div></div>
+        <figcaption>Аватарка соцмереж · 150 і 48 px</figcaption>
+      </figure>
+      <figure class="carrier">
+        <div class="sticker lightbg">
+          <div class="st-top"><img src="concept-logo/c-mark-color.svg" alt=""><span class="st-247">24/7</span></div>
+          <div><div class="st-title">Об'єкт<br>під охороною</div><div class="st-rule"></div></div>
+          <div class="st-foot"><span class="st-name">Штурмова<br>варта</span><span class="st-tel">+380 67 549 5710</span></div>
+        </div>
+        <figcaption>Наліпка на скло, світла версія · 100 × 100 мм <span class="todo">[уточнити розмір]</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <p class="lbl">Настрій</p>
+    <h2>Ніч, світло на посту, порядок</h2>
+    <p class="muted">Ілюстративні зображення, не фото об'єктів клієнта. Генерація зображень була недоступна (на рахунку сервісу немає кредитів), тому настрій показано плоскими SVG-ілюстраціями в палітрі. Для сайту потрібні справжні фото постів і об'єктів <span class="todo">[уточнити]</span>.</p>
+    <div class="mood">
+      <figure><img src="concept-img/mood-1-kpp.svg" alt="Ілюстрація: КПП уночі, будка з освітленим вікном і смугастий шлагбаум" width="1600" height="1000"><figcaption>КПП уночі · ілюстрація</figcaption></figure>
+      <figure><img src="concept-img/mood-2-perimeter.svg" alt="Ілюстрація: периметр із ліхтарями" width="1600" height="1000"><figcaption>Периметр і ліхтарі · ілюстрація</figcaption></figure>
+      <figure><img src="concept-img/mood-3-facade.svg" alt="Ілюстрація: бізнес-центр уночі, світиться пост на першому поверсі" width="1600" height="1000"><figcaption>Об'єкт уночі, світиться пост · ілюстрація</figcaption></figure>
+      <figure><img src="concept-img/mood-4-gate.svg" alt="Ілюстрація: відкатні ворота складу під прожектором" width="1600" height="1000"><figcaption>Ворота складу · ілюстрація</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="lbl">Порівняння</p>
+    <h2>Три варіанти поруч</h2>
+    <div class="tablewrap">
+    <table class="cmp">
+      <thead><tr><th>Варіант</th><th>Ідея</th><th>16 px</th><th>Монохром</th><th>Що дає стилю</th><th>Ризик</th></tr></thead>
+      <tbody>
+        <tr><td>A · Фундамент</td><td>Ш на латунній основі</td><td>чітко «Ш»</td><td>добре</td><td>спокій, простота</td><td>найменш самобутній</td></tr>
+        <tr><td>B · КПП</td><td>Ш під шлагбаумом</td><td>«Ш» з перекладиною</td><td>добре, шлагбаум слабше</td><td>фірмова смуга латунь / синій</td><td>шлагбаум зрозумілий лише в кольорі</td></tr>
+        <tr><td>C · Світло у вікні</td><td>В-будівля з вогником</td><td>«В», вогник зливається</td><td>добре</td><td>тепла історія «ми чергуємо»</td><td>схожість на знаки забудовників</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="rec">
+      <p style="margin:0"><b>Рекомендуємо B «КПП».</b> Він про охорону без жодного кліше: не щит і не орел, а знайомий кожному контроль доступу. Знак читається як «Ш», а смуга «латунь / синій» дає фірмовий елемент, який легко впізнати на авто, наліпці й формі. Запасний – C: найтепліша історія, але потрібна перевірка на схожість.</p>
+    </div>
+    <h3>Чого свідомо уникали</h3>
+    <p>Щит, орел, лев, камуфляж, зброя, приціл, череп, блискавки, «металеве» золото з градієнтом. З першої версії – помаранч, скоси, три стійки з квадратом (читалися як «Н»), середня стійка вища за крайні (схоже на тризуб). Конкурентів у Києві (наприклад, Шериф, Сокіл, Аргус, Security Group, Force Solutions) знайшли в каталогах, але їхні логотипи наживо не переглядали <span class="todo">[уточнити]</span>.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="lbl">Що погодити</p>
+    <h2>Питання до вас</h2>
+    <ol class="q">
+      <li><b>Який варіант знака беремо далі – A, B чи C?</b> Можна «B, але з …» – напишіть, що змінити.</li>
+      <li><b>Палітра:</b> чотири основні кольори лишаємо як є? Латунь достатньо стримана чи хочеться ще тьмяніше?</li>
+      <li><b>Шрифт IBM Plex Sans + Mono</b> – подобається характер, чи хочеться м'якшого або суворішого?</li>
+      <li><b>Написання:</b> «ШТУРМОВА ВАРТА» великими літерами у два рядки – ок? Чи потрібен підпис «охоронна компанія» в самому логотипі?</li>
+      <li><b>Носії для повного стилю:</b> які точно потрібні – авто (яка модель?), форма, наліпки, вивіска, візитки, документи? <span class="todo">[уточнити]</span></li>
+      <li><b>Фото:</b> чи є власні фото постів, об'єктів, авто, команди? Чи плануємо зйомку? Для сайту ілюстрацій мало.</li>
+      <li><b>Схожість:</b> перед фіналом перевіримо знак у реєстрі торговельних марок; назву «Варта» також використовують інші компанії – чи реєстрували ви вже знак для товарів і послуг? <span class="todo">[уточнити]</span></li>
+    </ol>
+  </div>
+</section>
+</main>
+
+<footer class="dark">
+  <div class="wrap">
+    <p>ТОВ «Охоронна компанія «Штурмова варта» · Київ · +380 67 549 5710</p>
+    <p class="muted">Концепція Storm Click, етап 0. Логотипи – SVG-криві в <code>concept-logo/</code>; ілюстрації – SVG у <code>concept-img/</code>. Після погодження варіанта – повний брендбук.</p>
+  </div>
+</footer>
+</body>
+</html>
