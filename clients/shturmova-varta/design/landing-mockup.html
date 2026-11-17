@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Штурмова варта – охорона об'єктів і особиста охорона</title>
+<meta name="description" content="Макет лендингу. Фізична охорона об'єктів і особиста охорона для бізнесу та приватних клієнтів.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--c-paper);color:var(--c-graphite);font:400 var(--fs-body)/var(--lh-body) var(--f-text);overflow-x:hidden}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-family:var(--f-head);font-weight:600;margin:0;letter-spacing:-.015em}
+h1{font-size:var(--fs-h1);line-height:1.02}
+h2{font-size:var(--fs-h2);line-height:1.1}
+h3{font-size:var(--fs-h3);line-height:1.25;font-weight:500}
+p{margin:0 0 var(--s-3)}
+.container{max-width:var(--container);margin:0 auto;padding:0 var(--gutter)}
+.section{padding:var(--section-y) 0}
+.dark{background:var(--c-graphite);color:var(--c-paper)}
+.dark .muted{color:var(--c-steel-light)}
+.muted{color:var(--c-steel)}
+.todo{background:rgba(255,91,31,.14);color:var(--c-signal-ink);font-weight:600;padding:0 .25em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.dark .todo{color:#FF9B73;background:rgba(255,91,31,.16)}
+.label{display:inline-flex;align-items:center;gap:10px;font:600 var(--fs-label)/1.2 var(--f-text);letter-spacing:.14em;text-transform:uppercase;color:var(--c-steel)}
+.label::before{content:"";width:10px;height:10px;background:var(--c-signal);flex:none}
+.dark .label{color:var(--c-steel-light)}
+.sec-title{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4);margin-bottom:var(--s-6);align-items:end}
+.sec-title > div{grid-column:1/8}
+.sec-title > p{grid-column:9/13;margin:0}
+.sec-title h2{margin-top:var(--s-3)}
+
+/* Кнопки */
+.btn{--h:56px;display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:var(--h);padding:0 28px;font:600 17px/1 var(--f-text);text-decoration:none;border:0;cursor:pointer;clip-path:var(--clip-cut);transition:background .15s}
+.btn-primary{background:var(--c-signal);color:var(--c-graphite)}
+.btn-primary:hover{background:var(--c-signal-hover)}
+.btn-primary:focus-visible{outline:3px solid var(--c-paper);outline-offset:3px}
+.btn-ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor;clip-path:none}
+.btn-ghost:hover{background:rgba(243,241,236,.08)}
+.btn .arr{font-family:var(--f-text);transition:transform .15s}
+.btn:hover .arr{transform:translateX(4px)}
+
+/* Шапка */
+.top{position:sticky;top:0;z-index:20;background:var(--c-graphite);color:var(--c-paper);border-bottom:1px solid var(--c-night-line)}
+.top .container{display:flex;align-items:center;gap:var(--s-5);height:72px}
+.top .logo{width:230px;flex:none}
+.top nav{display:flex;gap:28px;font-size:15px;font-weight:500;white-space:nowrap}
+.top nav a{text-decoration:none;color:var(--c-steel-light)}
+.top nav a:hover{color:var(--c-paper)}
+.top .right{margin-left:auto;display:flex;align-items:center;gap:var(--s-4)}
+.top .phone{font-weight:600;text-decoration:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+.top .btn{--h:44px;padding:0 20px;font-size:15px;white-space:nowrap}
+.top .logo{display:flex;align-items:center;min-height:44px}
+.top .phone{display:inline-flex;align-items:center;min-height:44px}
+@media (max-width:900px){.top .phone{display:none}}
+.burger{display:none;width:48px;height:48px;background:none;border:1.5px solid var(--c-night-line);color:var(--c-paper);align-items:center;justify-content:center}
+
+/* Перший екран */
+.hero{position:relative;overflow:hidden;padding:var(--s-6) 0 0}
+.hero .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4);align-items:stretch}
+.hero .copy{grid-column:1/8;padding-bottom:var(--s-7);display:flex;flex-direction:column}
+.hero h1{margin:var(--s-4) 0 var(--s-4);max-width:11ch}
+.hero h1 em{font-style:normal;color:var(--c-signal)}
+.hero .lead{font-size:var(--fs-lead);max-width:48ch;color:#D8D6D0}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:var(--s-3);margin:var(--s-4) 0 var(--s-5)}
+.proof{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:0;margin-top:auto;border-top:1px solid var(--c-night-line)}
+.proof div{padding:var(--s-4) var(--s-5) 0 0;margin-right:var(--s-5);border-right:1px solid var(--c-night-line)}
+.proof div:last-child{border:0;margin:0}
+.proof b{display:block;font:600 22px/1.2 var(--f-head);margin-bottom:6px}
+.proof span{font-size:var(--fs-small);color:var(--c-steel-light)}
+.hero .visual{grid-column:8/13;position:relative;min-height:560px}
+.ph{position:relative;background:linear-gradient(160deg,#2C3036 0%,#1E2126 70%);color:var(--c-steel-light);display:flex;flex-direction:column;justify-content:flex-end;padding:var(--s-4);font-size:14px;line-height:1.45;clip-path:var(--clip-cut-lg)}
+.ph::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 37px,rgba(255,255,255,.025) 37px 38px)}
+.ph .tag{position:relative;font:600 11px/1 var(--f-text);letter-spacing:.14em;text-transform:uppercase;color:var(--c-signal);margin-bottom:8px}
+.ph p{position:relative;margin:0;max-width:36ch}
+.hero .ph{position:absolute;inset:0 0 0 0}
+.hero .posts{position:absolute;left:-38px;bottom:0;display:flex;align-items:flex-end;gap:14px;z-index:2}
+.hero .posts i{display:block;width:24px;background:var(--c-paper)}
+.hero .posts .mid{display:flex;flex-direction:column;gap:14px}
+.hero .posts .mid b{display:block;width:24px;height:24px;background:var(--c-signal)}
+.hero .visual .ph p,.hero .visual .ph .tag{margin-left:72px}
+
+/* Послуги */
+.svc{border-top:2px solid var(--c-graphite)}
+.svc-row{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4);padding:var(--s-5) 0;border-bottom:1px solid var(--c-concrete)}
+.svc-row .num{grid-column:1/2;font:600 15px/1 var(--f-text);color:var(--c-steel);font-variant-numeric:tabular-nums;padding-top:8px}
+.svc-row .name{grid-column:2/6}
+.svc-row .name h3{font-size:clamp(24px,1.2rem + 1vw,34px);font-weight:600;line-height:1.1}
+.svc-row .name p{margin-top:var(--s-3);color:var(--c-steel)}
+.svc-row .what{grid-column:6/10}
+.svc-row .what ul{list-style:none;padding:0;margin:0}
+.svc-row .what li{padding:10px 0 10px 22px;border-bottom:1px solid var(--c-concrete);position:relative}
+.svc-row .what li::before{content:"";position:absolute;left:0;top:19px;width:8px;height:8px;background:var(--c-graphite)}
+.svc-row .act{grid-column:10/13;display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-3)}
+.svc-row .ph{width:100%;aspect-ratio:4/3;min-height:0;font-size:13px;padding:var(--s-3)}
+.link{font-weight:600;color:var(--c-signal-ink);text-decoration:none;display:inline-flex;gap:8px;align-items:center;min-height:44px}
+.link:hover{text-decoration:underline;text-underline-offset:4px}
+.soon{margin-top:var(--s-5);display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4);align-items:start}
+.soon .h{grid-column:1/4}
+.soon ul{grid-column:4/13;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-3)}
+.soon li{border:1.5px dashed #B9B4A9;padding:var(--s-3) var(--s-4);color:var(--c-steel);font-weight:500}
+.soon li b{display:block;color:var(--c-graphite);font-weight:600;margin-bottom:2px}
+
+/* Для кого */
+.objects{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--c-concrete);border-left:1px solid var(--c-concrete)}
+.objects li{list-style:none;padding:var(--s-4);border-right:1px solid var(--c-concrete);border-bottom:1px solid var(--c-concrete);min-height:168px;display:flex;flex-direction:column;justify-content:space-between;background:var(--c-white)}
+.objects li .n{font:600 13px var(--f-text);color:var(--c-steel);font-variant-numeric:tabular-nums}
+.objects li b{font:500 20px/1.2 var(--f-head)}
+.objects li span{font-size:var(--fs-small);color:var(--c-steel);margin-top:6px}
+.objects li.big{grid-column:span 2;background:var(--c-graphite);color:var(--c-paper)}
+.objects li.big span{color:var(--c-steel-light)}
+.objects li.big .n{color:var(--c-signal)}
+
+/* Чому ми */
+.why{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4)}
+.facts{grid-column:1/6;display:flex;flex-direction:column}
+.fact{padding:var(--s-4) 0;border-top:1px solid var(--c-night-line)}
+.fact b{display:block;font:600 clamp(40px,2rem + 2vw,64px)/1 var(--f-head);color:var(--c-paper)}
+.fact span{color:var(--c-steel-light);font-size:var(--fs-small)}
+.reasons{grid-column:7/13}
+.reason{display:grid;grid-template-columns:56px 1fr;gap:var(--s-3);padding:var(--s-4) 0;border-top:1px solid var(--c-night-line)}
+.reason .ix{width:40px;height:40px;background:var(--c-night);display:flex;align-items:center;justify-content:center;font:600 14px var(--f-text);color:var(--c-signal);clip-path:var(--clip-cut)}
+.reason h3{margin-bottom:8px}
+.reason p{margin:0;color:var(--c-steel-light)}
+.note{font-size:14px;color:var(--c-steel-light);border-left:3px solid var(--c-signal);padding:8px 14px;margin-top:var(--s-5)}
+
+/* Процес */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:s;position:relative}
+.step{padding:0 var(--s-4) 0 0;position:relative}
+.step .tick{display:flex;align-items:center;gap:0;margin-bottom:var(--s-4)}
+.step .tick i{width:24px;height:24px;background:var(--c-graphite);flex:none}
+.step:first-child .tick i{background:var(--c-signal)}
+.step .tick::after{content:"";flex:1;height:2px;background:var(--c-graphite)}
+.step:last-child .tick::after{background:linear-gradient(90deg,var(--c-graphite) 0 30%,transparent 30%)}
+.step .k{font:600 var(--fs-label) var(--f-text);letter-spacing:.14em;text-transform:uppercase;color:var(--c-steel)}
+.step h3{margin:8px 0 12px}
+.step p{color:var(--c-steel);font-size:16px;max-width:30ch}
+
+/* Ліцензія */
+.legal{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4);align-items:center}
+.legal .txt{grid-column:1/7}
+.legal dl{display:grid;grid-template-columns:auto 1fr;gap:0;margin:var(--s-5) 0 var(--s-4);border-top:1px solid var(--c-concrete)}
+.legal dt,.legal dd{padding:14px 0;border-bottom:1px solid var(--c-concrete);margin:0}
+.legal dt{color:var(--c-steel);padding-right:var(--s-4);font-size:var(--fs-small)}
+.legal dd{font-weight:600}
+.legal .doc{grid-column:8/13}
+.doc-card{background:var(--c-white);padding:var(--s-5);clip-path:var(--clip-cut-lg);border-left:6px solid var(--c-signal)}
+.doc-card .sheet{aspect-ratio:210/297;max-height:420px;margin:0 auto;background:repeating-linear-gradient(180deg,transparent 0 22px,var(--c-concrete) 22px 23px);background-color:#FAFAF8;outline:1px solid var(--c-concrete);display:flex;align-items:center;justify-content:center;text-align:center;color:var(--c-steel);font-size:14px;padding:var(--s-4)}
+.doc-card .sheet span{background:#FAFAF8;padding:8px}
+
+/* FAQ */
+.faq{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4)}
+.faq .h{grid-column:1/5}
+.faq .list{grid-column:5/13;border-top:2px solid var(--c-graphite)}
+details{border-bottom:1px solid var(--c-concrete)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:var(--s-4);padding:var(--s-4) 0;font:500 clamp(17px,1rem + .3vw,20px)/1.35 var(--f-head);min-height:44px}
+summary::-webkit-details-marker{display:none}
+summary .pm{flex:none;width:32px;height:32px;position:relative}
+summary .pm::before,summary .pm::after{content:"";position:absolute;left:8px;right:8px;top:15px;height:2px;background:var(--c-graphite)}
+summary .pm::after{transform:rotate(90deg);transition:transform .2s}
+details[open] summary .pm::after{transform:rotate(0)}
+details[open] summary .pm::before{background:var(--c-signal)}
+details .a{padding:0 var(--s-6) var(--s-4) 0;color:#3A3E45;max-width:68ch}
+
+/* Форма */
+.lead-sec{position:relative;overflow:hidden}
+.lead-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4)}
+.lead-grid .txt{grid-column:1/6}
+.lead-grid .txt h2{margin:var(--s-3) 0 var(--s-4)}
+.lead-grid form{grid-column:7/13;background:var(--c-night);padding:var(--s-5);clip-path:var(--clip-cut-lg)}
+.alt-contacts{margin-top:var(--s-5);display:flex;flex-direction:column;gap:var(--s-2)}
+.alt-contacts a{font:600 22px/1.3 var(--f-head);text-decoration:none;font-variant-numeric:tabular-nums;min-height:44px;display:flex;align-items:center}
+.field{margin-bottom:var(--s-4)}
+.field label{display:block;font-size:15px;font-weight:500;margin-bottom:8px;color:var(--c-paper)}
+.field label small{color:var(--c-steel-light);font-weight:400;font-size:14px}
+.field input,.field select,.field textarea{width:100%;font:400 17px/1.4 var(--f-text);color:var(--c-paper);background:var(--c-graphite);border:1.5px solid #4A4F57;border-radius:0;padding:14px 16px;min-height:52px;appearance:none;-webkit-appearance:none}
+.field textarea{min-height:120px;resize:vertical}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--c-steel-light) 50%),linear-gradient(135deg,var(--c-steel-light) 50%,transparent 50%);background-position:calc(100% - 22px) 23px,calc(100% - 16px) 23px;background-size:6px 6px;background-repeat:no-repeat;padding-right:44px}
+.field input::placeholder,.field textarea::placeholder{color:#8C9199}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--c-signal);box-shadow:0 0 0 1px var(--c-signal)}
+.field.err input{border-color:#FF6B5B}
+.field .msg{display:block;margin-top:6px;font-size:14px;color:#FF8A7D}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{margin:0}
+.chips input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.chips span{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1.5px solid #4A4F57;font-size:15px;font-weight:500;cursor:pointer;color:var(--c-paper)}
+.chips input:checked + span{background:var(--c-signal);border-color:var(--c-signal);color:var(--c-graphite)}
+.chips input:focus-visible + span{outline:2px solid var(--c-paper);outline-offset:2px}
+.form-foot{display:flex;align-items:center;gap:var(--s-4);flex-wrap:wrap;margin-top:var(--s-4)}
+.form-foot p{margin:0;font-size:14px;color:var(--c-steel-light);flex:1;min-width:220px}
+.form-foot .btn{flex:none}
+
+/* Контакти */
+.contacts{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4)}
+.contacts .list{grid-column:1/6}
+.contacts .row{padding:var(--s-3) 0;border-bottom:1px solid var(--c-concrete);display:grid;grid-template-columns:140px 1fr;gap:var(--s-3)}
+.contacts .row span{color:var(--c-steel);font-size:var(--fs-small)}
+.contacts .row b{font-weight:600}
+.contacts .map{grid-column:7/13;min-height:380px;background:#E4E0D7;position:relative;clip-path:var(--clip-cut-lg);display:flex;align-items:flex-end;padding:var(--s-4);color:var(--c-steel);font-size:14px;overflow:hidden}
+.contacts .map::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 48%,#fff 48% 50%,transparent 50%),linear-gradient(0deg,transparent 62%,#fff 62% 64%,transparent 64%),linear-gradient(28deg,transparent 30%,#F3F1EC 30% 31.5%,transparent 31.5%)}
+.contacts .map .pin{position:absolute;left:48%;top:36%;width:40px}
+
+/* Футер */
+footer{background:var(--c-graphite);color:var(--c-steel-light);padding:var(--s-6) 0 var(--s-5);font-size:15px}
+footer .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4)}
+footer .brand{grid-column:1/5}
+footer .brand .logo{width:min(320px,100%);margin-bottom:var(--s-4)}
+footer .req{grid-column:6/10}
+footer .req p{margin:0 0 6px}
+footer .nav{grid-column:10/13;display:flex;flex-direction:column;gap:4px}
+footer .nav a{text-decoration:none;color:var(--c-paper);min-height:44px;display:flex;align-items:center}
+footer .bottom{margin-top:var(--s-6);padding-top:var(--s-4);border-top:1px solid var(--c-night-line);display:flex;justify-content:space-between;gap:var(--s-3);flex-wrap:wrap;font-size:14px}
+footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:center;min-height:44px}
+
+/* Мобільна панель дій */
+.mbar{display:none}
+
+/* Планшет */
+@media (max-width:1080px){
+  .top nav{display:none}
+  .burger{display:inline-flex}
+  .hero .copy{grid-column:1/-1;padding-bottom:var(--s-5)}
+  .hero .visual{grid-column:1/-1;min-height:360px;margin:0 calc(var(--gutter) * -1)}
+  .hero .posts{display:none}
+  .sec-title > div,.sec-title > p{grid-column:1/-1}
+  .svc-row .num{grid-column:1/-1;padding:0}
+  .svc-row .name{grid-column:1/7}
+  .svc-row .what{grid-column:7/13}
+  .svc-row .act{grid-column:1/-1;flex-direction:row;align-items:center;justify-content:space-between}
+  .svc-row .act .ph{display:none}
+  .soon .h,.soon ul{grid-column:1/-1}
+  .objects{grid-template-columns:repeat(2,1fr)}
+  .facts,.reasons{grid-column:1/-1}
+  .facts{flex-direction:row;flex-wrap:wrap;gap:0 var(--s-5);margin-bottom:var(--s-5)}
+  .fact{flex:1 1 200px}
+  .steps{grid-template-columns:repeat(2,1fr);row-gap:var(--s-5)}
+  .legal .txt,.legal .doc{grid-column:1/-1}
+  .legal .doc{max-width:520px}
+  .faq .h,.faq .list{grid-column:1/-1}
+  .lead-grid .txt,.lead-grid form{grid-column:1/-1}
+  .contacts .list,.contacts .map{grid-column:1/-1}
+  footer .brand{grid-column:1/-1}
+  footer .req{grid-column:1/8}
+  footer .nav{grid-column:8/13}
+}
+
+/* Мобільний */
+@media (max-width:640px){
+  body{font-size:16px;padding-bottom:72px}
+  .top .container{height:64px;gap:var(--s-3)}
+  .top .logo{width:200px}
+  .top .phone{display:none}
+  .top .right .btn{display:none}
+  .hero{padding-top:var(--s-5)}
+  .hero h1{margin:var(--s-3) 0}
+  .hero .ctas{flex-direction:column;align-items:stretch;margin:var(--s-4) 0 var(--s-4)}
+  .hero .ctas .btn{width:100%}
+  .proof{grid-template-columns:1fr 1fr}
+  .proof div{padding:var(--s-3) var(--s-3) var(--s-3) 0;margin:0;border-right:0;border-bottom:1px solid var(--c-night-line)}
+  .proof div:nth-child(3){grid-column:1/-1;border-bottom:0}
+  .proof b{font-size:18px}
+  .hero .visual{min-height:260px}
+  .sec-title{margin-bottom:var(--s-5)}
+  .svc-row{padding:var(--s-4) 0}
+  .svc-row .name,.svc-row .what{grid-column:1/-1}
+  .svc-row .act{flex-direction:column;align-items:stretch}
+  .svc-row .act .btn{width:100%}
+  .soon ul{grid-template-columns:1fr}
+  .objects{grid-template-columns:1fr}
+  .objects li{min-height:0;padding:var(--s-3) var(--s-3);flex-direction:row;align-items:baseline;gap:var(--s-3);justify-content:flex-start;flex-wrap:wrap}
+  .objects li .n{flex:none;width:24px}
+  .objects li b{flex:1;font-size:18px}
+  .objects li span{flex-basis:100%;padding-left:40px;margin:0}
+  .objects li.big{grid-column:auto}
+  .facts{flex-direction:column}
+  .fact{flex:none}
+  .reason{grid-template-columns:48px 1fr}
+  .steps{grid-template-columns:1fr;row-gap:0}
+  .step{display:grid;grid-template-columns:24px 1fr;gap:var(--s-3);padding:0 0 var(--s-4)}
+  .step .tick{flex-direction:column;margin:0;height:100%}
+  .step .tick::after{width:2px;height:auto;flex:1}
+  .step:last-child .tick::after{background:linear-gradient(180deg,var(--c-graphite) 0 30%,transparent 30%)}
+  .step h3{margin:4px 0 8px}
+  .legal dl{grid-template-columns:1fr}
+  .legal dt{border-bottom:0;padding-bottom:0}
+  .doc-card{padding:var(--s-4)}
+  details .a{padding-right:0}
+  .lead-grid form{padding:var(--s-4) var(--s-3);margin:0 calc(var(--gutter) * -1);clip-path:none}
+  .form-foot .btn{width:100%}
+  .contacts .row{grid-template-columns:1fr;gap:2px}
+  .contacts .map{min-height:240px}
+  footer .req,footer .nav{grid-column:1/-1}
+  .mbar{display:grid;grid-template-columns:1fr 1.4fr;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--c-graphite);border-top:1px solid var(--c-night-line);padding:8px var(--gutter) calc(8px + env(safe-area-inset-bottom));gap:8px}
+  .mbar .btn{--h:52px;width:100%;padding:0 12px;font-size:16px}
+  .mbar .btn-ghost{color:var(--c-paper)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="container">
+    <a href="#top" class="logo" aria-label="Штурмова варта – на початок"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1338 100" role="img" aria-label="Штурмова варта"><title>Штурмова варта</title><path fill="#F3F1EC" transform="translate(0 0) scale(1.0)" d="M0 0H24V76H38V38H62V76H76V0H86L100 14V100H0Z"/><rect fill="#FF5B1F" x="38.00" y="0.00" width="24.00" height="24.00"/><g fill="#F3F1EC"><path transform="translate(130.00 0.00) scale(1.0)" d="M0 0H20V80H38V0H58V80H76V0H96V100H0Z"/><path transform="translate(238.00 0.00) scale(1.0)" d="M0 0H76V20H48V100H28V20H0Z"/><path transform="translate(326.00 0.00) scale(1.0)" d="M0 0H20V40H56V0H76V100H0V80H56V60H0Z"/><path transform="translate(414.00 0.00) scale(1.0)" d="M0 0H60L76 16V64H20V100H0Z M20 20V44H56V20Z"/><path transform="translate(502.00 0.00) scale(1.0)" d="M0 0H22L46 44L70 0H92V100H72V40L54 74H38L20 40V100H0Z"/><path transform="translate(606.00 0.00) scale(1.0)" d="M0 0H60L76 16V100H0Z M20 20V80H56V20Z"/><path transform="translate(694.00 0.00) scale(1.0)" d="M0 0H58L72 14V40L66 48L76 58V100H0Z M20 18V40H52V18Z M20 58V82H56V58Z"/><path transform="translate(782.00 0.00) scale(1.0)" d="M0 0H60L76 16V100H56V64H20V100H0Z M20 20V46H56V20Z"/><path transform="translate(910.00 0.00) scale(1.0)" d="M0 0H58L72 14V40L66 48L76 58V100H0Z M20 18V40H52V18Z M20 58V82H56V58Z"/><path transform="translate(998.00 0.00) scale(1.0)" d="M0 0H60L76 16V100H56V64H20V100H0Z M20 20V46H56V20Z"/><path transform="translate(1086.00 0.00) scale(1.0)" d="M0 0H60L76 16V64H20V100H0Z M20 20V44H56V20Z"/><path transform="translate(1174.00 0.00) scale(1.0)" d="M0 0H76V20H48V100H28V20H0Z"/><path transform="translate(1262.00 0.00) scale(1.0)" d="M0 0H60L76 16V100H56V64H20V100H0Z M20 20V46H56V20Z"/></g></svg></a>
+        <nav aria-label="Основна навігація">
+      <a href="#services">Послуги</a><a href="#process">Як починаємо</a><a href="#license">Ліцензія</a><a href="#faq">Питання</a><a href="#contacts">Контакти</a>
+    </nav>
+    <div class="right">
+      <a class="phone" href="tel:+380000000000">[+380 XX XXX XX XX]</a>
+      <a class="btn btn-primary" href="#lead">Залишити заявку</a>
+      <button class="burger" aria-label="Відкрити меню" type="button"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><path d="M0 1h22M0 8h22M0 15h14" stroke="currentColor" stroke-width="2"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+<!-- 1. ПЕРШИЙ ЕКРАН -->
+<section class="hero dark" aria-labelledby="h1">
+  <div class="container grid">
+    <div class="copy">
+      <span class="label"><span>Охоронна компанія · <span class="todo">[місто / регіон]</span></span></span>
+      <h1 id="h1">Ваш об'єкт під вартою<em>.</em></h1>
+      <p class="lead">Фізична охорона об'єктів і особиста охорона для бізнесу та приватних клієнтів. Приїдемо на огляд, порахуємо пост і запропонуємо договір <span class="todo">[термін – уточнити]</span>.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#lead">Замовити огляд об'єкта <span class="arr" aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="tel:+380000000000">Подзвонити <span class="todo">[телефон]</span></a>
+      </div>
+      <div class="proof">
+        <div><b>Ліцензія МВС</b><span>№ <span class="todo">[уточнити]</span></span></div>
+        <div><b><span class="todo">[N]</span> років</b><span>на ринку охорони</span></div>
+        <div><b><span class="todo">[N]</span> охоронців</b><span>у штаті компанії</span></div>
+      </div>
+    </div>
+    <div class="visual">
+      <div class="posts" aria-hidden="true"><i style="height:120px"></i><span class="mid"><b></b><i style="height:110px"></i></span><i style="height:180px"></i></div>
+      <div class="ph" role="img" aria-label="Місце для фото: охоронець на посту біля входу в будівлю ввечері">
+        <span class="tag">Фото · 4:5 · реальне фото клієнта</span>
+        <p>Охоронець у формі компанії біля входу бізнес-центру чи складу, вечір, світло ліхтарів. Знято збоку, людина не позує. До зйомки – нейтральний сток: вхід будівлі вночі без людей і вивісок.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. ПОСЛУГИ -->
+<section class="section" id="services" aria-labelledby="services-h">
+  <div class="container">
+    <div class="sec-title">
+      <div><span class="label">Послуги</span><h2 id="services-h">Беремо під охорону об'єкти і людей</h2></div>
+      <p class="muted">Кожна послуга – окремий рядок одного шаблону. Нова послуга додається ще одним рядком без зміни макета.</p>
+    </div>
+    <div class="svc">
+      <article class="svc-row">
+        <div class="num">01</div>
+        <div class="name"><h3>Фізична охорона об'єктів</h3><p>Пост охорони на території вашого об'єкта – цілодобово або за графіком <span class="todo">[уточнити варіанти]</span>.</p></div>
+        <div class="what"><ul>
+          <li>Огляд об'єкта і план постів</li>
+          <li>Контроль входу, в'їзду і пропускного режиму</li>
+          <li>Обходи території за графіком</li>
+          <li>Журнал змін і звіти власнику <span class="todo">[погодити формат]</span></li>
+        </ul></div>
+        <div class="act"><div class="ph" role="img" aria-label="Місце для фото: пост охорони на складі"><span class="tag">Фото · 4:3</span><p>Пост на складі чи КПП, охоронець перевіряє документи водія.</p></div><a class="link" href="#lead">Замовити огляд <span aria-hidden="true">→</span></a></div>
+      </article>
+      <article class="svc-row">
+        <div class="num">02</div>
+        <div class="name"><h3>Особиста охорона</h3><p>Супровід людини чи родини на зустрічах, поїздках, заходах. Делікатно і без зайвої уваги.</p></div>
+        <div class="what"><ul>
+          <li>Оцінка ризиків і маршрутів</li>
+          <li>Супровід на заходах і в поїздках</li>
+          <li>Охорона приватного будинку <span class="todo">[уточнити, чи входить сюди]</span></li>
+          <li>Конфіденційність за договором</li>
+        </ul></div>
+        <div class="act"><div class="ph" role="img" aria-label="Місце для фото: супровід клієнта"><span class="tag">Фото · 4:3</span><p>Охоронець відчиняє двері авто, клієнт – зі спини, без обличчя.</p></div><a class="link" href="#lead">Обговорити супровід <span aria-hidden="true">→</span></a></div>
+      </article>
+    </div>
+    <div class="soon">
+      <div class="h"><span class="label">Готуємо до запуску</span><p class="muted small" style="margin-top:8px;font-size:15px">Показувати чи ні – <span class="todo">[уточнити]</span></p></div>
+      <ul>
+        <li><b>Пультова охорона</b>Сигналізація з виведенням на пульт</li>
+        <li><b>Група швидкого реагування</b>Виїзд на сигнал тривоги</li>
+        <li><b>Системи безпеки</b>Відеоспостереження, контроль доступу</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3. ДЛЯ КОГО -->
+<section class="section" id="objects" aria-labelledby="objects-h" style="padding-top:0">
+  <div class="container">
+    <div class="sec-title">
+      <div><span class="label">Для кого</span><h2 id="objects-h">Які об'єкти охороняємо</h2></div>
+      <p class="muted">Перелік – заготовка. Лишаємо лише ті типи, з якими компанія справді працює <span class="todo">[погодити]</span>.</p>
+    </div>
+    <ul class="objects" style="margin:0;padding:0">
+      <li class="big"><span class="n">01</span><div><b>Склади й логістичні комплекси</b><br><span>Територія, в'їзд вантажівок, контроль відвантаження</span></div></li>
+      <li><span class="n">02</span><div><b>Виробництво</b><br><span>Цехи, прохідна, периметр</span></div></li>
+      <li><span class="n">03</span><div><b>Офіси й бізнес-центри</b><br><span>Рецепція, пропускний режим</span></div></li>
+      <li><span class="n">04</span><div><b>Магазини й ТРЦ</b><br><span>Зал, каси, вхідні групи</span></div></li>
+      <li><span class="n">05</span><div><b>Будівельні майданчики</b><br><span>Техніка і матеріали вночі</span></div></li>
+      <li><span class="n">06</span><div><b>Приватні будинки</b><br><span>Будинок, територія, родина</span></div></li>
+      <li><span class="n">07</span><div><b>Заходи</b><br><span>Вхід, порядок, супровід гостей</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 4. ЧОМУ МИ -->
+<section class="section dark" aria-labelledby="why-h">
+  <div class="container">
+    <div class="sec-title">
+      <div><span class="label">Чому ми</span><h2 id="why-h">Факти, які можна перевірити</h2></div>
+      <p class="muted">Без «команди професіоналів» – лише цифри і зобов'язання, які компанія підтвердить договором.</p>
+    </div>
+    <div class="why">
+      <div class="facts">
+        <div class="fact"><b><span class="todo">[N]</span></b><span>років компанія працює в охороні</span></div>
+        <div class="fact"><b><span class="todo">[N]</span></b><span>об'єктів під охороною зараз</span></div>
+        <div class="fact"><b><span class="todo">[N] хв</span></b><span>середній час відповіді на заявку</span></div>
+      </div>
+      <div class="reasons">
+        <div class="reason"><span class="ix">01</span><div><h3>Один відповідальний за ваш об'єкт</h3><p>Старший зміни чи менеджер, якому можна подзвонити напряму <span class="todo">[підтвердити]</span>.</p></div></div>
+        <div class="reason"><span class="ix">02</span><div><h3>Звітуємо, а не зникаємо</h3><p>Журнал змін і звіт власнику з частотою, яку ви оберете <span class="todo">[підтвердити формат]</span>.</p></div></div>
+        <div class="reason"><span class="ix">03</span><div><h3>Люди під ваш об'єкт</h3><p>Підбираємо охоронців з урахуванням типу об'єкта і графіка <span class="todo">[як відбирають і навчають – уточнити]</span>.</p></div></div>
+        <div class="reason"><span class="ix">04</span><div><h3>Відповідальність у договорі</h3><p>Обов'язки сторін і порядок відшкодування прописані в договорі <span class="todo">[умови – уточнити]</span>.</p></div></div>
+        <p class="note">Тези – заготовка для погодження. Те, що компанія не підтвердить, прибираємо з сайту.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. ПРОЦЕС -->
+<section class="section" id="process" aria-labelledby="process-h">
+  <div class="container">
+    <div class="sec-title">
+      <div><span class="label">Як починаємо співпрацю</span><h2 id="process-h">Від заявки до поста – чотири кроки</h2></div>
+      <p class="muted">Терміни кожного кроку – <span class="todo">[уточнити]</span>. Порядок кроків погодити з клієнтом.</p>
+    </div>
+    <ol class="steps" style="list-style:none;margin:0;padding:0">
+      <li class="step"><div class="tick"><i></i></div><div><span class="k">Крок 01</span><h3>Заявка</h3><p>Залишаєте заявку чи телефонуєте. Уточнюємо тип об'єкта і що потрібно.</p></div></li>
+      <li class="step"><div class="tick"><i></i></div><div><span class="k">Крок 02</span><h3>Огляд об'єкта</h3><p>Приїжджаємо, оцінюємо ризики, входи, периметр і графік.</p></div></li>
+      <li class="step"><div class="tick"><i></i></div><div><span class="k">Крок 03</span><h3>Пропозиція і договір</h3><p>Надсилаємо план постів і вартість. Підписуємо договір.</p></div></li>
+      <li class="step"><div class="tick"><i></i></div><div><span class="k">Крок 04</span><h3>Виставляємо пост</h3><p>Охоронці виходять на об'єкт, ви отримуєте контакт відповідального.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 6. ЛІЦЕНЗІЯ -->
+<section class="section" id="license" aria-labelledby="license-h" style="background:var(--c-white)">
+  <div class="container legal">
+    <div class="txt">
+      <span class="label">Законність</span>
+      <h2 id="license-h" style="margin-top:var(--s-3)">Працюємо за ліцензією і договором</h2>
+      <p class="muted" style="margin-top:var(--s-4);max-width:52ch">Охоронна діяльність в Україні ліцензується МВС. Номер ліцензії можна перевірити у відкритому реєстрі, а копію надішлемо до підписання договору.</p>
+      <dl>
+        <dt>Компанія</dt><dd>ТОВ «Охоронна компанія «Штурмова варта»</dd>
+        <dt>Ліцензія МВС</dt><dd>№ <span class="todo">[номер]</span> від <span class="todo">[дата]</span></dd>
+        <dt>Код ЄДРПОУ</dt><dd><span class="todo">[уточнити]</span></dd>
+        <dt>Види діяльності</dt><dd><span class="todo">[за ліцензією – уточнити]</span></dd>
+      </dl>
+      <a class="link" href="#" aria-disabled="true">Перевірити ліцензію в реєстрі <span class="todo">[посилання]</span> <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="doc">
+      <div class="doc-card"><div class="sheet"><span>Скан або витяг з ліцензії МВС<br>(без персональних даних)<br><b>[зображення]</b></span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. FAQ -->
+<section class="section" id="faq" aria-labelledby="faq-h">
+  <div class="container faq">
+    <div class="h"><span class="label">Питання</span><h2 id="faq-h" style="margin-top:var(--s-3)">Що питають перед договором</h2></div>
+    <div class="list">
+      <details open><summary>Скільки коштує охорона об'єкта?<span class="pm" aria-hidden="true"></span></summary><div class="a">Ціна залежить від кількості постів, графіка і типу об'єкта. Точну суму назвемо після огляду. <span class="todo">[чи показувати «від [ціна] грн за пост» – уточнити]</span></div></details>
+      <details><summary>Як швидко можете виставити пост?<span class="pm" aria-hidden="true"></span></summary><div class="a"><span class="todo">[термін від підписання договору – уточнити]</span></div></details>
+      <details><summary>Чи є у вас ліцензія?<span class="pm" aria-hidden="true"></span></summary><div class="a">Так, ліцензія МВС № <span class="todo">[номер]</span>. Копію надішлемо до підписання договору.</div></details>
+      <details><summary>Хто відповідає, якщо щось сталося на об'єкті?<span class="pm" aria-hidden="true"></span></summary><div class="a"><span class="todo">[умови відповідальності за договором – уточнити]</span></div></details>
+      <details><summary>Чи охороняєте приватні будинки?<span class="pm" aria-hidden="true"></span></summary><div class="a"><span class="todo">[уточнити]</span></div></details>
+      <details><summary>Можна замовити охорону на один захід?<span class="pm" aria-hidden="true"></span></summary><div class="a"><span class="todo">[мінімальний термін – уточнити]</span></div></details>
+      <details><summary>Як ви контролюєте охоронців на посту?<span class="pm" aria-hidden="true"></span></summary><div class="a"><span class="todo">[перевірки, обходи, зв'язок – уточнити]</span></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- 8. ФОРМА -->
+<section class="section dark lead-sec" id="lead" aria-labelledby="lead-h">
+  <div class="container lead-grid">
+    <div class="txt">
+      <span class="label">Заявка</span>
+      <h2 id="lead-h">Розкажіть про об'єкт – ми передзвонимо</h2>
+      <p class="muted" style="font-size:var(--fs-lead)">Відповімо <span class="todo">[протягом N хв у робочий час – уточнити]</span>, домовимось про огляд. Заявка ні до чого не зобов'язує.</p>
+      <div class="alt-contacts">
+        <span class="muted" style="font-size:15px">Або напряму</span>
+        <a href="tel:+380000000000">[+380 XX XXX XX XX]</a>
+        <a href="#" style="font-size:17px;font-family:var(--f-text);font-weight:500;color:var(--c-steel-light)">Telegram · Viber · <span class="todo">[уточнити]</span></a>
+      </div>
+    </div>
+    <form action="#" method="post" novalidate aria-label="Заявка на охорону">
+      <div class="field"><label for="f-name">Ім'я</label><input id="f-name" name="name" type="text" autocomplete="name" placeholder="Як до вас звертатися" required></div>
+      <div class="field err"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" value="+380 67" required aria-describedby="f-phone-msg" aria-invalid="true"><span class="msg" id="f-phone-msg">Перевірте номер – бракує цифр (приклад стану помилки)</span></div>
+      <fieldset class="field" style="border:0;padding:0;margin:0 0 var(--s-4)">
+        <legend style="font-size:15px;font-weight:500;margin-bottom:8px;padding:0">Тип послуги</legend>
+        <div class="chips">
+          <label><input type="radio" name="service" value="object" checked><span>Охорона об'єкта</span></label>
+          <label><input type="radio" name="service" value="personal"><span>Особиста охорона</span></label>
+          <label><input type="radio" name="service" value="other"><span>Інше / ще не знаю</span></label>
+        </div>
+      </fieldset>
+      <div class="field"><label for="f-msg">Коментар <small>– необов'язково</small></label><textarea id="f-msg" name="comment" placeholder="Тип об'єкта, район, з якої дати потрібна охорона"></textarea></div>
+      <div class="form-foot">
+        <button class="btn btn-primary" type="submit">Надіслати заявку <span class="arr" aria-hidden="true">→</span></button>
+        <p>Натискаючи кнопку, ви погоджуєтесь з <a href="#">обробкою персональних даних</a>.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- 9. КОНТАКТИ -->
+<section class="section" id="contacts" aria-labelledby="contacts-h">
+  <div class="container contacts">
+    <div class="list">
+      <span class="label">Контакти</span>
+      <h2 id="contacts-h" style="margin:var(--s-3) 0 var(--s-5)">На зв'язку</h2>
+      <div class="row"><span>Телефон</span><b><a href="tel:+380000000000" style="text-decoration:none;display:inline-flex;align-items:center;min-height:44px">[+380 XX XXX XX XX]</a></b></div>
+      <div class="row"><span>Пошта</span><b><span class="todo">[e-mail]</span></b></div>
+      <div class="row"><span>Офіс</span><b><span class="todo">[м. Місто, вул. Адреса]</span></b></div>
+      <div class="row"><span>Графік офісу</span><b><span class="todo">[пн–пт, 09:00–18:00]</span></b></div>
+      <div class="row"><span>Чергова частина</span><b><span class="todo">[цілодобово? – уточнити]</span></b></div>
+    </div>
+    <div class="map" role="img" aria-label="Місце для карти з адресою офісу">
+      <div class="pin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Штурмова варта – знак"><title>Штурмова варта – знак</title><path fill="#16181C" transform="translate(0 0) scale(1.0)" d="M0 0H24V76H38V38H62V76H76V0H86L100 14V100H0Z"/><rect fill="#FF5B1F" x="38.00" y="0.00" width="24.00" height="24.00"/></svg></div>
+      <span style="position:relative">Карта Google Maps з адресою офісу <span class="todo">[адреса]</span> – вбудовується при верстці, ліниво</span>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="grid">
+      <div class="brand"><div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 992 220" role="img" aria-label="Штурмова варта – охоронна компанія"><title>Штурмова варта – охоронна компанія</title><path fill="#F3F1EC" transform="translate(0 0) scale(2.2)" d="M0 0H24V76H38V38H62V76H76V0H86L100 14V100H0Z"/><rect fill="#FF5B1F" x="83.60" y="0.00" width="52.80" height="52.80"/><g fill="#F3F1EC"><path transform="translate(264.00 0.00) scale(1.0)" d="M0 0H20V80H38V0H58V80H76V0H96V100H0Z"/><path transform="translate(372.00 0.00) scale(1.0)" d="M0 0H76V20H48V100H28V20H0Z"/><path transform="translate(460.00 0.00) scale(1.0)" d="M0 0H20V40H56V0H76V100H0V80H56V60H0Z"/><path transform="translate(548.00 0.00) scale(1.0)" d="M0 0H60L76 16V64H20V100H0Z M20 20V44H56V20Z"/><path transform="translate(636.00 0.00) scale(1.0)" d="M0 0H22L46 44L70 0H92V100H72V40L54 74H38L20 40V100H0Z"/><path transform="translate(740.00 0.00) scale(1.0)" d="M0 0H60L76 16V100H0Z M20 20V80H56V20Z"/><path transform="translate(828.00 0.00) scale(1.0)" d="M0 0H58L72 14V40L66 48L76 58V100H0Z M20 18V40H52V18Z M20 58V82H56V58Z"/><path transform="translate(916.00 0.00) scale(1.0)" d="M0 0H60L76 16V100H56V64H20V100H0Z M20 20V46H56V20Z"/><path transform="translate(264.00 120.00) scale(1.0)" d="M0 0H58L72 14V40L66 48L76 58V100H0Z M20 18V40H52V18Z M20 58V82H56V58Z"/><path transform="translate(352.00 120.00) scale(1.0)" d="M0 0H60L76 16V100H56V64H20V100H0Z M20 20V46H56V20Z"/><path transform="translate(440.00 120.00) scale(1.0)" d="M0 0H60L76 16V64H20V100H0Z M20 20V44H56V20Z"/><path transform="translate(528.00 120.00) scale(1.0)" d="M0 0H76V20H48V100H28V20H0Z"/><path transform="translate(616.00 120.00) scale(1.0)" d="M0 0H60L76 16V100H56V64H20V100H0Z M20 20V46H56V20Z"/><path d="M738.2517680339463 150.33946251768035Q733.6265912305516 150.33946251768035 730.3804809052334 148.3875530410184Q727.1343705799152 146.43564356435644 725.4158415841584 142.95615275813296Q723.6973125884017 139.47666195190948 723.6973125884017 135.021216407355Q723.6973125884017 130.48090523338047 725.4370579915135 127.02263083451201Q727.1768033946252 123.56435643564356 730.4441301272984 121.59123055162658Q733.7114568599717 119.61810466760961 738.3366336633663 119.61810466760961Q742.961810466761 119.61810466760961 746.2079207920792 121.57001414427157Q749.4540311173974 123.52192362093352 751.1937765205091 126.98019801980197Q752.9335219236209 130.43847241867044 752.9335219236209 134.93635077793493Q752.9335219236209 139.3917963224894 751.2149929278642 142.87128712871288Q749.4964639321075 146.35077793493636 746.2079207920792 148.34512022630835Q742.9193776520509 150.33946251768035 738.2517680339463 150.33946251768035ZM738.3366336633663 145.41725601131543Q741.5615275813295 145.41725601131543 743.5983026874117 143.93210749646394Q745.6350777934937 142.44695898161245 746.5898161244696 140.07072135785006Q747.5445544554456 137.6944837340877 747.5445544554456 135.021216407355Q747.5445544554456 132.984441301273 747.0141442715701 131.1173974540311Q746.4837340876945 129.25035360678925 745.3592644978784 127.76520509193776Q744.2347949080622 126.28005657708628 742.4950495049504 125.41018387553041Q740.7553041018388 124.54031117397454 738.3366336633663 124.54031117397454Q735.1541725601131 124.54031117397454 733.0961810466761 126.02545968882603Q731.038189533239 127.5106082036775 730.062234794908 129.88684582743988Q729.086280056577 132.26308345120225 729.086280056577 135.021216407355Q729.086280056577 137.73691654879775 730.062234794908 140.11315417256012Q731.038189533239 142.48939179632248 733.0961810466761 143.95332390381895Q735.1541725601131 145.41725601131543 738.3366336633663 145.41725601131543Z"/><path d="M758.5952717720752 150.0 768.6518488583553 134.978783592645 758.9347342897555 120.0H765.299656496262L772.0040412204486 130.990099009901L778.6235603152153 120.0H784.8611840775915L775.1865023237018 134.93635077793493L785.2006465952718 150.0H778.8357243887655L771.8343099616085 138.96746817538897L764.7055970903214 150.0Z"/><path d="M805.4168518892707 150.33946251768035Q800.791675085876 150.33946251768035 797.5455647605578 148.3875530410184Q794.2994544352396 146.43564356435644 792.5809254394828 142.95615275813296Q790.8623964437261 139.47666195190948 790.8623964437261 135.021216407355Q790.8623964437261 130.48090523338047 792.6021418468379 127.02263083451201Q794.3418872499495 123.56435643564356 797.6092139826228 121.59123055162658Q800.8765407152961 119.61810466760961 805.5017175186907 119.61810466760961Q810.1268943220854 119.61810466760961 813.3730046474036 121.57001414427157Q816.6191149727218 123.52192362093352 818.3588603758335 126.98019801980197Q820.0986057789453 130.43847241867044 820.0986057789453 134.93635077793493Q820.0986057789453 139.3917963224894 818.3800767831885 142.87128712871288Q816.6615477874319 146.35077793493636 813.3730046474036 148.34512022630835Q810.0844615073753 150.33946251768035 805.4168518892707 150.33946251768035ZM805.5017175186907 145.41725601131543Q808.7266114366539 145.41725601131543 810.763386542736 143.93210749646394Q812.8001616488181 142.44695898161245 813.754899979794 140.07072135785006Q814.70963831077 137.6944837340877 814.70963831077 135.021216407355Q814.70963831077 132.984441301273 814.1792281268945 131.1173974540311Q813.6488179430189 129.25035360678925 812.5243483532028 127.76520509193776Q811.3998787633866 126.28005657708628 809.6601333602748 125.41018387553041Q807.9203879571631 124.54031117397454 805.5017175186907 124.54031117397454Q802.3192564154375 124.54031117397454 800.2612649020004 126.02545968882603Q798.2032733885634 127.5106082036775 797.2273186502324 129.88684582743988Q796.2513639119014 132.26308345120225 796.2513639119014 135.021216407355Q796.2513639119014 137.73691654879775 797.2273186502324 140.11315417256012Q798.2032733885634 142.48939179632248 800.2612649020004 143.95332390381895Q802.3192564154375 145.41725601131543 805.5017175186907 145.41725601131543Z"/><path d="M828.7730854718126 150.0V120.0H840.0602141846839Q843.4548393614873 120.0 845.9371590220248 121.03960396039604Q848.4194786825623 122.07920792079207 849.7985451606387 124.32814710042433Q851.177611638715 126.57708628005658 851.177611638715 130.22630834512023Q851.177611638715 133.7057991513437 849.6500303091534 136.03960396039605Q848.1224489795919 138.37340876944836 845.4916144675693 139.54031117397454Q842.8607799555467 140.7072135785007 839.4661547787433 140.7072135785007H834.0771873105679V150.0ZM834.0771873105679 135.95473833097594H839.3812891493233Q842.3091533643161 135.95473833097594 844.0913315821379 134.55445544554453Q845.8735097999597 133.15417256011315 845.8735097999597 130.14144271570015Q845.8735097999597 127.5106082036775 844.3883612851082 126.17397454031118Q842.9032127702567 124.83734087694484 839.8056172964236 124.83734087694484H834.0771873105679Z"/><path d="M872.5819357445951 150.33946251768035Q867.9567589412004 150.33946251768035 864.7106486158822 148.3875530410184Q861.464538290564 146.43564356435644 859.7460092948072 142.95615275813296Q858.0274802990505 139.47666195190948 858.0274802990505 135.021216407355Q858.0274802990505 130.48090523338047 859.7672257021622 127.02263083451201Q861.5069711052739 123.56435643564356 864.7742978379472 121.59123055162658Q868.0416245706205 119.61810466760961 872.6668013740151 119.61810466760961Q877.2919781774098 119.61810466760961 880.538088502728 121.57001414427157Q883.7841988280462 123.52192362093352 885.5239442311579 126.98019801980197Q887.2636896342697 130.43847241867044 887.2636896342697 134.93635077793493Q887.2636896342697 139.3917963224894 885.5451606385129 142.87128712871288Q883.8266316427563 146.35077793493636 880.538088502728 148.34512022630835Q877.2495453626997 150.33946251768035 872.5819357445951 150.33946251768035ZM872.6668013740151 145.41725601131543Q875.8916952919783 145.41725601131543 877.9284703980604 143.93210749646394Q879.9652455041424 142.44695898161245 880.9199838351184 140.07072135785006Q881.8747221660943 137.6944837340877 881.8747221660943 135.021216407355Q881.8747221660943 132.984441301273 881.3443119822189 131.1173974540311Q880.8139017983433 129.25035360678925 879.6894322085271 127.76520509193776Q878.564962618711 126.28005657708628 876.8252172155992 125.41018387553041Q875.0854718124875 124.54031117397454 872.6668013740151 124.54031117397454Q869.4843402707619 124.54031117397454 867.4263487573248 126.02545968882603Q865.3683572438878 127.5106082036775 864.3924025055568 129.88684582743988Q863.4164477672258 132.26308345120225 863.4164477672258 135.021216407355Q863.4164477672258 137.73691654879775 864.3924025055568 140.11315417256012Q865.3683572438878 142.48939179632248 867.4263487573248 143.95332390381895Q869.4843402707619 145.41725601131543 872.6668013740151 145.41725601131543Z"/><path d="M895.938169327137 150.0V120.0H901.2422711658922V132.8147100424328H915.2451000202063V120.0H920.5067690442515V150.0H915.2451000202063V137.65205091937764H901.2422711658922V150.0Z"/><path d="M930.8361285108105 150.0V120.0H936.1402303495657V132.8147100424328H950.1430592038798V120.0H955.404728227925V150.0H950.1430592038798V137.65205091937764H936.1402303495657V150.0Z"/><path d="M962.5516265912308 150.0 974.0509193776523 120.0H980.3734087694486L991.8302687411601 150.0H986.1018387553044L984.1074964639323 144.44130127298445H970.2743988684585L968.2376237623765 150.0ZM971.9717114568602 139.64639321074964H982.3677510608206L977.1909476661955 125.34653465346534Z"/><path d="M725.3521923620933 220.0V190.0H730.6562942008486V202.89957567185292H734.984441301273L743.4285714285714 190.0H749.4540311173974L739.4398868458275 204.68175388967467L749.4964639321075 220.0H743.3012729844413L735.2390381895333 207.73691654879775H730.6562942008486V220.0Z"/><path d="M771.6342695494039 220.33946251768035Q767.0090927460093 220.33946251768035 763.7629824206911 218.3875530410184Q760.5168720953728 216.43564356435644 758.7983430996161 212.95615275813296Q757.0798141038593 209.47666195190948 757.0798141038593 205.021216407355Q757.0798141038593 200.48090523338047 758.819559506971 197.02263083451203Q760.5593049100828 193.56435643564356 763.8266316427561 191.5912305516266Q767.0939583754293 189.61810466760963 771.719135178824 189.61810466760963Q776.3443119822186 189.61810466760963 779.5904223075369 191.57001414427157Q782.8365326328551 193.52192362093353 784.5762780359669 196.980198019802Q786.3160234390785 200.43847241867044 786.3160234390785 204.93635077793493Q786.3160234390785 209.3917963224894 784.5974944433219 212.87128712871288Q782.8789654475652 216.35077793493636 779.5904223075369 218.34512022630835Q776.3018791675086 220.33946251768035 771.6342695494039 220.33946251768035ZM771.719135178824 215.41725601131543Q774.9440290967872 215.41725601131543 776.9808042028692 213.93210749646394Q779.0175793089513 212.44695898161245 779.9723176399273 210.07072135785006Q780.9270559709032 207.6944837340877 780.9270559709032 205.021216407355Q780.9270559709032 202.984441301273 780.3966457870276 201.1173974540311Q779.8662356031522 199.25035360678925 778.741766013336 197.76520509193776Q777.6172964235199 196.28005657708627 775.8775510204082 195.4101838755304Q774.1378056172964 194.54031117397454 771.719135178824 194.54031117397454Q768.5366740755708 194.54031117397454 766.4786825621337 196.02545968882603Q764.4206910486967 197.51060820367752 763.4447363103657 199.88684582743988Q762.4687815720347 202.26308345120225 762.4687815720347 205.021216407355Q762.4687815720347 207.73691654879775 763.4447363103657 210.11315417256012Q764.4206910486967 212.48939179632248 766.4786825621337 213.95332390381895Q768.5366740755708 215.41725601131543 771.719135178824 215.41725601131543Z"/><path d="M796.8696706405334 220.0V190.0H804.0832491412407L812.484946453829 205.14851485148515L820.8442109517074 190.0H827.8031925641544V220.0H822.5415235401091V196.57708628005656L813.5033340068701 212.95615275813296H811.2968276419479L802.1737724792887 196.57708628005656V220.0Z"/><path d="M840.0117195393009 220.0V190.0H864.5378864417055V220.0H859.2337846029501V194.79490806223478H845.3158213780562V220.0Z"/><path d="M873.5639523135989 220.0 885.0632451000204 190.0H891.3857344918166L902.8425944635281 220.0H897.1141644776724L895.1198221863003 214.44130127298445H881.2867245908266L879.2499494847445 220.0ZM882.9840371792283 209.64639321074964H893.3800767831887L888.2032733885635 195.34653465346534Z"/><path d="M911.8686603354214 220.0V190.0H917.1727621741767V202.8147100424328H931.1755910284908V190.0H936.437260052536V220.0H931.1755910284908V207.65205091937764H917.1727621741767V220.0Z"/><path d="M948.6457870276824 220.0V190.0H953.9498888664377V220.0Z"/><path d="M964.927864214993 220.0 972.0990099009902 208.54314002828855Q969.0438472418671 207.65205091937764 967.2616690240453 205.44554455445544Q965.4794908062236 203.23903818953323 965.4794908062236 199.63224893917965Q965.4794908062236 196.9165487977369 966.3493635077795 195.07072135785006Q967.2192362093353 193.22489391796321 968.7892503536069 192.10042432814708Q970.3592644978785 190.97595473833098 972.5021216407356 190.4879773691655Q974.6449787835927 190.0 977.1060820367752 190.0H988.6478076379067V220.0H983.3437057991514V209.43422913719942H977.3182461103254L971.0806223479492 220.0ZM983.3437057991514 204.72418670438472V194.83734087694484H976.7666195190949Q974.8571428571429 194.83734087694484 973.4992927864216 195.34653465346534Q972.1414427157002 195.85572842998585 971.4413012729844 196.9165487977369Q970.7411598302688 197.97736916548797 970.7411598302688 199.67468175388967Q970.7411598302688 201.71145685997172 971.7171145685998 202.7934936350778Q972.6930693069307 203.87553041018387 974.2418670438474 204.2998585572843Q975.7906647807639 204.72418670438472 977.5304101838756 204.72418670438472Z"/></g></svg></div></div>
+      <div class="req">
+        <p style="color:var(--c-paper);font-weight:600">ТОВ «ОХОРОННА КОМПАНІЯ «ШТУРМОВА ВАРТА»</p>
+        <p>Код ЄДРПОУ: [уточнити]</p>
+        <p>Юридична адреса: [уточнити]</p>
+        <p>Ліцензія МВС № [уточнити] від [дата]</p>
+      </div>
+      <nav class="nav" aria-label="Навігація в підвалі">
+        <a href="#services">Послуги</a><a href="#process">Як починаємо</a><a href="#license">Ліцензія</a><a href="#faq">Питання</a><a href="#lead">Заявка</a>
+      </nav>
+    </div>
+    <div class="bottom"><span>© 2026 «Штурмова варта»</span><a href="#">Політика конфіденційності</a></div>
+  </div>
+</footer>
+
+<div class="mbar" aria-label="Швидкі дії">
+  <a class="btn btn-ghost" href="tel:+380000000000">Подзвонити</a>
+  <a class="btn btn-primary" href="#lead">Залишити заявку</a>
+</div>
+</body>
+</html>
