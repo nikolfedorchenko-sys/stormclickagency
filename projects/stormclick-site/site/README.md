@@ -6,7 +6,7 @@
 
 - [Vite](https://vite.dev) – збірка і dev-сервер
 - [GSAP ScrollTrigger](https://gsap.com) + [Lenis](https://lenis.darkroom.engineering) – анімації на скролі і плавний скрол
-- Шрифти Unbounded (заголовки) і Manrope (текст), вбудовані в збірку
+- Шрифт Geologica (variable, вісь SHRP для загострених заголовків), вбудований у збірку через @fontsource-variable/geologica.
 
 ## Структура
 
