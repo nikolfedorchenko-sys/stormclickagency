@@ -28,7 +28,7 @@
                 radial-gradient(45% 45% at 85% 25%, rgba(169, 139, 255, .22), transparent 70%);
 
   /* Сцена шторму (перший екран) – кольори canvas. Детально: design-brief.md, «Сцена шторму» */
-  --storm-core: #FFFFFF;                 /* ядро розряду, 1.8 px (360: 1.45 px) */
+  --storm-core: #FFFFFF;                 /* ядро розряду, 1.8 px (360: 1.45 px); світіння – у canvas 1/4 роздільності */
   --storm-glow-inner: rgba(200, 206, 255, .7); /* ореол 3 px, blur 8 */
   --storm-glow-mid: rgba(124, 136, 255, .16);  /* ореол 6 px, тінь #A98BFF blur 22 */
   --storm-glow-outer: rgba(124, 136, 255, .05); /* повітря 18 px, blur 44 */
@@ -84,6 +84,10 @@
   --storm-decay: 65ms;        /* згасання кожного спалаху (експонента, tau) */
   --storm-tail: 650ms;        /* догоряння каналу після останнього спалаху */
   --storm-sky-max: .62;       /* максимум підсвітки хмар */
+  --storm-min-len-narrow: 180px; /* мінімальний видимий канал на 360/768 */
+  --storm-min-len-wide: 300px;   /* і на десктопі */
+  --storm-end-fade: 55px;        /* 768: кінець каналу гасне; на <768 – 40px */
+  --storm-cloud-blur: 4px;       /* CSS blur статичного шару хмар */
 }
 
 @media (min-width: 768px) {
