@@ -1,0 +1,16 @@
+name = "stormclick-assistant"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Домен сайту, якому дозволено звертатися до API (кілька через кому)
+ALLOWED_ORIGINS = "https://stormclick.agency,http://localhost:5173,http://localhost:4173"
+# Куди відправляти заявки на email (необов'язково, потрібен RESEND_API_KEY)
+LEAD_EMAIL = ""
+
+# Секрети задаються командою `wrangler secret put <NAME>`:
+#   ANTHROPIC_API_KEY   – ключ Claude
+#   TELEGRAM_BOT_TOKEN  – токен бота, який надсилає заявки
+#   TELEGRAM_CHAT_ID    – id чату або каналу, куди падають заявки
+#   RESEND_API_KEY      – (необов'язково) для дублювання заявок на email
