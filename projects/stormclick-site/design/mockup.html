@@ -54,10 +54,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ---- Перший екран ---- */
 .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;isolation:isolate;overflow:hidden}
-.storm{position:absolute;z-index:-1;pointer-events:none;top:0;right:-34%;width:118%;height:440px}
+/* Сцена шторму: хмари (статичний canvas) + блискавка (canvas, малюється лише під час удару).
+   Займає весь герой; де можна бити – рахує скрипт за положенням тексту, кнопок і табло. */
+.storm{position:absolute;z-index:-1;pointer-events:none;inset:0;overflow:hidden}
+.storm canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .storm::before{content:"";position:absolute;inset:0 0 auto;height:calc(var(--header-h) + 24px);background:linear-gradient(180deg,var(--c-bg) 35%,rgba(5,6,11,0));z-index:1}
-.storm svg{width:100%;height:100%;display:block}
-.storm::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,var(--c-bg) 100%)}
 .hero-main{flex:1;display:flex;align-items:flex-end}
 .hero-main .container{padding-top:calc(var(--header-h) + 52px);padding-bottom:var(--s-6)}
 .announce{display:inline-flex;align-items:center;gap:var(--s-3);min-height:var(--tap);padding:6px 16px 6px 6px;border-radius:var(--r-pill);border:1px solid var(--c-line);background:rgba(14,16,24,.72);backdrop-filter:blur(8px);font-size:var(--fs-small);font-weight:500;color:var(--c-text);margin-bottom:var(--s-5);transition:border-color var(--dur-fast)}
@@ -93,20 +94,15 @@ h1 .hl{color:var(--c-accent);display:block}
 .p-note a{display:inline-flex;align-items:center;min-height:var(--tap);color:var(--c-text);font-weight:600;gap:6px}
 .p-note a span{color:var(--c-accent-hi)}
 
-/* Позначка заглушки – видима завжди, щоб SVG не сприйняли як фінальний візуал */
-.stub{position:absolute;z-index:4;right:max(var(--gutter),calc((100% - var(--container)) / 2));top:calc(var(--header-h) + 8px);display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px dashed var(--c-line-strong);border-radius:var(--r-sm);background:rgba(5,6,11,.7);font-size:var(--fs-small);line-height:1.3;color:var(--c-muted)}
-.stub .long{display:none}
 /* Анотація для погодження (вмикається ?notes) */
 .annot{display:none;position:absolute;z-index:5;right:var(--gutter);top:calc(var(--header-h) + 12px);max-width:260px;padding:10px 12px;border:1px dashed var(--c-accent);border-radius:var(--r-sm);font-size:var(--fs-small);color:var(--c-accent-hi);background:rgba(5,6,11,.8)}
 .show-notes .annot{display:block}
 
 /* ---- 768 ---- */
 @media (min-width:768px){
-  .storm{right:-14%;width:70%;height:560px}
   .hero{min-height:min(100svh,940px)}
   .hero-main{align-items:center}
   .hero-main .container{padding-top:calc(var(--header-h) + 160px);padding-bottom:var(--s-7)}
-  .stub .long{display:inline}.stub .short{display:none}
   .lead{max-width:42ch}
   .actions{flex-direction:row;align-items:center;gap:var(--s-5)}
   .p-list{grid-template-columns:repeat(3,1fr);column-gap:var(--s-5)}
@@ -126,10 +122,7 @@ h1 .hl{color:var(--c-accent);display:block}
   .burger{display:none}
   .header-cta{display:inline-flex;align-items:center;height:var(--tap);padding:0 var(--s-5);border-radius:var(--r-md);border:1px solid var(--c-line-strong);font-weight:600;font-size:15px;transition:border-color var(--dur-fast),background var(--dur-fast)}
   .header-cta:hover{border-color:var(--c-text);background:var(--c-surface)}
-  .storm{right:-6%;width:62%;height:100%}
   .hero{min-height:100svh}
-  .stub{top:calc(var(--header-h) + 16px)}
-  .storm::after{background:linear-gradient(90deg,var(--c-bg) 0%,transparent 30%),linear-gradient(180deg,transparent 70%,var(--c-bg) 100%)}
   .hero-main{align-items:center}
   .hero-main .container{padding-top:calc(var(--header-h) + var(--s-7));padding-bottom:var(--s-7)}
   h1{max-width:13.5ch}
@@ -145,7 +138,6 @@ h1 .hl{color:var(--c-accent);display:block}
 /* Планшет у ландшафті (1024×768): контент вище, щоб смуга цін була видна */
 @media (min-width:768px) and (max-width:1199px) and (max-height:820px){
   .hero-main .container{padding-top:calc(var(--header-h) + 64px);padding-bottom:var(--s-5)}
-  .storm{right:-6%;width:66%;height:560px}
 }
 /* Низькі десктопні екрани (1280×720, 1366×768): усе до смуги цін влазить у перший екран */
 @media (min-width:1200px) and (max-height:820px){
@@ -157,7 +149,6 @@ h1 .hl{color:var(--c-accent);display:block}
   .p-item{padding:var(--s-5) 0}
   .p-item + .p-item::before{top:var(--s-5);bottom:var(--s-5)}
   .p-note{padding:var(--s-5) 0 var(--s-5) var(--s-6)}
-  .storm{width:50%;right:0}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -188,12 +179,12 @@ h1 .hl{color:var(--c-accent);display:block}
 
 <main>
   <section class="hero" aria-labelledby="hero-title">
-    <!-- [3D] Місце WebGL-сцени «шторм із частинок». Нижче – статична SVG-заглушка, що передає ідею. -->
-    <div class="storm" aria-hidden="true">
-      <svg id="storm" viewBox="0 0 800 900" preserveAspectRatio="xMidYMin slice"></svg>
+    <!-- Сцена шторму: процедурна блискавка на canvas. ?strike – кадр удару, ?calm – між ударами. -->
+    <div class="storm" id="storm" aria-hidden="true">
+      <canvas class="storm-sky"></canvas>
+      <canvas class="storm-fx"></canvas>
     </div>
-    <p class="stub" aria-hidden="true"><span class="short">Заглушка 3D-сцени</span><span class="long">Місце 3D-сцени: шторм із частинок – заглушка</span></p>
-    <p class="annot">[3D] Тут шторм із частинок (Three.js). Курсор нахиляє хмару, на скролі частинки збираються в блискавку-логотип. На слабких пристроях – відео-цикл.</p>
+    <p class="annot">Сцена: темні хмари, удар блискавки раз на 3–6 с, щоразу інша форма; 2–3 спалахи за удар, підсвічують хмари. Блискавка обходить текст, кнопки, шапку і табло. Без руху – статичний кадр.</p>
 
     <div class="hero-main">
       <div class="container">
@@ -237,50 +228,335 @@ h1 .hl{color:var(--c-accent);display:block}
 </main>
 
 <script>
-// Статична заглушка шторму: хмара частинок + розряд у блискавку.
-// Детермінований генератор, щоб скриншоти були однакові.
+// Сцена шторму: процедурні хмари + блискавка на canvas, без бібліотек.
+// ?strike – застиглий кадр удару (фіксований seed), ?calm – хмари між ударами,
+// ?notes – анотація. prefers-reduced-motion – один статичний кадр блискавки.
 (function(){
-  if (location.search.indexOf('notes') > -1) document.body.classList.add('show-notes');
-  var svg = document.getElementById('storm'), NS = 'http://www.w3.org/2000/svg';
-  var seed = 7; function rnd(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
-  function el(n, a){ var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); svg.appendChild(e); return e; }
-  var defs = el('defs', {});
-  defs.innerHTML =
-    '<radialGradient id="sky" cx="58%" cy="34%" r="60%"><stop offset="0" stop-color="#7C88FF" stop-opacity=".34"/><stop offset=".45" stop-color="#A98BFF" stop-opacity=".12"/><stop offset="1" stop-color="#05060B" stop-opacity="0"/></radialGradient>' +
-    '<linearGradient id="bolt" x1="0" y1="0" x2=".6" y2="1"><stop offset="0" stop-color="#E4E7FF"/><stop offset=".45" stop-color="#9AA3FF"/><stop offset="1" stop-color="#A98BFF"/></linearGradient>' +
-    '<filter id="blur" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1200" height="1300"><feGaussianBlur stdDeviation="22"/></filter><filter id="cloud" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1200" height="1300"><feGaussianBlur stdDeviation="48"/></filter>' +
-    '';
-  el('rect', {x:0, y:0, width:800, height:900, fill:'url(#sky)'});
-  // маса грозової хмари під частинками
-  el('ellipse', {cx:430, cy:210, rx:240, ry:90, fill:'#A98BFF', opacity:.16, filter:'url(#cloud)'});
-  el('ellipse', {cx:560, cy:250, rx:200, ry:80, fill:'#7C88FF', opacity:.18, filter:'url(#cloud)'});
-  // хмара частинок: густіше вгорі, сходиться до точки удару
-  var cx = 470, cy = 250;
-  for (var i = 0; i < 520; i++){
-    var a = rnd() * Math.PI * 2, r = Math.pow(rnd(), .6);
-    var x = cx + Math.cos(a) * r * 330, y = cy + Math.sin(a) * r * 150 - 30;
-    var s = rnd() < .08 ? 2.2 : (rnd() < .4 ? 1.4 : .9);
-    var op = (1 - r) * .85 + .1;
-    el('circle', {cx:x.toFixed(1), cy:y.toFixed(1), r:s, fill: rnd() < .35 ? '#A98BFF' : '#9AA3FF', 'fill-opacity':op.toFixed(2)});
+  var q = location.search;
+  if (q.indexOf('notes') > -1) document.body.classList.add('show-notes');
+  var MODE = q.indexOf('strike') > -1 ? 'strike' : (q.indexOf('calm') > -1 ? 'calm' : 'live');
+  var reduceMQ = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+
+  var hero = document.querySelector('.hero');
+  var box = document.getElementById('storm');
+  var sky = box.querySelector('.storm-sky'), fx = box.querySelector('.storm-fx');
+  var sctx = sky.getContext('2d'), fctx = fx.getContext('2d');
+
+  // ---- Параметри (ті самі – у design-brief.md) ----
+  var P = {
+    firstDelay: 1200,          // перший удар після завантаження, мс
+    gapMin: 3000, gapMax: 6000, // пауза між ударами, мс
+    leaderMin: 60, leaderMax: 110,   // «лідер» – розряд проростає згори
+    pulseGapMin: 170, pulseGapMax: 260, // між спалахами одного удару
+    tau: 65,                   // згасання спалаху, мс
+    tail: 650,                 // догоряння після останнього спалаху, мс
+    skyMax: .62,               // максимум підсвітки хмар (не сліпить)
+    cloudScale: 3              // хмари рахуються в 1/3 роздільності
+  };
+
+  // ---- Детермінований генератор ----
+  function mulberry(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  // ---- Value noise для хмар ----
+  function hash(ix, iy){ var h = Math.imul(ix, 374761393) + Math.imul(iy, 668265263) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967295; }
+  function vnoise(x, y){
+    var ix = Math.floor(x), iy = Math.floor(y), fx_ = x - ix, fy = y - iy;
+    var u = fx_ * fx_ * (3 - 2 * fx_), v = fy * fy * (3 - 2 * fy);
+    var a = hash(ix, iy), b = hash(ix + 1, iy), c = hash(ix, iy + 1), d = hash(ix + 1, iy + 1);
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
   }
-  // потоки частинок, що стікають до блискавки
-  for (var j = 0; j < 140; j++){
-    var t = rnd(), sx = 230 + rnd() * 480, ex = 470 + (rnd() - .5) * 40;
-    var px = sx + (ex - sx) * t, py = 300 + t * 220 + (rnd() - .5) * 30;
-    el('circle', {cx:px.toFixed(1), cy:py.toFixed(1), r:.9, fill:'#9AA3FF', 'fill-opacity':(.15 + t * .5).toFixed(2)});
+  function fbm(x, y){
+    var s = 0, amp = .5, f = 1;
+    for (var o = 0; o < 5; o++){ s += amp * vnoise(x * f + o * 17.3, y * f - o * 9.1); f *= 2.03; amp *= .5;
+      var t = x; x = x * .8 - y * .6; y = t * .6 + y * .8; }
+    return s / .97;
   }
-  // гілка розряду з хмари
-  var d = 'M468 160 L450 214 L478 236 L452 292 L488 312 L500 360';
-  el('path', {d:d, stroke:'#9AA3FF', 'stroke-width':10, fill:'none', filter:'url(#blur)', opacity:.9});
-  el('path', {d:d, stroke:'#E4E7FF', 'stroke-width':1.6, fill:'none', 'stroke-linejoin':'round'});
-  el('path', {d:'M478 236 L522 262 L514 294 L550 326', stroke:'#9AA3FF', 'stroke-width':1, fill:'none', opacity:.6});
-  el('path', {d:'M452 292 L414 322 L420 350', stroke:'#9AA3FF', 'stroke-width':1, fill:'none', opacity:.5});
-  // блискавка-логотип: точка удару
-  var g = el('g', {transform:'translate(392 360) scale(1.7)'});
-  var glow = document.createElementNS(NS, 'path'); glow.setAttribute('d', 'M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z'); glow.setAttribute('fill', '#7C88FF'); glow.setAttribute('filter', 'url(#blur)'); glow.setAttribute('opacity', '.9'); g.appendChild(glow);
-  var bolt = document.createElementNS(NS, 'path'); bolt.setAttribute('d', 'M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z'); bolt.setAttribute('fill', 'url(#bolt)'); g.appendChild(bolt);
-  // горизонт: відблиск унизу
-  el('ellipse', {cx:470, cy:720, rx:260, ry:26, fill:'#7C88FF', opacity:.22, filter:'url(#blur)'});
+  function sstep(a, b, x){ x = (x - a) / (b - a); x = x < 0 ? 0 : x > 1 ? 1 : x; return x * x * (3 - 2 * x); }
+
+  // ---- Розмітка: де бити не можна ----
+  var W, H, DPR, L; // L – геометрія поточного макета
+  function rel(r, hr){ return { l: r.left - hr.left, t: r.top - hr.top, r: r.right - hr.left, b: r.bottom - hr.top }; }
+  function visibleBox(el){ var r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 ? r : null; }
+  function textLines(el, out, hr){
+    var tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), n, rg = document.createRange();
+    while ((n = tw.nextNode())){ if (!n.nodeValue.trim()) continue; rg.selectNodeContents(n);
+      var rs = rg.getClientRects(); for (var i = 0; i < rs.length; i++) if (rs[i].width > 0) out.push(rel(rs[i], hr)); }
+  }
+  function measure(){
+    var hr = hero.getBoundingClientRect();
+    W = Math.round(hr.width); H = Math.round(hr.height);
+    var mobile = W < 768;
+    DPR = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
+    var m = mobile ? 12 : 22;               // відступ ядра блискавки від тексту
+    var blocks = [], text = [];
+    document.querySelectorAll('.header .container > *, .announce, .actions > *').forEach(function(el){ var r = visibleBox(el); if (r) blocks.push(rel(r, hr)); });
+    textLines(document.querySelector('h1'), text, hr);
+    textLines(document.querySelector('.lead'), text, hr);
+    var annot = document.querySelector('.annot'); if (annot && visibleBox(annot)) blocks.push(rel(annot.getBoundingClientRect(), hr));
+    var all = blocks.concat(text);
+    var ex = all.map(function(r){ return { l: r.l - m, t: r.t - m, r: r.r + m, b: r.b + m }; });
+    var header = document.querySelector('.header').getBoundingClientRect().height;
+    var proofTop = document.querySelector('.proof').getBoundingClientRect().top - hr.top;
+    var textRight = 0, textTop = H;
+    blocks.concat(text).forEach(function(r){ if (r.t > header) { textRight = Math.max(textRight, r.r); textTop = Math.min(textTop, r.t); } });
+    // Режим: «збоку» (є широка вільна смуга праворуч) або «згори» (вузькі екрани)
+    var side = (W - textRight) >= 300;
+    var A = side ? { x: (textRight + W) / 2 + 40, y: header, rx: (W - textRight) * .95 + 80, ry: H * .62 }
+                 : { x: W * .8, y: header, rx: W * .72, ry: Math.max(220, textTop - header + 150) };
+    L = { mobile: mobile, m: m, ex: ex, text: all, header: header, proofTop: proofTop, textRight: textRight, side: side, A: A };
+  }
+  function blocked(x, y){
+    var ex = L.ex; for (var i = 0; i < ex.length; i++){ var r = ex[i]; if (x > r.l && x < r.r && y > r.t && y < r.b) return true; }
+    return false;
+  }
+  function segFree(x1, y1, x2, y2){
+    var d = Math.hypot(x2 - x1, y2 - y1), n = Math.max(1, Math.ceil(d / 5));
+    for (var i = 0; i <= n; i++){ var k = i / n; if (blocked(x1 + (x2 - x1) * k, y1 + (y2 - y1) * k)) return false; }
+    return true;
+  }
+
+  // ---- Хмари: темний шар (завжди) і підсвічений (для спалаху) ----
+  var cloudDark, cloudLit, cw, ch;
+  function buildClouds(){
+    var S = P.cloudScale; cw = Math.ceil(W / S); ch = Math.ceil(H / S);
+    cloudDark = document.createElement('canvas'); cloudDark.width = cw; cloudDark.height = ch;
+    cloudLit = document.createElement('canvas'); cloudLit.width = cw; cloudLit.height = ch;
+    var dctx = cloudDark.getContext('2d'), lctx = cloudLit.getContext('2d');
+    var di = dctx.createImageData(cw, ch), li = lctx.createImageData(cw, ch), dd = di.data, ld = li.data;
+    var A = L.A, sc = L.mobile ? 120 : 190;
+    for (var y = 0; y < ch; y++){
+      for (var x = 0; x < cw; x++){
+        var px = x * S, py = y * S;
+        var dx = (px - A.x) / A.rx, dy = (py - A.y) / A.ry, e = 1 - (dx * dx + dy * dy);
+        var mask = sstep(0, .75, e);
+        if (mask <= 0) continue;
+        var n = fbm(px / sc, py / (sc * .62));
+        var d = sstep(.38, .78, n * .85 + mask * .42) * mask;
+        if (d <= .003) continue;
+        var n2 = fbm((px - 9) / sc, (py - 14) / (sc * .62));
+        var sh = Math.max(0, Math.min(1, (n - n2) * 6 + .5)); // «верх» хмари світліший
+        var i = (y * cw + x) * 4;
+        dd[i] = 16 + 20 * sh; dd[i + 1] = 18 + 22 * sh; dd[i + 2] = 36 + 38 * sh; dd[i + 3] = 255 * d * .92;
+        ld[i] = 150 + 80 * sh; ld[i + 1] = 158 + 74 * sh; ld[i + 2] = 255; ld[i + 3] = 255 * Math.min(1, d * (.45 + .75 * sh));
+      }
+    }
+    dctx.putImageData(di, 0, 0); lctx.putImageData(li, 0, 0);
+  }
+  function drawSky(){
+    sky.width = Math.round(W * DPR); sky.height = Math.round(H * DPR);
+    sctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    var A = L.A, g = sctx.createRadialGradient(A.x, A.y + A.ry * .25, 0, A.x, A.y + A.ry * .25, Math.max(A.rx, A.ry));
+    g.addColorStop(0, 'rgba(124,136,255,.10)'); g.addColorStop(.55, 'rgba(169,139,255,.04)'); g.addColorStop(1, 'rgba(5,6,11,0)');
+    sctx.fillStyle = g; sctx.fillRect(0, 0, W, H);
+    sctx.imageSmoothingQuality = 'high';
+    sctx.drawImage(cloudDark, 0, 0, W, H);
+  }
+
+  // ---- Геометрія удару ----
+  function walk(rnd, x, y, tx, ty, opt){
+    var pts = [[x, y]], dir = Math.atan2(ty - y, tx - x), steps = 0, hit = false;
+    while (steps++ < opt.maxSteps){
+      var to = Math.atan2(ty - y, tx - x), dist = Math.hypot(tx - x, ty - y);
+      if (dist < opt.sMax) { if (segFree(x, y, tx, ty)) pts.push([tx, ty]); break; }
+      var base = Math.atan2(Math.sin(dir) * .45 + Math.sin(to) * .55, Math.cos(dir) * .45 + Math.cos(to) * .55);
+      var ok = false;
+      for (var k = 0; k < 10; k++){
+        var big = rnd() < .12 ? 1.9 : 1;
+        var a = base + (rnd() - .5) * opt.jit * big * (1 + k * .15);
+        var len = opt.sMin + rnd() * (opt.sMax - opt.sMin);
+        var nx = x + Math.cos(a) * len, ny = y + Math.sin(a) * len;
+        if (ny < opt.yMin || nx > W + 60) continue;
+        if (segFree(x, y, nx, ny)) { x = nx; y = ny; dir = a; ok = true; break; }
+      }
+      if (!ok) { hit = true; break; }
+      pts.push([x, y]);
+      if (opt.budget && pathLen(pts) > opt.budget) break;
+    }
+    return { pts: pts, hit: hit, reached: Math.hypot(tx - x, ty - y) < opt.sMax * 1.5 };
+  }
+  function pathLen(p){ var s = 0; for (var i = 1; i < p.length; i++) s += Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); return s; }
+
+  function makeBolt(rnd){
+    var k = L.mobile ? .62 : 1;
+    var y0 = L.header + 4, bottom = L.proofTop + (L.mobile ? 0 : 36); // нижче proofTop – за непрозорим табло
+    var xl = L.side ? Math.max(L.textRight + L.m, W * .5) : W * .5;
+    for (var tries = 0; tries < 40; tries++){
+      var sx = xl + 20 + rnd() * (W + (L.side ? -40 : 40) - xl - 20), sy = y0;
+      if (blocked(sx, sy)) continue;
+      // ціль: найдовша вільна пряма вниз
+      var best = null;
+      for (var c = 0; c < 160; c++){
+        var tx = xl + rnd() * (W - 14 - xl), ty = sy + 90 * k + rnd() * (bottom - sy - 90 * k);
+        if (blocked(tx, ty) || !segFree(sx, sy, tx, ty)) continue;
+        var score = (ty - sy) + rnd() * 120 * k - Math.abs(tx - sx) * .25;
+        if (!best || score > best.s) best = { x: tx, y: ty, s: score };
+      }
+      if (!best || best.y - sy < 110 * k) continue;
+      var opt = { sMin: 7 * k, sMax: 19 * k, jit: 1.15, maxSteps: 600, yMin: y0 - 8 };
+      var main = walk(rnd, sx, sy, best.x, best.y, opt);
+      if (!main.reached) continue;
+      var branches = [];
+      var pts = main.pts, total = pts.length;
+      for (var i = 2; i < total * .8; i++){
+        if (rnd() > (L.mobile ? .07 : .085)) continue;
+        var p = pts[i], q2 = pts[i - 1], md = Math.atan2(p[1] - q2[1], p[0] - q2[0]);
+        var side = rnd() < .5 ? -1 : 1, a = md + side * (.35 + rnd() * .6);
+        var remain = pathLen(pts.slice(i)), blen = remain * (.18 + rnd() * .32) + 30 * k;
+        var b = walk(rnd, p[0], p[1], p[0] + Math.cos(a) * blen * 1.4, p[1] + Math.sin(a) * blen * 1.4,
+          { sMin: 5 * k, sMax: 13 * k, jit: 1.3, maxSteps: 120, yMin: y0 - 8, budget: blen });
+        if (b.pts.length > 2) {
+          branches.push({ pts: b.pts, w: .55 + rnd() * .2, depth: 1 });
+          if (rnd() < .45 && b.pts.length > 5){
+            var j = 2 + Math.floor(rnd() * (b.pts.length - 4)), bp = b.pts[j], a2 = a - side * (.4 + rnd() * .5), l2 = blen * (.3 + rnd() * .3);
+            var c2 = walk(rnd, bp[0], bp[1], bp[0] + Math.cos(a2) * l2 * 1.4, bp[1] + Math.sin(a2) * l2 * 1.4,
+              { sMin: 4 * k, sMax: 10 * k, jit: 1.3, maxSteps: 60, yMin: y0 - 8, budget: l2 });
+            if (c2.pts.length > 2) branches.push({ pts: c2.pts, w: .35, depth: 2 });
+          }
+        }
+      }
+      var yEnd = 0; pts.forEach(function(p){ yEnd = Math.max(yEnd, p[1]); });
+      branches.forEach(function(b){ b.pts.forEach(function(p){ yEnd = Math.max(yEnd, p[1]); }); });
+      return { main: pts, branches: branches, sx: sx, sy: sy, ex: best.x, ey: best.y, yEnd: yEnd };
+    }
+    return null;
+  }
+
+  // ---- Рендер удару в офскрін-канви (один раз на удар) ----
+  var boltC = document.createElement('canvas'), litC = document.createElement('canvas');
+  function stroke(ctx, pts, width, color, blur, glow){
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.lineWidth = width; ctx.strokeStyle = color; ctx.shadowBlur = blur * DPR; ctx.shadowColor = glow || 'transparent'; ctx.stroke();
+  }
+  function taper(ctx, pts, w, a, k){ // гілки тоншають і гаснуть до кінця
+    var n = 3, len = pts.length;
+    for (var s = 0; s < n; s++){
+      var seg = pts.slice(Math.floor(s * (len - 1) / n), Math.floor((s + 1) * (len - 1) / n) + 1);
+      if (seg.length < 2) continue;
+      var f = 1 - s / n * .75;
+      stroke(ctx, seg, 7 * w * k, 'rgba(124,136,255,' + (.10 * a * f) + ')', 22 * k, 'rgba(169,139,255,.8)');
+      stroke(ctx, seg, 2.6 * w * k, 'rgba(190,197,255,' + (.55 * a * f) + ')', 8 * k, 'rgba(154,163,255,.9)');
+      stroke(ctx, seg, Math.max(.6, 1.7 * w * k * f), 'rgba(255,255,255,' + (.9 * a * f) + ')', 0);
+    }
+  }
+  function renderBolt(b){
+    var k = L.mobile ? .8 : 1;
+    boltC.width = fx.width; boltC.height = fx.height;
+    var c = boltC.getContext('2d'); c.setTransform(DPR, 0, 0, DPR, 0, 0);
+    c.lineJoin = 'round'; c.lineCap = 'round'; c.globalCompositeOperation = 'lighter';
+    // повітря навколо каналу
+    stroke(c, b.main, 26 * k, 'rgba(124,136,255,.06)', 40 * k, 'rgba(124,136,255,.9)');
+    b.branches.forEach(function(br){ taper(c, br.pts, br.w, br.depth === 1 ? .85 : .6, k); });
+    stroke(c, b.main, 9 * k, 'rgba(124,136,255,.22)', 26 * k, 'rgba(169,139,255,1)');
+    stroke(c, b.main, 4 * k, 'rgba(200,206,255,.75)', 10 * k, 'rgba(154,163,255,1)');
+    stroke(c, b.main, 2.3 * k, '#FFFFFF', 3 * k, 'rgba(255,255,255,1)');
+    c.shadowBlur = 0;
+  }
+  function renderLit(b){
+    // підсвічені хмари навколо початку удару + сяйво вздовж каналу; текст – «вирізаний»
+    var S = P.cloudScale; litC.width = cw; litC.height = ch;
+    var c = litC.getContext('2d');
+    c.drawImage(cloudLit, 0, 0);
+    c.globalCompositeOperation = 'destination-in';
+    var r = (L.mobile ? 220 : 420) / S, cx = b.sx / S, cy = (b.sy + 30) / S;
+    var g = c.createRadialGradient(cx, cy, 0, cx, cy, r);
+    g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(.5, 'rgba(0,0,0,.55)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = g; c.fillRect(0, 0, cw, ch);
+    c.globalCompositeOperation = 'lighter';
+    var mx = (b.sx + b.ex) / 2 / S, my = (b.sy + b.ey) / 2 / S, r2 = Math.max(80, (b.ey - b.sy) * .6) / S;
+    var g2 = c.createRadialGradient(mx, my, 0, mx, my, r2);
+    g2.addColorStop(0, 'rgba(124,136,255,.16)'); g2.addColorStop(1, 'rgba(124,136,255,0)');
+    c.fillStyle = g2; c.fillRect(0, 0, cw, ch);
+    var g3 = c.createRadialGradient(cx, cy, 0, cx, cy, r * .55);
+    g3.addColorStop(0, 'rgba(210,214,255,.45)'); g3.addColorStop(1, 'rgba(154,163,255,0)');
+    c.fillStyle = g3; c.fillRect(0, 0, cw, ch);
+    // вирізати м'які «дірки» під текстом і кнопками, щоб спалах не знижував контраст
+    c.globalCompositeOperation = 'destination-out';
+    c.shadowColor = 'rgba(0,0,0,1)'; c.shadowBlur = 14 / S * (window.devicePixelRatio > 1 ? 1 : 1);
+    L.text.forEach(function(t){ if (t.b < L.header) return; c.shadowOffsetX = cw * 2; c.fillStyle = '#000';
+      c.fillRect(t.l / S - 4 - cw * 2, t.t / S - 3, (t.r - t.l) / S + 8, (t.b - t.t) / S + 6); });
+    c.shadowBlur = 0; c.shadowOffsetX = 0;
+    c.globalCompositeOperation = 'source-over';
+  }
+
+  // ---- Кадр ----
+  function frame(bolt, sky, reveal, b){
+    fctx.setTransform(1, 0, 0, 1, 0, 0);
+    fctx.clearRect(0, 0, fx.width, fx.height);
+    if (!b) return;
+    if (sky > .003){ fctx.globalAlpha = Math.min(1, sky); fctx.imageSmoothingQuality = 'high'; fctx.drawImage(litC, 0, 0, fx.width, fx.height); }
+    if (bolt > .003){
+      fctx.globalAlpha = Math.min(1, bolt);
+      if (reveal < 1){
+        var yk = (b.sy + (b.yEnd - b.sy) * reveal) * DPR;
+        fctx.save(); fctx.beginPath(); fctx.rect(0, 0, fx.width, yk); fctx.clip(); fctx.drawImage(boltC, 0, 0); fctx.restore();
+      } else fctx.drawImage(boltC, 0, 0);
+    }
+    fctx.globalAlpha = 1;
+  }
+
+  // ---- Таймлайн удару ----
+  var cur = null, raf = 0, timer = 0, rndLive = mulberry((Math.random() * 1e9) | 0);
+  function plan(rnd){
+    var lead = P.leaderMin + rnd() * (P.leaderMax - P.leaderMin);
+    var n = rnd() < .5 ? 2 : 3, pulses = [{ at: lead, peak: 1 }], at = lead;
+    for (var i = 1; i < n; i++){ at += P.pulseGapMin + rnd() * (P.pulseGapMax - P.pulseGapMin); pulses.push({ at: at, peak: .85 - i * .17 + rnd() * .1 }); }
+    return { lead: lead, pulses: pulses, last: at, end: at + P.tail };
+  }
+  function levels(t, pl){
+    if (t < pl.lead) return { bolt: .35 + .25 * (t / pl.lead), sky: .06 * (t / pl.lead), reveal: t / pl.lead };
+    var env = 0;
+    pl.pulses.forEach(function(p){ if (t >= p.at) env = Math.max(env, p.peak * Math.exp(-(t - p.at) / P.tau)); });
+    var resid = t <= pl.last ? .3 : .3 * Math.exp(-(t - pl.last) / (P.tail / 3.2));
+    return { bolt: Math.min(1, env + resid), sky: env * P.skyMax, reveal: 1 };
+  }
+  function strike(rnd, b){
+    b = b || makeBolt(rnd); if (!b) return null;
+    renderBolt(b); renderLit(b); return b;
+  }
+  function tick(now){
+    var t = now - cur.t0, lv = levels(t, cur.pl);
+    frame(lv.bolt, lv.sky, lv.reveal, cur.b);
+    if (t < cur.pl.end) raf = requestAnimationFrame(tick);
+    else { raf = 0; frame(0, 0, 1, null); cur = null; schedule(P.gapMin + rndLive() * (P.gapMax - P.gapMin)); }
+  }
+  function fire(){
+    timer = 0;
+    var b = strike(rndLive); if (!b) { schedule(P.gapMin); return; }
+    cur = { b: b, pl: plan(rndLive), t0: performance.now() };
+    raf = requestAnimationFrame(function(n){ cur.t0 = n; tick(n); });
+  }
+  function schedule(ms){ clearTimeout(timer); if (running()) timer = setTimeout(fire, ms); }
+  function stop(){ clearTimeout(timer); timer = 0; if (raf) cancelAnimationFrame(raf); raf = 0; cur = null; frame(0, 0, 1, null); }
+  var inView = true;
+  function running(){ return MODE === 'live' && !reduceMQ.matches && !document.hidden && inView; }
+
+  // ---- Статичні режими ----
+  function renderStatic(){
+    if (MODE === 'calm') { frame(0, 0, 1, null); return; }
+    if (MODE === 'strike' || reduceMQ.matches){
+      var b = strike(mulberry(MODE === 'strike' ? 20261117 : 777));
+      if (MODE === 'strike') frame(1, .85 * P.skyMax, 1, b);   // мить одразу після головного спалаху
+      else frame(.8, .3, 1, b);                                                 // без руху – м'якший кадр
+    }
+  }
+
+  function layout(){
+    measure(); buildClouds(); drawSky();
+    fx.width = Math.round(W * DPR); fx.height = Math.round(H * DPR);
+    stop();
+    if (MODE !== 'live' || reduceMQ.matches) renderStatic();
+    else schedule(P.firstDelay);
+  }
+
+  layout();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+  var rt; window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(layout, 180); });
+  document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else if (running()) schedule(P.firstDelay); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function(e){
+    inView = e[0].isIntersecting; if (!inView) stop(); else if (running() && !timer && !raf) schedule(800);
+  }).observe(hero);
+  if (reduceMQ.addEventListener) reduceMQ.addEventListener('change', layout);
 })();
 </script>
 </body>
