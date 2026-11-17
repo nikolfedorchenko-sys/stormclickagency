@@ -1,6 +1,6 @@
 {
   "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/landing-mockup.html",
-  "takenAt": "2026-11-17T13:18:48.037Z",
+  "takenAt": "2026-11-17T13:34:05.166Z",
   "viewports": {
     "mobile-360": {
       "screenshots": {
@@ -55,7 +55,7 @@
         "count": 15,
         "items": [
           "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
-          "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 11px",
+          "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 12px",
           "span.label «ПОСЛУГИ» 13px",
           "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
           "span.label «ДЛЯ КОГО» 13px",
@@ -82,14 +82,14 @@
           "p «Код ЄДРПОУ: [уточнити]» 15px",
           "p «Телефон: +380 67 549 57 10» 15px",
           "p «Юридична адреса: [уточнити]» 15px",
-          "p «Ліцензія МВС № [уточнити] від [дата]» 15px"
+          "p «Ліцензія МВС на охоронну діяльність: нак» 15px"
         ]
       },
       "fontFamiliesUsed": [
-        "Onest",
-        "Unbounded"
+        "\"Fira Sans\"",
+        "\"Fira Sans Extra Condensed\""
       ],
-      "pageHeightPx": 12563
+      "pageHeightPx": 12465
     },
     "tablet-768": {
       "screenshots": {
@@ -141,7 +141,7 @@
         "count": 15,
         "items": [
           "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
-          "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 11px",
+          "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 12px",
           "span.label «ПОСЛУГИ» 13px",
           "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
           "span.label «ДЛЯ КОГО» 13px",
@@ -168,14 +168,14 @@
           "p «Код ЄДРПОУ: [уточнити]» 15px",
           "p «Телефон: +380 67 549 57 10» 15px",
           "p «Юридична адреса: [уточнити]» 15px",
-          "p «Ліцензія МВС № [уточнити] від [дата]» 15px"
+          "p «Ліцензія МВС на охоронну діяльність: нак» 15px"
         ]
       },
       "fontFamiliesUsed": [
-        "Onest",
-        "Unbounded"
+        "\"Fira Sans\"",
+        "\"Fira Sans Extra Condensed\""
       ],
-      "pageHeightPx": 10783
+      "pageHeightPx": 10928
     },
     "desktop-1440": {
       "screenshots": {
@@ -226,11 +226,11 @@
         "count": 19,
         "items": [
           "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
-          "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 11px",
+          "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 12px",
           "span.label «ПОСЛУГИ» 13px",
-          "span.tag «ФОТО · 4:3» 11px",
+          "span.tag «ФОТО · 4:3» 12px",
           "p «Пост на складі чи КПП, охоронець перевір» 13px",
-          "span.tag «ФОТО · 4:3» 11px",
+          "span.tag «ФОТО · 4:3» 12px",
           "p «Охоронець відчиняє двері авто, клієнт – » 13px",
           "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
           "span.label «ДЛЯ КОГО» 13px",
@@ -247,10 +247,10 @@
         "items": []
       },
       "fontFamiliesUsed": [
-        "Onest",
-        "Unbounded"
+        "\"Fira Sans\"",
+        "\"Fira Sans Extra Condensed\""
       ],
-      "pageHeightPx": 8531
+      "pageHeightPx": 8525
     }
   }
 }

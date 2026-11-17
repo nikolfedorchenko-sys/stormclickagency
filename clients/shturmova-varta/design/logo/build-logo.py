@@ -1,5 +1,6 @@
-# Генератор SVG-логотипів «Штурмова варта». Запуск: python3 build-logo.py <тека-результату> <Onest-SemiBold.ttf>
-# Потрібен fontTools (pip install fonttools). Onest 600 TTF – Google Fonts (OFL).
+# Генератор SVG-логотипів «Штурмова варта». Запуск: python3 build-logo.py <тека-результату> <FiraSans-SemiBold.ttf>
+# Потрібен fontTools (pip install fonttools). Fira Sans 600 TTF – Google Fonts (OFL), дескриптор «Охоронна компанія».
+# Знак: 3 стійки по 24 + 2 просвіти по 14 = 100 по ширині; по висоті 14 (просвіт) + 24 (квадрат) + 38 (стійка) + 24 (основа) = 100.
 import sys, os
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
@@ -34,10 +35,14 @@ def word(text, x0=0, y0=0, s=1.0):
     return parts, x - TRACK * s - x0
 
 MARK_BODY = 'M0 0H24V76H38V38H62V76H76V0H86L100 14V100H0Z'
-MARK_DOT = (38, 0, 24, 24)
+MARK_DOT = (38, 14, 24, 24)  # сигнальний квадрат стоїть на середній стійці; над ним – просвіт 14
+
+MARK_MONO = 'M0 0H24V76H38V14H62V76H76V0H86L100 14V100H0Z'  # моно: квадрат і стійка – одна форма, без шва
 
 def mark(x, y, s, body, dot):
     r = MARK_DOT
+    if body == dot:
+        return [f'<path fill="{body}" transform="translate({x} {y}) scale({s})" d="{MARK_MONO}"/>']
     return [f'<path fill="{body}" transform="translate({x} {y}) scale({s})" d="{MARK_BODY}"/>',
             f'<rect fill="{dot}" x="{x + r[0]*s:.2f}" y="{y + r[1]*s:.2f}" width="{r[2]*s:.2f}" height="{r[3]*s:.2f}"/>']
 
@@ -45,7 +50,7 @@ font = TTFont(FONT); gs = font.getGlyphSet(); cmap = font.getBestCmap(); hmtx = 
 CAP = font['OS/2'].sCapHeight
 
 def outline(text, x, y_top, cap_px, target_w=None):
-    """Onest text as paths. y_top = top of caps. Tracking fills target_w if given."""
+    """Descriptor text as paths. y_top = top of caps. Tracking fills target_w if given."""
     sc = cap_px / CAP
     adv = [hmtx[cmap[ord(c)]][0] * sc for c in text]
     natural = sum(adv)
@@ -70,8 +75,8 @@ def primary(fg, dot):
     l2, w2 = word('ВАРТА', x, 120)
     dx = x + w2 + 30
     dw = x + w1 - dx
-    d1, t1 = outline('ОХОРОННА', dx, 120, 30, dw)
-    d2, t2 = outline('КОМПАНІЯ', dx, 190, 30, dw)
+    d1, t1 = outline('ОХОРОННА', dx, 120, 33, dw)
+    d2, t2 = outline('КОМПАНІЯ', dx, 187, 33, dw)
     body = m + [f'<g fill="{fg}">'] + l1 + l2 + d1 + d2 + ['</g>']
     return svg(x + w1, 220, body, 'Штурмова варта – охоронна компанія'), (t1, t2)
 
