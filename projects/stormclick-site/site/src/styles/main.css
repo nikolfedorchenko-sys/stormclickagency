@@ -65,7 +65,7 @@ ul { list-style: none; }
 
 /* Шапка: прозора над героєм, після прокрутки – темна з розмиттям і лінією */
 .header { position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: var(--header-h); border-bottom: 1px solid transparent; font-family: var(--f-body); transition: background var(--dur-base), border-color var(--dur-base); }
-.header.is-scrolled { background: rgba(5, 6, 11, .92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--c-line); }
+.header.is-scrolled { background: rgba(5, 6, 11, .96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--c-line); }
 .header-inner { height: 100%; display: flex; align-items: center; gap: var(--s-2); }
 .logo { display: flex; align-items: center; gap: 10px; min-height: var(--tap); margin-right: auto; font: 600 17px/1 var(--f-display); letter-spacing: -.01em; color: var(--c-text); }
 .logo svg { width: 16px; height: 22px; fill: var(--c-accent); }
@@ -424,7 +424,7 @@ html.menu-open { overflow: hidden; }
   .choices { grid-template-columns: 1fr; }
   .quiz { padding: 22px; }
   .counters { gap: 24px; }
-  .sticky-cta { display: flex; transition: transform 0.4s, opacity 0.4s; position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 40; box-shadow: 0 8px 24px rgba(0, 0, 0, .4); }
+  .sticky-cta { display: flex; transition: transform 0.4s, opacity 0.4s; position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 40; box-shadow: var(--glow-accent), 0 8px 24px rgba(0, 0, 0, .4); }
   .in-hero .sticky-cta { opacity: 0; transform: translateY(20px); pointer-events: none; }
   .ai-grid, .pain-grid { grid-template-columns: 1fr; }
   .pains { gap: 36px; }
