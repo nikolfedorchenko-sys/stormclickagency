@@ -22,7 +22,14 @@ const V = Q.get('v') || 'a', MODE = Q.get('mode') || 'emblem', STILL = Q.has('st
 if (Q.has('bg')) document.body.classList.add('bg');
 const D = window.EMBLEMS[V];
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); }
+catch (e) {
+  // без WebGL – показуємо статичний рендер того ж варіанта
+  const im = new Image(); im.src = 'render-' + V + '-' + (MODE === 'mark' ? 'mark' : 'emblem') + '.png'; im.alt = '3D-емблема (статичний рендер)';
+  im.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block';
+  document.body.appendChild(im); window.__busy = false; throw e;
+}
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;

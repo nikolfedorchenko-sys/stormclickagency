@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Штурмова варта – концепція v3</title>
+<meta name="description" content="Етап 0, концепція v3: чотири напрями графіки – емблема, 3D і метал, ілюстрація, фото. На погодження.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --night:#0E1A2B; --navy:#1F3350; --brass:#C9A35A; --brass-ink:#E2C27E; --brass-ink-light:#7A5C24; --light:#F4F1EA;
+  --deep:#08111D; --line:rgba(201,163,90,.28); --muted:#AEB8C7; --text:#D5DCE6;
+  --gut:clamp(16px, 4vw, 56px);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html { background:var(--deep); }
+body { background:var(--deep); color:var(--light); font:16px/1.5 'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+img { display:block; max-width:100%; height:auto; }
+a { color:var(--brass-ink); }
+.wrap { max-width:1440px; margin:0 auto; padding:0 var(--gut); }
+.mono { font-family:'IBM Plex Mono', monospace; letter-spacing:.12em; text-transform:uppercase; font-size:13px; color:var(--brass-ink); }
+.cap { font-size:14px; color:var(--muted); line-height:1.45; }
+.cap b { color:var(--light); font-weight:600; }
+
+/* обкладинка */
+.cover { position:relative; min-height:min(92vh, 900px); overflow:hidden; display:flex; align-items:flex-end; }
+.cover .bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:60% 40%; opacity:.9; }
+.cover:after { content:''; position:absolute; inset:0; background:linear-gradient(0deg, var(--deep) 2%, rgba(8,17,29,.2) 45%, rgba(8,17,29,.55) 100%); }
+.cover .coin { position:absolute; right:4%; top:6%; width:min(44vw, 560px); z-index:1; filter:drop-shadow(0 40px 60px rgba(0,0,0,.6)); }
+.cover .t { position:relative; z-index:2; padding:0 var(--gut) clamp(32px, 6vw, 80px); max-width:1440px; width:100%; margin:0 auto; }
+.cover h1 { font-size:clamp(40px, 7vw, 96px); line-height:.98; font-weight:700; letter-spacing:-.015em; margin-top:16px; }
+.cover h1 span { color:var(--brass-ink); }
+.cover p { max-width:560px; margin-top:18px; color:var(--text); font-size:clamp(16px, 1.5vw, 19px); }
+.toc { display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+.toc a { text-decoration:none; color:var(--light); border:1px solid var(--line); padding:10px 16px; font-size:15px; background:rgba(14,26,43,.6); }
+.toc a b { color:var(--brass-ink); font-family:'IBM Plex Mono', monospace; font-weight:500; margin-right:8px; }
+
+/* розділи */
+section { padding:clamp(56px, 8vw, 120px) 0 0; }
+.sh { display:grid; grid-template-columns:auto 1fr; gap:6px 24px; align-items:end; margin-bottom:clamp(24px, 3vw, 40px); }
+.sh .n { font-family:'IBM Plex Mono', monospace; font-size:clamp(48px, 7vw, 104px); line-height:.85; color:var(--brass); grid-row:span 2; }
+.sh h2 { font-size:clamp(28px, 3.6vw, 48px); line-height:1.05; font-weight:700; }
+.sh p { color:var(--muted); max-width:720px; font-size:16px; }
+h3 { font-size:clamp(20px, 2vw, 26px); font-weight:700; line-height:1.15; }
+.sub { display:flex; align-items:center; gap:14px; margin:clamp(40px, 5vw, 72px) 0 18px; }
+.sub:after { content:''; flex:1; height:1px; background:var(--line); }
+
+/* емблеми */
+.trio { display:grid; grid-template-columns:repeat(3, 1fr); gap:clamp(12px, 2vw, 28px); }
+.ecard { background:radial-gradient(90% 70% at 50% 40%, #1C3050 0%, var(--night) 60%, #091321 100%); padding:clamp(18px, 3vw, 44px) clamp(14px, 2.4vw, 36px) 24px; position:relative; }
+.ecard .lt { position:absolute; top:16px; left:18px; font-family:'IBM Plex Mono', monospace; font-size:44px; line-height:1; color:rgba(201,163,90,.35); }
+.ecard img.em { width:100%; filter:drop-shadow(0 22px 34px rgba(0,0,0,.55)); }
+.ecard h3 { margin-top:18px; }
+.ecard h3 span { color:var(--brass-ink); }
+.ecard p { color:var(--text); font-size:15px; margin-top:6px; }
+.lightrow { display:grid; grid-template-columns:repeat(3, 1fr); gap:clamp(12px, 2vw, 28px); margin-top:clamp(12px, 2vw, 28px); }
+.lightrow > div { background:var(--light); padding:clamp(16px, 2.4vw, 36px); display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:center; }
+.lightrow img.lk { grid-column:1 / -1; }
+.lightrow .dk { background:var(--night); padding:10%; }
+.tests { display:grid; grid-template-columns:repeat(3, 1fr); gap:clamp(12px, 2vw, 28px); }
+.test { border:1px solid var(--line); padding:20px; }
+.sizes { display:flex; gap:18px; align-items:flex-end; padding:16px; }
+.sizes.on-l { background:var(--light); }
+.sizes.on-d { background:var(--night); }
+.sizes img { image-rendering:auto; }
+.sizes figure { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.sizes figcaption { font:12px 'IBM Plex Mono', monospace; color:var(--muted); }
+.sizes.on-l figcaption { color:#4A5568; }
+.zoom { display:flex; gap:10px; margin-top:12px; align-items:center; }
+.zoom img { width:64px; height:64px; image-rendering:pixelated; border:1px solid var(--line); }
+.test p { font-size:14px; color:var(--text); margin-top:12px; }
+.test p b { color:var(--brass-ink); font-weight:600; }
+
+/* носії */
+.carriers { display:grid; grid-template-columns:repeat(12, 1fr); gap:clamp(12px, 1.6vw, 22px); }
+.c-hero { grid-column:1 / -1; position:relative; }
+.c-hero img { width:100%; box-shadow:0 30px 80px rgba(0,0,0,.5); }
+.c-hero a { position:absolute; right:12px; top:12px; font-size:14px; background:rgba(8,17,29,.85); padding:12px 14px; min-height:44px; text-decoration:none; }
+.cbox { background:#0B1626; border:1px solid rgba(201,163,90,.14); padding:18px; display:flex; flex-direction:column; gap:12px; }
+.cbox .stage { flex:1; display:flex; align-items:center; justify-content:center; min-height:220px; border-radius:2px; position:relative; overflow:hidden; }
+.c-av { grid-column:span 2; } .c-pa { grid-column:span 3; } .c-st { grid-column:span 3; } .c-car { grid-column:span 4; }
+.ava { width:132px; height:132px; border-radius:50%; overflow:hidden; box-shadow:0 0 0 3px #26364d; background:var(--night); display:grid; place-items:center; }
+.ava img { width:100%; height:100%; object-fit:cover; }
+.stage.phone { background:linear-gradient(#111C2D, #0A1220); flex-direction:column; gap:10px; }
+.stage.phone .nm { font-size:14px; font-weight:600; }
+.stage.phone .hd { font-size:12px; color:var(--muted); }
+.fabric { background-color:#1A2433; background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.035) 0 2px, transparent 2px 5px), repeating-linear-gradient(-45deg, rgba(0,0,0,.25) 0 2px, transparent 2px 5px); }
+.fabric:before { content:''; position:absolute; left:-10%; right:-10%; top:46%; height:2px; background:rgba(0,0,0,.35); box-shadow:0 1px 0 rgba(255,255,255,.05); transform:rotate(-8deg); }
+.patch { width:188px; height:188px; border-radius:50%; position:relative; background:#14233A; background-image:repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px); box-shadow:0 0 0 7px #B8924C, 0 0 0 8px #6E5426, 0 10px 24px rgba(0,0,0,.6); display:grid; place-items:center; transform:rotate(-6deg); }
+.patch:after { content:''; position:absolute; inset:-4px; border-radius:50%; border:2px dashed rgba(14,26,43,.75); }
+.patch img { width:88%; filter:drop-shadow(0 1px 0 rgba(0,0,0,.6)) contrast(1.05); }
+.patch.illus { overflow:hidden; }
+.patch.illus img.bgimg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:44% 40%; filter:saturate(1.1); }
+.patch.illus img.mk { position:relative; width:46%; z-index:1; }
+.pin { width:190px; filter:drop-shadow(0 14px 16px rgba(0,0,0,.65)); transform:rotate(-8deg); }
+.stage.wall { background:linear-gradient(135deg, #3C4757 0%, #2A3442 100%); }
+.stage.wall:before { content:''; position:absolute; inset:0; background-image:repeating-linear-gradient(0deg, rgba(0,0,0,.12) 0 1px, transparent 1px 22px), repeating-linear-gradient(90deg, rgba(0,0,0,.08) 0 1px, transparent 1px 44px); }
+.sticker { width:min(100%, 280px); aspect-ratio:3 / 2; position:relative; border-radius:10px; overflow:hidden; box-shadow:0 12px 26px rgba(0,0,0,.45); display:grid; grid-template-columns:38% 1fr; align-items:center; padding:14px; gap:12px; color:var(--light); background:var(--night); }
+.sticker img.s-mk { width:100%; position:relative; z-index:1; }
+.sticker .s-t { position:relative; z-index:1; }
+.sticker .s-t b { display:block; font-size:18px; line-height:1.05; font-weight:700; text-transform:uppercase; letter-spacing:.01em; }
+.sticker .s-t span { display:block; font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--brass-ink); margin-top:8px; }
+.sticker .s-t i { display:block; font-style:normal; font-size:11px; color:var(--muted); margin-top:4px; letter-spacing:.04em; }
+.sticker.light { background:var(--light); color:var(--night); }
+.sticker.light .s-t span { color:var(--brass-ink-light); }
+.sticker.light .s-t i { color:#4A5568; }
+.sticker .s-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.55; }
+.sticker .s-bg.dim { opacity:.35; }
+.sticker .gl { position:absolute; inset:-30%; width:160%; opacity:.09; }
+.sticker.foil { background:linear-gradient(120deg, #0E1A2B 0%, #1F3350 45%, #0E1A2B 100%); }
+.sticker.foil:after { content:''; position:absolute; inset:0; background:linear-gradient(115deg, transparent 30%, rgba(255,240,200,.18) 46%, transparent 60%); }
+.stage.street { background:linear-gradient(180deg, #101C2E 0%, #0B1524 70%, #05090F 100%); align-items:flex-end; padding-bottom:8px; }
+.stage.street img { width:100%; }
+.stage.photo img { width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
+.tag { font:12px 'IBM Plex Mono', monospace; letter-spacing:.08em; color:var(--brass-ink); text-transform:uppercase; }
+.cbox .cap { font-size:13px; }
+.warn { color:#F2C37A; }
+
+/* 3D */
+.big3d { position:relative; }
+.big3d img { width:100%; }
+.viewer { display:grid; grid-template-columns:2fr 1fr; gap:clamp(12px, 2vw, 28px); margin-top:clamp(12px, 2vw, 28px); }
+.viewer .live { position:relative; aspect-ratio:1 / 1; background:radial-gradient(120% 90% at 50% 38%, #22385A 0%, #0E1A2B 52%, #060B13 100%); }
+.viewer iframe { width:100%; height:100%; border:0; display:block; }
+.viewer .sw { position:absolute; left:12px; bottom:12px; display:flex; gap:6px; }
+.viewer .sw button { font:500 14px 'IBM Plex Sans', sans-serif; background:rgba(8,17,29,.85); color:var(--light); border:1px solid var(--line); padding:10px 14px; cursor:pointer; min-height:44px; }
+.viewer .sw button[aria-pressed="true"] { background:var(--brass); color:var(--night); }
+.viewer .side { display:grid; gap:clamp(12px, 2vw, 20px); }
+.viewer .side figure { background:radial-gradient(100% 80% at 50% 40%, #1E3354, #0B1524); padding:8px; }
+.marks3d { display:grid; grid-template-columns:repeat(3, 1fr); gap:clamp(12px, 2vw, 28px); margin-top:clamp(12px, 2vw, 28px); }
+.marks3d figure { background:radial-gradient(100% 80% at 50% 40%, #1E3354, #0B1524); padding:6%; }
+figure figcaption { margin-top:8px; }
+.matref { display:grid; grid-template-columns:220px 1fr; gap:20px; align-items:center; margin-top:clamp(12px, 2vw, 28px); border:1px solid var(--line); padding:16px; }
+
+/* ілюстрації */
+.ill-main img { width:100%; }
+.ill-pair { display:grid; grid-template-columns:1fr 1fr; gap:clamp(12px, 2vw, 28px); margin-top:clamp(12px, 2vw, 28px); }
+.ill-pair figure, .ill-main { position:relative; }
+
+/* фото */
+.photos { display:grid; grid-template-columns:repeat(12, 1fr); gap:clamp(12px, 2vw, 22px); }
+.ph { position:relative; background:#0B1626; }
+.ph img { width:100%; height:100%; object-fit:cover; }
+.ph .lab { position:absolute; left:10px; bottom:10px; right:10px; font-size:12px; color:#E9EEF5; background:rgba(8,17,29,.78); padding:6px 9px; line-height:1.35; }
+.ph .lab b { color:var(--brass-ink); font-weight:600; }
+.p1 { grid-column:span 8; aspect-ratio:16 / 9; } .p2 { grid-column:span 4; } .p4 { grid-column:span 6; aspect-ratio:16 / 9; } .p5 { grid-column:span 6; aspect-ratio:16 / 9; }
+.p3 { grid-column:span 4; display:grid; grid-template-columns:1fr; } .p6 { grid-column:span 4; }
+.slot { grid-column:span 4; border:1px dashed rgba(201,163,90,.55); background:repeating-linear-gradient(135deg, rgba(201,163,90,.05) 0 10px, transparent 10px 20px); padding:20px; display:flex; flex-direction:column; justify-content:flex-end; min-height:240px; gap:8px; }
+.slot b { font-size:17px; }
+.slot p { font-size:14px; color:var(--text); }
+.thumb { padding:14px; display:flex; flex-direction:column; gap:10px; justify-content:center; border:1px solid var(--line); }
+.thumb img { width:256px; height:auto; }
+
+/* палітра на носії */
+.palette { display:grid; grid-template-columns:1.2fr 1fr; gap:clamp(12px, 2vw, 28px); }
+.card { background:var(--light); color:var(--night); padding:clamp(20px, 3vw, 40px); aspect-ratio:85 / 55; display:grid; grid-template-rows:auto 1fr auto; position:relative; overflow:hidden; box-shadow:0 30px 60px rgba(0,0,0,.45); }
+.card .gl { position:absolute; right:-18%; top:-30%; width:70%; opacity:.12; }
+.card .lk { width:62%; position:relative; }
+.card .who { align-self:end; position:relative; }
+.card .who b { font-size:clamp(16px, 1.8vw, 22px); display:block; }
+.card .who span { font-size:14px; color:#4A5568; }
+.card .ct { display:flex; justify-content:space-between; font-family:'IBM Plex Mono', monospace; font-size:clamp(12px, 1.2vw, 15px); margin-top:14px; color:var(--brass-ink-light); position:relative; flex-wrap:wrap; gap:6px; }
+.sw4 { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; }
+.sw4 div { padding:14px 12px; min-height:120px; display:flex; flex-direction:column; justify-content:space-between; font-size:13px; }
+.sw4 div b { font-size:15px; }
+.sw4 div span { font-family:'IBM Plex Mono', monospace; font-size:12px; }
+.ctr { margin-top:14px; font-size:14px; color:var(--text); }
+.ctr td { padding:4px 14px 4px 0; border-bottom:1px solid rgba(201,163,90,.14); }
+.ctr td:last-child { font-family:'IBM Plex Mono', monospace; color:var(--brass-ink); }
+.type { margin-top:18px; border-top:1px solid var(--line); padding-top:16px; }
+.type .a { font-size:clamp(34px, 4vw, 54px); font-weight:700; line-height:1; }
+.type .b { font-family:'IBM Plex Mono', monospace; color:var(--brass-ink); margin-top:8px; }
+
+/* що погодити */
+.ask { background:var(--night); border-top:2px solid var(--brass); padding:clamp(24px, 4vw, 56px); margin-top:clamp(56px, 8vw, 120px); }
+.ask ol { margin:20px 0 0 22px; display:grid; gap:14px; max-width:900px; }
+.ask li { font-size:17px; color:var(--text); }
+.ask li b { color:var(--light); }
+.rec { margin-top:26px; padding:18px 20px; border:1px solid var(--line); max-width:900px; }
+.rec b { color:var(--brass-ink); }
+footer { padding:40px 0 60px; color:var(--muted); font-size:13px; }
+footer code { font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--text); }
+
+@media (max-width: 1080px) {
+  .c-av { grid-column:span 4; } .c-pa { grid-column:span 4; } .c-st { grid-column:span 4; } .c-car { grid-column:1 / -1; }
+  .viewer { grid-template-columns:1fr; } .viewer .side { grid-template-columns:1fr 1fr; }
+  .palette { grid-template-columns:1fr; }
+}
+@media (max-width: 720px) {
+  .ecard p, .test p, .cap { font-size:16px; }
+  .trio, .lightrow, .tests, .marks3d { grid-template-columns:1fr; }
+  .ill-pair { grid-template-columns:1fr; }
+  .c-av, .c-pa, .c-st { grid-column:1 / -1; }
+  .photos > * { grid-column:1 / -1 !important; }
+  .cover { min-height:auto; padding-top:64vw; }
+  .cover .coin { width:72vw; right:-6vw; top:2vw; }
+  .matref { grid-template-columns:1fr; }
+  .sw4 { grid-template-columns:1fr 1fr; }
+  .thumb img { width:100%; max-width:256px; }
+  .sh { grid-template-columns:1fr; } .sh .n { grid-row:auto; }
+}
+@media print { .viewer .live { display:none; } section { break-inside:avoid; } }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <img class="bg" src="concept-v3/illustration/illus-1-kpp.svg" alt="" width="1600" height="1000">
+  <img class="coin" src="concept-v3/3d/render-a-emblem.png" alt="3D-емблема «Брама»: латунь, синя емаль, рифлене ребро" width="1100" height="1100">
+  <div class="t">
+    <div class="mono">Штурмова варта · етап 0 · концепція v3</div>
+    <h1>Більше графіки:<br><span>чотири напрями</span></h1>
+    <p>Палітра і шрифти з v2 лишаються. Нове – знак-емблема з гравіюванням, 3D-метал, власний ілюстрований світ і фото. Оберіть, що з цього беремо.</p>
+    <nav class="toc" aria-label="Розділи">
+      <a href="#emblem"><b>01</b>Емблема</a><a href="#metal"><b>02</b>3D і метал</a><a href="#illus"><b>03</b>Ілюстрація</a><a href="#photo"><b>04</b>Фото</a><a href="#ask"><b>?</b>Що погодити</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= 01 ЕМБЛЕМА ================= -->
+<section id="emblem">
+  <div class="sh"><div class="n">01</div><h2>Емблема з деталями</h2><p>Знак-жетон: латунний обідок, кільцевий напис, гравіювання, мікротекст по колу, як на захищених документах. Три ідеї – три форми.</p></div>
+
+  <div class="trio">
+    <article class="ecard"><span class="lt">A</span><img class="em" src="concept-v3/emblem/a-emblem-color.svg" alt="Емблема A «Брама»" width="1030" height="1030">
+      <h3>A <span>«Брама»</span></h3><p>Арка з замковим каменем і віялом-фрамугою; стулки брами складаються в «Ш». Об'єкт зачинено – ми на вході. Поле – гільйош.</p></article>
+    <article class="ecard"><span class="lt">B</span><img class="em" src="concept-v3/emblem/b-emblem-color.svg" alt="Емблема B «Ліхтар варти»" width="1030" height="1030">
+      <h3>B <span>«Ліхтар варти»</span></h3><p>Стійки клітки ліхтаря – це «Ш», між ними два світлі вікна. Нічна варта, яка не гасне. Восьмикутник, промені, заклепки.</p></article>
+    <article class="ecard"><span class="lt">C</span><img class="em" src="concept-v3/emblem/c-emblem-color.svg" alt="Емблема C «КПП»" width="1030" height="1030">
+      <h3>C <span>«КПП»</span></h3><p>«Ш» – три стовпчики проїзду, над ними піднята смугаста стріла. Доступ під контролем. Дорога в перспективі, зорі, гвинти на рамці.</p></article>
+  </div>
+
+  <div class="lightrow">
+    <div><img src="concept-v3/emblem/a-emblem-mono-night.svg" alt="A, монохром на світлому" width="1000" height="1000"><div class="dk"><img src="concept-v3/emblem/a-emblem-mono-light.svg" alt="A, монохром на темному" width="1000" height="1000"></div><img class="lk" src="concept-v3/mark/a-lockup-light.svg" alt="Знак A і написання" width="760" height="250"></div>
+    <div><img src="concept-v3/emblem/b-emblem-mono-night.svg" alt="B, монохром на світлому" width="1000" height="1000"><div class="dk"><img src="concept-v3/emblem/b-emblem-mono-light.svg" alt="B, монохром на темному" width="1000" height="1000"></div><img class="lk" src="concept-v3/mark/b-lockup-light.svg" alt="Знак B і написання" width="760" height="250"></div>
+    <div><img src="concept-v3/emblem/c-emblem-mono-night.svg" alt="C, монохром на світлому" width="1000" height="1000"><div class="dk"><img src="concept-v3/emblem/c-emblem-mono-light.svg" alt="C, монохром на темному" width="1000" height="1000"></div><img class="lk" src="concept-v3/mark/c-lockup-light.svg" alt="Знак C і написання" width="760" height="250"></div>
+  </div>
+  <p class="cap" style="margin-top:12px">Монохром – один колір, без градієнтів: для гравіювання, штампа, вишивки в одну нитку, факсу. Знак у рядку з написанням – для шапки сайту, бланка, дверей.</p>
+
+  <div class="sub"><span class="mono">Тест: 16 / 32 / 64 px і негативний простір</span></div>
+  <div class="tests">
+    <div class="test">
+      <div class="sizes on-d"><figure><img src="concept-v3/mark/a-favicon.svg" width="16" height="16" alt=""><figcaption>16</figcaption></figure><figure><img src="concept-v3/mark/a-favicon.svg" width="32" height="32" alt=""><figcaption>32</figcaption></figure><figure><img src="concept-v3/mark/a-mark-color.svg" width="64" height="64" alt=""><figcaption>64</figcaption></figure><figure><img src="concept-v3/mark/a-mark-mono-white.svg" width="64" height="64" alt=""><figcaption>моно</figcaption></figure></div>
+      <div class="sizes on-l"><figure><img src="concept-v3/mark/a-mark-light.svg" width="16" height="16" alt=""><figcaption>16</figcaption></figure><figure><img src="concept-v3/mark/a-mark-light.svg" width="32" height="32" alt=""><figcaption>32</figcaption></figure><figure><img src="concept-v3/mark/a-mark-light.svg" width="64" height="64" alt=""><figcaption>64</figcaption></figure><figure><img src="concept-v3/mark/a-mark-inverse.svg" width="64" height="64" alt=""><figcaption>інверс</figcaption></figure></div>
+      <div class="zoom"><img src="concept-v3/mark/a-favicon-16.png" alt="16 px, збільшено" width="64" height="64"><span class="cap">16 px, збільшено</span></div>
+      <p><b>Видно вперше:</b> «Ш» під аркою, двері або брама. У негативному просторі – два вузькі проходи між стулками і півколо над ними. <b>Ризик:</b> арка з замковим каменем може нагадати банк чи храм; у спрощеному знаку – навісний замок (для охорони це не шкодить, але це не задум). «Н», як у v1, тут не читається.</p>
+    </div>
+    <div class="test">
+      <div class="sizes on-d"><figure><img src="concept-v3/mark/b-favicon.svg" width="16" height="16" alt=""><figcaption>16</figcaption></figure><figure><img src="concept-v3/mark/b-favicon.svg" width="32" height="32" alt=""><figcaption>32</figcaption></figure><figure><img src="concept-v3/mark/b-mark-color.svg" width="64" height="64" alt=""><figcaption>64</figcaption></figure><figure><img src="concept-v3/mark/b-mark-mono-white.svg" width="64" height="64" alt=""><figcaption>моно</figcaption></figure></div>
+      <div class="sizes on-l"><figure><img src="concept-v3/mark/b-mark-light.svg" width="16" height="16" alt=""><figcaption>16</figcaption></figure><figure><img src="concept-v3/mark/b-mark-light.svg" width="32" height="32" alt=""><figcaption>32</figcaption></figure><figure><img src="concept-v3/mark/b-mark-light.svg" width="64" height="64" alt=""><figcaption>64</figcaption></figure><figure><img src="concept-v3/mark/b-mark-inverse.svg" width="64" height="64" alt=""><figcaption>інверс</figcaption></figure></div>
+      <div class="zoom"><img src="concept-v3/mark/b-favicon-16.png" alt="16 px, збільшено" width="64" height="64"><span class="cap">16 px, збільшено</span></div>
+      <p><b>Видно вперше:</b> ліхтар; «Ш» – з другого погляду, через два світлі вікна між стійками. <b>Ризик:</b> на 16 px – просто вертикальна плямка, «Ш» не видно; ліхтар з вогнем міг би нагадати лампадку – тому світло рівне, без полум'я.</p>
+    </div>
+    <div class="test">
+      <div class="sizes on-d"><figure><img src="concept-v3/mark/c-favicon.svg" width="16" height="16" alt=""><figcaption>16</figcaption></figure><figure><img src="concept-v3/mark/c-favicon.svg" width="32" height="32" alt=""><figcaption>32</figcaption></figure><figure><img src="concept-v3/mark/c-mark-color.svg" width="64" height="64" alt=""><figcaption>64</figcaption></figure><figure><img src="concept-v3/mark/c-mark-mono-white.svg" width="64" height="64" alt=""><figcaption>моно</figcaption></figure></div>
+      <div class="sizes on-l"><figure><img src="concept-v3/mark/c-mark-light.svg" width="16" height="16" alt=""><figcaption>16</figcaption></figure><figure><img src="concept-v3/mark/c-mark-light.svg" width="32" height="32" alt=""><figcaption>32</figcaption></figure><figure><img src="concept-v3/mark/c-mark-light.svg" width="64" height="64" alt=""><figcaption>64</figcaption></figure><figure><img src="concept-v3/mark/c-mark-inverse.svg" width="64" height="64" alt=""><figcaption>інверс</figcaption></figure></div>
+      <div class="zoom"><img src="concept-v3/mark/c-favicon-16.png" alt="16 px, збільшено" width="64" height="64"><span class="cap">16 px, збільшено</span></div>
+      <p><b>Видно вперше:</b> «Ш» і шлагбаум – найпряміше прочитання, тримається навіть на 16 px. У негативному просторі – дві смуги проїзду. <b>Ризик:</b> найбуквальніший – ближче до «піктограми КПП», ніж до герба.</p>
+    </div>
+  </div>
+  <p class="cap" style="margin-top:12px">Тризуб, щит, орел, зброя, череп, камуфляж – не використано. Середня стійка «Ш» у всіх варіантах тієї самої висоти, що й крайні, з пласким верхом – щоб не читалась як тризуб. Схожості з шевронами ЗСУ, НГУ, поліції і відомими охоронними брендами візуально не знайшли; юридичну перевірку знака – [уточнити].</p>
+
+  <div class="sub"><span class="mono">Носії · напрям 01</span></div>
+  <div class="carriers">
+    <figure class="c-hero"><img src="concept-v3/hero/hero-1-emblem.png" alt="Перший екран сайту 1440: плоска емблема, гільйош на тлі" width="1440" height="900" loading="lazy"><a href="concept-v3/hero/hero-1-emblem.html">відкрити кадр</a></figure>
+    <div class="cbox c-av"><span class="tag">Аватарка</span><div class="stage phone"><div class="ava"><img src="concept-v3/emblem/a-emblem-color.svg" alt="" style="transform:scale(1.04)"></div><span class="nm">Штурмова варта</span><span class="hd">охоронна компанія</span></div></div>
+    <div class="cbox c-pa"><span class="tag">Нашивка на рукав</span><div class="stage fabric"><div class="patch"><img src="concept-v3/emblem/a-emblem-mono-brass.svg" alt="Вишита нашивка з емблемою A"></div></div><span class="cap">Вишивка латунною ниткою на синьому твілі, Ø 80–90 мм.</span></div>
+    <div class="cbox c-st"><span class="tag">Наліпка «Об'єкт під охороною»</span><div class="stage wall"><div class="sticker light"><img class="gl" src="concept-v3/emblem/a-emblem-mono-night.svg" alt=""><img class="s-mk" src="concept-v3/emblem/a-emblem-color.svg" alt=""><div class="s-t"><b>Об'єкт під охороною</b><span>+380 67 549 5710</span><i>ШТУРМОВА ВАРТА</i></div></div></div></div>
+    <div class="cbox c-car"><span class="tag">Борт авто</span><div class="stage street"><img src="concept-v3/carriers/car-1-emblem.svg" alt="Авто охорони з емблемою на дверях і гільйош-смугою" width="940" height="390"></div><span class="cap">Емблема на передніх дверях, латунна смуга, гільйош по порогу. Плівка – друк + ламінат.</span></div>
+  </div>
+</section>
+
+<!-- ================= 02 3D І МЕТАЛ ================= -->
+<section id="metal">
+  <div class="sh"><div class="n">02</div><h2>3D і метал</h2><p>Та сама емблема як справжній предмет: латунь зі шліфуванням, синя емаль з глянцем, рифлене ребро монети. Рендер у браузері (three.js), студійне світло.</p></div>
+  <figure class="big3d"><img src="concept-v3/3d/render-a-wide.png" alt="3D-рендер емблеми «Брама» на темно-синьому тлі" width="1600" height="1000" loading="lazy"></figure>
+  <div class="viewer">
+    <div class="live"><iframe src="concept-v3/3d/emblem-3d.html?v=a" title="3D-емблема, повільне обертання"></iframe>
+      <div class="sw" role="group" aria-label="Варіант емблеми"><button type="button" data-v="a" aria-pressed="true">A «Брама»</button><button type="button" data-v="b" aria-pressed="false">B «Ліхтар»</button><button type="button" data-v="c" aria-pressed="false">C «КПП»</button></div></div>
+    <div class="side">
+      <figure><img src="concept-v3/3d/render-b-emblem.png" alt="3D-рендер емблеми B" width="1100" height="1100" loading="lazy"><figcaption class="cap"><b>B</b> – світлі вікна ліхтаря світяться власним світлом</figcaption></figure>
+      <figure><img src="concept-v3/3d/render-c-emblem.png" alt="3D-рендер емблеми C" width="1100" height="1100" loading="lazy"><figcaption class="cap"><b>C</b> – стріла з білою емаллю, гвинти на рамці</figcaption></figure>
+    </div>
+  </div>
+  <div class="marks3d">
+    <figure><img src="concept-v3/3d/render-a-mark.png" alt="3D-знак A" width="800" height="800" loading="lazy"><figcaption class="cap">Знак A – значок, кнопка застосунку</figcaption></figure>
+    <figure><img src="concept-v3/3d/render-b-mark.png" alt="3D-знак B" width="800" height="800" loading="lazy"><figcaption class="cap">Знак B</figcaption></figure>
+    <figure><img src="concept-v3/3d/render-c-mark.png" alt="3D-знак C" width="800" height="800" loading="lazy"><figcaption class="cap">Знак C</figcaption></figure>
+  </div>
+  <div class="matref"><img src="concept-ai/03-brass-emblem-material.jpg" alt="Згенерований референс матеріалу: латунь і синя емаль" width="1024" height="1024" loading="lazy">
+    <p class="cap"><b>Референс матеріалу, ілюстративне фото, згенеровано (Figma AI).</b> Так має виглядати фізичний значок: латунь, синя емаль, оксамит. <span class="warn">Символ на фото схожий на тризуб/стрілу – як знак не брати.</span> Наш знак – рендери вище.</p></div>
+
+  <div class="sub"><span class="mono">Носії · напрям 02</span></div>
+  <div class="carriers">
+    <figure class="c-hero"><img src="concept-v3/hero/hero-2-metal.png" alt="Перший екран сайту 1440: 3D-емблема у промені світла" width="1440" height="900" loading="lazy"><a href="concept-v3/hero/hero-2-metal.html">відкрити кадр</a></figure>
+    <div class="cbox c-av"><span class="tag">Аватарка</span><div class="stage phone"><div class="ava" style="background:radial-gradient(#22385A,#0B1524)"><img src="concept-v3/3d/render-a-front.png" alt="" style="transform:scale(1.18)"></div><span class="nm">Штурмова варта</span><span class="hd">охоронна компанія</span></div></div>
+    <div class="cbox c-pa"><span class="tag">Знак на рукав / лацкан</span><div class="stage fabric"><img class="pin" src="concept-v3/3d/render-a-emblem.png" alt="Металевий значок на тканині"></div><span class="cap">Замість вишивки – литий латунний значок з емаллю, Ø 30–40 мм; для нашивки – вишивка з напряму 01.</span></div>
+    <div class="cbox c-st"><span class="tag">Наліпка «Об'єкт під охороною»</span><div class="stage wall"><div class="sticker foil"><img class="s-mk" src="concept-v3/3d/render-a-front.png" alt=""><div class="s-t"><b>Об'єкт під охороною</b><span>+380 67 549 5710</span><i>ШТУРМОВА ВАРТА</i></div></div></div><span class="cap">Друк на металізованій плівці – об'єм «зашитий» у зображення.</span></div>
+    <div class="cbox c-car"><span class="tag">Борт авто</span><div class="stage street"><img src="concept-v3/carriers/car-2-metal.svg" alt="Авто охорони з металізованою смугою" width="940" height="390"></div><span class="cap">На борті 3D немає – друк плоскої емблеми на металізованій плівці і латунна смуга під «хром-золото».</span></div>
+  </div>
+</section>
+
+<!-- ================= 03 ІЛЮСТРАЦІЯ ================= -->
+<section id="illus">
+  <div class="sh"><div class="n">03</div><h2>Ілюстрований світ</h2><p>Власні сцени бренду: ніч, порядок, тепле світло на посту. Сотні деталей – профнастил, сітка огорожі, камери, ліхтарі, вікна, відблиски на мокрому асфальті. Люди – силуети без облич.</p></div>
+  <figure class="ill-main"><img src="concept-v3/illustration/illus-1-kpp.svg" alt="Ілюстрація: КПП складу вночі, ізометрія" width="1600" height="1000" loading="lazy"><figcaption class="cap"><b>КПП складу</b> – ізометрія: будка з постом, шлагбаум, доки, причепи, периметр з камерами</figcaption></figure>
+  <div class="ill-pair">
+    <figure><img src="concept-v3/illustration/illus-2-city.svg" alt="Ілюстрація: нічне місто і пост бізнес-центру" width="1600" height="1000" loading="lazy"><figcaption class="cap"><b>Нічне місто</b> – бізнес-центр, пост біля входу, патрульне авто</figcaption></figure>
+    <figure><img src="concept-v3/illustration/illus-3-car.svg" alt="Ілюстрація: авто охорони на нічній вулиці" width="1600" height="1000" loading="lazy"><figcaption class="cap"><b>Авто охорони</b> – дощ, вітрини, відображення в калюжах</figcaption></figure>
+  </div>
+
+  <div class="sub"><span class="mono">Носії · напрям 03</span></div>
+  <div class="carriers">
+    <figure class="c-hero"><img src="concept-v3/hero/hero-3-illus.png" alt="Перший екран сайту 1440: ілюстрація нічного міста" width="1440" height="900" loading="lazy"><a href="concept-v3/hero/hero-3-illus.html">відкрити кадр</a></figure>
+    <div class="cbox c-av"><span class="tag">Аватарка</span><div class="stage phone"><div class="ava" style="position:relative"><img src="concept-v3/illustration/illus-2-city.svg" alt="" style="object-position:72% 40%;position:absolute;inset:0"><img src="concept-v3/mark/a-mark-color.svg" alt="" style="position:relative;width:62%;height:auto"></div><span class="nm">Штурмова варта</span><span class="hd">охоронна компанія</span></div></div>
+    <div class="cbox c-pa"><span class="tag">Нашивка на рукав</span><div class="stage fabric"><div class="patch illus"><img class="bgimg" src="concept-v3/illustration/illus-1-kpp.svg" alt=""><img class="mk" src="concept-v3/mark/a-mark-color.svg" alt=""></div></div><span class="cap">Сублімаційний друк сцени + вишитий знак. Для формової нашивки – варіант 01.</span></div>
+    <div class="cbox c-st"><span class="tag">Наліпка «Об'єкт під охороною»</span><div class="stage wall"><div class="sticker"><img class="s-bg" src="concept-v3/illustration/illus-1-kpp.svg" alt=""><img class="s-mk" src="concept-v3/mark/a-mark-color.svg" alt=""><div class="s-t"><b>Об'єкт під охороною</b><span>+380 67 549 5710</span><i>ШТУРМОВА ВАРТА</i></div></div></div></div>
+    <div class="cbox c-car"><span class="tag">Борт авто</span><div class="stage street"><img src="concept-v3/carriers/car-3-illus.svg" alt="Авто охорони з ілюстрованою смугою міста" width="940" height="390"></div><span class="cap">Силует міста латунню по низу кузова, спрощений знак на дверях.</span></div>
+  </div>
+</section>
+
+<!-- ================= 04 ФОТО ================= -->
+<section id="photo">
+  <div class="sh"><div class="n">04</div><h2>Фотореалізм</h2><p>Ніч, мокрий асфальт, тепле світло, люди зі спини. Шість кадрів згенеровано у Figma AI (ліміт вичерпано), решту – за промптами з <a href="concept-v3/prompts-chatgpt.md">prompts-chatgpt.md</a>. Усе – ілюстративні фото, згенеровано; на сайті – з підписом або замінити реальними.</p></div>
+  <div class="photos">
+    <figure class="ph p1"><img src="concept-ai/01-kpp-night.jpg" alt="Нічний КПП складу" width="1536" height="864" loading="lazy"><figcaption class="lab"><b>01 КПП вночі.</b> Ілюстративне фото, згенеровано. <span class="warn">Шлагбаум червоно-білий – у бренді латунь/синій, перегенерувати.</span></figcaption></figure>
+    <figure class="ph p2"><img src="concept-ai/02-guard-entrance.jpg" alt="Охоронець зі спини біля входу бізнес-центру" width="1024" height="1280" loading="lazy"><figcaption class="lab"><b>02 Пост біля БЦ.</b> Ілюстративне фото, згенеровано. <span class="warn">Кашкет «поліцейський» – краще без нього.</span></figcaption></figure>
+    <figure class="ph p4"><img src="concept-ai/04-patrol-car.jpg" alt="Синій позашляховик біля воріт складу" width="1536" height="864" loading="lazy"><figcaption class="lab"><b>04 Авто біля воріт.</b> Ілюстративне фото, згенеровано. <span class="warn">Модель схожа на поліцейську – лише настрій, не референс авто.</span></figcaption></figure>
+    <figure class="ph p5"><img src="concept-ai/05-keycard.jpg" alt="Рука в рукавичці з ключ-карткою біля зчитувача" width="1280" height="960" loading="lazy"><figcaption class="lab"><b>05 Контроль доступу.</b> Ілюстративне фото, згенеровано.</figcaption></figure>
+    <div class="p6 thumb"><img src="concept-ai/06-escort-car-THUMB-256.jpg" alt="Супровід: двері седана, мініатюра" width="256" height="144" loading="lazy"><p class="cap"><b>06 Супровід.</b> Ілюстративне фото, згенеровано. Є лише мініатюра 256 px – повну версію не вдалося забрати; перегенерувати за промптом 7.</p></div>
+    <div class="slot"><span class="tag">Місце під фото · 21:9</span><b>Периметр складу</b><p>Довга огорожа, ліхтарі на стовпах через рівні проміжки, камери, туман. Без людей. Промпт 6.</p></div>
+    <div class="slot"><span class="tag">Місце під фото · 3:2</span><b>Обхід з ліхтариком</b><p>Охоронець зі спини йде повз ворота доків, теплий промінь на бетоні. Промпт 8.</p></div>
+  </div>
+
+  <div class="sub"><span class="mono">Носії · напрям 04</span></div>
+  <div class="carriers">
+    <figure class="c-hero"><img src="concept-v3/hero/hero-4-photo.png" alt="Перший екран сайту 1440: фото нічного КПП" width="1440" height="900" loading="lazy"><a href="concept-v3/hero/hero-4-photo.html">відкрити кадр</a></figure>
+    <div class="cbox c-av"><span class="tag">Аватарка</span><div class="stage phone"><div class="ava" style="position:relative"><img src="concept-ai/02-guard-entrance.jpg" alt="" style="position:absolute;inset:0;object-position:40% 30%;filter:brightness(.6)"><img src="concept-v3/mark/a-mark-color.svg" alt="" style="position:relative;width:58%;height:auto"></div><span class="nm">Штурмова варта</span><span class="hd">охоронна компанія</span></div></div>
+    <div class="cbox c-pa"><span class="tag">Нашивка на рукав</span><div class="stage fabric"><div class="patch"><img src="concept-v3/mark/a-mark-color.svg" alt="Нашивка зі спрощеним знаком" style="width:78%"></div></div><span class="cap">Фото на нашивку не друкують – спрощений знак, вишивка.</span></div>
+    <div class="cbox c-st"><span class="tag">Наліпка «Об'єкт під охороною»</span><div class="stage wall"><div class="sticker"><img class="s-bg dim" src="concept-ai/05-keycard.jpg" alt=""><img class="s-mk" src="concept-v3/mark/a-mark-color.svg" alt=""><div class="s-t"><b>Об'єкт під охороною</b><span>+380 67 549 5710</span><i>ШТУРМОВА ВАРТА</i></div></div></div><span class="cap">Фото – лише як притемнене тло, текст на суцільній ділянці.</span></div>
+    <div class="cbox c-car"><span class="tag">Борт авто – фото-референс</span><div class="stage photo"><img src="concept-ai/04-patrol-car.jpg" alt="Згенероване фото авто біля воріт" style="object-position:20% 60%"></div><span class="cap">Ілюстративне фото, згенеровано. <span class="warn">Модель схожа на поліцейську – лише настрій.</span> Для реального авто – лівреї з напрямів 01–03.</span></div>
+  </div>
+</section>
+
+<!-- ================= ПАЛІТРА І ШРИФТИ ================= -->
+<section id="base">
+  <div class="sh"><div class="n">≡</div><h2>Палітра і шрифти – з v2</h2><p>Нічний синій, синій, латунь, світлий; IBM Plex Sans + IBM Plex Mono (OFL, повна кирилиця). На прикладі візитки.</p></div>
+  <div class="palette">
+    <div class="card"><img class="gl" src="concept-v3/emblem/a-emblem-mono-night.svg" alt=""><img class="lk" src="concept-v3/mark/a-lockup-light.svg" alt="Штурмова варта" width="760" height="250"><div class="who"><b>Ім'я Прізвище</b><span>менеджер з охорони об'єктів – [уточнити]</span></div><div class="ct"><span>+380 67 549 5710</span><span>[пошта – уточнити]</span><span>Київ</span></div></div>
+    <div>
+      <div class="sw4">
+        <div style="background:#0E1A2B;border:1px solid #26364d"><b>Нічний</b><span>#0E1A2B</span></div>
+        <div style="background:#1F3350"><b>Синій</b><span>#1F3350</span></div>
+        <div style="background:#C9A35A;color:#0E1A2B"><b>Латунь</b><span>#C9A35A</span></div>
+        <div style="background:#F4F1EA;color:#0E1A2B"><b>Світлий</b><span>#F4F1EA</span></div>
+      </div>
+      <table class="ctr" aria-label="Контраст тексту WCAG">
+        <tr><td>Світлий на нічному</td><td>15,5 : 1</td></tr>
+        <tr><td>Латунь на нічному</td><td>7,4 : 1</td></tr>
+        <tr><td>Латунь на синьому</td><td>5,4 : 1</td></tr>
+        <tr><td>Нічний на латуні (кнопка)</td><td>7,4 : 1</td></tr>
+        <tr><td>Темна латунь #7A5C24 на світлому</td><td>5,5 : 1</td></tr>
+        <tr><td>Латунь #C9A35A на світлому</td><td>2,1 : 1 – лише графіка</td></tr>
+      </table>
+      <div class="type"><div class="a">Ґанок, ліхтар, ключ – Її Єє Щщ</div><div class="b">+380 67 549 5710 · ПОСТ 01 · 22:00</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ЩО ПОГОДИТИ ================= -->
+<section class="ask" id="ask">
+  <div class="mono">Що погодити</div>
+  <h2 style="font-size:clamp(28px,3.6vw,48px);margin-top:10px">Ваш вибір – і робимо брендбук</h2>
+  <ol>
+    <li><b>Знак:</b> A «Брама», B «Ліхтар варти» чи C «КПП»? Або поєднати (наприклад, форма і обідок A з символом C).</li>
+    <li><b>Напрями графіки:</b> які з чотирьох беремо в систему? Можна кілька: емблема – основа, 3D – для сайту і соцмереж, ілюстрації – для сайту і презентацій, фото – для реклами.</li>
+    <li><b>3D:</b> лишаємо інтерактивну 3D-емблему на першому екрані сайту чи статичний рендер?</li>
+    <li><b>Ілюстрації:</b> ізометрія (як КПП) чи панорама збоку (як місто й авто)? Для серії потрібен один кут.</li>
+    <li><b>Фото:</b> генеровані кадри – лише як тимчасові, чи плануємо зйомку реальних об'єктів і працівників? Чи можна показувати об'єкти клієнтів – [уточнити].</li>
+    <li><b>Авто:</b> яка модель і колір у парку? Чи потрібен маячок на даху (за правилами)? – [уточнити].</li>
+    <li><b>Факти для сайту:</b> рік заснування, ліцензія, кількість постів, режим роботи – [уточнити]; на кадрах сайту лише нейтральні тексти.</li>
+  </ol>
+  <div class="rec"><b>Рекомендація дизайнера:</b> знак A «Брама» – найсильніший як емблема (форма монети, гільйош, рифлене ребро добре живуть і в плоскому, і в 3D), «Ш» читається з першого погляду, а спрощений знак тримається на 32 px. Система: емблема 01 – основа, 3D 02 – для першого екрана і соцмереж, ілюстрації 03 – для розділів сайту і презентацій, фото 04 – лише після перегенерації за промптами або реальної зйомки. Для 16 px (фавікон) у A слабке місце – там краще працює C; якщо фавікон критичний, взяти символ C як «маленький знак» до емблеми A.</div>
+</section>
+
+<footer class="wrap">
+  Файли: <code>concept-v3/emblem/</code> (емблеми, SVG у кривих), <code>concept-v3/mark/</code> (спрощені знаки, фавікон, знак із написанням), <code>concept-v3/3d/</code> (живий 3D і PNG-рендери), <code>concept-v3/illustration/</code>, <code>concept-v3/carriers/</code>, <code>concept-v3/hero/</code>, <code>concept-v3/prompts-chatgpt.md</code>, генератори – <code>concept-v3/build/</code>. Фото – <code>concept-ai/</code> (ілюстративні, згенеровано у Figma AI). Шрифт IBM Plex – OFL; three.js – MIT.
+</footer>
+</main>
+
+<script>
+  // перемикач варіантів у живому 3D
+  document.querySelectorAll('.viewer .sw button').forEach(b => b.addEventListener('click', () => {
+    const f = document.querySelector('.viewer iframe');
+    f.src = 'concept-v3/3d/emblem-3d.html?v=' + b.dataset.v;
+    document.querySelectorAll('.viewer .sw button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  }));
+</script>
+</body>
+</html>
