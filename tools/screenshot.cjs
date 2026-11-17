@@ -35,7 +35,7 @@ function loadPlaywright() {
   } catch (e) {
     // Node не шукає глобальні пакети сам – пробуємо глобальну теку npm.
     try {
-      const globalRoot = require('child_process').execSync('npm root -g', { encoding: 'utf8' }).trim();
+      const globalRoot = require('child_process').execSync('npm root -g', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
       return require(path.join(globalRoot, 'playwright'));
     } catch (e2) {
       console.error('Не знайдено Playwright. Встановіть: npm i -g playwright && npx playwright install chromium');
