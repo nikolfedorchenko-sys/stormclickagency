@@ -2,6 +2,8 @@
 export function initCursor({ reducedMotion }) {
   if (!matchMedia('(pointer: fine)').matches) return;
   document.documentElement.classList.add('has-cursor');
+  // до першого руху миші курсор не видно (інакше точка стоїть у лівому верхньому куті)
+  document.documentElement.classList.add('cursor-hidden');
 
   const dot = document.createElement('div');
   dot.className = 'cursor-dot';

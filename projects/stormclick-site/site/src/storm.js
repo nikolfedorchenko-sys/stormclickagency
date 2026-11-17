@@ -204,6 +204,7 @@ export function initStorm(hero) {
     return pts;
   }
 
+  var FADE_IN_LOW = 40;  // плавна поява каналу, що стартує нижче шапки (тип C)
   function finish(rnd, pts, branches, sx, sy, best){
     pts = detail(rnd, pts, .2);
     branches.forEach(function(br){ br.pts = detail(rnd, br.pts, .14); });
@@ -254,6 +255,7 @@ export function initStorm(hero) {
         // збоку – найглибший удар; згори – найдовша вільна діагональ
         var score = L.side ? (ty - sy) + rnd() * 140 * k - Math.abs(tx - sx) * .15
                   : narrow && type === 'B' ? ty + rnd() * 10
+                  : narrow && type === 'C' ? Math.hypot(tx - sx, ty - sy) + (ty - sy) * .6 + rnd() * 30
                   : Math.hypot(tx - sx, ty - sy) + rnd() * 40;
         if (!best || score > best.s) best = { x: tx, y: ty, s: score };
       }
@@ -288,7 +290,10 @@ export function initStorm(hero) {
       }
       var mainLen = pathLen(pts);
       var res = finish(rnd, pts, branches, sx, sy, best);
-      if (mainLen >= minLen && branches.length >= 2) return res;   // видимий канал і щонайменше 2 гілки
+      var low = sy > L.header + 20; res.low = low;
+      // видимий канал без зон плавної появи/згасання – не коротший за мінімум (тип C інакше виходить ~150 px)
+      var visLen = mainLen - (low ? FADE_IN_LOW / 2 : 0) - (L.side ? 0 : (L.mobile ? 40 : P.endFade) / 2);
+      if (visLen >= minLen && branches.length >= 2) return res;   // видимий канал і щонайменше 2 гілки
       var sc = mainLen + branches.length * 60;
       if (!fallback || sc > fallback.sc) { fallback = res; fallback.sc = sc; }
     }
@@ -319,7 +324,8 @@ export function initStorm(hero) {
   function fades(c, b){
     // верх каналу виходить з хмари, а не обрізаний
     c.globalCompositeOperation = 'destination-in';
-    var g = c.createLinearGradient(0, b.sy, 0, b.sy + (b.sy > L.header + 20 ? 22 : 70));
+    // тип C (старт з основи хмари під плашкою): перші ~40 px проявляються плавно, а не обриваються
+    var g = c.createLinearGradient(0, b.sy, 0, b.sy + (b.sy > L.header + 20 ? FADE_IN_LOW : 70));
     g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
     c.fillStyle = g; c.fillRect(0, 0, W, H);
     // знизу (360/768, де нема табло, за яке сховатись) – плавно гасне, а не обривається
@@ -364,6 +370,11 @@ export function initStorm(hero) {
     g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(.5, 'rgba(0,0,0,.55)'); g.addColorStop(1, 'rgba(0,0,0,0)');
     c.fillStyle = g; c.fillRect(0, 0, cw, ch);
     c.globalCompositeOperation = 'lighter';
+    if (b.low){ // тип C: хмара в точці старту світиться сильніше – розряд виходить із неї
+      var gs = c.createRadialGradient(b.sx / S, (b.sy + 4) / S, 0, b.sx / S, (b.sy + 4) / S, 46 / S);
+      gs.addColorStop(0, 'rgba(176,184,255,.42)'); gs.addColorStop(.6, 'rgba(140,150,255,.12)'); gs.addColorStop(1, 'rgba(124,136,255,0)');
+      c.globalCompositeOperation = 'lighter'; c.fillStyle = gs; c.fillRect(0, 0, cw, ch);
+    }
     var mx = (b.sx + b.ex) / 2 / S, my = (b.sy + b.ey) / 2 / S, r2 = Math.max(80, (b.ey - b.sy) * .6) / S;
     var g2 = c.createRadialGradient(mx, my, 0, mx, my, r2);
     g2.addColorStop(0, 'rgba(124,136,255,.16)'); g2.addColorStop(1, 'rgba(124,136,255,0)');
@@ -419,7 +430,9 @@ export function initStorm(hero) {
   }
   function strike(rnd, b, type){
     b = b || makeBolt(rnd, type); if (!b) return null;
-    renderBolt(b); renderLit(b); return b;
+    renderBolt(b); renderLit(b);
+    hero.__stormBolt = b;   // для перевірок скриншотами (довжина, тип, старт)
+    return b;
   }
   function tick(now){
     var t = now - cur.t0, lv = levels(t, cur.pl);

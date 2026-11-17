@@ -10,30 +10,21 @@ const DICT = {
     'cta.discuss': 'Обговорити проєкт',
     'cta.quote': 'Отримати розрахунок',
 
-    'hero.badge': 'ШІ-аудит бізнесу за $100: покажемо, що автоматизувати →',
+    'nav.label': 'Основна навігація',
+    'nav.open': 'Відкрити меню',
+    'lang.label': 'Мова сайту',
+    'lang.switch': 'Перейти на українську',
+    'hero.new': 'Новинка',
+    'hero.badge': 'ШІ-аудит бізнесу за $100',
     'hero.title1': 'Сайт, бот або CRM',
     'hero.title2': 'за ціною нижче ринку',
-    'hero.subtitle': 'Команда професіоналів, яка працює з інструментами ШІ. Тому Telegram-бот готовий за годину, сайт – за кілька годин, CRM – за кілька днів, і коштує це в рази менше, ніж у класичній агенції.',
+    // **…** – виділення в ліді (data-i18n-rich)
+    'hero.subtitle': 'Команда професіоналів, яка працює з інструментами ШІ. Тому це коштує **в рази менше**, ніж у класичній агенції.',
+    'proof.label': 'Орієнтовні ціни і терміни',
+    'proof.bot': 'Telegram-бот',
+    'proof.note': 'Ціни орієнтовні. Точний розрахунок – безкоштовно, протягом години в робочий час.',
+    'proof.all': 'Усі послуги',
     'cta.launch': 'Отримати розрахунок',
-    'panel.online': '● онлайн',
-    'panel.m1': 'Хочу сайт для кав\'ярні: меню, адреса, кнопка в Telegram',
-    'panel.m2': 'Зробимо сьогодні: 4 екрани, мобільна версія, форма замовлення. $100, хостинг на рік включено. Куди надіслати розрахунок?',
-    'panel.ads': 'Проєкт · CRM для салону',
-    'panel.leads': 'днів до запуску',
-    'panel.cpl': 'ціна',
-    'panel.content': 'Зроблено цього тижня',
-    'panel.done': 'готово',
-    'panel.c1': 'Сайт для кав\'ярні',
-    'panel.who1': '4 години',
-    'panel.c2': 'Бот запису для салону',
-    'panel.who2': '40 хвилин',
-    'panel.c3': 'Лендинг + реклама',
-    'panel.who3': '1 день',
-    'panel.c4': 'CRM для доставки',
-    'panel.who4': '3 дні',
-    'panel.burn': 'Задачі закриваються щодня – демо',
-    'panel.vs1': 'в агенції – 6 тижнів',
-    'panel.vs2': 'в агенції – від $5 000',
     'hero.ask': 'Спитати ціну у ШІ-асистента',
     'hero.scroll': 'Гортайте',
     'stage2.eyebrow': 'Удар блискавки = клік',
@@ -211,30 +202,20 @@ const DICT = {
     'cta.discuss': 'Discuss a project',
     'cta.quote': 'Get a quote',
 
-    'hero.badge': 'AI business audit for $100: we show what to automate →',
+    'nav.label': 'Main navigation',
+    'nav.open': 'Open menu',
+    'lang.label': 'Site language',
+    'lang.switch': 'Switch to English',
+    'hero.new': 'New',
+    'hero.badge': 'AI business audit for $100',
     'hero.title1': 'A website, a bot or a CRM',
     'hero.title2': 'below market price',
-    'hero.subtitle': 'A team of professionals working with AI tools. That is why a Telegram bot is ready in an hour, a website in a few hours and a CRM in days, at a fraction of what a classic agency charges.',
+    'hero.subtitle': 'A team of professionals working with AI tools. That is why it costs **a fraction** of what a classic agency charges.',
+    'proof.label': 'Indicative prices and timelines',
+    'proof.bot': 'Telegram bot',
+    'proof.note': 'Prices are indicative. An exact quote is free, within an hour during business hours.',
+    'proof.all': 'All services',
     'cta.launch': 'Get a quote',
-    'panel.online': '● online',
-    'panel.m1': 'I need a website for my coffee shop: menu, address, Telegram button',
-    'panel.m2': 'We can do it today: 4 screens, mobile version, order form. $100, hosting for a year included. Where should I send the quote?',
-    'panel.ads': 'Project · CRM for a salon',
-    'panel.leads': 'days to launch',
-    'panel.cpl': 'price',
-    'panel.content': 'Shipped this week',
-    'panel.done': 'done',
-    'panel.c1': 'Coffee shop website',
-    'panel.who1': '4 hours',
-    'panel.c2': 'Booking bot for a salon',
-    'panel.who2': '40 minutes',
-    'panel.c3': 'Landing page + ads',
-    'panel.who3': '1 day',
-    'panel.c4': 'CRM for a delivery service',
-    'panel.who4': '3 days',
-    'panel.burn': 'Tasks closed every day – demo',
-    'panel.vs1': 'agency: 6 weeks',
-    'panel.vs2': 'agency: from $5,000',
     'hero.ask': 'Ask the AI assistant for a price',
     'hero.scroll': 'Scroll',
     'stage2.eyebrow': 'Lightning strike = click',
@@ -422,21 +403,47 @@ export const t = (key) => DICT[lang][key] ?? DICT.uk[key] ?? key;
 export const getLang = () => lang;
 export const onLangChange = (fn) => listeners.push(fn);
 
+// Текст із **виділенням** -> вузли (без innerHTML)
+function setRich(el, text) {
+  el.replaceChildren(...text.split('**').map((part, i) => {
+    if (i % 2 === 0) return document.createTextNode(part);
+    const b = document.createElement('strong');
+    b.textContent = part;
+    return b;
+  }));
+}
+
+const other = () => LANGS.find((l) => l !== lang);
+const LANG_SHORT = { uk: 'UA', en: 'EN' };
+
 function apply() {
   document.documentElement.lang = lang;
   document.title = t('meta.title');
   document.querySelector('meta[name="description"]')?.setAttribute('content', t('meta.description'));
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-rich]').forEach((el) => setRich(el, t(el.dataset.i18nRich)));
+  document.querySelectorAll('[data-i18n-aria]').forEach((el) => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
   document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder); });
   document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  // Мобільна кнопка мови показує ту мову, на яку перемикає, і підписана цією мовою
+  const next = other();
+  document.querySelectorAll('[data-lang-toggle]').forEach((b) => {
+    b.textContent = LANG_SHORT[next];
+    b.lang = next;
+    b.setAttribute('aria-label', DICT[next]['lang.switch']);
+  });
   listeners.forEach((fn) => fn(lang));
 }
 
+function setLang(next) {
+  if (!LANGS.includes(next) || next === lang) return;
+  lang = next;
+  try { localStorage.setItem('lang', lang); } catch (e) { /* сховище недоступне */ }
+  apply();
+}
+
 export function initI18n() {
-  document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => {
-    lang = b.dataset.lang;
-    try { localStorage.setItem('lang', lang); } catch (e) { /* сховище недоступне */ }
-    apply();
-  }));
+  document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
+  document.querySelectorAll('[data-lang-toggle]').forEach((b) => b.addEventListener('click', () => setLang(other())));
   apply();
 }

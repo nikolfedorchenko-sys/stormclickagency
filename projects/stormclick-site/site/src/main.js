@@ -1,14 +1,18 @@
 import '@fontsource/unbounded/500.css';
+import '@fontsource/unbounded/600.css';
 import '@fontsource/unbounded/700.css';
 import '@fontsource-variable/manrope';
 import 'lenis/dist/lenis.css';
+import './styles/tokens.css';
 import './styles/main.css';
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { CONFIG } from './config.js';
-import { initI18n } from './i18n.js';
+import { initI18n, onLangChange } from './i18n.js';
+import { initStorm } from './storm.js';
+import { initProof } from './proof.js';
 import { initCursor } from './cursor.js';
 import { initFunnel } from './funnel.js';
 import { initChart } from './chart.js';
@@ -31,11 +35,34 @@ function initLinks() {
 function initMenu() {
   const nav = document.getElementById('nav');
   const toggle = document.querySelector('.nav-toggle');
-  toggle.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
+  const set = (open) => {
+    nav.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', String(open));
+  };
+  toggle.addEventListener('click', () => set(!nav.classList.contains('open')));
+  nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => set(false)));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('open')) { set(false); toggle.focus(); } });
+  matchMedia('(min-width: 1200px)').addEventListener('change', () => set(false));
+}
+
+// Плаваюча кнопка асистента ховається, поки видно перший екран (асистент уже є в діях героя),
+// і з'являється після прокрутки за нього. Клас in-hero (мобільна sticky-кнопка) лишається як був.
+function initHeroState() {
+  const hero = document.getElementById('hero');
+  document.body.classList.add('in-hero', 'hero-visible');
+  if (!hero || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(([e]) => document.body.classList.toggle('hero-visible', e.isIntersecting)).observe(hero);
+}
+
+// Події аналітики: клік по елементу з data-track. Лічильники (GA4 / Meta / TikTok) на сайті ще не
+// підключені – ідентифікаторів у config.js немає; події йдуть у dataLayer і підхопляться менеджером тегів.
+function initTracking() {
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-track]');
+    if (!el) return;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: el.dataset.track, lang: document.documentElement.lang });
   });
-  nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => nav.classList.remove('open')));
 }
 
 function initSmoothScroll() {
@@ -99,32 +126,16 @@ function initHeader() {
   });
 }
 
-function intro() {
-  if (reducedMotion) return;
-  gsap.timeline({ defaults: { ease: 'power3.out' } })
-    .from('.header', { autoAlpha: 0, y: -20, duration: 0.8 }, 0)
-    .from('.hero-tag', { autoAlpha: 0, y: 16, duration: 0.7 }, 0.1)
-    .from('.hero-title .line > span', { yPercent: 110, duration: 1, stagger: 0.1 }, 0.15)
-    .from('.hero-subtitle, .hero-actions', { autoAlpha: 0, y: 20, duration: 0.8, stagger: 0.08 }, 0.4)
-    .from('.panel', { autoAlpha: 0, y: 60, duration: 1.1 }, 0.55)
-    .from('.pcard', { autoAlpha: 0, y: 24, duration: 0.8, stagger: 0.12 }, 0.8)
-    .from('.pmsg', { autoAlpha: 0, y: 10, duration: 0.5, stagger: 0.35 }, 1.1)
-    .add(() => document.querySelector('.panel').classList.add('is-live'), 1.2);
-  // Панель ледь зміщується за курсором
-  if (matchMedia('(pointer: fine)').matches) {
-    const panel = document.querySelector('.panel');
-    window.addEventListener('pointermove', (e) => {
-      const x = (e.clientX / innerWidth - 0.5) * 6;
-      const y = (e.clientY / innerHeight - 0.5) * 4;
-      gsap.to(panel, { rotateY: x, rotateX: -y, duration: 1.2, ease: 'power2.out' });
-    });
-  }
-}
-
 async function boot() {
   initI18n();
+  initProof(document.querySelector('.proof'));
+  // Сцена шторму стартує сама після load + шрифтів; при зміні мови – перерахунок заборонених зон
+  const storm = initStorm(document.getElementById('hero'));
+  onLangChange(() => requestAnimationFrame(storm.relayout));
   initLinks();
   initMenu();
+  initHeroState();
+  initTracking();
   initCursor({ reducedMotion });
   await document.fonts.ready;
 
@@ -146,7 +157,6 @@ async function boot() {
   initQuiz(document.getElementById('quiz'));
   initAssistant(document.getElementById('assistant'));
 
-  intro();
   ScrollTrigger.refresh();
 }
 
