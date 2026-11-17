@@ -1,0 +1,4 @@
+shots/
+shots-review/
+!**/design/shots/
+**/design/refs/
