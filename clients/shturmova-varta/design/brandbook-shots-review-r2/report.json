@@ -1,0 +1,281 @@
+{
+  "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/brandbook.html",
+  "takenAt": "2026-11-17T13:51:40.556Z",
+  "viewports": {
+    "mobile-360": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-02.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-03.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-04.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-05.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-06.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-07.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-08.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-09.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-10.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-11.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-part-12.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/mobile-360-full.png"
+      },
+      "warnings": [
+        "сторінка довша за 12 екранів – частини зняті лише для початку; решту дивіться на mobile-360-full.png"
+      ],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Штурмова варта – брендбук",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 61,
+        "items": [
+          "span.label «БРЕНДБУК · ВЕРСІЯ 1.1 · ЛИСТОПАД 2026» 12px",
+          "span.label «ТОВ «ОХОРОННА КОМПАНІЯ «ШТУРМОВА ВАРТА»» 12px",
+          "span.label «ПОЗИЦІОНУВАННЯ І ХАРАКТЕР» 12px",
+          "span.label «ЛОГОТИП» 12px",
+          "span.cap «ОСНОВНА ВЕРСІЯ · SV-PRIMARY-COLOR.SVG» 12px",
+          "span.cap «ГОРИЗОНТАЛЬНА · ШАПКА САЙТУ, ВИВІСКА, АВ» 12px",
+          "span.cap «ЗНАК · АВАТАРКА, ФАВІКОН, НАШИВКА» 12px",
+          "span.cap «ІНВЕРСНА · НА ГРАФІТІ» 12px",
+          "span.cap «ЗНАК ІНВЕРСНИЙ» 12px",
+          "span.cap «МОНОХРОМНА ЧОРНА · ФАКС, ШТАМП, ГРАВІЮВА» 12px",
+          "span.cap «ЧОРНА НА СИГНАЛЬНОМУ · ЛИШЕ ДЛЯ НАЛІПОК » 12px",
+          "figcaption «Основна – від 60 мм / 240 px» 13px",
+          "figcaption «Горизонтальна – від 32 мм / 130 px» 13px",
+          "figcaption «Знак – від 5 мм / 16 px» 13px",
+          "figcaption «Розтягувати чи стискати» 13px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 21,
+        "items": [
+          "p.note «Чи пов'язані засновники або працівники з» 15px",
+          "p.small.muted «Порядок у деталях: форма, звіти, пунктуа» 14px",
+          "p.small.muted «Важкі, стійкі форми у графіці. Жодної зб» 14px",
+          "p.small.muted «Показуємо людей на посту і реальну робот» 14px",
+          "p.small.muted «Коротко, по суті, з конкретикою. Без «за» 14px",
+          "p.small.muted «Для вишивки (нашивка) – знак не менше 25» 14px",
+          "p.small.muted «* CMYK пораховано наївною формулою RGB →» 14px",
+          "p.muted.small «Сигнальний помаранч – завжди найменша пл» 14px",
+          "p.note «Чому не широкий гротеск. Пара «широкий г» 15px",
+          "p.small.muted «Друк (візитки, бланки): заголовки Fira S» 14px",
+          "p.note «Не використовуємо: камуфляж, «тактичні» » 15px",
+          "p «Охоронець у формі компанії біля входу ск» 15px",
+          "p «Кілька людей перед виходом на пост, стар» 15px",
+          "p «Керівник охорони і власник об'єкта огляд» 15px",
+          "p.small.muted «Це схема обробки, а не фото. Ліцензійних» 14px"
+        ]
+      },
+      "fontFamiliesUsed": [
+        "\"Fira Sans\"",
+        "\"Fira Sans Extra Condensed\"",
+        "ui-monospace",
+        "Arial"
+      ],
+      "pageHeightPx": 30198
+    },
+    "tablet-768": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-02.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-03.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-04.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-05.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-06.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-07.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-08.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-09.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-10.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-11.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-part-12.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/tablet-768-full.png"
+      },
+      "warnings": [
+        "сторінка довша за 12 екранів – частини зняті лише для початку; решту дивіться на tablet-768-full.png"
+      ],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Штурмова варта – брендбук",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 52,
+        "items": [
+          "span.label «БРЕНДБУК · ВЕРСІЯ 1.1 · ЛИСТОПАД 2026» 12px",
+          "span.label «ТОВ «ОХОРОННА КОМПАНІЯ «ШТУРМОВА ВАРТА»» 12px",
+          "span.label «ПОЗИЦІОНУВАННЯ І ХАРАКТЕР» 12px",
+          "span.label «ЛОГОТИП» 12px",
+          "span.cap «ОСНОВНА ВЕРСІЯ · SV-PRIMARY-COLOR.SVG» 12px",
+          "span.cap «ГОРИЗОНТАЛЬНА · ШАПКА САЙТУ, ВИВІСКА, АВ» 12px",
+          "span.cap «ЗНАК · АВАТАРКА, ФАВІКОН, НАШИВКА» 12px",
+          "span.cap «ІНВЕРСНА · НА ГРАФІТІ» 12px",
+          "span.cap «ЗНАК ІНВЕРСНИЙ» 12px",
+          "span.cap «МОНОХРОМНА ЧОРНА · ФАКС, ШТАМП, ГРАВІЮВА» 12px",
+          "span.cap «ЧОРНА НА СИГНАЛЬНОМУ · ЛИШЕ ДЛЯ НАЛІПОК » 12px",
+          "figcaption «Основна – від 60 мм / 240 px» 13px",
+          "figcaption «Горизонтальна – від 32 мм / 130 px» 13px",
+          "figcaption «Знак – від 5 мм / 16 px» 13px",
+          "span.label «КОЛЬОРИ» 12px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 23,
+        "items": [
+          "p.note «Чи пов'язані засновники або працівники з» 15px",
+          "p.small.muted «Порядок у деталях: форма, звіти, пунктуа» 14px",
+          "p.small.muted «Важкі, стійкі форми у графіці. Жодної зб» 14px",
+          "p.small.muted «Показуємо людей на посту і реальну робот» 14px",
+          "p.small.muted «Коротко, по суті, з конкретикою. Без «за» 14px",
+          "p.small.muted «Для вишивки (нашивка) – знак не менше 25» 14px",
+          "p.small.muted «* CMYK пораховано наївною формулою RGB →» 14px",
+          "p.muted.small «Сигнальний помаранч – завжди найменша пл» 14px",
+          "p.note «Чому не широкий гротеск. Пара «широкий г» 15px",
+          "p.small.muted «Друк (візитки, бланки): заголовки Fira S» 14px",
+          "p.note «Не використовуємо: камуфляж, «тактичні» » 15px",
+          "p «Охоронець у формі компанії біля входу ск» 15px",
+          "p «Нашивка на рукаві, журнал змін, рація на» 15px",
+          "p «Кілька людей перед виходом на пост, стар» 15px",
+          "p «Людина зі спини йде вздовж паркану чи ст» 15px"
+        ]
+      },
+      "fontFamiliesUsed": [
+        "\"Fira Sans\"",
+        "\"Fira Sans Extra Condensed\"",
+        "ui-monospace",
+        "Arial"
+      ],
+      "pageHeightPx": 21446
+    },
+    "desktop-1440": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-02.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-03.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-04.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-05.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-06.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-07.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-08.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-09.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-10.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-11.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-part-12.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/brandbook-shots-review-r2/desktop-1440-full.png"
+      },
+      "warnings": [
+        "сторінка довша за 12 екранів – частини зняті лише для початку; решту дивіться на desktop-1440-full.png"
+      ],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Штурмова варта – брендбук",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 52,
+        "items": [
+          "span.label «БРЕНДБУК · ВЕРСІЯ 1.1 · ЛИСТОПАД 2026» 12px",
+          "span.label «ТОВ «ОХОРОННА КОМПАНІЯ «ШТУРМОВА ВАРТА»» 12px",
+          "span.label «ПОЗИЦІОНУВАННЯ І ХАРАКТЕР» 12px",
+          "span.label «ЛОГОТИП» 12px",
+          "span.cap «ОСНОВНА ВЕРСІЯ · SV-PRIMARY-COLOR.SVG» 12px",
+          "span.cap «ГОРИЗОНТАЛЬНА · ШАПКА САЙТУ, ВИВІСКА, АВ» 12px",
+          "span.cap «ЗНАК · АВАТАРКА, ФАВІКОН, НАШИВКА» 12px",
+          "span.cap «ІНВЕРСНА · НА ГРАФІТІ» 12px",
+          "span.cap «ЗНАК ІНВЕРСНИЙ» 12px",
+          "span.cap «МОНОХРОМНА ЧОРНА · ФАКС, ШТАМП, ГРАВІЮВА» 12px",
+          "span.cap «ЧОРНА НА СИГНАЛЬНОМУ · ЛИШЕ ДЛЯ НАЛІПОК » 12px",
+          "figcaption «Основна – від 60 мм / 240 px» 13px",
+          "figcaption «Горизонтальна – від 32 мм / 130 px» 13px",
+          "figcaption «Знак – від 5 мм / 16 px» 13px",
+          "span.label «КОЛЬОРИ» 12px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "\"Fira Sans\"",
+        "\"Fira Sans Extra Condensed\"",
+        "ui-monospace",
+        "Arial"
+      ],
+      "pageHeightPx": 17218
+    }
+  }
+}

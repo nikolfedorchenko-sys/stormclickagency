@@ -1,0 +1,252 @@
+{
+  "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/landing-mockup.html?still",
+  "takenAt": "2026-11-17T13:51:24.223Z",
+  "viewports": {
+    "mobile-360": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-02.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-03.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-04.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-05.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-06.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-07.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-08.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-09.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-10.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-11.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-part-12.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/mobile-360-full.png"
+      },
+      "warnings": [
+        "сторінка довша за 12 екранів – частини зняті лише для початку; решту дивіться на mobile-360-full.png"
+      ],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Штурмова варта – охорона об'єктів і особиста охорона",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 14,
+        "items": [
+          "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
+          "span.label.rh-label «ПОСЛУГИ» 13px",
+          "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
+          "span.label.rh-label «ДЛЯ КОГО» 13px",
+          "span.label.rh-label «ЧОМУ МИ» 13px",
+          "span.label.rh-label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
+          "span.k «КРОК 01» 13px",
+          "span.k «КРОК 02» 13px",
+          "span.k «КРОК 03» 13px",
+          "span.k «КРОК 04» 13px",
+          "span.label.rh-label «ЗАКОННІСТЬ» 13px",
+          "span.label.rh-label «ПИТАННЯ» 13px",
+          "span.label.rh-label «ЗАЯВКА» 13px",
+          "span.label.rh-label «КОНТАКТИ» 13px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 8,
+        "items": [
+          "p.muted.small «Показувати чи ні – [уточнити]» 15px",
+          "p.note «Тези – заготовка для погодження. Те, що » 14px",
+          "p «Натискаючи кнопку, ви погоджуєтесь з обр» 14px",
+          "p «ТОВ «ОХОРОННА КОМПАНІЯ «ШТУРМОВА ВАРТА»» 15px",
+          "p «Код ЄДРПОУ: [уточнити]» 15px",
+          "p «Телефон: +380 67 549 57 10» 15px",
+          "p «Юридична адреса: [уточнити]» 15px",
+          "p «Ліцензія МВС на охоронну діяльність: нак» 15px"
+        ]
+      },
+      "fontFamiliesUsed": [
+        "\"Fira Sans\"",
+        "\"Fira Sans Extra Condensed\""
+      ],
+      "pageHeightPx": 12342
+    },
+    "tablet-768": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-02.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-03.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-04.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-05.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-06.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-07.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-08.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-09.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-10.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-part-11.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/tablet-768-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Штурмова варта – охорона об'єктів і особиста охорона",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 14,
+        "items": [
+          "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
+          "span.label.rh-label «ПОСЛУГИ» 13px",
+          "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
+          "span.label.rh-label «ДЛЯ КОГО» 13px",
+          "span.label.rh-label «ЧОМУ МИ» 13px",
+          "span.label.rh-label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
+          "span.k «КРОК 01» 13px",
+          "span.k «КРОК 02» 13px",
+          "span.k «КРОК 03» 13px",
+          "span.k «КРОК 04» 13px",
+          "span.label.rh-label «ЗАКОННІСТЬ» 13px",
+          "span.label.rh-label «ПИТАННЯ» 13px",
+          "span.label.rh-label «ЗАЯВКА» 13px",
+          "span.label.rh-label «КОНТАКТИ» 13px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 8,
+        "items": [
+          "p.muted.small «Показувати чи ні – [уточнити]» 15px",
+          "p.note «Тези – заготовка для погодження. Те, що » 14px",
+          "p «Натискаючи кнопку, ви погоджуєтесь з обр» 14px",
+          "p «ТОВ «ОХОРОННА КОМПАНІЯ «ШТУРМОВА ВАРТА»» 15px",
+          "p «Код ЄДРПОУ: [уточнити]» 15px",
+          "p «Телефон: +380 67 549 57 10» 15px",
+          "p «Юридична адреса: [уточнити]» 15px",
+          "p «Ліцензія МВС на охоронну діяльність: нак» 15px"
+        ]
+      },
+      "fontFamiliesUsed": [
+        "\"Fira Sans\"",
+        "\"Fira Sans Extra Condensed\""
+      ],
+      "pageHeightPx": 10853
+    },
+    "desktop-1440": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-02.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-03.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-04.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-05.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-06.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-07.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-08.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-09.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-part-10.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/shots-review-r2/desktop-1440-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Штурмова варта – охорона об'єктів і особиста охорона",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 18,
+        "items": [
+          "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
+          "span.label.rh-label «ПОСЛУГИ» 13px",
+          "span.tag «ФОТО · 4:3» 12px",
+          "p «Пост на складі чи КПП, охоронець перевір» 13px",
+          "span.tag «ФОТО · 4:3» 12px",
+          "p «Охоронець відчиняє двері авто, клієнт – » 13px",
+          "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
+          "span.label.rh-label «ДЛЯ КОГО» 13px",
+          "span.label.rh-label «ЧОМУ МИ» 13px",
+          "span.label.rh-label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
+          "span.k «КРОК 01» 13px",
+          "span.k «КРОК 02» 13px",
+          "span.k «КРОК 03» 13px",
+          "span.k «КРОК 04» 13px",
+          "span.label.rh-label «ЗАКОННІСТЬ» 13px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "\"Fira Sans\"",
+        "\"Fira Sans Extra Condensed\""
+      ],
+      "pageHeightPx": 8467
+    }
+  }
+}
