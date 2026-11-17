@@ -1,6 +1,6 @@
 {
   "url": "file:///home/user/stormclickagency/projects/stormclick-site/design/mockup.html",
-  "takenAt": "2026-11-17T09:40:54.943Z",
+  "takenAt": "2026-11-17T09:49:12.137Z",
   "viewports": {
     "mobile-360": {
       "screenshots": {
@@ -51,7 +51,7 @@
         "Unbounded",
         "Manrope"
       ],
-      "pageHeightPx": 954
+      "pageHeightPx": 967
     },
     "tablet-768": {
       "screenshots": {
