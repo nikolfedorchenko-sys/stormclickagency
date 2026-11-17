@@ -10,6 +10,7 @@
 //
 // Потрібен Playwright. У хмарних сесіях Claude Code він уже встановлений.
 // На своєму комп'ютері один раз: npm i -g playwright && npx playwright install chromium
+// (скрипт сам знайде глобально встановлений пакет).
 //
 // Що робить:
 //   - знімає перший екран, сторінку частинами по висоті екрана (part-01, part-02, …)
@@ -20,12 +21,29 @@
 //     основний текст (p, li) < 16 px на мобільному; кількість h1, lang, шрифти;
 //   - пише report.json і короткий підсумок у консоль.
 //
+// Примітка: кнопки й поля форми без `font: inherit` мають стандартний розмір
+// браузера 13.33px – скрипт покаже їх у smallText; це справжній сигнал.
+//
 // Звіт – це сигнали для перевірки, а не вирок: хибне спрацювання треба
 // пояснити, а не «виправляти».
 
 const path = require('path');
 const fs = require('fs');
-const { chromium } = require('playwright');
+function loadPlaywright() {
+  try {
+    return require('playwright');
+  } catch (e) {
+    // Node не шукає глобальні пакети сам – пробуємо глобальну теку npm.
+    try {
+      const globalRoot = require('child_process').execSync('npm root -g', { encoding: 'utf8' }).trim();
+      return require(path.join(globalRoot, 'playwright'));
+    } catch (e2) {
+      console.error('Не знайдено Playwright. Встановіть: npm i -g playwright && npx playwright install chromium');
+      process.exit(4);
+    }
+  }
+}
+const { chromium } = loadPlaywright();
 
 const VIEWPORTS = [
   { name: 'mobile-360', width: 360, height: 800, touch: true },

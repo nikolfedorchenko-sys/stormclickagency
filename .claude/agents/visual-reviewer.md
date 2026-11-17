@@ -15,7 +15,7 @@ tools: Read, Glob, Grep, Bash, WebFetch
 1. Зніми власні скриншоти в окрему теку, щоб не перезаписати знімки автора: `node tools/screenshot.cjs <url або файл> <тека сайту чи макета>/shots-review`. Якщо сайт треба запустити (Vite тощо) – запусти сервер у фоні, знімай з localhost і зупини сервер після перевірки.
 2. **Подивись** через Read перший екран і всі частини (`part-01`, `part-02`, …) на 360, 768 і 1440 px; знімок усієї сторінки – лише для загальної композиції. Без перегляду картинок вердикт не виносиш.
 3. Прочитай `report.json`: помилки консолі, биті ресурси, вміст ширший за екран, зображення без `alt`, дрібні зони натискання, дрібний текст. Це сигнали, а не вирок: перевір кожен на скриншоті; підтверджене йде у звіт з цифрами, хибне спрацювання – не зауваження.
-4. За потреби подивись окремий блок ближче, наприклад: `node -e "const {chromium}=require('playwright');(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:360,height:800}});await p.goto('<url>');await p.locator('<css-селектор>').screenshot({path:'<тека>/shots-review/block.png'});await b.close()})()"`.
+4. За потреби подивись окремий блок ближче, наприклад: `node -e "const {chromium}=require('playwright');(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:360,height:800}});await p.goto('<url>');await p.locator('<css-селектор>').screenshot({path:'<тека>/shots-review/block.png'});await b.close()})()"`. Так працює в хмарній сесії; якщо `require('playwright')` не знаходиться – додай перед командою `NODE_PATH="$(npm root -g)"`.
 
 ## Що оцінюєш
 

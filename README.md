@@ -26,7 +26,7 @@
 
 Правило записане в `CLAUDE.md` і діє автоматично: виконавець робить, `quality-reviewer` перевіряє, виконавець виправляє, і так до вердикту ГОТОВО (не більше трьох кіл). Людина отримує фінал і список того, що потребує її рішення.
 
-Для сайтів порядок такий: `ui-designer` (макет) → `visual-reviewer` (перевірка макета) → погодження людиною → `landing-developer` (верстка) → `visual-reviewer` (вигляд) і `quality-reviewer` (форми, тексти, код) → `seo-auditor` перед запуском. Скриншоти для перевірки знімає скрипт `tools/screenshot.cjs` (потрібен Playwright: у хмарних сесіях Claude Code він є, на своєму комп'ютері – `npm i -g playwright && npx playwright install chromium`):
+Для сайтів порядок такий: `ui-designer` (макет) → `visual-reviewer` (перевірка макета) → погодження людиною → `landing-developer` (верстка) → `visual-reviewer` (вигляд) і `quality-reviewer` (форми, тексти, код) → `seo-auditor` перед запуском. Скриншоти для перевірки знімає скрипт `tools/screenshot.cjs` (потрібен Playwright: у хмарних сесіях Claude Code він є, на своєму комп'ютері – один раз `npm i -g playwright && npx playwright install chromium`, скрипт сам знайде глобальний пакет):
 
 ```
 node tools/screenshot.cjs http://localhost:5173 shots/
