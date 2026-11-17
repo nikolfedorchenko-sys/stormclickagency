@@ -7,7 +7,9 @@
 <meta name="theme-color" content="#05060B">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+<!-- Geologica (SIL OFL 1.1), варіативний: wght + SHRP (гострота кутів) + CRSV. Рішення власника – варіант D з fonts-compare.html.
+     Для сайту – самостійний хостинг: @fontsource-variable/geologica/shrp.css (див. design-brief.md, «Типографіка»). -->
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght,CRSV,SHRP@400..700,0..1,0..100&display=swap" rel="stylesheet">
 <style>
 /* ---- Токени (копія tokens.css, щоб макет був самодостатнім) ---- */
 :root{
@@ -15,23 +17,24 @@
   --c-text:#F2F3F8;--c-muted:#A3A7BF;
   --c-accent:#7C88FF;--c-accent-hi:#9AA3FF;--c-on-accent:#05060B;--c-violet:#A98BFF;--c-live:#5CE39A;
   --glow-accent:0 0 0 1px rgba(124,136,255,.55),0 8px 32px -8px rgba(124,136,255,.65);
-  --font-display:'Unbounded','Arial Black',system-ui,sans-serif;
-  --font-body:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --fs-h1:30px;--lh-h1:1.12;--fs-price:22px;--fs-lead:16px;--lh-lead:1.55;--fs-body:16px;--lh-body:1.55;--fs-ui:16px;--fs-small:14px;
-  --tracking-display:-0.02em;--tracking-caps:0.08em;
+  --font-display:'Geologica',system-ui,sans-serif;
+  --font-body:'Geologica',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fvs-display:'SHRP' 100,'CRSV' 0;--fvs-body:'SHRP' 0;--fw-display:600;
+  --fs-h1:33px;--lh-h1:1.12;--fs-price:22px;--fs-lead:16px;--lh-lead:1.55;--fs-body:16px;--lh-body:1.55;--fs-ui:16px;--fs-small:14px;
+  --tracking-display:-0.03em;--tracking-caps:0.08em;
   --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:24px;--s-6:32px;--s-7:40px;--s-8:64px;--s-9:96px;--s-10:128px;
   --container:1280px;--gutter:16px;--cols:4;--col-gap:16px;--header-h:64px;
   --r-sm:8px;--r-md:14px;--r-pill:999px;--shadow-pop:0 24px 64px -24px rgba(0,0,0,.8);
   --tap:44px;--btn-h:56px;
   --ease-out:cubic-bezier(.2,.8,.2,1);--dur-fast:160ms;--dur-base:320ms;
 }
-@media (min-width:768px){:root{--fs-h1:48px;--lh-h1:1.06;--fs-price:26px;--fs-lead:18px;--gutter:32px;--cols:8}}
-@media (min-width:1200px){:root{--fs-h1:76px;--lh-h1:1.02;--fs-price:32px;--fs-lead:20px;--lh-lead:1.5;--fs-body:17px;--gutter:48px;--cols:12;--col-gap:24px;--header-h:80px}}
+@media (min-width:768px){:root{--fs-h1:52px;--lh-h1:1.06;--fs-price:26px;--fs-lead:18px;--gutter:32px;--cols:8}}
+@media (min-width:1200px){:root{--fs-h1:84px;--lh-h1:1.02;--fs-price:32px;--fs-lead:20px;--lh-lead:1.5;--fs-body:17px;--gutter:48px;--cols:12;--col-gap:24px;--header-h:80px}}
 
 /* ---- База ---- */
 *{box-sizing:border-box;margin:0;padding:0}
 html{background:var(--c-bg)}
-body{background:var(--c-bg);color:var(--c-text);font:400 var(--fs-body)/var(--lh-body) var(--font-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{background:var(--c-bg);color:var(--c-text);font:400 var(--fs-body)/var(--lh-body) var(--font-body);font-variation-settings:var(--fvs-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--c-accent-hi);outline-offset:3px;border-radius:var(--r-sm)}
@@ -43,7 +46,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .header .container{height:100%;display:flex;align-items:center;gap:var(--s-2)}
 .logo{display:flex;align-items:center;gap:10px;min-height:var(--tap);margin-right:auto}
 .logo svg{width:16px;height:22px;fill:var(--c-accent)}
-.logo span{font:600 17px/1 var(--font-display);letter-spacing:-.01em}
+.logo span{font:var(--fw-display) 17px/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:var(--tracking-display)}
 .nav{display:none}
 .lang{display:flex}
 .lang-full{display:none}
@@ -66,7 +69,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .announce b{margin-right:0;font-weight:700;font-size:var(--fs-small);padding:4px 10px;border-radius:var(--r-pill);background:var(--c-surface-2);color:var(--c-accent-hi)}
 .announce:hover{border-color:var(--c-line-strong)}
 .announce .arr{color:var(--c-accent-hi)}
-h1{font:600 var(--fs-h1)/var(--lh-h1) var(--font-display);letter-spacing:var(--tracking-display);text-wrap:balance;max-width:15ch}
+h1{font:var(--fw-display) var(--fs-h1)/var(--lh-h1) var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:var(--tracking-display);text-wrap:balance;max-width:10.5ch} /* телефон: 4 рядки «Сайт, бот / або CRM / за ціною / нижче ринку» (EN теж 4) – праворуч кишеня для удару */
 h1 .hl{color:var(--c-accent);display:block}
 .lead{margin-top:var(--s-4);font-size:var(--fs-lead);line-height:var(--lh-lead);color:var(--c-muted);max-width:34ch}
 .lead strong{color:var(--c-text);font-weight:600}
@@ -89,7 +92,7 @@ h1 .hl{color:var(--c-accent);display:block}
 .p-name{grid-area:name;font-size:var(--fs-body);font-weight:600}
 .p-time{grid-area:time;font-size:var(--fs-small);color:var(--c-muted);display:flex;align-items:center;gap:6px}
 .p-time svg{width:14px;height:14px;stroke:var(--c-accent-hi);fill:none;stroke-width:2}
-.p-price{grid-area:price;font:500 var(--fs-price)/1 var(--font-display);letter-spacing:-.02em;text-align:right;white-space:nowrap}
+.p-price{grid-area:price;font:var(--fw-display) var(--fs-price)/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:var(--tracking-display);text-align:right;white-space:nowrap}
 .p-price small{font:500 var(--fs-small)/1 var(--font-body);color:var(--c-muted);letter-spacing:0}
 .p-note{padding:var(--s-4) 0 var(--s-5);font-size:var(--fs-body);color:var(--c-muted);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2) var(--s-4)}
 .p-note a{display:inline-flex;align-items:center;min-height:var(--tap);color:var(--c-text);font-weight:600;gap:6px}
@@ -99,11 +102,23 @@ h1 .hl{color:var(--c-accent);display:block}
 .annot{display:none;position:absolute;z-index:5;right:var(--gutter);top:calc(var(--header-h) + 12px);max-width:260px;padding:10px 12px;border:1px dashed var(--c-accent);border-radius:var(--r-sm);font-size:var(--fs-small);color:var(--c-accent-hi);background:rgba(5,6,11,.8)}
 .show-notes .annot{display:block}
 
+/* ---- Телефони: з Geologica H1 на 4 рядки (33 px) на рядок вищий, ніж був; щоб на 360×800 табло цін
+   лишилось у першому екрані, верхній відступ 52 → 36 px (на всіх телефонах, щоб композиція була однакова). ---- */
+@media (max-width:767px){
+  .hero-main .container{padding-top:calc(var(--header-h) + 36px)}
+}
+/* 360 px: плашка-анонс у Geologica ширша – праворуч від неї має лишитись прохід для удару (типи A/B) */
+@media (max-width:374px){
+  .announce{gap:var(--s-2);padding-right:12px}
+  .announce b{padding:4px 8px}
+}
+
 /* ---- 768 ---- */
 @media (min-width:768px){
   .hero{min-height:min(100svh,940px)}
   .hero-main{align-items:center}
   .hero-main .container{padding-top:calc(var(--header-h) + 160px);padding-bottom:var(--s-7)}
+  h1{max-width:14ch}
   .lead{max-width:42ch}
   .actions{flex-direction:row;align-items:center;gap:var(--s-5)}
   .p-list{grid-template-columns:repeat(3,1fr);column-gap:var(--s-5)}
@@ -126,7 +141,6 @@ h1 .hl{color:var(--c-accent);display:block}
   .hero{min-height:100svh}
   .hero-main{align-items:center}
   .hero-main .container{padding-top:calc(var(--header-h) + var(--s-7));padding-bottom:var(--s-7)}
-  h1{max-width:13.5ch}
   .lead{margin-top:var(--s-5);max-width:40ch}
   .actions{margin-top:var(--s-7);gap:var(--s-6)}
   .btn{padding:0 var(--s-6);font-size:17px}
@@ -142,7 +156,7 @@ h1 .hl{color:var(--c-accent);display:block}
 }
 /* Низькі десктопні екрани (1280×720, 1366×768): усе до смуги цін влазить у перший екран */
 @media (min-width:1200px) and (max-height:820px){
-  :root{--fs-h1:clamp(52px,8.5vh,76px);--fs-lead:18px;--fs-price:28px}
+  :root{--fs-h1:clamp(52px,8.5vh,84px);--fs-lead:18px;--fs-price:28px}
   .hero-main .container{padding-top:calc(var(--header-h) + var(--s-4));padding-bottom:var(--s-5)}
   .announce{margin-bottom:var(--s-4)}
   .lead{margin-top:var(--s-4)}
@@ -191,7 +205,7 @@ h1 .hl{color:var(--c-accent);display:block}
       <div class="container">
         <a href="#audit" class="announce"><b>Новинка</b> ШІ-аудит бізнесу за $100 <span class="arr" aria-hidden="true">→</span></a>
         <h1 id="hero-title">Сайт, бот або CRM <span class="hl">за ціною нижче ринку</span></h1>
-        <p class="lead">Команда професіоналів, яка працює з інструментами ШІ. Тому це коштує <strong>в рази менше</strong>, ніж у класичній агенції.</p>
+        <p class="lead">Команда професіоналів, яка працює з&nbsp;інструментами ШІ. Тому це коштує <strong>в&nbsp;рази менше</strong>, ніж у&nbsp;класичній&nbsp;агенції.</p>
         <div class="actions">
           <a href="#contact" class="btn btn-primary">
             <svg viewBox="0 0 100 140" aria-hidden="true"><path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z"/></svg>

@@ -1,6 +1,6 @@
 {
   "url": "file:///home/user/stormclickagency/projects/stormclick-site/design/mockup.html",
-  "takenAt": "2026-11-17T12:59:52.742Z",
+  "takenAt": "2026-11-17T20:46:37.480Z",
   "viewports": {
     "mobile-360": {
       "screenshots": {
@@ -48,10 +48,9 @@
         "items": []
       },
       "fontFamiliesUsed": [
-        "Unbounded",
-        "Manrope"
+        "Geologica"
       ],
-      "pageHeightPx": 967
+      "pageHeightPx": 964
     },
     "tablet-768": {
       "screenshots": {
@@ -98,8 +97,7 @@
         "items": []
       },
       "fontFamiliesUsed": [
-        "Unbounded",
-        "Manrope"
+        "Geologica"
       ],
       "pageHeightPx": 1024
     },
@@ -148,8 +146,7 @@
         "items": []
       },
       "fontFamiliesUsed": [
-        "Unbounded",
-        "Manrope"
+        "Geologica"
       ],
       "pageHeightPx": 900
     }

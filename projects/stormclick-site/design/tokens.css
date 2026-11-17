@@ -1,6 +1,12 @@
 /* StormClick – дизайн-токени (перший екран, напрям «Розряд»)
-   Тема лише темна. Шрифти: Unbounded (display), Manrope (текст) – Google Fonts:
-   https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600&display=swap
+   Тема лише темна. Шрифт: Geologica (SIL OFL 1.1), одна варіативна родина для заголовків і тексту
+   (рішення власника – варіант D з fonts-compare.html). Заголовки, ціни, логотип – 600 з віссю SHRP 100
+   («гострі кути»); текст – 400/500/600/700 з SHRP 0.
+   Сайт (самостійний хостинг, осі wght + SHRP):  npm i @fontsource-variable/geologica
+     import '@fontsource-variable/geologica/shrp.css';   // font-family: 'Geologica Variable'
+     – тоді у --font-display / --font-body першим іменем поставити 'Geologica Variable'.
+   Макет (Google Fonts):
+   https://fonts.googleapis.com/css2?family=Geologica:wght,CRSV,SHRP@400..700,0..1,0..100&display=swap
    Контраст перевірено розрахунком WCAG – див. design-brief.md, розділ «Кольори». */
 
 :root {
@@ -37,17 +43,20 @@
   --storm-cloud-lit: rgb(150, 158, 255); /* підсвічена хмара; світлий бік – до rgb(230, 232, 255) */
 
   /* Шрифти */
-  --font-display: 'Unbounded', 'Arial Black', system-ui, sans-serif;
-  --font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Geologica', system-ui, sans-serif;
+  --font-body: 'Geologica', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fw-display: 600;                        /* H1, ціни, логотип */
+  --fvs-display: 'SHRP' 100, 'CRSV' 0;      /* загострені кути – лише H1, ціни, логотип */
+  --fvs-body: 'SHRP' 0;                     /* текст, кнопки, дрібне – без загострення (на body) */
 
   /* Шкала типографіки – мобільний (360) */
-  --fs-h1: 30px;   --lh-h1: 1.12;   /* Unbounded 600, letter-spacing -0.02em */
-  --fs-price: 22px;                 /* Unbounded 500 – ціни в смузі доказу */
-  --fs-lead: 16px; --lh-lead: 1.55; /* Manrope 400 */
+  --fs-h1: 33px;   --lh-h1: 1.12;   /* Geologica 600 SHRP 100, -0.03em; max-width 10.5ch → 4 рядки */
+  --fs-price: 22px;                 /* Geologica 600 SHRP 100, -0.03em – ціни в смузі доказу */
+  --fs-lead: 16px; --lh-lead: 1.55; /* Geologica 400 */
   --fs-body: 16px; --lh-body: 1.55;
-  --fs-ui: 16px;                    /* кнопки, Manrope 600 */
+  --fs-ui: 16px;                    /* кнопки, Geologica 600 */
   --fs-small: 14px;                 /* мінімальний розмір тексту на сайті */
-  --tracking-display: -0.02em;
+  --tracking-display: -0.03em;     /* H1, ціни, логотип */
   --tracking-caps: 0.08em;          /* лише для коротких капсів, 14px */
 
   /* Відступи – одна шкала */
@@ -93,7 +102,7 @@
 
 @media (min-width: 768px) {
   :root {
-    --fs-h1: 48px;  --lh-h1: 1.06;
+    --fs-h1: 52px;  --lh-h1: 1.06;   /* H1 max-width 14ch від 768 */
     --fs-price: 26px;
     --fs-lead: 18px;
     --gutter: 32px;
@@ -103,7 +112,7 @@
 
 @media (min-width: 1200px) {
   :root {
-    --fs-h1: 76px;  --lh-h1: 1.02;
+    --fs-h1: 84px;  --lh-h1: 1.02;
     --fs-price: 32px;
     --fs-lead: 20px; --lh-lead: 1.5;
     --fs-body: 17px;
@@ -111,5 +120,14 @@
     --cols: 12;
     --col-gap: 24px;
     --header-h: 80px;
+  }
+}
+
+/* Низькі десктопи (1280×720, 1366×768): H1 від висоти екрана, щоб смуга цін була в першому екрані */
+@media (min-width: 1200px) and (max-height: 820px) {
+  :root {
+    --fs-h1: clamp(52px, 8.5vh, 84px);
+    --fs-lead: 18px;
+    --fs-price: 28px;
   }
 }
