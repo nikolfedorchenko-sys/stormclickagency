@@ -123,7 +123,10 @@ h3 { font-size:clamp(20px, 2vw, 26px); font-weight:700; line-height:1.15; }
 .big3d img { width:100%; }
 .viewer { display:grid; grid-template-columns:2fr 1fr; gap:clamp(12px, 2vw, 28px); margin-top:clamp(12px, 2vw, 28px); }
 .viewer .live { position:relative; aspect-ratio:1 / 1; background:radial-gradient(120% 90% at 50% 38%, #22385A 0%, #0E1A2B 52%, #060B13 100%); }
-.viewer iframe { width:100%; height:100%; border:0; display:block; }
+.viewer iframe { width:100%; height:100%; border:0; display:block; position:relative; z-index:1; }
+.viewer .poster { position:absolute; inset:8%; width:84%; height:84%; object-fit:contain; }
+.viewer .live.ok .poster { display:none; }
+.viewer .sw { z-index:2; }
 .viewer .sw { position:absolute; left:12px; bottom:12px; display:flex; gap:6px; }
 .viewer .sw button { font:500 14px 'IBM Plex Sans', sans-serif; background:rgba(8,17,29,.85); color:var(--light); border:1px solid var(--line); padding:10px 14px; cursor:pointer; min-height:44px; }
 .viewer .sw button[aria-pressed="true"] { background:var(--brass); color:var(--night); }
@@ -279,7 +282,7 @@ footer code { font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(
   <div class="sh"><div class="n">02</div><h2>3D і метал</h2><p>Та сама емблема як справжній предмет: латунь зі шліфуванням, синя емаль з глянцем, рифлене ребро монети. Рендер у браузері (three.js), студійне світло.</p></div>
   <figure class="big3d"><img src="concept-v3/3d/render-a-wide.png" alt="3D-рендер емблеми «Брама» на темно-синьому тлі" width="1600" height="1000" loading="lazy"></figure>
   <div class="viewer">
-    <div class="live"><iframe src="concept-v3/3d/emblem-3d.html?v=a" title="3D-емблема, повільне обертання"></iframe>
+    <div class="live"><img class="poster" src="concept-v3/3d/render-a-front.png" alt="" aria-hidden="true"><iframe src="concept-v3/3d/emblem-3d.html?v=a" title="3D-емблема, повільне обертання"></iframe>
       <div class="sw" role="group" aria-label="Варіант емблеми"><button type="button" data-v="a" aria-pressed="true">A «Брама»</button><button type="button" data-v="b" aria-pressed="false">B «Ліхтар»</button><button type="button" data-v="c" aria-pressed="false">C «КПП»</button></div></div>
     <div class="side">
       <figure><img src="concept-v3/3d/render-b-emblem.png" alt="3D-рендер емблеми B" width="1100" height="1100" loading="lazy"><figcaption class="cap"><b>B</b> – світлі вікна ліхтаря світяться власним світлом</figcaption></figure>
@@ -393,10 +396,13 @@ footer code { font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(
 </main>
 
 <script>
+  // постер ховаємо, коли 3D справді відмалювався (без WebGL лишається статичний рендер)
+  addEventListener('message', e => { if (e.data === 'sv3d-ok') document.querySelector('.viewer .live').classList.add('ok'); });
   // перемикач варіантів у живому 3D
   document.querySelectorAll('.viewer .sw button').forEach(b => b.addEventListener('click', () => {
     const f = document.querySelector('.viewer iframe');
     f.src = 'concept-v3/3d/emblem-3d.html?v=' + b.dataset.v;
+    document.querySelector('.viewer .poster').src = 'concept-v3/3d/render-' + b.dataset.v + '-emblem.png';
     document.querySelectorAll('.viewer .sw button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
   }));
 </script>

@@ -177,7 +177,7 @@ function frame(t) {
 let first = true;
 function loop(t) {
   frame(t || 0);
-  if (first) { first = false; requestAnimationFrame(() => { window.__busy = false; }); }
+  if (first) { first = false; requestAnimationFrame(() => { window.__busy = false; try { parent.postMessage('sv3d-ok', '*'); } catch (e) {} }); }
   if (!STILL) requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);

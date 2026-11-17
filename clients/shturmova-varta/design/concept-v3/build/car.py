@@ -48,9 +48,9 @@ def car(uid, livery='plain', emblem_svg='', word=None, phone=None, headlights=Tr
     if livery == 'skyline':
         import random; R = random.Random(7); x = 0; sk = []
         while x < 900:
-            w = R.randint(16, 46); h = R.randint(14, 58)
+            w = R.randint(10, 34); h = R.randint(10, 42)
             sk.append(f'M{x} -44 V{-44 - h} H{x + w} V-44 Z'); x += w + R.randint(0, 6)
-        s.append(f'<path d="{"".join(sk)}" fill="#C9A35A" opacity=".55"/>')
+        s.append(f'<path d="{"".join(sk)}" fill="#C9A35A" opacity=".9"/>')
     if livery == 'metal':
         s.append(f'<path d="M0 -300 L900 -300 L900 -240 L0 -230 Z" fill="#fff" opacity=".05"/>')
     # відблиск плеча
