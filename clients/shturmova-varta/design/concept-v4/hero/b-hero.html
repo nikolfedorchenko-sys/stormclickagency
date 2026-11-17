@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=1440">
+<title>Перший екран – «Курс»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hero.css"></head>
+<body><section class="hero"><svg class="pat" viewBox="0 0 1440 900" aria-hidden="true"><g fill="none" stroke="#C9A35A" stroke-opacity=".10" stroke-width="1.5"><path d="M-560 -40 L-90 430 L-560 900"/><path d="M-410 -40 L60 430 L-410 900"/><path d="M-260 -40 L210 430 L-260 900"/><path d="M-110 -40 L360 430 L-110 900"/><path d="M40 -40 L510 430 L40 900"/><path d="M190 -40 L660 430 L190 900"/><path d="M340 -40 L810 430 L340 900"/><path d="M490 -40 L960 430 L490 900"/><path d="M640 -40 L1110 430 L640 900"/><path d="M790 -40 L1260 430 L790 900"/><path d="M940 -40 L1410 430 L940 900"/><path d="M1090 -40 L1560 430 L1090 900"/></g></svg>
+<nav><img class="logo" src="../lockup/b-lockup-line-dark.svg" alt="Штурмова варта" width="270" height="46">
+<ul><li>Послуги</li><li>Об’єкти</li><li>Як працюємо</li><li>Контакти</li></ul>
+<span class="tel">+380 67 549 5710</span><a class="btn p" href="#">Залишити заявку</a></nav>
+<div class="txt"><div class="eyebrow">Охоронна компанія · Київ</div>
+<h1>Охорона об’єктів <span>і людей</span></h1>
+<p class="lead">Фізична охорона об’єктів і особиста охорона. Залиште заявку – обговоримо ваш об’єкт і формат охорони.</p>
+<div class="cta"><a class="btn p" href="#">Залишити заявку</a><a class="btn s" href="tel:+380675495710">Зателефонувати</a></div></div>
+<div class="em" id="em"><img src="../3d/render-b-patch.png" alt="3D-емблема «Курс»" width="720" height="720"></div>
+<div class="foot"><div><b>Фізична охорона</b>об’єкти бізнесу і приватних клієнтів</div><div><b>Особиста охорона</b>супровід і захист людей</div><div><b>+380 67 549 5710</b>Київ</div></div>
+</section>
+<script>
+// ?live – жива 3D-емблема (three.js) замість статичного кадру
+if (location.search.includes('live')) document.getElementById('em').innerHTML = '<iframe title="3D-емблема" src="../3d/emblem-3d.html?v=b&mode=patch"></iframe>';
+</script>
+</body></html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Штурмова варта – 3D-знак v4</title>
+<style>
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+  body.bg { background: radial-gradient(110% 90% at 60% 40%, #1F3350 0%, #0E1A2B 55%, #08111D 100%); }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<!-- three.js r160 (MIT), локальна копія – працює з file:// без інтернету. Геометрія – з build/build.py (ті самі криві, що й у SVG) -->
+<script src="../vendor/three.min.js"></script>
+<script src="data-v4.js"></script>
+<script>
+/* Параметри: ?v=a|b|c  &mode=patch|solo  &still=1  &bg=1  &ry=-0.38&rx=-0.16  &fov=24 */
+window.__busy = true;
+const Q = new URLSearchParams(location.search);
+const V = Q.get('v') || 'a', MODE = Q.get('mode') || 'patch', STILL = Q.has('still');
+if (Q.has('bg')) document.body.classList.add('bg');
+const D = window.SV4[V];
+
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); }
+catch (e) {
+  const im = new Image(); im.src = 'render-' + V + '-' + MODE + '.png'; im.alt = '3D-знак (статичний рендер)';
+  im.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block';
+  document.body.appendChild(im); window.__busy = false; throw e;
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.3;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(+(Q.get('fov') || 24), innerWidth / innerHeight, 0.1, 200);
+camera.position.set(0, 0, MODE === 'solo' ? 17 : 22);
+
+/* студія: темна кімната зі смуговими софтбоксами – лише для відблисків металу */
+function studio() {
+  const s = new THREE.Scene();
+  s.add(new THREE.Mesh(new THREE.SphereGeometry(40, 32, 16), new THREE.MeshBasicMaterial({ color: 0x14120e, side: THREE.BackSide })));
+  const box = (w, h, x, y, z, inten, col) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(inten), side: THREE.DoubleSide }));
+    m.position.set(x, y, z); m.lookAt(0, 0, 0); s.add(m);
+  };
+  box(28, 6, 0, 22, 8, 2.6, 0xffe9c8);
+  box(4, 26, -20, 4, 10, 8, 0xffe7c2);
+  box(3, 22, 21, 2, 6, 5.5, 0xd8e6ff);
+  box(18, 3, 0, -14, 16, 1.8, 0xffffff);
+  box(26, 14, 6, 10, 26, 4.2, 0xffe6c0);
+  box(12, 10, -10, -6, 24, 1.6, 0xfff4e0);
+  box(14, 22, -21, 9, 21, 0.62, 0xffd9a0);   // великий теплий софтбокс ліворуч-спереду – дзеркалиться в лицьових гранях латуні
+  box(30, 2, 0, 6, -26, 2.2, 0x9fb8e0);
+  return s;
+}
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(studio(), 0.03).texture;
+
+/* шліфування латуні – тонкі штрихи в roughnessMap (без жодних візерунків на поверхні) */
+function canvasTex(size, draw) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  draw(c.getContext('2d'), size);
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8; return t;
+}
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const brushed = canvasTex(1024, (g, n) => {
+  g.fillStyle = '#808080'; g.fillRect(0, 0, n, n);
+  for (let i = 0; i < 2400; i++) {
+    const y = rnd() * n, v = 95 + rnd() * 80;
+    g.fillStyle = `rgba(${v},${v},${v},${0.22 + rnd() * 0.3})`;
+    g.fillRect(rnd() * n - 200, y, 200 + rnd() * 700, 0.6 + rnd() * 1.1);
+  }
+});
+brushed.repeat.set(0.3, 0.3);
+
+const M = {
+  brass: new THREE.MeshPhysicalMaterial({ color: 0xE6C27A, metalness: 1, roughness: 0.28, roughnessMap: brushed, envMapIntensity: 1.2 }),
+  brassPolish: new THREE.MeshPhysicalMaterial({ color: 0xE0BC72, metalness: 1, roughness: 0.16, envMapIntensity: 1.3, clearcoat: 0.3, clearcoatRoughness: 0.1 }),
+  brassDark: new THREE.MeshPhysicalMaterial({ color: 0x8C6A2F, metalness: 1, roughness: 0.4, envMapIntensity: 1.0 }),
+  enamel: new THREE.MeshPhysicalMaterial({ color: 0x1C3760, metalness: 0.0, roughness: 0.5, clearcoat: 0.7, clearcoatRoughness: 0.25, envMapIntensity: 0.12 }),
+  ivory: new THREE.MeshPhysicalMaterial({ color: 0xEFE9DC, metalness: 0, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.06, envMapIntensity: 0.6 }),
+};
+
+function shapes(list) {
+  return list.map(p => {
+    const pts = []; for (let i = 0; i < p.o.length; i += 2) pts.push(new THREE.Vector2(p.o[i], p.o[i + 1]));
+    const sh = new THREE.Shape(pts);
+    p.h.forEach(h => { const hp = []; for (let i = 0; i < h.length; i += 2) hp.push(new THREE.Vector2(h[i], h[i + 1])); sh.holes.push(new THREE.Path(hp)); });
+    return sh;
+  });
+}
+const group = new THREE.Group(); scene.add(group);
+function layer(list, mat, z, depth, bevel) {
+  if (!list || !list.length) return;
+  const geo = new THREE.ExtrudeGeometry(shapes(list), { depth, curveSegments: 1, steps: 1,
+    bevelEnabled: !!bevel, bevelThickness: bevel || 0, bevelSize: bevel ? bevel * 0.7 : 0, bevelSegments: bevel ? 3 : 0 });
+  geo.computeVertexNormals();
+  const m = new THREE.Mesh(geo, mat); m.position.z = z; group.add(m); return m;
+}
+
+if (MODE === 'patch') {
+  layer(D.rim, M.brassDark, -0.45, 0.45, 0.04);     // корпус
+  layer(D.ring, M.brassPolish, -0.02, 0.2, 0.03);   // рант
+  layer(D.field, M.enamel, -0.02, 0.08, 0);         // емаль – нижче ранту
+  layer(D.mark, M.brass, 0.04, 0.2, 0.035);         // знак – рельєф латунню
+  if (D.whites) { layer(D.whites, M.ivory, -0.02, 0.12, 0.01); layer(D.acc, M.enamel, -0.02, 0.17, 0.02); }
+  else if (D.acc) layer(D.acc, M.ivory, 0.04, 0.2, 0.02);
+  layer(D.words, M.brassPolish, 0.04, 0.09, 0.01);
+} else {
+  layer(D.solo, M.brass, -0.4, 0.8, 0.06);
+  if (D.soloAcc) layer(D.soloAcc, V === 'b' ? M.ivory : M.brassPolish, -0.3, V === 'b' ? 0.8 : 0.6, 0.05);
+}
+const key = new THREE.DirectionalLight(0xfff2dc, 0.5); key.position.set(-6, 8, 10); scene.add(key);
+
+const RY = +(Q.get('ry') ?? -0.38), RX = +(Q.get('rx') ?? -0.16);
+group.rotation.set(RX, RY, 0);
+function frame(t) {
+  if (!STILL) {
+    const s = t * 0.001;
+    group.rotation.y = RY * 0.2 + Math.sin(s * 0.42) * 0.45;
+    group.rotation.x = RX * 0.6 + Math.sin(s * 0.29) * 0.07;
+  }
+  renderer.render(scene, camera);
+}
+let first = true;
+function loop(t) {
+  frame(t || 0);
+  if (first) { first = false; requestAnimationFrame(() => { window.__busy = false; }); }
+  if (!STILL) requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight); if (STILL) frame(0);
+});
+</script>
+</body>
+</html>

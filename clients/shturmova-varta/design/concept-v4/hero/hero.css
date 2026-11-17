@@ -1,0 +1,25 @@
+:root { --night:#0E1A2B; --navy:#1F3350; --brass:#C9A35A; --brass-ink:#E2C27E; --light:#F4F1EA; --muted:#AEB8C7; --line:rgba(201,163,90,.25); }
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { background:var(--night); color:var(--light); font:16px/1.5 'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+.hero { position:relative; height:900px; width:1440px; overflow:hidden;
+  background:radial-gradient(70% 80% at 74% 46%, #22385A 0%, #14243A 42%, #0B1524 100%); }
+.hero .pat { position:absolute; inset:0; pointer-events:none; }
+nav { position:absolute; top:0; left:0; right:0; height:96px; display:flex; align-items:center; gap:40px; padding:0 72px; border-bottom:1px solid rgba(244,241,234,.08); z-index:3; }
+nav .logo { height:46px; width:auto; }
+nav ul { list-style:none; display:flex; gap:32px; margin-left:auto; font-size:15px; color:#D5DCE6; }
+nav .tel { font-family:'IBM Plex Mono', monospace; font-size:15px; color:var(--light); letter-spacing:.02em; }
+.btn { display:inline-flex; align-items:center; height:52px; padding:0 26px; font:600 16px/1 'IBM Plex Sans', sans-serif; text-decoration:none; }
+.btn.p { background:var(--brass); color:var(--night); }
+.btn.s { border:1px solid rgba(244,241,234,.35); color:var(--light); }
+nav .btn { height:44px; padding:0 20px; font-size:15px; }
+.txt { position:absolute; left:72px; top:236px; width:620px; z-index:2; }
+.eyebrow { font-family:'IBM Plex Mono', monospace; font-size:14px; letter-spacing:.16em; text-transform:uppercase; color:var(--brass-ink); }
+h1 { font-size:76px; line-height:1.0; font-weight:600; letter-spacing:-.02em; margin-top:22px; }
+h1 span { color:var(--brass-ink); }
+.lead { font-size:20px; color:#D5DCE6; margin-top:26px; max-width:520px; }
+.cta { display:flex; gap:14px; margin-top:40px; }
+.em { position:absolute; right:40px; top:110px; width:720px; height:720px; z-index:1; }
+.em img, .em iframe { width:100%; height:100%; border:0; display:block; filter:drop-shadow(0 40px 50px rgba(0,0,0,.5)); }
+.foot { position:absolute; left:72px; right:72px; bottom:0; height:112px; display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid rgba(244,241,234,.1); z-index:2; }
+.foot div { padding:28px 0; font-size:15px; color:var(--muted); }
+.foot b { display:block; color:var(--light); font-size:17px; font-weight:600; margin-bottom:2px; }
