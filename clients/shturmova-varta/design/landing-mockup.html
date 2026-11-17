@@ -15,6 +15,7 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--c-paper);color:var(--c-graphite);font:400 var(--fs-body)/var(--lh-body) var(--f-text);overflow-x:hidden}
 img,svg{display:block;max-width:100%}
 a{color:inherit}
+h1,h2{text-wrap:balance}
 h1,h2,h3{font-family:var(--f-head);font-weight:700;margin:0;letter-spacing:-.005em}
 h1{font-size:var(--fs-h1);line-height:var(--lh-h1);font-weight:800}
 h2{font-size:var(--fs-h2);line-height:var(--lh-h2)}
@@ -34,11 +35,37 @@ p{margin:0 0 var(--s-3)}
 .sec-title > div{grid-column:1/8}
 .sec-title > p{grid-column:9/13;margin:0}
 .sec-title h2{margin-top:var(--s-3)}
+/* Ритм стійок у мітці розділу – мініатюра знака, стійки виростають при появі */
+.rh-label::before{display:none}
+.rh{display:inline-flex;align-items:flex-end;gap:3px;height:16px;margin-right:4px}
+.rh i{display:block;width:4px;height:16px;background:currentColor;transform-origin:bottom}
+.rh i.m{height:8px;position:relative}
+.rh i.m::before{content:"";position:absolute;left:0;top:-7px;width:4px;height:4px;background:var(--c-signal)}
+html.js:not(.still) .rh i{transform:scaleY(0);transition:transform var(--dur-l) var(--ease-out)}
+html.js:not(.still) .rh i:nth-child(2){transition-delay:var(--stagger)}
+html.js:not(.still) .rh i:nth-child(3){transition-delay:calc(var(--stagger) * 2)}
+html.js:not(.still) .rh i.m::before{opacity:0;transform:scale(.4);transition:opacity var(--dur-s) var(--ease-step),transform var(--dur-s) var(--ease-step);transition-delay:calc(var(--stagger) * 3 + var(--dur-l) * .6)}
+html.js:not(.still) .is-in .rh i,html.js:not(.still) .rh.is-in i{transform:none}
+html.js:not(.still) .is-in .rh i.m::before,html.js:not(.still) .rh.is-in i.m::before{opacity:1;transform:none}
+
+/* Поява блоків */
+html.js:not(.still) .reveal{opacity:0;transform:translateY(var(--reveal-shift));transition:opacity var(--dur-l) var(--ease-out),transform var(--dur-l) var(--ease-out);transition-delay:calc(var(--d, 0) * var(--stagger))}
+html.js:not(.still) .reveal.is-in{opacity:1;transform:none}
+/* Поява зі скосом: діагональна «шторка» зліва направо */
+html.js:not(.still) .reveal-cut{clip-path:polygon(0 0,0 0,0 0,-60% 100%,0 100%);transition:clip-path var(--dur-l) var(--ease-out);transition-delay:calc(var(--d, 0) * var(--stagger))}
+html.js:not(.still) .reveal-cut.is-in{clip-path:var(--clip-cut-lg)}  /* закінчується фірмовим скосом */
+
+/* Нахил карток (лише миша; вмикає motion.js) */
+[data-tilt]{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform var(--dur-m) var(--ease-out)}
+[data-tilt]:hover{transition-duration:var(--dur-xs)}
 
 /* Кнопки */
 .btn{--h:56px;display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:var(--h);padding:0 28px;font:600 17px/1 var(--f-text);text-decoration:none;border:0;cursor:pointer;clip-path:var(--clip-cut);transition:background .15s}
 .btn-primary{background:var(--c-signal);color:var(--c-graphite)}
 .btn-primary:hover{background:var(--c-signal-hover)}
+.btn-primary{transition:background var(--dur-s),clip-path var(--dur-s) var(--ease-out),transform var(--dur-xs)}
+.btn-primary:hover{clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,0 100%)}
+.btn:active{transform:translateY(1px)}
 .btn-primary:focus-visible{outline:3px solid var(--c-focus-on-signal);outline-offset:3px}
 .link:focus-visible,a:focus-visible{outline:2px solid var(--c-focus);outline-offset:3px}
 .btn-ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor;clip-path:none}
@@ -48,7 +75,15 @@ p{margin:0 0 var(--s-3)}
 
 /* Шапка */
 .top{position:sticky;top:0;z-index:20;background:var(--c-graphite);color:var(--c-paper);border-bottom:1px solid var(--c-night-line)}
-.top .container{display:flex;align-items:center;gap:var(--s-5);height:72px}
+.top .container{display:flex;align-items:center;gap:var(--s-5);height:72px;transition:height var(--dur-m) var(--ease-out)}
+.top{transition:background var(--dur-m)}
+.top.is-scrolled .container{height:60px}
+.top.is-scrolled{background:rgba(22,24,28,.94);backdrop-filter:blur(8px)}
+/* Знак у шапці: стійки виростають, потім вмикається квадрат */
+.logo-boot .logo svg > path:first-of-type{transform-box:fill-box;transform-origin:bottom;animation:rise var(--dur-l) var(--ease-out) both}
+.logo-boot .logo svg > rect{transform-box:fill-box;transform-origin:center;animation:sig-on var(--dur-s) var(--ease-step) both;animation-delay:calc(var(--dur-l) * .8)}
+@keyframes rise{from{transform:scaleY(0)}to{transform:none}}
+@keyframes sig-on{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
 .top .logo{width:230px;flex:none}
 .top nav{display:flex;gap:28px;font-size:15px;font-weight:500;white-space:nowrap}
 .top nav a{text-decoration:none;color:var(--c-steel-light)}
@@ -69,7 +104,9 @@ p{margin:0 0 var(--s-3)}
 .hero h1 em{font-style:normal;color:var(--c-signal)}
 .hero .lead{font-size:var(--fs-lead);max-width:48ch;color:#D8D6D0}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:var(--s-3);margin:var(--s-4) 0 var(--s-2)}
-.link-dark{color:var(--c-paper);margin-bottom:var(--s-5);align-self:flex-start}
+.hero .link-dark{color:var(--c-paper)}
+.hero .aux{display:flex;flex-wrap:wrap;align-items:center;gap:4px var(--s-4);margin-bottom:var(--s-5)}
+.hero .aux small{font-size:15px;color:var(--c-steel-light)}
 .link-dark span[aria-hidden]{color:var(--c-signal)}
 .proof{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:0;margin-top:auto;border-top:1px solid var(--c-night-line)}
 .proof div{padding:var(--s-4) var(--s-5) 0 0;margin-right:var(--s-5);border-right:1px solid var(--c-night-line)}
@@ -82,12 +119,8 @@ p{margin:0 0 var(--s-3)}
 .ph::after{content:"ФОТО";position:absolute;top:28px;left:28px;font:800 clamp(40px,5vw,72px)/1 var(--f-head);color:rgba(243,241,236,.16);letter-spacing:.02em}
 .ph .tag{position:relative;font:600 12px/1.2 var(--f-text);letter-spacing:.14em;text-transform:uppercase;color:var(--c-signal);margin-bottom:8px}
 .ph p{position:relative;margin:0;max-width:36ch}
-.hero .ph{position:absolute;inset:0 0 0 0}
-.hero .posts{position:absolute;left:-38px;bottom:0;display:flex;align-items:flex-end;gap:14px;z-index:2}
-.hero .posts i{display:block;width:24px;background:var(--c-paper)}
-.hero .posts .mid{display:flex;flex-direction:column;gap:14px}
-.hero .posts .mid b{display:block;width:24px;height:24px;background:var(--c-signal)}
-.hero .visual .ph p,.hero .visual .ph .tag{margin-left:72px}
+.hero .scene{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+.hero .container{position:relative;z-index:1}
 
 /* Послуги */
 .svc{border-top:2px solid var(--c-graphite)}
@@ -138,7 +171,12 @@ p{margin:0 0 var(--s-3)}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:s;position:relative}
 .step{padding:0 var(--s-4) 0 0;position:relative}
 .step .tick{display:flex;align-items:center;gap:0;margin-bottom:var(--s-4)}
-.step .tick i{width:24px;height:24px;background:var(--c-graphite);flex:none}
+.step .tick i{width:24px;height:24px;background:var(--c-graphite);flex:none;position:relative}
+html.js:not(.still) .step .tick i{background:transparent;box-shadow:inset 0 0 0 2px var(--c-graphite);transition:background var(--dur-m) var(--ease-step),box-shadow var(--dur-m)}
+html.js:not(.still) .step.is-in .tick i{background:var(--c-graphite)}
+html.js:not(.still) .step:first-child.is-in .tick i{background:var(--c-signal);box-shadow:none}
+html.js:not(.still) .step .tick::after{transform:scaleX(0);transform-origin:left;transition:transform var(--dur-l) var(--ease-in-out) var(--dur-s)}
+html.js:not(.still) .step.is-in .tick::after{transform:none}
 .step:first-child .tick i{background:var(--c-signal)}
 .step .tick::after{content:"";flex:1;height:2px;background:var(--c-graphite)}
 .step:last-child .tick::after{background:linear-gradient(90deg,var(--c-graphite) 0 30%,transparent 30%)}
@@ -162,12 +200,15 @@ p{margin:0 0 var(--s-3)}
 .faq{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4)}
 .faq .h{grid-column:1/5}
 .faq .list{grid-column:5/13;border-top:2px solid var(--c-graphite)}
-details{border-bottom:1px solid var(--c-concrete)}
+details{border-bottom:1px solid var(--c-concrete);interpolate-size:allow-keywords}
+details::details-content{height:0;overflow:clip;transition:height var(--dur-m) var(--ease-out),content-visibility var(--dur-m) allow-discrete}
+details[open]::details-content{height:auto}
+summary .pm::before{transition:background var(--dur-s)}
 summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:var(--s-4);padding:var(--s-4) 0;font:700 clamp(19px,1.05rem + .4vw,23px)/1.25 var(--f-head);min-height:44px}
 summary::-webkit-details-marker{display:none}
 summary .pm{flex:none;width:32px;height:32px;position:relative}
 summary .pm::before,summary .pm::after{content:"";position:absolute;left:8px;right:8px;top:15px;height:2px;background:var(--c-graphite)}
-summary .pm::after{transform:rotate(90deg);transition:transform .2s}
+summary .pm::after{transform:rotate(90deg);transition:transform var(--dur-s) var(--ease-out)}
 details[open] summary .pm::after{transform:rotate(0)}
 details[open] summary .pm::before{background:var(--c-signal)}
 details .a{padding:0 var(--s-6) var(--s-4) 0;color:#3A3E45;max-width:68ch}
@@ -194,6 +235,8 @@ details .a{padding:0 var(--s-6) var(--s-4) 0;color:#3A3E45;max-width:68ch}
 .chips label{margin:0}
 .chips input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
 .chips span{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1.5px solid var(--c-field-line);font-size:15px;font-weight:500;cursor:pointer;color:var(--c-paper)}
+.chips span{transition:background var(--dur-s),border-color var(--dur-s),color var(--dur-s),transform var(--dur-xs)}
+.chips span:active{transform:scale(.98)}
 .chips input:checked + span{background:var(--c-signal);border-color:var(--c-signal);color:var(--c-graphite)}
 .chips input:focus-visible + span{outline:2px solid var(--c-focus);outline-offset:2px}
 .form-foot{display:flex;align-items:center;gap:var(--s-4);flex-wrap:wrap;margin-top:var(--s-4)}
@@ -204,7 +247,7 @@ details .a{padding:0 var(--s-6) var(--s-4) 0;color:#3A3E45;max-width:68ch}
 .contacts{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4)}
 .contacts .list{grid-column:1/6}
 .contacts .row{padding:var(--s-3) 0;border-bottom:1px solid var(--c-concrete);display:grid;grid-template-columns:160px 1fr;gap:var(--s-3);align-items:baseline;min-height:60px}
-.contacts .row span{color:var(--c-steel);font-size:var(--fs-small)}
+.contacts .row > span{color:var(--c-steel);font-size:var(--fs-small)}
 .contacts .row b{font-weight:600}
 .contacts .row b a{min-height:0!important}
 .contacts .map{grid-column:7/13;min-height:380px;background:#E4E0D7;position:relative;clip-path:var(--clip-cut-lg);display:flex;align-items:flex-end;padding:var(--s-4);color:var(--c-steel);font-size:14px;overflow:hidden}
@@ -232,9 +275,7 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
   .top nav{display:none}
   .burger{display:inline-flex}
   .hero .copy{grid-column:1/-1;padding-bottom:var(--s-5)}
-  .hero .visual{grid-column:1/-1;min-height:360px;margin:0 calc(var(--gutter) * -1)}
-  .hero .posts{display:none}
-  .hero .visual .ph p,.hero .visual .ph .tag{margin-left:0}
+  .hero .visual{grid-column:1/-1;min-height:340px}
   .sec-title > div,.sec-title > p{grid-column:1/-1}
   .svc-row .num{grid-column:1/-1;padding:0}
   .svc-row .name{grid-column:1/7}
@@ -250,6 +291,8 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
   .step{display:grid;grid-template-columns:24px 1fr;gap:var(--s-3);padding:0 0 var(--s-4)}
   .step .tick{flex-direction:column;margin:0;height:100%}
   .step .tick::after{width:2px;height:auto;flex:1}
+  html.js:not(.still) .step .tick::after{transform:scaleY(0);transform-origin:top}
+  html.js:not(.still) .step.is-in .tick::after{transform:none}
   .step:last-child .tick::after{background:linear-gradient(180deg,var(--c-graphite) 0 30%,transparent 30%)}
   .step h3{margin:4px 0 8px}
   .step p{max-width:56ch}
@@ -279,7 +322,7 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
   .proof div{padding:var(--s-3) var(--s-3) var(--s-3) 0;margin:0;border-right:0;border-bottom:1px solid var(--c-night-line)}
   .proof div:nth-child(3){grid-column:1/-1;border-bottom:0}
   .proof b{font-size:18px}
-  .hero .visual{min-height:260px}
+  .hero .visual{min-height:240px}
   .sec-title{margin-bottom:var(--s-5)}
   .svc-row{padding:var(--s-4) 0}
   .svc-row .name,.svc-row .what{grid-column:1/-1}
@@ -330,29 +373,24 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
 <main id="top">
 <!-- 1. ПЕРШИЙ ЕКРАН -->
 <section class="hero dark" aria-labelledby="h1">
+  <canvas class="scene" aria-hidden="true"></canvas>
   <div class="container grid">
     <div class="copy">
       <span class="label"><span>Охоронна компанія · Київ</span></span>
       <h1 id="h1">Ваш об'єкт під вартою<em>.</em></h1>
-      <p class="lead">Фізична охорона об'єктів і особиста охорона для бізнесу та приватних клієнтів у Києві <span class="todo">[і області – уточнити]</span>. Приїдемо на огляд <span class="todo">[безкоштовно? – уточнити]</span>, розрахуємо склад поста і запропонуємо договір <span class="todo">[термін – уточнити]</span>.</p>
+      <p class="lead">Фізична охорона об'єктів і особиста охорона для бізнесу та приватних клієнтів у Києві <span class="todo">[і області – уточнити]</span>. Приїдемо на огляд, розрахуємо склад поста і запропонуємо договір.</p>
       <div class="ctas">
         <a class="btn btn-primary" href="#lead" data-service="object">Замовити огляд об'єкта <span class="arr" aria-hidden="true">→</span></a>
         <a class="btn btn-ghost" href="tel:+380675495710">+380 67 549 57 10</a>
       </div>
-      <a class="link link-dark" href="#lead" data-service="personal">Потрібна особиста охорона <span aria-hidden="true">→</span></a>
+      <div class="aux"><a class="link link-dark" href="#lead" data-service="personal">Потрібна особиста охорона <span aria-hidden="true">→</span></a><small>Огляд об'єкта – <span class="todo">[безкоштовно? – уточнити]</span></small></div>
       <div class="proof">
-        <div><b>Ліцензія МВС</b><span>на охоронну діяльність, наказ № <span class="todo">[уточнити]</span></span></div>
+        <div><b>Ліцензія МВС</b><span>наказ № <span class="todo">[уточнити]</span></span></div>
         <div><b><span class="todo">[N]</span> років</b><span>на ринку охорони</span></div>
         <div><b><span class="todo">[N]</span> охоронців</b><span>працюють на постах <span class="todo">[уточнити]</span></span></div>
       </div>
     </div>
-    <div class="visual">
-      <div class="posts" aria-hidden="true"><i style="height:120px"></i><span class="mid"><b></b><i style="height:110px"></i></span><i style="height:180px"></i></div>
-      <div class="ph" role="img" aria-label="Місце для фото: охоронець на посту біля входу в будівлю ввечері">
-        <span class="tag">Фото · 4:5 · реальне фото клієнта</span>
-        <p>Охоронець у формі компанії біля входу бізнес-центру чи складу, вечір, світло ліхтарів. Знято збоку, людина не позує. До зйомки – нейтральний сток: вхід будівлі вночі без людей і вивісок.</p>
-      </div>
-    </div>
+    <div class="visual" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -360,10 +398,10 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
 <section class="section" id="services" aria-labelledby="services-h">
   <div class="container">
     <div class="sec-title">
-      <div><span class="label">Послуги</span><h2 id="services-h">Беремо під охорону об'єкти і людей</h2></div>
+      <div class="reveal"><span class="label rh-label"><span class="rh" aria-hidden="true"><i></i><i class="m"></i><i></i></span>Послуги</span><h2 id="services-h">Беремо під охорону об'єкти і людей</h2></div>
       <p class="muted">Починаємо з огляду об'єкта: після нього ви знатимете склад поста, графік і вартість.</p>
     </div>
-    <div class="svc">
+    <div class="svc reveal">
       <article class="svc-row">
         <div class="num">01</div>
         <div class="name"><h3>Фізична охорона об'єктів</h3><p>Пост охорони на території вашого об'єкта – цілодобово або за графіком <span class="todo">[уточнити варіанти]</span>.</p></div>
@@ -373,7 +411,7 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
           <li>Обходи території за графіком</li>
           <li>Журнал змін і звіти власнику <span class="todo">[погодити формат]</span></li>
         </ul></div>
-        <div class="act"><div class="ph" role="img" aria-label="Місце для фото: пост охорони на складі"><span class="tag">Фото · 4:3</span><p>Пост на складі чи КПП, охоронець перевіряє документи водія.</p></div><a class="link" href="#lead" data-service="object">Замовити огляд <span aria-hidden="true">→</span></a></div>
+        <div class="act"><div class="ph reveal-cut" data-tilt role="img" aria-label="Місце для фото: пост охорони на складі"><span class="tag">Фото · 4:3</span><p>Пост на складі чи КПП, охоронець перевіряє документи водія.</p></div><a class="link" href="#lead" data-service="object">Замовити огляд <span aria-hidden="true">→</span></a></div>
       </article>
       <article class="svc-row">
         <div class="num">02</div>
@@ -384,7 +422,7 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
           <li>Охорона приватного будинку <span class="todo">[уточнити, чи входить сюди]</span></li>
           <li>Конфіденційність за договором <span class="todo">[підтвердити]</span></li>
         </ul></div>
-        <div class="act"><div class="ph" role="img" aria-label="Місце для фото: супровід клієнта"><span class="tag">Фото · 4:3</span><p>Охоронець відчиняє двері авто, клієнт – зі спини, без обличчя.</p></div><a class="link" href="#lead" data-service="personal">Обговорити супровід <span aria-hidden="true">→</span></a></div>
+        <div class="act"><div class="ph reveal-cut" data-tilt role="img" aria-label="Місце для фото: супровід клієнта"><span class="tag">Фото · 4:3</span><p>Охоронець відчиняє двері авто, клієнт – зі спини, без обличчя.</p></div><a class="link" href="#lead" data-service="personal">Обговорити супровід <span aria-hidden="true">→</span></a></div>
       </article>
     </div>
     <div class="soon">
@@ -402,17 +440,17 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
 <section class="section" id="objects" aria-labelledby="objects-h" style="padding-top:0">
   <div class="container">
     <div class="sec-title">
-      <div><span class="label">Для кого</span><h2 id="objects-h">Які об'єкти охороняємо</h2></div>
+      <div class="reveal"><span class="label rh-label"><span class="rh" aria-hidden="true"><i></i><i class="m"></i><i></i></span>Для кого</span><h2 id="objects-h">Які об'єкти охороняємо</h2></div>
       <p class="muted">Працюємо з бізнесом і приватними клієнтами. <span class="todo">[перелік погодити: лишаємо лише реальні типи об'єктів]</span></p>
     </div>
-    <ul class="objects" style="margin:0;padding:0">
-      <li class="big"><span class="n">01</span><div><b>Склади й логістичні комплекси</b><span>Територія, в'їзд вантажівок, контроль відвантаження</span></div></li>
-      <li><span class="n">02</span><div><b>Виробництво</b><span>Цехи, прохідна, периметр</span></div></li>
-      <li><span class="n">03</span><div><b>Офіси й бізнес-центри</b><span>Рецепція, пропускний режим</span></div></li>
-      <li><span class="n">04</span><div><b>Магазини й ТРЦ</b><span>Зал, каси, вхідні групи</span></div></li>
-      <li><span class="n">05</span><div><b>Будівельні майданчики</b><span>Техніка і матеріали вночі</span></div></li>
-      <li><span class="n">06</span><div><b>Приватні будинки</b><span>Будинок, територія, родина</span></div></li>
-      <li><span class="n">07</span><div><b>Заходи</b><span>Пропускний режим, супровід гостей</span></div></li>
+    <ul class="objects reveal" style="margin:0;padding:0">
+      <li class="big" data-tilt><span class="n">01</span><div><b>Склади й логістичні комплекси</b><span>Територія, в'їзд вантажівок, контроль відвантаження</span></div></li>
+      <li data-tilt><span class="n">02</span><div><b>Виробництво</b><span>Цехи, прохідна, периметр</span></div></li>
+      <li data-tilt><span class="n">03</span><div><b>Офіси й бізнес-центри</b><span>Рецепція, пропускний режим</span></div></li>
+      <li data-tilt><span class="n">04</span><div><b>Магазини й ТРЦ</b><span>Зал, каси, вхідні групи</span></div></li>
+      <li data-tilt><span class="n">05</span><div><b>Будівельні майданчики</b><span>Техніка і матеріали вночі</span></div></li>
+      <li data-tilt><span class="n">06</span><div><b>Приватні будинки</b><span>Будинок, територія, родина</span></div></li>
+      <li data-tilt><span class="n">07</span><div><b>Заходи</b><span>Пропускний режим, супровід гостей</span></div></li>
     </ul>
   </div>
 </section>
@@ -421,20 +459,20 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
 <section class="section dark" aria-labelledby="why-h">
   <div class="container">
     <div class="sec-title">
-      <div><span class="label">Чому ми</span><h2 id="why-h">Факти, які можна перевірити</h2></div>
+      <div class="reveal"><span class="label rh-label"><span class="rh" aria-hidden="true"><i></i><i class="m"></i><i></i></span>Чому ми</span><h2 id="why-h">Факти, які можна перевірити</h2></div>
       <p class="muted">Цифри про компанію і зобов'язання, які ми закріплюємо в договорі.</p>
     </div>
     <div class="why">
       <div class="facts">
-        <div class="fact"><b>—</b><span>років компанія працює в охороні <span class="todo">[цифра – уточнити]</span></span></div>
-        <div class="fact"><b>—</b><span>об'єктів під охороною зараз <span class="todo">[цифра – уточнити]</span></span></div>
-        <div class="fact"><b>— хв</b><span>середній час відповіді на заявку <span class="todo">[цифра – уточнити]</span></span></div>
+        <div class="fact reveal"><b data-count="">–</b><span>років компанія працює в охороні <span class="todo">[цифра – уточнити]</span></span></div>
+        <div class="fact reveal" style="--d:1"><b data-count="">–</b><span>об'єктів під охороною зараз <span class="todo">[цифра – уточнити]</span></span></div>
+        <div class="fact reveal" style="--d:2"><b data-count="" data-suffix=" хв">– хв</b><span>середній час відповіді на заявку <span class="todo">[цифра – уточнити]</span></span></div>
       </div>
       <div class="reasons">
-        <div class="reason"><span class="ix">01</span><div><h3>Один відповідальний за ваш об'єкт</h3><p>Старший зміни чи менеджер, якому можна подзвонити напряму <span class="todo">[підтвердити]</span>.</p></div></div>
-        <div class="reason"><span class="ix">02</span><div><h3>Звітуємо, а не зникаємо</h3><p>Журнал змін і звіт власнику з частотою, яку ви оберете <span class="todo">[підтвердити формат]</span>.</p></div></div>
-        <div class="reason"><span class="ix">03</span><div><h3>Люди під ваш об'єкт</h3><p>Підбираємо охоронців з урахуванням типу об'єкта і графіка <span class="todo">[як відбирають і навчають – уточнити]</span>.</p></div></div>
-        <div class="reason"><span class="ix">04</span><div><h3>Відповідальність у договорі</h3><p>Обов'язки сторін і порядок відшкодування прописані в договорі <span class="todo">[умови – уточнити]</span>.</p></div></div>
+        <div class="reason reveal" style="--d:0"><span class="ix">01</span><div><h3>Один відповідальний за ваш об'єкт</h3><p>Старший зміни чи менеджер, якому можна подзвонити напряму <span class="todo">[підтвердити]</span>.</p></div></div>
+        <div class="reason reveal" style="--d:1"><span class="ix">02</span><div><h3>Звітуємо, а не зникаємо</h3><p>Журнал змін і звіт власнику з частотою, яку ви оберете <span class="todo">[підтвердити формат]</span>.</p></div></div>
+        <div class="reason reveal" style="--d:2"><span class="ix">03</span><div><h3>Люди під ваш об'єкт</h3><p>Підбираємо охоронців з урахуванням типу об'єкта і графіка <span class="todo">[як відбирають і навчають – уточнити]</span>.</p></div></div>
+        <div class="reason reveal" style="--d:3"><span class="ix">04</span><div><h3>Відповідальність у договорі</h3><p>Обов'язки сторін і порядок відшкодування прописані в договорі <span class="todo">[умови – уточнити]</span>.</p></div></div>
         <p class="note">Тези – заготовка для погодження. Те, що компанія не підтвердить, прибираємо з сайту.</p>
       </div>
     </div>
@@ -445,8 +483,8 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
 <section class="section" id="process" aria-labelledby="process-h">
   <div class="container">
     <div class="sec-title">
-      <div><span class="label">Як починаємо співпрацю</span><h2 id="process-h">Від заявки до поста – чотири кроки</h2></div>
-      <p class="muted">Терміни кожного кроку – <span class="todo">[уточнити]</span>. Порядок кроків погодити з клієнтом.</p>
+      <div class="reveal"><span class="label rh-label"><span class="rh" aria-hidden="true"><i></i><i class="m"></i><i></i></span>Як починаємо співпрацю</span><h2 id="process-h">Від заявки до поста за чотири кроки</h2></div>
+      <p class="muted">Терміни кожного кроку – <span class="todo">[уточнити]</span>.</p>
     </div>
     <ol class="steps" style="list-style:none;margin:0;padding:0">
       <li class="step"><div class="tick"><i></i></div><div><span class="k">Крок 01</span><h3>Заявка</h3><p>Залишаєте заявку чи телефонуєте. Уточнюємо тип об'єкта і що потрібно.</p></div></li>
@@ -461,7 +499,7 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
 <section class="section" id="license" aria-labelledby="license-h" style="background:var(--c-white)">
   <div class="container legal">
     <div class="txt">
-      <span class="label">Законність</span>
+      <span class="label rh-label"><span class="rh" aria-hidden="true"><i></i><i class="m"></i><i></i></span>Законність</span>
       <h2 id="license-h" style="margin-top:var(--s-3)">Працюємо за ліцензією і договором</h2>
       <p class="muted" style="margin-top:var(--s-4);max-width:52ch">Ліцензію на охоронну діяльність видає МВС, запис про неї є у відкритому Ліцензійному реєстрі. Витяг з реєстру надішлемо до підписання договору <span class="todo">[підтвердити]</span>.</p>
       <dl>
@@ -472,7 +510,7 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
       </dl>
       <a class="link" href="#" aria-disabled="true">Перевірити ліцензію в реєстрі <span class="todo">[посилання]</span> <span aria-hidden="true">→</span></a>
     </div>
-    <div class="doc">
+    <div class="doc reveal-cut">
       <div class="doc-card"><div class="sheet"><span>Витяг з Ліцензійного реєстру<br>або копія наказу МВС<br>(без персональних даних)<br><b>[зображення]</b></span></div></div>
     </div>
   </div>
@@ -481,8 +519,8 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
 <!-- 7. FAQ -->
 <section class="section" id="faq" aria-labelledby="faq-h">
   <div class="container faq">
-    <div class="h"><span class="label">Питання</span><h2 id="faq-h" style="margin-top:var(--s-3)">Що питають перед договором</h2></div>
-    <div class="list">
+    <div class="h"><span class="label rh-label"><span class="rh" aria-hidden="true"><i></i><i class="m"></i><i></i></span>Питання</span><h2 id="faq-h" style="margin-top:var(--s-3)">Що питають перед договором</h2></div>
+    <div class="list reveal">
       <details open><summary>Скільки коштує охорона об'єкта?<span class="pm" aria-hidden="true"></span></summary><div class="a">Ціна залежить від кількості постів, графіка і типу об'єкта. Точну суму назвемо після огляду. <span class="todo">[чи показувати «від [ціна] грн за пост» – уточнити]</span></div></details>
       <details><summary>Як швидко можете виставити пост?<span class="pm" aria-hidden="true"></span></summary><div class="a"><span class="todo">[термін від підписання договору – уточнити]</span></div></details>
       <details><summary>Чи є у вас ліцензія?<span class="pm" aria-hidden="true"></span></summary><div class="a">Так, ліцензія МВС на охоронну діяльність (наказ від <span class="todo">[дата]</span> № <span class="todo">[номер]</span>). Витяг з Ліцензійного реєстру надішлемо до підписання договору <span class="todo">[підтвердити]</span>.</div></details>
@@ -498,8 +536,8 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
 <section class="section dark lead-sec" id="lead" aria-labelledby="lead-h">
   <div class="container lead-grid">
     <div class="txt">
-      <span class="label">Заявка</span>
-      <h2 id="lead-h">Розкажіть про об'єкт – ми передзвонимо</h2>
+      <span class="label rh-label"><span class="rh" aria-hidden="true"><i></i><i class="m"></i><i></i></span>Заявка</span>
+      <h2 id="lead-h">Розкажіть про об'єкт&nbsp;– ми передзвонимо</h2>
       <p class="muted" style="font-size:var(--fs-lead)">Відповімо <span class="todo">[протягом N хв у робочий час – уточнити]</span>, домовимось про огляд. Заявка ні до чого не зобов'язує.</p>
       <div class="alt-contacts">
         <span class="muted" style="font-size:15px">Або напряму</span>
@@ -507,7 +545,7 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
         <span style="font-size:17px;color:var(--c-steel-light)"><span class="todo">[месенджери – уточнити]</span></span>
       </div>
     </div>
-    <form action="#" method="post" novalidate aria-label="Заявка на охорону">
+    <form class="reveal" action="#" method="post" novalidate aria-label="Заявка на охорону">
       <div class="field"><label for="f-name">Ім'я</label><input id="f-name" name="name" type="text" autocomplete="name" placeholder="Як до вас звертатися" required></div>
       <div class="field err"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" value="+380 67" required aria-describedby="f-phone-msg" aria-invalid="true"><span class="msg" id="f-phone-msg">Перевірте номер – бракує цифр (приклад стану помилки)</span></div>
       <fieldset class="field" style="border:0;padding:0;margin:0 0 var(--s-4)">
@@ -531,7 +569,7 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
 <section class="section" id="contacts" aria-labelledby="contacts-h">
   <div class="container contacts">
     <div class="list">
-      <span class="label">Контакти</span>
+      <span class="label rh-label"><span class="rh" aria-hidden="true"><i></i><i class="m"></i><i></i></span>Контакти</span>
       <h2 id="contacts-h" style="margin:var(--s-3) 0 var(--s-5)">На зв'язку</h2>
       <div class="row"><span>Телефон</span><b><a href="tel:+380675495710" style="text-decoration:none;display:inline-block;padding:10px 0;margin:-10px 0">+380 67 549 57 10</a></b></div>
       <div class="row"><span>Регіон роботи</span><b>Київ <span class="todo">[чи також область – уточнити]</span></b></div>
@@ -540,7 +578,7 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
       <div class="row"><span>Графік офісу</span><b><span class="todo">[пн–пт, 09:00–18:00]</span></b></div>
       <div class="row"><span>Чергова частина</span><b><span class="todo">[цілодобово? – уточнити]</span></b></div>
     </div>
-    <div class="map" role="img" aria-label="Місце для карти з адресою офісу">
+    <div class="map reveal-cut" role="img" aria-label="Місце для карти з адресою офісу">
       <div class="pin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Штурмова варта – знак"><title>Штурмова варта – знак</title><path fill="#16181C" transform="translate(0 0) scale(1.0)" d="M0 0H24V76H38V38H62V76H76V0H86L100 14V100H0Z"/><rect fill="#FF5B1F" x="38.00" y="14.00" width="24.00" height="24.00"/></svg></div>
       <span style="position:relative">Карта Google Maps з адресою офісу <span class="todo">[адреса]</span> – вбудовується при верстці, ліниво</span>
     </div>
@@ -571,22 +609,6 @@ footer .bottom a{color:var(--c-steel-light);display:inline-flex;align-items:cent
   <a class="btn btn-ghost" href="tel:+380675495710">Подзвонити</a>
   <a class="btn btn-primary" href="#lead">Залишити заявку</a>
 </div>
-<script>
-// Макет: передвибір послуги з кнопок data-service і показ мобільної панелі після першого екрана.
-document.querySelectorAll('[data-service]').forEach(function (a) {
-  a.addEventListener('click', function () {
-    var r = document.querySelector('input[name="service"][value="' + a.dataset.service + '"]');
-    if (r) r.checked = true;
-  });
-});
-(function () {
-  var bar = document.querySelector('.mbar'), hero = document.querySelector('.hero'), lead = document.getElementById('lead');
-  if (!bar || !('IntersectionObserver' in window)) return;
-  var heroVisible = true, leadVisible = false;
-  function upd() { bar.classList.toggle('show', !heroVisible && !leadVisible); }
-  new IntersectionObserver(function (e) { heroVisible = e[0].isIntersecting; upd(); }).observe(hero);
-  new IntersectionObserver(function (e) { leadVisible = e[0].isIntersecting; upd(); }, { threshold: 0.15 }).observe(lead);
-})();
-</script>
+<script src="motion.js" defer></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
  *    сигнальний квадрат «на посту», далі повільно ходить промінь прожектора. Без миготіння і спалахів.
  * 2. Поява блоків (.reveal, .reveal-cut – зі скосом), ритм стійок у заголовках (.rh).
  * 3. Таймлайн «Як починаємо» – кроки заповнюються при прокрутці.
- * 4. Лічильники [data-count] – анімуються лише коли в атрибуті є число; порожній – лишається «—».
+ * 4. Лічильники [data-count] – анімуються лише коли в атрибуті є число; порожній – лишається «–».
  * 5. Нахил карток [data-tilt] – лише миша/тачпад з hover.
  * 6. Шапка при прокрутці, мобільна панель дій, передвибір послуги [data-service], анімація знака в шапці.
  *
@@ -35,7 +35,7 @@
     fps: 30,             // промінь малюємо не частіше 30 к/с
     stillPhase: 0.32     // положення променя у статичному кадрі
   };
-  var C = { sky0: '#101215', sky1: '#16181C', bld: '#1C1F25', bldEdge: '#262A31', panel: '#20242A',
+  var C = { sky0: '#101215', sky1: '#16181C', far: '#181B20', bld: '#1C1F25', bldEdge: '#262A31', panel: '#20242A',
     gate: '#121418', win: '#2A2D33', winLit: 'rgba(214,170,110,.22)', post: '#2B2F36', postLit: '#5A5F67',
     ground: '#14161A', mast: '#2B2F36', signal: '#FF5B1F', beam: '255,232,200' };
 
@@ -58,7 +58,7 @@
       var s = st ? rel(st.getBoundingClientRect(), hr) : { x: W * .55, y: 0, w: W * .45, h: H };
       var wide = W >= 1080;
       var ground = H - (wide ? 0 : 0);
-      var bw = Math.min(s.w * (wide ? .86 : .82), 640), bh = Math.min(s.h * (wide ? .52 : .5), bw * .62);
+      var bw = Math.min(s.w * (wide ? .88 : .82), 660), bh = Math.min(s.h * (wide ? .6 : .52), bw * .7);
       var bx = s.x + s.w - bw - (wide ? 0 : s.w * .04), by = ground - bh;
       // «Шеренга» – стійки 24/14 у масштабі; висоти з ритму знака
       var k = wide ? 1 : .7, pw = 10 * k, gap = 7 * k, posts = [];
@@ -79,6 +79,10 @@
       var b = G.b, g = G.ground;
       var sky = ctx.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, C.sky0); sky.addColorStop(1, C.sky1);
       ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+      // далекий силует міста – глибина без деталей
+      ctx.fillStyle = C.far;
+      var fh = [.34, .5, .28, .42, .6, .36, .46, .3], fw = G.wide ? 70 : 46;
+      for (var fx = G.s.x + (G.wide ? 40 : 0), j = 0; fx < W; fx += fw + 6, j++) { var hh = b.h * fh[j % fh.length] * 1.1; ctx.fillRect(fx, g - b.h * .35 - hh, fw, hh + b.h * .35); }
       // будівля з фірмовим скосом угорі праворуч
       var cut = Math.min(56, b.w * .09);
       ctx.fillStyle = C.bld; ctx.beginPath();
@@ -184,7 +188,7 @@
       drawBase(full, 1);
       if (MODE !== 'calm') drawBeam(P.stillPhase, reduceMQ.matches ? .8 : 1, full);
     }
-    function running() { return !STATIC && !document.hidden && inView; }
+    function running() { return started && G && !STATIC && !document.hidden && inView; }
     function start() {
       if (started) return; started = true;
       measure();
@@ -224,13 +228,13 @@
     // кроки таймлайну вмикаються, коли доходять до середини екрана
     var io2 = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io2.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -45% 0px' });
+    }, { rootMargin: '0px 0px -30% 0px' });
     document.querySelectorAll('.step').forEach(function (el) { io2.observe(el); });
   }
   function initCounters() {
     document.querySelectorAll('[data-count]').forEach(function (el) {
       var target = parseFloat(el.dataset.count);
-      if (!isFinite(target)) return;                         // цифри немає – лишаємо «—», нічого не вигадуємо
+      if (!isFinite(target)) return;                         // цифри немає – лишаємо «–», нічого не вигадуємо
       var suffix = el.dataset.suffix || '';
       function run() {
         if (STATIC) { el.textContent = target.toLocaleString('uk-UA') + suffix; return; }

@@ -1,6 +1,6 @@
 {
-  "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/landing-mockup.html",
-  "takenAt": "2026-11-17T13:34:05.166Z",
+  "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/landing-mockup.html?still",
+  "takenAt": "2026-11-17T13:49:32.618Z",
   "viewports": {
     "mobile-360": {
       "screenshots": {
@@ -52,29 +52,27 @@
         "items": []
       },
       "smallText": {
-        "count": 15,
+        "count": 14,
         "items": [
           "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
-          "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 12px",
-          "span.label «ПОСЛУГИ» 13px",
+          "span.label.rh-label «ПОСЛУГИ» 13px",
           "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
-          "span.label «ДЛЯ КОГО» 13px",
-          "span.label «ЧОМУ МИ» 13px",
-          "span.label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
+          "span.label.rh-label «ДЛЯ КОГО» 13px",
+          "span.label.rh-label «ЧОМУ МИ» 13px",
+          "span.label.rh-label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
           "span.k «КРОК 01» 13px",
           "span.k «КРОК 02» 13px",
           "span.k «КРОК 03» 13px",
           "span.k «КРОК 04» 13px",
-          "span.label «ЗАКОННІСТЬ» 13px",
-          "span.label «ПИТАННЯ» 13px",
-          "span.label «ЗАЯВКА» 13px",
-          "span.label «КОНТАКТИ» 13px"
+          "span.label.rh-label «ЗАКОННІСТЬ» 13px",
+          "span.label.rh-label «ПИТАННЯ» 13px",
+          "span.label.rh-label «ЗАЯВКА» 13px",
+          "span.label.rh-label «КОНТАКТИ» 13px"
         ]
       },
       "bodyTextUnder16": {
-        "count": 9,
+        "count": 8,
         "items": [
-          "p «Охоронець у формі компанії біля входу бі» 14px",
           "p.muted.small «Показувати чи ні – [уточнити]» 15px",
           "p.note «Тези – заготовка для погодження. Те, що » 14px",
           "p «Натискаючи кнопку, ви погоджуєтесь з обр» 14px",
@@ -89,7 +87,7 @@
         "\"Fira Sans\"",
         "\"Fira Sans Extra Condensed\""
       ],
-      "pageHeightPx": 12465
+      "pageHeightPx": 12342
     },
     "tablet-768": {
       "screenshots": {
@@ -138,29 +136,27 @@
         "items": []
       },
       "smallText": {
-        "count": 15,
+        "count": 14,
         "items": [
           "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
-          "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 12px",
-          "span.label «ПОСЛУГИ» 13px",
+          "span.label.rh-label «ПОСЛУГИ» 13px",
           "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
-          "span.label «ДЛЯ КОГО» 13px",
-          "span.label «ЧОМУ МИ» 13px",
-          "span.label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
+          "span.label.rh-label «ДЛЯ КОГО» 13px",
+          "span.label.rh-label «ЧОМУ МИ» 13px",
+          "span.label.rh-label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
           "span.k «КРОК 01» 13px",
           "span.k «КРОК 02» 13px",
           "span.k «КРОК 03» 13px",
           "span.k «КРОК 04» 13px",
-          "span.label «ЗАКОННІСТЬ» 13px",
-          "span.label «ПИТАННЯ» 13px",
-          "span.label «ЗАЯВКА» 13px",
-          "span.label «КОНТАКТИ» 13px"
+          "span.label.rh-label «ЗАКОННІСТЬ» 13px",
+          "span.label.rh-label «ПИТАННЯ» 13px",
+          "span.label.rh-label «ЗАЯВКА» 13px",
+          "span.label.rh-label «КОНТАКТИ» 13px"
         ]
       },
       "bodyTextUnder16": {
-        "count": 9,
+        "count": 8,
         "items": [
-          "p «Охоронець у формі компанії біля входу бі» 14px",
           "p.muted.small «Показувати чи ні – [уточнити]» 15px",
           "p.note «Тези – заготовка для погодження. Те, що » 14px",
           "p «Натискаючи кнопку, ви погоджуєтесь з обр» 14px",
@@ -175,7 +171,7 @@
         "\"Fira Sans\"",
         "\"Fira Sans Extra Condensed\""
       ],
-      "pageHeightPx": 10928
+      "pageHeightPx": 10853
     },
     "desktop-1440": {
       "screenshots": {
@@ -223,23 +219,23 @@
         "items": []
       },
       "smallText": {
-        "count": 19,
+        "count": 18,
         "items": [
           "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
-          "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 12px",
-          "span.label «ПОСЛУГИ» 13px",
+          "span.label.rh-label «ПОСЛУГИ» 13px",
           "span.tag «ФОТО · 4:3» 12px",
           "p «Пост на складі чи КПП, охоронець перевір» 13px",
           "span.tag «ФОТО · 4:3» 12px",
           "p «Охоронець відчиняє двері авто, клієнт – » 13px",
           "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
-          "span.label «ДЛЯ КОГО» 13px",
-          "span.label «ЧОМУ МИ» 13px",
-          "span.label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
+          "span.label.rh-label «ДЛЯ КОГО» 13px",
+          "span.label.rh-label «ЧОМУ МИ» 13px",
+          "span.label.rh-label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
           "span.k «КРОК 01» 13px",
           "span.k «КРОК 02» 13px",
           "span.k «КРОК 03» 13px",
-          "span.k «КРОК 04» 13px"
+          "span.k «КРОК 04» 13px",
+          "span.label.rh-label «ЗАКОННІСТЬ» 13px"
         ]
       },
       "bodyTextUnder16": {
@@ -250,7 +246,7 @@
         "\"Fira Sans\"",
         "\"Fira Sans Extra Condensed\""
       ],
-      "pageHeightPx": 8525
+      "pageHeightPx": 8467
     }
   }
 }
