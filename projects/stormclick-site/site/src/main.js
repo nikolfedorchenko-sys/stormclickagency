@@ -1,7 +1,5 @@
-import '@fontsource/unbounded/500.css';
-import '@fontsource/unbounded/600.css';
-import '@fontsource/unbounded/700.css';
-import '@fontsource-variable/manrope';
+// Geologica з віссю SHRP (гострі кути): саме shrp.css – у index.css/wght.css осі SHRP немає. Родина 'Geologica Variable'.
+import '@fontsource-variable/geologica/shrp.css';
 import 'lenis/dist/lenis.css';
 import './styles/tokens.css';
 import './styles/main.css';
