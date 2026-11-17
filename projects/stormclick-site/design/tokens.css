@@ -1,0 +1,92 @@
+/* StormClick – дизайн-токени (перший екран, напрям «Розряд»)
+   Тема лише темна. Шрифти: Unbounded (display), Manrope (текст) – Google Fonts:
+   https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600&display=swap
+   Контраст перевірено розрахунком WCAG – див. design-brief.md, розділ «Кольори». */
+
+:root {
+  /* Кольори – фон і поверхні */
+  --c-bg: #05060B;            /* нічне небо, фон сторінки */
+  --c-surface: #0E1018;       /* картки, плашки, меню */
+  --c-surface-2: #1A1D2B;     /* hover поверхонь, активний сегмент */
+  --c-line: #22253A;          /* лінії, рамки */
+  --c-line-strong: #34384F;   /* рамка другорядної кнопки */
+
+  /* Кольори – текст */
+  --c-text: #F2F3F8;          /* основний текст і заголовки – 18.3:1 на --c-bg */
+  --c-muted: #A3A7BF;         /* другорядний текст – 8.5:1 на --c-bg, 8.0:1 на --c-surface */
+
+  /* Кольори – бренд */
+  --c-accent: #7C88FF;        /* електрик: основна кнопка, фокус, акцент заголовка */
+  --c-accent-hi: #9AA3FF;     /* hover основної кнопки, акцентний текст дрібного розміру */
+  --c-on-accent: #05060B;     /* текст на --c-accent – 6.6:1 */
+  --c-violet: #A98BFF;        /* лише атмосфера: світіння шторму, частинки. Не для UI */
+  --c-live: #5CE39A;          /* лише статус «онлайн» асистента */
+
+  /* Світіння (шторм) */
+  --glow-accent: 0 0 0 1px rgba(124, 136, 255, .55), 0 8px 32px -8px rgba(124, 136, 255, .65);
+  --glow-storm: radial-gradient(60% 55% at 70% 40%, rgba(124, 136, 255, .28), transparent 70%),
+                radial-gradient(45% 45% at 85% 25%, rgba(169, 139, 255, .22), transparent 70%);
+
+  /* Шрифти */
+  --font-display: 'Unbounded', 'Arial Black', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Шкала типографіки – мобільний (360) */
+  --fs-h1: 30px;   --lh-h1: 1.12;   /* Unbounded 600, letter-spacing -0.02em */
+  --fs-price: 22px;                 /* Unbounded 500 – ціни в смузі доказу */
+  --fs-lead: 16px; --lh-lead: 1.55; /* Manrope 400 */
+  --fs-body: 16px; --lh-body: 1.55;
+  --fs-ui: 16px;                    /* кнопки, Manrope 600 */
+  --fs-small: 14px;                 /* мінімальний розмір тексту на сайті */
+  --tracking-display: -0.02em;
+  --tracking-caps: 0.08em;          /* лише для коротких капсів, 14px */
+
+  /* Відступи – одна шкала */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 24px;
+  --s-6: 32px; --s-7: 40px; --s-8: 64px; --s-9: 96px; --s-10: 128px;
+
+  /* Сітка */
+  --container: 1280px;
+  --gutter: 16px;                   /* 360: 16, 768: 32, 1440: 48 */
+  --cols: 4;                        /* 360: 4, 768: 8, 1440: 12 */
+  --col-gap: 16px;                  /* 360/768: 16, 1440: 24 */
+  --header-h: 64px;                 /* 360/768: 64, 1440: 80 */
+
+  /* Радіуси і тіні */
+  --r-sm: 8px;      /* чипи, сегменти */
+  --r-md: 14px;     /* кнопки, поля, картки */
+  --r-pill: 999px;  /* плашка-анонс */
+  --shadow-pop: 0 24px 64px -24px rgba(0, 0, 0, .8); /* меню, попапи */
+
+  /* Розміри зон натискання */
+  --tap: 44px;      /* мінімум для будь-якого інтерактиву */
+  --btn-h: 56px;    /* основна кнопка першого екрана */
+
+  /* Рух */
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --dur-fast: 160ms;
+  --dur-base: 320ms;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --fs-h1: 48px;  --lh-h1: 1.06;
+    --fs-price: 26px;
+    --fs-lead: 18px;
+    --gutter: 32px;
+    --cols: 8;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --fs-h1: 76px;  --lh-h1: 1.02;
+    --fs-price: 32px;
+    --fs-lead: 20px; --lh-lead: 1.5;
+    --fs-body: 17px;
+    --gutter: 48px;
+    --cols: 12;
+    --col-gap: 24px;
+    --header-h: 80px;
+  }
+}
