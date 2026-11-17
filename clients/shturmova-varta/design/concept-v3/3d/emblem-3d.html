@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Штурмова варта – 3D-емблема</title>
+<style>
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+  body.bg { background: radial-gradient(120% 90% at 50% 38%, #22385A 0%, #0E1A2B 52%, #060B13 100%); }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<!-- three.js r160 (MIT), локальна копія npm-пакета three@0.160.0 – працює і з file:// без інтернету -->
+<script src="../vendor/three.min.js"></script>
+<script src="emblems-data.js"></script>
+<script>
+/* Параметри: ?v=a|b|c  &mode=emblem|mark  &still=1  &bg=1  &ry=-0.42&rx=-0.22  &fov=28 */
+window.__busy = true;
+const Q = new URLSearchParams(location.search);
+const V = Q.get('v') || 'a', MODE = Q.get('mode') || 'emblem', STILL = Q.has('still');
+if (Q.has('bg')) document.body.classList.add('bg');
+const D = window.EMBLEMS[V];
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(+(Q.get('fov') || 26), innerWidth / innerHeight, 0.1, 200);
+camera.position.set(0, 0, 25.5);
+
+/* ---------- студія: темна кімната зі смуговими софтбоксами (для відблисків металу) ---------- */
+function studio() {
+  const s = new THREE.Scene();
+  const room = new THREE.Mesh(new THREE.SphereGeometry(40, 32, 16), new THREE.MeshBasicMaterial({ color: 0x15130f, side: THREE.BackSide }));
+  s.add(room);
+  const box = (w, h, x, y, z, ry, rx, inten, col) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(col || 0xffffff).multiplyScalar(inten), side: THREE.DoubleSide }));
+    m.position.set(x, y, z); m.rotation.set(rx || 0, ry || 0, 0); m.lookAt(0, 0, 0); s.add(m);
+  };
+  box(26, 7, 0, 22, 8, 0, 0, 5.5, 0xfff4e0);      // верхній софтбокс
+  box(4, 24, -20, 4, 10, 0, 0, 9, 0xffe7c2);       // ліва смуга, тепла
+  box(3, 22, 21, 2, 6, 0, 0, 7, 0xd8e6ff);         // права смуга, холодна
+  box(18, 3, 0, -14, 16, 0, 0, 2.2, 0xffffff);     // нижній заповнювальний
+  box(24, 14, 4, 8, 26, 0, 0, 3.2, 0xfff1d6);      // фронтальний м'який
+  box(30, 2, 0, 6, -26, 0, 0, 2.5, 0x9fb8e0);      // контровий ззаду
+  return s;
+}
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(studio(), 0.035).texture;
+
+/* ---------- текстури ---------- */
+function canvasTex(size, draw, srgb) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  const g = c.getContext('2d'); draw(g, size);
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 8; return t;
+}
+// шліфований метал: тонкі горизонтальні штрихи у roughnessMap
+const brushed = canvasTex(1024, (g, n) => {
+  g.fillStyle = '#7a7a7a'; g.fillRect(0, 0, n, n);
+  for (let i = 0; i < 2600; i++) {
+    const y = Math.random() * n, v = 90 + Math.random() * 90;
+    g.fillStyle = `rgba(${v},${v},${v},${0.25 + Math.random() * 0.35})`;
+    g.fillRect(Math.random() * n - 200, y, 200 + Math.random() * 700, 0.6 + Math.random() * 1.2);
+  }
+});
+brushed.repeat.set(0.35, 0.35);
+// гільйош / гравіювання поля – карта рельєфу
+const fieldBump = canvasTex(2048, (g, n) => {
+  g.fillStyle = '#000'; g.fillRect(0, 0, n, n);
+  const c = n / 2, S = n / 6.6;   // 6.6 одиниці = діаметр поля
+  g.strokeStyle = '#fff'; g.lineWidth = 3.2;
+  if (V === 'a') {
+    for (let pass = 0; pass < 2; pass++) for (let i = 0; i < 30; i++) {
+      const R = 0.4 + (3.18 - 0.4) * i / 29, ph = i * Math.PI * (pass ? 1 : 0.5);
+      g.beginPath();
+      for (let k = 0; k <= 720; k++) {
+        const th = 2 * Math.PI * k / 720, r = R + 0.09 * Math.cos(24 * th + ph) * (0.4 + 0.6 * R / 3.18);
+        const x = c + r * Math.cos(th) * S, y = c + r * Math.sin(th) * S; k ? g.lineTo(x, y) : g.moveTo(x, y);
+      }
+      g.stroke();
+    }
+  } else if (V === 'b') {
+    for (let i = 0; i < 360; i++) { const a = i / 360 * Math.PI * 2; g.beginPath(); g.moveTo(c, c); g.lineTo(c + Math.cos(a) * n, c + Math.sin(a) * n); g.lineWidth = 1.4; g.stroke(); }
+  } else {
+    for (let y = 0; y < n * 0.47; y += 9) { g.fillStyle = '#fff'; g.fillRect(0, y, n, 2.2); }
+  }
+});
+fieldBump.repeat.set(1 / 6.6, 1 / 6.6); fieldBump.offset.set(0.5, 0.5);
+
+/* ---------- матеріали ---------- */
+const M = {
+  brass: new THREE.MeshPhysicalMaterial({ color: 0xE0B866, metalness: 1, roughness: 0.3, roughnessMap: brushed, envMapIntensity: 1.25 }),
+  brassPolish: new THREE.MeshPhysicalMaterial({ color: 0xE2BE72, metalness: 1, roughness: 0.14, envMapIntensity: 1.35, clearcoat: 0.3, clearcoatRoughness: 0.1 }),
+  brassDark: new THREE.MeshPhysicalMaterial({ color: 0x8F6C30, metalness: 1, roughness: 0.42, envMapIntensity: 1.0 }),
+  enamel: new THREE.MeshPhysicalMaterial({ color: 0x24426F, metalness: 0.0, roughness: 0.55, clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 0.35 }),
+  enamelField: new THREE.MeshPhysicalMaterial({ color: 0x1A3358, metalness: 0.3, roughness: 0.38, bumpMap: fieldBump, bumpScale: 0.7, clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 0.5 }),
+  enamelDeep: new THREE.MeshPhysicalMaterial({ color: 0x0B1524, metalness: 0.1, roughness: 0.5, clearcoat: 0.8, clearcoatRoughness: 0.1, envMapIntensity: 0.35 }),
+  relief: new THREE.MeshPhysicalMaterial({ color: 0x2A4467, metalness: 0.2, roughness: 0.45, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 0.5 }),
+  glow: new THREE.MeshPhysicalMaterial({ color: 0xFFE2A0, emissive: 0xFFC25C, emissiveIntensity: 1.6, roughness: 0.15, transmission: 0, clearcoat: 1 }),
+  ivory: new THREE.MeshPhysicalMaterial({ color: 0xF1EBDD, metalness: 0, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }),
+};
+
+/* ---------- геометрія з даних ---------- */
+function shapes(list) {
+  return list.map(p => {
+    const pts = []; for (let i = 0; i < p.o.length; i += 2) pts.push(new THREE.Vector2(p.o[i], p.o[i + 1]));
+    const sh = new THREE.Shape(pts);
+    p.h.forEach(h => { const hp = []; for (let i = 0; i < h.length; i += 2) hp.push(new THREE.Vector2(h[i], h[i + 1])); sh.holes.push(new THREE.Path(hp)); });
+    return sh;
+  });
+}
+const group = new THREE.Group(); scene.add(group);
+function layer(list, mat, z, depth, bevel) {
+  if (!list || !list.length) return;
+  const geo = new THREE.ExtrudeGeometry(shapes(list), {
+    depth, curveSegments: 1, steps: 1,
+    bevelEnabled: !!bevel, bevelThickness: bevel || 0, bevelSize: bevel ? bevel * 0.8 : 0, bevelSegments: bevel ? 3 : 0,
+  });
+  geo.computeVertexNormals();
+  const m = new THREE.Mesh(geo, mat); m.position.z = z; group.add(m); return m;
+}
+
+if (MODE === 'emblem') {
+  layer(D.outerEdge || D.outer, M.brassDark, -0.5, 0.5, 0.05);       // корпус з рифленим ребром
+  layer(D.outer, M.brass, -0.02, 0.06, 0);
+  layer(D.groove, M.enamelDeep, 0.02, 0.06, 0);
+  layer(D.spandrel, M.enamelDeep, 0.02, 0.07, 0);
+  layer(D.rim, M.brassPolish, 0.02, 0.16, 0.035);
+  layer(D.beads, M.brassPolish, 0.06, 0.06, 0.035);
+  layer(D.band, M.enamel, 0.02, 0.1, 0);
+  layer(D.lines, M.brassPolish, 0.02, 0.15, 0.02);
+  layer(D.field, M.enamelField, 0.02, 0.07, 0);
+  layer(D.relief, M.relief, 0.08, 0.02, 0);
+  layer(D.letters, M.brassPolish, 0.1, 0.07, 0.014);
+  layer(D.kyiv, M.brass, 0.08, 0.05, 0.01);
+  layer(D.panes, V === 'c' ? M.ivory : M.glow, 0.09, V === 'c' ? 0.2 : 0.06, V === 'c' ? 0.03 : 0);
+  layer(D.symbol, M.brass, 0.09, 0.2, 0.035);
+} else {
+  const m = D.mark;
+  layer(m.bg, M.brassDark, -0.5, 0.5, 0.05);
+  layer(m.bg, M.enamel, -0.02, 0.1, 0);
+  layer(m.rim, M.brassPolish, 0.0, 0.16, 0.035);
+  layer(m.panes, V === 'c' ? M.ivory : M.glow, 0.08, V === 'c' ? 0.28 : 0.08, V === 'c' ? 0.035 : 0);
+  layer(m.symbol, M.brass, 0.08, 0.28, 0.045);
+}
+
+/* тепле світло ліхтаря для B */
+if (V === 'b') { const pl = new THREE.PointLight(0xffc56a, 6, 6, 2); pl.position.set(0, 0.3, 1.0); group.add(pl); }
+const key = new THREE.DirectionalLight(0xfff2dc, 0.6); key.position.set(-6, 8, 10); scene.add(key);
+
+const RY = +(Q.get('ry') ?? -0.42), RX = +(Q.get('rx') ?? -0.2);
+group.rotation.set(RX, RY, 0);
+
+function frame(t) {
+  if (!STILL) {
+    const s = t * 0.001;
+    group.rotation.y = RY * 0.15 + Math.sin(s * 0.45) * 0.55;
+    group.rotation.x = RX * 0.6 + Math.sin(s * 0.31) * 0.08;
+  }
+  renderer.render(scene, camera);
+}
+let first = true;
+function loop(t) {
+  frame(t || 0);
+  if (first) { first = false; requestAnimationFrame(() => { window.__busy = false; }); }
+  if (!STILL) requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight); if (STILL) frame(0);
+});
+// requestAnimationFrame сам зупиняється у прихованій вкладці – зайвих обчислень немає
+</script>
+</body>
+</html>
