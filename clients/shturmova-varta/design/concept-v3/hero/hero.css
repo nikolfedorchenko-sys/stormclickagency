@@ -1,0 +1,25 @@
+/* Перші екрани 1440 для концепції v3 (лише ілюстрація стилю, не макет сайту) */
+:root { --night:#0E1A2B; --navy:#1F3350; --brass:#C9A35A; --brass-ink:#E2C27E; --light:#F4F1EA; --muted:#AEB8C7; }
+* { box-sizing:border-box; margin:0; }
+html,body { width:1440px; height:900px; overflow:hidden; background:var(--night); color:var(--light); font-family:'IBM Plex Sans',system-ui,sans-serif; }
+.frame { position:relative; width:1440px; height:900px; overflow:hidden; }
+.bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.shade { position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,14,24,.92) 0%, rgba(8,14,24,.72) 38%, rgba(8,14,24,0) 66%); }
+nav { position:absolute; top:0; left:0; right:0; height:96px; display:flex; align-items:center; gap:44px; padding:0 72px; z-index:3; }
+nav .logo { height:52px; }
+nav a { color:var(--light); text-decoration:none; font-size:16px; font-weight:500; opacity:.86; }
+nav .sp { flex:1; }
+nav .tel { font-family:'IBM Plex Mono',monospace; font-size:17px; color:var(--brass-ink); opacity:1; }
+nav .cta { border:1px solid var(--brass); padding:12px 20px; color:var(--light); opacity:1; }
+.copy { position:absolute; left:72px; top:228px; width:640px; z-index:3; }
+.eyebrow { font-family:'IBM Plex Mono',monospace; font-size:14px; letter-spacing:.16em; text-transform:uppercase; color:var(--brass-ink); display:flex; align-items:center; gap:14px; }
+.eyebrow:before { content:''; width:40px; height:1px; background:var(--brass); }
+h1 { font-size:72px; line-height:1.02; font-weight:700; letter-spacing:-.01em; margin-top:26px; }
+h1 em { font-style:normal; color:var(--brass-ink); }
+.lead { font-size:20px; line-height:1.5; color:#D5DCE6; margin-top:26px; max-width:520px; }
+.btns { display:flex; gap:16px; margin-top:40px; }
+.btn { background:var(--brass); color:var(--night); font-weight:600; font-size:17px; padding:18px 28px; }
+.btn.ghost { background:transparent; color:var(--light); border:1px solid rgba(244,241,234,.4); }
+.chips { position:absolute; left:72px; bottom:56px; display:flex; gap:12px; z-index:3; }
+.chip { font-size:14px; padding:9px 14px; border:1px solid rgba(201,163,90,.45); color:#E7DCC4; background:rgba(14,26,43,.55); }
+.note { position:absolute; right:24px; bottom:18px; font-size:12px; color:rgba(244,241,234,.6); z-index:3; font-family:'IBM Plex Mono',monospace; }

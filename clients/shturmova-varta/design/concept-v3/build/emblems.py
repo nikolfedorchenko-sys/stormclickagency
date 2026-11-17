@@ -395,7 +395,7 @@ def mark_svg(k, scheme):
 def lockup(k, scheme):
     """Знак + написання в рядок: ШТУРМОВА / ВАРТА + ОХОРОННА КОМПАНІЯ."""
     mk = mark_svg(k, 'color' if scheme == 'dark' else 'light')
-    word = '#F4F1EA' if scheme == 'dark' else '#0E1A2B'; sub = '#C9A35A' if scheme == 'dark' else '#8A6A2E'
+    word = '#F4F1EA' if scheme == 'dark' else '#0E1A2B'; sub = '#C9A35A' if scheme == 'dark' else '#7A5C24'
     x = 1180
     l1 = F.line('ШТУРМОВА', x, 400, 300, 0.04); l2 = F.line('ВАРТА', x, 760, 300, 0.04)
     w = max(F.width('ШТУРМОВА', 300, 0.04), F.width('ВАРТА', 300, 0.04))
@@ -412,7 +412,7 @@ if __name__ == '__main__':
     for k, v in VARIANTS.items():
         nm = v['name']
         write_svg(os.path.join(OUT, 'emblem', f'{k}-emblem-color.svg'), (-10, -10, 1030, 1030), ''.join(svg_color(k)), f'Штурмова варта – емблема {k.upper()} «{nm}», кольорова', 1030, 1030)
-        for col, nmc in (('#0E1A2B', 'mono-night'), ('#F4F1EA', 'mono-light'), ('#000000', 'mono-black')):
+        for col, nmc in (('#0E1A2B', 'mono-night'), ('#F4F1EA', 'mono-light'), ('#000000', 'mono-black'), ('#D4B06A', 'mono-brass')):
             write_svg(os.path.join(OUT, 'emblem', f'{k}-emblem-{nmc}.svg'), (0, 0, 1000, 1000), mono_full(k, col), f'Штурмова варта – емблема {k.upper()} «{nm}», монохром')
         for sch in ('color', 'inverse', 'light', 'mono-black', 'mono-white'):
             write_svg(os.path.join(OUT, 'mark', f'{k}-mark-{sch}.svg'), (0, 0, 1000, 1000), mark_svg(k, sch), f'Штурмова варта – спрощений знак {k.upper()} «{nm}»')

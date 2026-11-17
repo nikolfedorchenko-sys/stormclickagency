@@ -48,7 +48,7 @@ def person(x, y, h=60, col='#05080D', pose='stand'):
 
 
 # ============ 1. КПП складу (ізометрія) ============
-S = 13; OX = 800; OY = 120
+S = 13; OX = 800; OY = 210
 C30 = math.cos(math.radians(30))
 
 
@@ -89,27 +89,19 @@ def lamp_pole(x, y, h=8, arm_dx=0.0, arm_dy=1.2):
 
 def illus_kpp():
     R = random.Random(11); b = []
-    b.append(f'<rect width="{W}" height="{H}" fill="url(#sky)"/>')
-    b.append(stars(R, 160, 0, 0, W, 300))
-    # далеке місто на горизонті
-    x = 0; sk = []
-    while x < W:
-        w = R.randint(14, 40); h = R.randint(10, 70)
-        sk.append(f'M{x} 330 V{330-h} H{x+w} V330 Z'); x += w + R.randint(0, 4)
-    b.append(f'<path d="{"".join(sk)}" fill="#14243B"/>')
-    b.append(f'<rect x="0" y="250" width="{W}" height="120" fill="#2F4A70" opacity=".25" filter="url(#b30)"/>')
-    for _ in range(90):
-        xx = R.uniform(0, W); yy = R.uniform(270, 328)
-        b.append(f'<rect x="{xx:.0f}" y="{yy:.0f}" width="2" height="2" fill="#E9C98A" opacity="{R.uniform(.3,.8):.2f}"/>')
+    # далеке місто на горизонті (прибрано: в ізометрії немає горизонту)
+    if False:
+        pass
     # земля
-    g = P([iso(-60, -60), iso(130, -60), iso(130, 130), iso(-60, 130)])
-    b.append(f'<path d="{g}" fill="#0C1626"/>')
+    b.append(f'<radialGradient id="gnd" cx=".55" cy=".5" r=".7"><stop offset="0" stop-color="#15243A"/><stop offset="1" stop-color="#070C15"/></radialGradient><rect width="{W}" height="{H}" fill="url(#gnd)"/>')
+    for i in range(-40, 130, 4): b.append(iline((i, -40), (i, 130), '#101C2E', 1))
+    for j in range(-40, 130, 4): b.append(iline((-40, j), (130, j), '#101C2E', 1))
     b.append(f'<path d="{P([iso(-2,-2),iso(64,-2),iso(64,40),iso(-2,40)])}" fill="#111E31"/>')
     # плитка двору
     for i in range(0, 65, 2): b.append(iline((i, -2), (i, 40), '#18283F', 1))
     for j in range(-2, 41, 2): b.append(iline((-2, j), (64, j), '#18283F', 1))
     # дорога
-    b.append(f'<path d="{P([iso(9,22),iso(18,22),iso(18,140),iso(9,140)])}" fill="#0A1220"/>')
+    b.append(f'<path d="{P([iso(9,40),iso(18,40),iso(18,140),iso(9,140)])}" fill="#0A1220"/>')
     for j in range(42, 120, 4): b.append(iline((13.5, j), (13.5, j + 2), '#C9A35A', 2, .7))
     b.append(iline((9.3, 40), (9.3, 140), '#3A4E6C', 1.5)); b.append(iline((17.7, 40), (17.7, 140), '#3A4E6C', 1.5))
     # розмітка паркування
@@ -244,6 +236,11 @@ def illus_kpp():
         x = R.uniform(24, 62); y = R.uniform(41, 44)
         cx, cy = iso(x, y, 0.4); r = R.uniform(5, 11)
         b.append(f'<ellipse cx="{cx:.0f}" cy="{cy:.0f}" rx="{r:.0f}" ry="{r*.7:.0f}" fill="{R.choice(["#0D1A22","#10202A","#0B1620"])}"/>')
+    trees = [(R.uniform(-30, -6), R.uniform(-30, 60)) for _ in range(26)] + [(R.uniform(66, 90), R.uniform(-30, 50)) for _ in range(22)] + [(R.uniform(34, 72), R.uniform(50, 72)) for _ in range(26)] + [(R.uniform(-10, 4), R.uniform(44, 70)) for _ in range(10)]
+    for (x, y) in sorted(trees, key=lambda t: t[0] + t[1]):
+        bx_, by_ = iso(x, y); h = R.uniform(38, 70); w = h * 0.38
+        b.append(f'<ellipse cx="{bx_:.0f}" cy="{by_:.0f}" rx="{w*.9:.0f}" ry="{w*.4:.0f}" fill="#000" opacity=".35"/>')
+        b.append(f'<path d="M{bx_:.0f} {by_-h:.0f} L{bx_+w:.0f} {by_-4:.0f} L{bx_-w:.0f} {by_-4:.0f} Z" fill="#0F2129"/><path d="M{bx_:.0f} {by_-h:.0f} L{bx_+w:.0f} {by_-4:.0f} L{bx_:.0f} {by_:.0f} Z" fill="#0A161D"/>')
     # туман знизу і віньєтка
     b.append(f'<rect x="0" y="{H-260}" width="{W}" height="260" fill="#0E1A2B" opacity=".55" filter="url(#b30)"/>')
     b.append(f'<radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient><rect width="{W}" height="{H}" fill="url(#vig)"/>')
@@ -272,7 +269,7 @@ def illus_city():
     R = random.Random(23); b = []
     b.append(f'<rect width="{W}" height="{H}" fill="url(#sky)"/>')
     b.append(stars(R, 240, 0, 0, W, 420))
-    b.append('<circle cx="1240" cy="150" r="34" fill="#F4E9CC"/><circle cx="1256" cy="140" r="32" fill="#0B1525"/><circle cx="1240" cy="150" r="80" fill="#F4E9CC" opacity=".08" filter="url(#b14)"/>')
+    b.append('<circle cx="860" cy="160" r="30" fill="#F4E9CC"/><circle cx="874" cy="151" r="28" fill="#0A1424"/><circle cx="860" cy="160" r="80" fill="#F4E9CC" opacity=".08" filter="url(#b14)"/>')
     for i in range(6):
         b.append(f'<ellipse cx="{R.uniform(0,W):.0f}" cy="{R.uniform(120,380):.0f}" rx="{R.uniform(120,300):.0f}" ry="{R.uniform(10,24):.0f}" fill="#2F4A70" opacity=".22" filter="url(#b14)"/>')
     # далекий план
@@ -321,10 +318,10 @@ def illus_city():
     # будка-пост на вулиці + охоронець
     b.append('<rect x="1010" y="740" width="70" height="72" fill="#1A2B44"/><rect x="1004" y="734" width="82" height="8" fill="#2A4060"/><rect x="1018" y="752" width="54" height="30" fill="#FFD98F"/><rect x="1018" y="752" width="54" height="30" fill="#FFF3D1" opacity=".5" filter="url(#b6)"/>')
     b.append('<rect x="1030" y="790" width="30" height="4" fill="#C9A35A"/>')
-    b.append(person(1100, 846, 62, '#03060A'))
     # вулиця
     b.append(f'<linearGradient id="road2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1524"/><stop offset="1" stop-color="#05090F"/></linearGradient><rect x="0" y="812" width="{W}" height="{H-812}" fill="url(#road2)"/>')
     b.append(f'<rect x="0" y="812" width="{W}" height="6" fill="#22344F"/><rect x="0" y="836" width="{W}" height="2" fill="#2C3E5A"/>')
+    b.append(person(1092, 850, 64, '#03060A'))
     # стовпчики
     for i in range(10):
         xx = 1120 + i * 46
@@ -342,7 +339,7 @@ def illus_city():
         b.append(f'<path d="M{xx+28} 640 L{xx+40} 640 L{xx+110} 830 L{xx-40} 830 Z" fill="url(#cone)" opacity=".5"/><circle cx="{xx+34}" cy="640" r="12" fill="#FFE1A0" filter="url(#b6)"/><circle cx="{xx+34}" cy="640" r="3" fill="#FFF8E6"/>')
         b.append(f'<ellipse cx="{xx+34}" cy="840" rx="110" ry="16" fill="url(#pool)"/>')
     # авто охорони
-    emb = f'<g transform="translate(410 -240) scale(.13)">{"".join(E.svg_color("a", p="ct", glare=False))}</g>'
+    emb = f'<g transform="translate(392 -186) scale(.124)">{"".join(E.svg_color("a", p="ct", glare=False))}</g>'
     b.append(car('c2', 'plain', emb, scale=0.5, tx=500, ty=884))
     b.append(f'<rect x="500" y="884" width="450" height="60" fill="#1F3350" opacity=".25" filter="url(#b14)"/>')
     b.append(f'<radialGradient id="vig2" cx=".5" cy=".45" r=".8"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></radialGradient><rect width="{W}" height="{H}" fill="url(#vig2)"/>')
@@ -386,10 +383,10 @@ def illus_car():
     # дорога, мокра
     b.append(f'<linearGradient id="road3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0D1828"/><stop offset="1" stop-color="#04070C"/></linearGradient><rect x="0" y="776" width="{W}" height="{H-776}" fill="url(#road3)"/>')
     # відображення авто (віддзеркалене, розмите)
-    emb = f'<g transform="translate(400 -250) scale(.14)">{"".join(E.svg_color("a", p="c3e", glare=False))}</g>'
-    wordp = E.F.line('ШТУРМОВА ВАРТА', 590, -212, 22, 0.08)
+    emb = f'<g transform="translate(392 -186) scale(.124)">{"".join(E.svg_color("a", p="c3e", glare=False))}</g>'
+    wordp = E.F.line('ШТУРМОВА ВАРТА', 580, -160, 17, 0.06)
     word = f'<path fill="#F4F1EA" d="{d(wordp)}"/>'
-    phone = f'<path fill="#C9A35A" d="{d(E.FS.line("+380 67 549 5710", 596, -178, 16, 0.06))}"/>'
+    phone = f'<path fill="#C9A35A" d="{d(E.FS.line("+380 67 549 5710", 581, -138, 13, 0.08))}"/>'
     b.append(f'<g transform="translate(0 1752) scale(1 -1)" opacity=".28" filter="url(#b6)">{car("c3r", "plain", "", headlights=False, scale=1.05, tx=420, ty=880)}</g>')
     b.append(car('c3', 'guilloche', emb, word, phone, headlights=True, scale=1.05, tx=420, ty=876))
     # блики на дорозі
@@ -411,3 +408,24 @@ if __name__ == '__main__':
     open(os.path.join(OUT, 'illus-2-city.svg'), 'w').write(illus_city())
     open(os.path.join(OUT, 'illus-3-car.svg'), 'w').write(illus_car())
     print('ok')
+
+
+def car_carriers():
+    """Борт авто для носіїв: три лівреї на прозорому тлі."""
+    out = os.path.join(HERE, '..', 'carriers'); os.makedirs(out, exist_ok=True)
+    word = lambda: f'<path fill="#F4F1EA" d="{d(E.F.line("ШТУРМОВА ВАРТА", 580, -160, 17, 0.06))}"/>'
+    phone = lambda: f'<path fill="#C9A35A" d="{d(E.FS.line("+380 67 549 5710", 581, -138, 13, 0.08))}"/>'
+    emb_a = lambda p: f'<g transform="translate(392 -186) scale(.124)">{"".join(E.svg_color("a", p=p, glare=False))}</g>'
+    variants = {
+        'car-1-emblem': ('guilloche', emb_a('k1')),
+        'car-2-metal': ('metal', emb_a('k2')),
+        'car-3-illus': ('skyline', f'<g transform="translate(398 -180) scale(.112)">{E.mark_svg("a", "color")}</g>'.replace('<g transform="translate(398 -180) scale(.112)">', '<g transform="translate(398 -180) scale(.112)">')),
+    }
+    for name, (liv, emb) in variants.items():
+        body = car(name.replace('-', ''), liv, emb, word(), phone(), headlights=False, scale=1.0, tx=20, ty=360)
+        open(os.path.join(out, name + '.svg'), 'w').write(
+            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 390" width="940" height="390" role="img" aria-label="Борт авто охорони"><title>Борт авто охорони – {liv}</title>{body}</svg>\n')
+
+
+if __name__ == '__main__':
+    car_carriers(); print('cars ok')

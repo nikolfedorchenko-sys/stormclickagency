@@ -4,13 +4,13 @@ from geom import d, Font, disc, box
 from shapely.geometry import Polygon
 from shapely.ops import unary_union
 
-WF = (190, -82); WR = (716, -82)
+WF = (192, -70); WR = (716, -70)
 
 
 def body_path():
     return ('M24 -44 C10 -50 6 -66 8 -84 L12 -118 C14 -132 24 -142 44 -148 L250 -176 C276 -180 296 -186 312 -196 '
             'L392 -286 C402 -298 418 -306 440 -308 L748 -310 C780 -310 806 -302 826 -284 L866 -238 C878 -224 886 -206 888 -186 '
-            'L892 -96 C893 -70 888 -52 876 -44 L812 -44 A98 98 0 0 0 620 -44 L286 -44 A98 98 0 0 0 94 -44 Z')
+            'L892 -96 C893 -70 888 -52 876 -44 L800 -44 A84 84 0 0 0 632 -44 L276 -44 A84 84 0 0 0 108 -44 Z')
 
 
 def glass_path():
@@ -76,16 +76,16 @@ def car(uid, livery='plain', emblem_svg='', word=None, phone=None, headlights=Tr
     s.append('<path d="M8 -70 L60 -66 L58 -58 L8 -60 Z" fill="#0A111C"/><path d="M840 -70 L890 -72 L890 -62 L842 -60 Z" fill="#0A111C"/>')
     # колеса
     for i, (cx, cy) in enumerate((WF, WR)):
-        s.append(f'<circle cx="{cx}" cy="{cy}" r="86" fill="#07090D"/><circle cx="{cx}" cy="{cy}" r="82" fill="#14171C"/>')
-        s.append(f'<circle cx="{cx}" cy="{cy}" r="56" fill="url(#{uid}rim)"/>')
+        s.append(f'<circle cx="{cx}" cy="{cy}" r="72" fill="#07090D"/><circle cx="{cx}" cy="{cy}" r="69" fill="#14171C"/>')
+        s.append(f'<circle cx="{cx}" cy="{cy}" r="48" fill="url(#{uid}rim)"/>')
         sp = []
         for k in range(10):
             a = 2 * math.pi * k / 10
             a1, a2 = a - 0.11, a + 0.11
-            sp.append(f'M{cx + 14*math.cos(a1):.1f} {cy + 14*math.sin(a1):.1f} L{cx + 52*math.cos(a - 0.07):.1f} {cy + 52*math.sin(a - 0.07):.1f} L{cx + 52*math.cos(a + 0.07):.1f} {cy + 52*math.sin(a + 0.07):.1f} L{cx + 14*math.cos(a2):.1f} {cy + 14*math.sin(a2):.1f} Z')
-        s.append(f'<circle cx="{cx}" cy="{cy}" r="50" fill="#1B1F26"/><path d="{"".join(sp)}" fill="#A9B0BA"/>')
-        s.append(f'<circle cx="{cx}" cy="{cy}" r="15" fill="#C9A35A"/><circle cx="{cx}" cy="{cy}" r="6" fill="#0E1A2B"/>')
-        s.append(f'<path d="M{cx-60} {cy-58} A84 84 0 0 1 {cx+60} {cy-58}" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="3"/>')
+            sp.append(f'M{cx + 14*math.cos(a1):.1f} {cy + 14*math.sin(a1):.1f} L{cx + 45*math.cos(a - 0.07):.1f} {cy + 45*math.sin(a - 0.07):.1f} L{cx + 45*math.cos(a + 0.07):.1f} {cy + 45*math.sin(a + 0.07):.1f} L{cx + 14*math.cos(a2):.1f} {cy + 14*math.sin(a2):.1f} Z')
+        s.append(f'<circle cx="{cx}" cy="{cy}" r="43" fill="#1B1F26"/><path d="{"".join(sp)}" fill="#A9B0BA"/>')
+        s.append(f'<circle cx="{cx}" cy="{cy}" r="13" fill="#C9A35A"/><circle cx="{cx}" cy="{cy}" r="6" fill="#0E1A2B"/>')
+        s.append(f'<path d="M{cx-50} {cy-48} A70 70 0 0 1 {cx+50} {cy-48}" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="3"/>')
     # емблема на дверях
     if emblem_svg:
         s.append(emblem_svg)
