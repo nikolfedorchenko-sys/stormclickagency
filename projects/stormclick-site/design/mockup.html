@@ -300,8 +300,8 @@ h1 .hl{color:var(--c-accent);display:block}
     var all = blocks.concat(text);
     var annEl = document.querySelector('.announce');
     var ex = all.map(function(r){ return { l: r.l - m, t: r.t - m, r: r.r + m, b: r.b + m }; });
-    // плашка-анонс на телефоні – відступ 10 px, щоб між нею і краєм екрана пройшов канал
-    var annR = rel(annEl.getBoundingClientRect(), hr), mA = mobile ? 10 : m;
+    // плашка-анонс – окремий прямокутник (від її правого краю залежить шлях каналу на 360)
+    var annR = rel(annEl.getBoundingClientRect(), hr), mA = m;
     ex.push({ l: annR.l - mA, t: annR.t - mA, r: annR.r + mA, b: annR.b + mA });
     var header = document.querySelector('.header').getBoundingClientRect().height;
     var proofTop = document.querySelector('.proof').getBoundingClientRect().top - hr.top;
@@ -339,7 +339,7 @@ h1 .hl{color:var(--c-accent);display:block}
     var dctx = cloudDark.getContext('2d'), lctx = cloudLit.getContext('2d');
     var di = dctx.createImageData(cw, ch), li = lctx.createImageData(cw, ch), dd = di.data, ld = li.data;
     var A = L.A, sc = L.mobile ? 120 : Math.max(170, Math.min(260, W * .14));
-    var dens = L.mobile ? 1.35 : 1;           // на телефоні хмари щільніші – між ударами екран не чорний
+    var dens = L.mobile ? 1.65 : 1, tone = L.mobile ? 1.22 : 1; // на телефоні хмари щільніші й світліші – між ударами екран не чорний
     for (var y = 0; y < ch; y++){
       for (var x = 0; x < cw; x++){
         var px = x * S, py = y * S;
@@ -352,7 +352,7 @@ h1 .hl{color:var(--c-accent);display:block}
         var n2 = fbm((px - 9) / sc, (py - 14) / (sc * .62));
         var sh = Math.max(0, Math.min(1, (n - n2) * 6 + .5)); // «верх» хмари світліший
         var i = (y * cw + x) * 4;
-        dd[i] = 16 + 20 * sh; dd[i + 1] = 18 + 22 * sh; dd[i + 2] = 36 + 38 * sh; dd[i + 3] = 255 * d * .92;
+        dd[i] = (16 + 20 * sh) * tone; dd[i + 1] = (18 + 22 * sh) * tone; dd[i + 2] = (36 + 38 * sh) * tone; dd[i + 3] = 255 * d * .92;
         ld[i] = 150 + 80 * sh; ld[i + 1] = 158 + 74 * sh; ld[i + 2] = 255; ld[i + 3] = 255 * Math.min(1, d * (.45 + .75 * sh));
       }
     }
@@ -423,7 +423,12 @@ h1 .hl{color:var(--c-accent);display:block}
     return { main: pts, branches: branches, sx: sx, sy: sy, ex: best.x, ey: best.y, yEnd: yEnd, mainEnd: mainEnd };
   }
 
-  function makeBolt(rnd){
+  // Типи траєкторії на вузьких екранах, де плашка-анонс перекриває шлях униз (360 px):
+  // A – проміжок біля плашки, далі діагональ униз-ліворуч; B – прямо вниз біля краю до рівня ліду, гілки ліворуч;
+  // C – з основи хмари під плашкою, лівіше, діагональ униз-праворуч.
+  var TYPES = ['A', 'B', 'C'];
+  function makeBolt(rnd, type){
+    type = type || 'A';
     var k = L.mobile ? .62 : 1;
     var y0 = L.header + 10, bottom = L.bottom;  // старт – у затемненні під шапкою, нижче зони її кнопок
     var xl = L.side ? Math.max(L.textRight + L.m, W * .5) : W * .5;
@@ -433,13 +438,16 @@ h1 .hl{color:var(--c-accent);display:block}
     for (var tries = 0; tries < 60; tries++){
       // старт завжди в кадрі. Згори – з-під шапки; якщо там не пройти повз плашку-анонс (360 px),
       // канал виходить з основи хмари одразу під плашкою.
-      var sx, sy = y0, wp = null;
+      var sx, sy = y0, wp = null, narrow = false;
       if (L.side) sx = xl + (xr - xl) * (.2 + .7 * rnd());
       else {
         // згори: старт у кадрі (x від 55% ширини до W−24); якщо плашка-анонс перекриває шлях униз –
         // канал іде через проміжок праворуч від неї (точка wp) і далі ламається в кишеню біля заголовка
-        var sl = Math.max(W * .55, L.annRight + 2); sx = sl + rnd() * Math.max(0, W - 24 - sl);
-        if (L.annRight > W * .55) wp = [Math.min(W - 16, L.annRight + 4 + rnd() * 8), L.annBottom + 4];
+        var narrow = L.annRight > W * .55;
+        if (narrow && type === 'C') { sx = W * .58 + rnd() * W * .22; sy = L.annBottom + 4; }
+        else if (narrow) { var sl = L.annRight + 2; sx = sl + rnd() * Math.max(0, W - 18 - sl);
+          wp = [Math.min(W - 16, L.annRight + 3 + rnd() * 6), L.annBottom + 4]; }
+        else { sx = W * .55 + rnd() * (W * .45 - 24); }
       }
       if (blocked(sx, sy)) continue;
       var ox = sx, oy = sy, pre = null;
@@ -450,10 +458,14 @@ h1 .hl{color:var(--c-accent);display:block}
       var best = null;
       for (var c = 0; c < 160; c++){
         var tx = xl + rnd() * (xr - xl), ty = sy + 90 * k + rnd() * (bottom - sy - 90 * k);
+        if (narrow && type === 'B') { tx = W - 48 + rnd() * 28; ty = bottom - 40 + rnd() * 40; }
         if (blocked(tx, ty) || !segFree(sx, sy, tx, ty)) continue;
+        if (narrow && type === 'A' && tx > sx - 40) continue;   // A – униз-ліворуч
+        if (narrow && type === 'C' && tx < sx + 50) continue;   // C – униз-праворуч
         // збоку – найглибший удар; згори – найдовша вільна діагональ
         var score = L.side ? (ty - sy) + rnd() * 140 * k - Math.abs(tx - sx) * .15
-                           : Math.hypot(tx - sx, ty - sy) + rnd() * 40;
+                  : narrow && type === 'B' ? ty + rnd() * 10
+                  : Math.hypot(tx - sx, ty - sy) + rnd() * 40;
         if (!best || score > best.s) best = { x: tx, y: ty, s: score };
       }
       if (!best || (L.side ? best.y - sy : Math.hypot(best.x - sx, best.y - sy)) < 110 * k) continue;
@@ -471,7 +483,7 @@ h1 .hl{color:var(--c-accent);display:block}
         if (branches.length >= want + 2 || rnd() > want / (total * .8)) continue;
         var p = pts[i], q2 = pts[i - 1], md = Math.atan2(p[1] - q2[1], p[0] - q2[0]);
         if (pre && p[1] < L.annBottom) continue;   // з проміжку біля плашки гілок не пускаємо
-        var side = rnd() < .5 ? -1 : 1, a = md + side * (.55 + rnd() * .65);
+        var side = narrow && type === 'B' ? (rnd() < .85 ? 1 : -1) : (rnd() < .5 ? -1 : 1), a = md + side * (.55 + rnd() * .65);
         var remain = pathLen(pts.slice(i)), blen = remain * (.18 + rnd() * .32) + 30 * k;
         var b = walk(rnd, p[0], p[1], p[0] + Math.cos(a) * blen * 1.4, p[1] + Math.sin(a) * blen * 1.4,
           { sMin: 8 * k, sMax: 24 * k, jit: 1.5, maxSteps: 120, yMin: y0 - 8, yMax: bottom, budget: blen, xMax: opt.xMax, down: true });
@@ -602,7 +614,7 @@ h1 .hl{color:var(--c-accent);display:block}
   }
 
   // ---- Таймлайн удару ----
-  var cur = null, raf = 0, timer = 0, rndLive = mulberry((Math.random() * 1e9) | 0);
+  var lastType = null, cur = null, raf = 0, timer = 0, rndLive = mulberry((Math.random() * 1e9) | 0);
   function plan(rnd){
     var lead = P.leaderMin + rnd() * (P.leaderMax - P.leaderMin);
     var n = rnd() < .5 ? 2 : 3, pulses = [{ at: lead, peak: 1 }], at = lead;
@@ -616,8 +628,8 @@ h1 .hl{color:var(--c-accent);display:block}
     var resid = t <= pl.last ? .3 : .3 * Math.exp(-(t - pl.last) / (P.tail / 3.2));
     return { bolt: Math.min(1, env + resid), sky: env * P.skyMax, reveal: 1 };
   }
-  function strike(rnd, b){
-    b = b || makeBolt(rnd); if (!b) return null;
+  function strike(rnd, b, type){
+    b = b || makeBolt(rnd, type); if (!b) return null;
     renderBolt(b); renderLit(b); return b;
   }
   function tick(now){
@@ -628,7 +640,9 @@ h1 .hl{color:var(--c-accent);display:block}
   }
   function fire(){
     timer = 0;
-    var b = strike(rndLive); if (!b) { schedule(P.gapMin); return; }
+    // тип траєкторії – щоразу інший, ніж минулого разу
+    var opts = TYPES.filter(function(t){ return t !== lastType; }); lastType = opts[Math.floor(rndLive() * opts.length)];
+    var b = strike(rndLive, null, lastType); if (!b) { schedule(P.gapMin); return; }
     cur = { b: b, pl: plan(rndLive), t0: performance.now() };
     raf = requestAnimationFrame(function(n){ cur.t0 = n; tick(n); });
   }
@@ -641,7 +655,7 @@ h1 .hl{color:var(--c-accent);display:block}
   function renderStatic(){
     if (MODE === 'calm') { frame(0, 0, 1, null); return; }
     if (MODE === 'strike' || reduceMQ.matches){
-      var b = strike(mulberry(MODE === 'strike' ? SEED : 777));
+      var b = strike(mulberry(MODE === 'strike' ? SEED : 777), null, TYPES[(SEED - 20261117) % 3]);
       if (MODE === 'strike') frame(1, .85 * P.skyMax, 1, b);   // мить одразу після головного спалаху
       else frame(.8, .3, 1, b);                                                 // без руху – м'якший кадр
     }
