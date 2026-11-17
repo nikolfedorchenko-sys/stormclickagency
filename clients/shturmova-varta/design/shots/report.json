@@ -1,6 +1,6 @@
 {
   "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/landing-mockup.html",
-  "takenAt": "2026-11-17T13:16:51.404Z",
+  "takenAt": "2026-11-17T13:18:48.037Z",
   "viewports": {
     "mobile-360": {
       "screenshots": {
@@ -52,10 +52,9 @@
         "items": []
       },
       "smallText": {
-        "count": 16,
+        "count": 15,
         "items": [
-          "span «ОХОРОННА КОМПАНІЯ · [МІСТО / РЕГІОН]» 13px",
-          "span.todo «[МІСТО / РЕГІОН]» 13px",
+          "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
           "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 11px",
           "span.label «ПОСЛУГИ» 13px",
           "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
@@ -68,11 +67,12 @@
           "span.k «КРОК 04» 13px",
           "span.label «ЗАКОННІСТЬ» 13px",
           "span.label «ПИТАННЯ» 13px",
-          "span.label «ЗАЯВКА» 13px"
+          "span.label «ЗАЯВКА» 13px",
+          "span.label «КОНТАКТИ» 13px"
         ]
       },
       "bodyTextUnder16": {
-        "count": 8,
+        "count": 9,
         "items": [
           "p «Охоронець у формі компанії біля входу бі» 14px",
           "p.muted.small «Показувати чи ні – [уточнити]» 15px",
@@ -80,6 +80,7 @@
           "p «Натискаючи кнопку, ви погоджуєтесь з обр» 14px",
           "p «ТОВ «ОХОРОННА КОМПАНІЯ «ШТУРМОВА ВАРТА»» 15px",
           "p «Код ЄДРПОУ: [уточнити]» 15px",
+          "p «Телефон: +380 67 549 57 10» 15px",
           "p «Юридична адреса: [уточнити]» 15px",
           "p «Ліцензія МВС № [уточнити] від [дата]» 15px"
         ]
@@ -88,7 +89,7 @@
         "Onest",
         "Unbounded"
       ],
-      "pageHeightPx": 12609
+      "pageHeightPx": 12563
     },
     "tablet-768": {
       "screenshots": {
@@ -137,10 +138,9 @@
         "items": []
       },
       "smallText": {
-        "count": 16,
+        "count": 15,
         "items": [
-          "span «ОХОРОННА КОМПАНІЯ · [МІСТО / РЕГІОН]» 13px",
-          "span.todo «[МІСТО / РЕГІОН]» 13px",
+          "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
           "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 11px",
           "span.label «ПОСЛУГИ» 13px",
           "span.label «ГОТУЄМО ДО ЗАПУСКУ» 13px",
@@ -153,11 +153,12 @@
           "span.k «КРОК 04» 13px",
           "span.label «ЗАКОННІСТЬ» 13px",
           "span.label «ПИТАННЯ» 13px",
-          "span.label «ЗАЯВКА» 13px"
+          "span.label «ЗАЯВКА» 13px",
+          "span.label «КОНТАКТИ» 13px"
         ]
       },
       "bodyTextUnder16": {
-        "count": 8,
+        "count": 9,
         "items": [
           "p «Охоронець у формі компанії біля входу бі» 14px",
           "p.muted.small «Показувати чи ні – [уточнити]» 15px",
@@ -165,6 +166,7 @@
           "p «Натискаючи кнопку, ви погоджуєтесь з обр» 14px",
           "p «ТОВ «ОХОРОННА КОМПАНІЯ «ШТУРМОВА ВАРТА»» 15px",
           "p «Код ЄДРПОУ: [уточнити]» 15px",
+          "p «Телефон: +380 67 549 57 10» 15px",
           "p «Юридична адреса: [уточнити]» 15px",
           "p «Ліцензія МВС № [уточнити] від [дата]» 15px"
         ]
@@ -173,7 +175,7 @@
         "Onest",
         "Unbounded"
       ],
-      "pageHeightPx": 10721
+      "pageHeightPx": 10783
     },
     "desktop-1440": {
       "screenshots": {
@@ -221,10 +223,9 @@
         "items": []
       },
       "smallText": {
-        "count": 20,
+        "count": 19,
         "items": [
-          "span «ОХОРОННА КОМПАНІЯ · [МІСТО / РЕГІОН]» 13px",
-          "span.todo «[МІСТО / РЕГІОН]» 13px",
+          "span «ОХОРОННА КОМПАНІЯ · КИЇВ» 13px",
           "span.tag «ФОТО · 4:5 · РЕАЛЬНЕ ФОТО КЛІЄНТА» 11px",
           "span.label «ПОСЛУГИ» 13px",
           "span.tag «ФОТО · 4:3» 11px",
@@ -237,7 +238,8 @@
           "span.label «ЯК ПОЧИНАЄМО СПІВПРАЦЮ» 13px",
           "span.k «КРОК 01» 13px",
           "span.k «КРОК 02» 13px",
-          "span.k «КРОК 03» 13px"
+          "span.k «КРОК 03» 13px",
+          "span.k «КРОК 04» 13px"
         ]
       },
       "bodyTextUnder16": {
@@ -248,7 +250,7 @@
         "Onest",
         "Unbounded"
       ],
-      "pageHeightPx": 8415
+      "pageHeightPx": 8531
     }
   }
 }
