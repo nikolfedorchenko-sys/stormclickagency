@@ -2,3 +2,4 @@ shots/
 shots-review/
 !**/design/shots/
 **/design/refs/
+__pycache__/
