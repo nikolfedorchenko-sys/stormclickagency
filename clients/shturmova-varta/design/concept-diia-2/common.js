@@ -1,28 +1,5 @@
-/* Спільне для всіх сторінок: тема, мобільне меню, вкладки з клавіатури. Без бібліотек. */
+/* Спільне для всіх сторінок: мобільне меню, вкладки з клавіатури. Без бібліотек. */
 (function () {
-  var root = document.documentElement;
-
-  /* ---------- тема: light | dark | auto (як у системі) ---------- */
-  function stored() { try { return localStorage.getItem('sv-theme'); } catch (e) { return null; } }
-  function current() { return root.getAttribute('data-theme') || 'auto'; }
-  function apply(v) {
-    if (v === 'light' || v === 'dark') root.setAttribute('data-theme', v); else root.removeAttribute('data-theme');
-    try { if (v === 'auto') localStorage.removeItem('sv-theme'); else localStorage.setItem('sv-theme', v); } catch (e) {}
-    mark();
-  }
-  function mark() {
-    var v = current();
-    document.querySelectorAll('[data-theme-set]').forEach(function (b) {
-      var on = b.dataset.themeSet === v;
-      b.setAttribute('aria-checked', on); b.tabIndex = on ? 0 : -1;
-    });
-  }
-  document.querySelectorAll('[data-theme-set]').forEach(function (b) {
-    b.addEventListener('click', function () { apply(b.dataset.themeSet); });
-  });
-  document.querySelectorAll('.theme-g').forEach(function (g) { roving(g, '[role="radio"]', function (b) { apply(b.dataset.themeSet); }); });
-  mark();
-
   /* ---------- мобільне меню ---------- */
   var menu = document.getElementById('mnav'), burger = document.querySelector('.burger');
   if (menu && burger) {

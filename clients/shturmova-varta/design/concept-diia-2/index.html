@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Штурмова варта – охорона онлайн (макет)</title>
 <meta name="description" content="Макет головної сторінки охоронної компанії «Штурмова варта», Київ.">
-<meta name="color-scheme" content="light dark">
-<script>/* тема до першого малювання: ?theme=dark|light або збережений вибір */
-(function(){var t=null,m=location.search.match(/[?&]theme=(light|dark)/);try{t=localStorage.getItem('sv-theme')}catch(e){}if(m)t=m[1];if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)})();</script>
+<meta name="color-scheme" content="light">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
@@ -81,7 +79,7 @@
 <section class="hero" id="hero">
   <div class="aurora" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span><span class="b5"></span></div>
   <div class="hero-in">
-    <h1>Охорона об’єктів і людей онлайн</h1>
+    <h1>Охорона об’єктів і&nbsp;людей&nbsp;онлайн</h1>
     <div class="switch" role="tablist" aria-label="Як звернутися">
       <button type="button" role="tab" id="sw-find" aria-selected="true" aria-controls="p-find" data-mode="find"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg>Підібрати<span class="m-hide"> охорону</span></button>
       <button type="button" role="tab" id="sw-call" aria-selected="false" aria-controls="p-call" data-mode="call" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Подзвонити</button>
@@ -96,9 +94,10 @@
     </div>
     <div id="p-call" role="tabpanel" aria-labelledby="sw-call" hidden>
       <div class="callbox">
-        <div><b>+380 67 549 5710</b><small>Графік роботи лінії – [уточнити]</small></div>
-        <a class="btn" href="tel:+380675495710"><svg class="i"><use href="#i-phone"/></svg>Подзвонити</a>
+        <a class="cb-num" href="tel:+380675495710">+380 67 549 5710</a>
+        <a class="btn cb-btn" href="tel:+380675495710" aria-label="Набрати номер +380 67 549 5710"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg><span class="cb-t">Набрати номер</span></a>
       </div>
+      <p class="hint">Графік роботи лінії – [уточнити]</p>
     </div>
   </div>
   <button class="pause" type="button" aria-label="Зупинити анімацію фону" aria-pressed="false"><svg class="i" aria-hidden="true"><use href="#i-pause"/></svg></button>
@@ -212,7 +211,7 @@
       </div>
       <div class="feature" id="yak">
         <h3>Як замовити охорону онлайн?</h3>
-        <p>Чотири короткі питання – і заявка готова. Менеджер передзвонить і назве ціну. Коли саме – [уточнити].</p>
+        <p>Чотири короткі питання – і заявка готова. Менеджер зв’яжеться з вами і назве ціну. Коли саме – [уточнити].</p>
         <ol class="steps">
           <li>Що охороняти</li>
           <li>Який об’єкт чи подія</li>
@@ -280,7 +279,7 @@
                   <li><time>17:45</time><span>В’їзд: 2 вантажівки, звірено з перепустками</span></li>
                 </ol>
               </div>
-              <div class="demo-bill"><h4>Рахунок за [місяць]</h4><div class="sum">[сума] грн</div><span class="mini">Оплатити</span></div>
+              <div class="demo-bill"><h4>Рахунок за [місяць]</h4><div class="sum">[сума] грн</div><span class="mini">Оплата – незабаром</span></div>
             </div>
           </div>
         </div>
@@ -341,20 +340,18 @@
     </div>
     <div class="ftr-mid">
       <ul><li><a href="#yak">Як це працює</a></li><li><a href="#kabinet">Кабінет клієнта</a></li><li><a href="wizard.html">Залишити заявку</a></li></ul>
-      <ul><li><a href="#pytannia">Питання та відповіді</a></li><li><a href="#">Ліцензія [уточнити]</a></li><li><a href="#">Політика конфіденційності</a></li></ul>
+      <ul><li><a href="#pytannia">Питання та відповіді</a></li><li><a href="#">Політика конфіденційності [уточнити]</a></li></ul>
       <ul><li><a class="ftr-phone" href="tel:+380675495710">+380 67 549 5710</a></li><li class="muted">Київ, [адреса – уточнити]</li><li class="muted">[email – уточнити]</li></ul>
       <ul><li>Ми в мережах:</li><li class="muted">[Telegram, Facebook, Instagram – уточнити]</li></ul>
     </div>
     <div class="ftr-bot">
       <a class="logo" href="index.html" aria-label="Штурмова варта – на головну"><span class="logo-mark" aria-hidden="true">ШВ</span><span class="logo-word">Штурмова<br>варта</span></a>
-      <span>ТОВ «Охоронна компанія «Штурмова варта» · 2026</span>
-      <div class="theme"><span class="theme-l" id="theme-l">Тема</span>
-        <div class="theme-g" role="radiogroup" aria-labelledby="theme-l">
-          <button type="button" role="radio" data-theme-set="light">Світла</button>
-          <button type="button" role="radio" data-theme-set="dark">Темна</button>
-          <button type="button" role="radio" data-theme-set="auto">Як у системі</button>
-        </div>
-      </div>
+      <ul class="ftr-legal">
+        <li>ТОВ «Охоронна компанія „Штурмова&nbsp;варта“»</li>
+        <li>Код ЄДРПОУ [уточнити]</li>
+        <li><a href="#">Ліцензія на охоронну діяльність [уточнити: номер і дата]</a></li>
+        <li>© 2026</li>
+      </ul>
     </div>
   </div>
 </footer>

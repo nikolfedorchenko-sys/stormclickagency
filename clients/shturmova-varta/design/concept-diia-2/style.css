@@ -1,6 +1,5 @@
 /* Штурмова варта – макет «як Дія», v3 (для верстки). Спільні стилі головної і майстра.
-   Усі кольори – лише через токени нижче. Дві теми: світла (типово) і темна
-   (prefers-color-scheme або data-theme="dark" на <html>). */
+   Усі кольори – лише через токени нижче. Одна світла тема. */
 
 /* =========================================================
    1. ТОКЕНИ
@@ -37,7 +36,7 @@
   --ok-dot: #1f9d4c;
   --bar-bg: rgba(255, 255, 255, .96);
   --tag-bg: rgba(0, 0, 0, .62);
-  /* чорні блоки (кабінет, футер) – в обох темах */
+  /* чорні блоки (кабінет, футер) */
   --night: #000;
   --night-fg: #fff;
   --night-fg-2: #d9d9d9;
@@ -71,40 +70,6 @@
   --fs-body: 16px;
   --fs-small: 13px;
   --t-fast: .15s;
-}
-
-/* темна тема – дзеркально, тими самими іменами */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --bg: #121212; --fg: #f2f2f2; --fg-2: #c9c9c9; --muted: #a3a6ab; --faint: #8f9298;
-    --line: #f2f2f2; --line-soft: #3a3a3a; --field-line: #8a8d92;
-    --soft: #1c1c1a; --sky: #161b22; --surface: #1f1f1f; --hover: #262626; --press: #303030;
-    --btn-bg: #f2f2f2; --btn-fg: #000; --btn-hover: #d6d6d6; --btn-active: #bdbdbd;
-    --dis-bg: #2e2e2e; --dis-fg: #a8a8a8;
-    --focus: #fff; --err: #ff8a80; --err-bg: #3a1d1b; --ok-fg: #9be3b0; --ok-bg: #173320; --ok-dot: #4cc777;
-    --bar-bg: rgba(18, 18, 18, .96); --tag-bg: rgba(0, 0, 0, .7);
-    --night: #000; --night-line: #3d3d3d;
-    --hero-fg: #f2f2f2;
-    --hero-grad: linear-gradient(125deg, #3b2c17 0%, #3f2d1b 26%, #3d2322 48%, #25264a 72%, #14313f 100%);
-    --b1: #694619; --b2: #1b4a64; --b3: #5c2a20; --b4: #302d6b; --b5: #18493b;
-    --blob-op: .6;
-  }
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #121212; --fg: #f2f2f2; --fg-2: #c9c9c9; --muted: #a3a6ab; --faint: #8f9298;
-  --line: #f2f2f2; --line-soft: #3a3a3a; --field-line: #8a8d92;
-  --soft: #1c1c1a; --sky: #161b22; --surface: #1f1f1f; --hover: #262626; --press: #303030;
-  --btn-bg: #f2f2f2; --btn-fg: #000; --btn-hover: #d6d6d6; --btn-active: #bdbdbd;
-  --dis-bg: #2e2e2e; --dis-fg: #a8a8a8;
-  --focus: #fff; --err: #ff8a80; --err-bg: #3a1d1b; --ok-fg: #9be3b0; --ok-bg: #173320; --ok-dot: #4cc777;
-  --bar-bg: rgba(18, 18, 18, .96); --tag-bg: rgba(0, 0, 0, .7);
-  --night: #000; --night-line: #3d3d3d;
-  --hero-fg: #f2f2f2;
-  --hero-grad: linear-gradient(125deg, #3b2c17 0%, #3f2d1b 26%, #3d2322 48%, #25264a 72%, #14313f 100%);
-  --b1: #694619; --b2: #1b4a64; --b3: #5c2a20; --b4: #302d6b; --b5: #18493b;
-  --blob-op: .6;
 }
 
 @media (max-width: 1100px) { :root { --gut: 40px; --fs-h1: 52px; --fs-h2: 46px; --fs-h3: 24px; } }
@@ -255,15 +220,18 @@ ul, ol { list-style: none; }
 .hint { margin-top: 16px; font-size: 14px; }
 .hint a { font-weight: 500; text-underline-offset: 2px; }
 .hint a:hover { text-decoration-thickness: 2px; }
-.callbox { margin: 20px auto 0; max-width: 656px; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--surface); color: var(--fg); border-radius: 28px; padding: 8px 8px 8px 28px; text-align: left; }
-.callbox[hidden] { display: none; }
-.callbox b { font-size: 22px; font-weight: 500; letter-spacing: -.01em; display: block; }
-.callbox small { font-size: 14px; color: var(--muted); }
+.callbox { margin: 20px auto 0; max-width: 656px; height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--surface); color: var(--fg); border-radius: var(--radius-pill); padding: 0 2px 0 24px; text-align: left; }
+.cb-num { font-size: 20px; font-weight: 500; letter-spacing: -.01em; text-decoration: none; white-space: nowrap; }
+.cb-num:hover { text-decoration: underline; text-underline-offset: 4px; }
+.callbox .cb-btn { min-height: 44px; height: 44px; padding: 0 20px; font-size: 15px; }
 .pause { position: absolute; z-index: 3; right: 36px; bottom: 36px; width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--hero-fg); color: var(--hero-fg); background: transparent; display: grid; place-items: center; cursor: pointer; transition: background var(--t-fast); }
 .pause:hover { background: rgba(127, 127, 127, .2); }
 .pause .i { width: 16px; height: 16px; fill: currentColor; stroke: none; }
 
-@media (max-width: 1100px) { .search .round { width: 44px; height: 44px; top: 2px; right: 2px; } }
+@media (max-width: 1100px) {
+  .hero { min-height: 580px; height: auto; max-height: none; }
+  .search .round { width: 44px; height: 44px; top: 2px; right: 2px; }
+}
 @media (max-width: 640px) {
   .hero { min-height: 600px; height: auto; max-height: none; }
   .hero-in { padding: 120px 16px 72px; }
@@ -272,8 +240,11 @@ ul, ol { list-style: none; }
   .switch button { font-size: 17px; padding: 0 16px 0 14px; min-height: 48px; }
   .search input { height: 52px; font-size: 16px; padding-left: 18px; }
   .search .round { top: 4px; right: 4px; }
-  .callbox { flex-direction: column; align-items: stretch; padding: 20px; text-align: center; }
-  .callbox .btn { width: 100%; }
+  .hero .hint { min-height: 42px; } /* 2 рядки: підказка пошуку і графік однакової висоти – H1 не стрибає */
+  .callbox { height: 52px; padding: 0 4px 0 18px; }
+  .cb-num { font-size: 18px; }
+  .callbox .cb-btn { width: 44px; padding: 0; }
+  .cb-t { display: none; }
   .pause { right: 16px; bottom: 16px; }
 }
 
@@ -296,7 +267,7 @@ ul, ol { list-style: none; }
 .arrows button[data-dir="-1"] { --d: -1; }
 .arrows button[disabled] { color: var(--line-soft); cursor: default; }
 .arrows .i { width: 64px; height: 40px; stroke-width: 1.6; }
-.rail { display: flex; gap: 30px; margin-top: 40px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 4px 4px 8px; margin-left: -4px; margin-right: -4px; }
+.rail { display: flex; gap: 30px; margin-top: 40px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 4px 4px 8px; margin-left: -4px; margin-right: -4px; scroll-padding-inline: 4px; }
 .rail::-webkit-scrollbar { display: none; }
 .card { flex: 0 0 290px; scroll-snap-align: start; text-decoration: none; color: var(--fg); }
 .card-media { position: relative; height: 160px; overflow: hidden; background: var(--soft); }
@@ -424,7 +395,7 @@ ul, ol { list-style: none; }
 .demo-log time { font-weight: 600; }
 .demo-bill { border: 1px solid var(--line-soft); border-radius: 10px; padding: 12px; }
 .demo-bill .sum { font-size: 22px; font-weight: 500; margin: 2px 0 10px; }
-.demo-bill .mini { display: inline-block; padding: 6px 12px; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); font-size: 12px; }
+.demo-bill .mini { display: inline-block; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line-soft); color: var(--muted); font-size: 12px; }
 @media (max-width: 1100px) { .cab-grid { grid-template-columns: 1fr; gap: 48px; } }
 @media (max-width: 640px) {
   .cab { padding: 48px 0 56px; }
@@ -446,7 +417,7 @@ ul, ol { list-style: none; }
 .faq { background: var(--sky); padding: 104px 0 96px; }
 .faq .sec-head .link-arrow { margin-right: 87px; margin-bottom: 8px; }
 .faq-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--col-gap); margin-top: 64px; }
-.faq-col > h3 { font-size: 16px; font-weight: 500; color: var(--muted); padding-bottom: 14px; position: relative; max-width: 320px; }
+.faq-col > h3 { font-size: 16px; font-weight: 500; color: var(--muted); padding-bottom: 14px; position: relative; max-width: 340px; }
 .faq-col > h3::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; background: var(--accent-line); }
 .faq-col ul { margin-top: 28px; display: grid; gap: 20px; max-width: 340px; }
 .faq details summary { list-style: none; cursor: pointer; font-size: 18px; font-weight: 500; line-height: 1.5; display: flex; gap: 12px; justify-content: space-between; }
@@ -465,7 +436,7 @@ ul, ol { list-style: none; }
 }
 
 /* =========================================================
-   13. ФУТЕР + ПЕРЕМИКАЧ ТЕМИ
+   13. ФУТЕР
    ========================================================= */
 .ftr { background: var(--night); color: var(--night-fg); padding: 88px 0 48px; border-top: 1px solid var(--night-line); }
 .ftr-top { display: grid; grid-template-columns: 1fr 1fr; gap: var(--col-gap); padding-bottom: 56px; border-bottom: 1px solid var(--night-line); }
@@ -479,17 +450,12 @@ ul, ol { list-style: none; }
 .ftr-mid .muted { color: var(--night-muted); font-size: 14px; }
 .ftr-phone { font-size: 24px !important; font-weight: 500; letter-spacing: -.01em; }
 .ftr-bot { display: flex; align-items: center; flex-wrap: wrap; gap: 16px 24px; font-size: 14px; color: var(--night-muted); }
-.ftr-bot .theme { margin-left: auto; }
+.ftr-legal { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-left: auto; justify-content: flex-end; }
+.ftr-legal a { text-decoration: none; }
+.ftr-legal a:hover { color: var(--night-fg); text-decoration: underline; text-underline-offset: 3px; }
 .ftr-slim { padding: 32px 0; }
 
-.theme { display: flex; align-items: center; gap: 12px; }
-.theme-l { font-size: 14px; color: var(--night-muted); }
-.theme-g { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--radius-pill); border: 1px solid var(--night-line); }
-.theme-g button { min-height: 38px; padding: 0 14px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--night-fg-2); font-size: 14px; font-weight: 500; cursor: pointer; transition: background var(--t-fast), color var(--t-fast); }
-.theme-g button:hover { background: #262626; color: var(--night-fg); }
-.theme-g button[aria-checked="true"] { background: var(--night-fg); color: var(--night); }
-
-@media (max-width: 1100px) { .ftr-mid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 1100px) { .ftr-mid { grid-template-columns: 1fr 1fr; } .ftr-legal { margin-left: 0; width: 100%; justify-content: flex-start; } }
 @media (max-width: 640px) {
   .ftr { padding: 48px 0 32px; }
   .ftr-top { grid-template-columns: 1fr; gap: 36px; padding-bottom: 36px; }
@@ -500,8 +466,9 @@ ul, ol { list-style: none; }
   .ftr-mid a { display: inline-block; padding: 10px 0; }
   .ftr-mid .muted { font-size: 16px; }
   .ftr-bot { flex-direction: column; align-items: flex-start; }
-  .ftr-bot .theme { margin-left: 0; flex-wrap: wrap; }
-  .theme-g button { min-height: 44px; }
+  .ftr-legal { margin-left: 0; flex-direction: column; justify-content: flex-start; gap: 0; }
+  .ftr-legal li { padding: 4px 0; font-size: 16px; }
+  .ftr-legal a { display: inline-block; padding: 10px 0; margin: -10px 0; }
   .ftr-slim { padding: 24px 0 calc(24px + env(safe-area-inset-bottom)); }
 }
 
@@ -593,6 +560,7 @@ ul, ol { list-style: none; }
 
 .fine { margin-top: 20px; font-size: 14px; color: var(--muted); }
 .fine a { color: var(--fg-2); }
+.fine + .fine { margin-top: 8px; }
 .w-nav { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .w-nav .btn { min-height: 56px; padding: 0 40px; font-size: 17px; }
 .w-why { width: 100%; font-size: 14px; color: var(--muted); }
@@ -638,11 +606,11 @@ ul, ol { list-style: none; }
    16. СЕНСОРНІ ЕКРАНИ (≤ 1100 px): зони натискання ≥ 44 px, текст ≥ 16 px
    ========================================================= */
 @media (max-width: 1100px) {
-  .cat-links a, .theme-g button { min-height: 44px; }
+  .cat-links a { min-height: 44px; }
   .cat h3 a { display: inline-block; padding: 11px 0; margin: -11px 0; }
   .crumbs a, .w-call a { display: inline-flex; align-items: center; min-height: 44px; }
   .crumbs { align-items: center; }
-  .card p, .ftr-mid .muted, .cab-note { font-size: 16px; }
+  .card p, .ftr-mid .muted, .cab-note, .ftr-legal li { font-size: 16px; }
 }
 
 /* =========================================================

@@ -48,7 +48,7 @@
     var max = r.scrollWidth - r.clientWidth, vis = r.clientWidth / r.scrollWidth;
     var w = Math.min(Math.max(vis, .12), 1) * 100, pos = max > 0 ? r.scrollLeft / max : 0;
     bar.style.width = w + '%'; bar.style.left = (100 - w) * pos + '%';
-    arrows[0].disabled = r.scrollLeft <= 2; arrows[1].disabled = r.scrollLeft >= max - 2;
+    arrows[0].disabled = r.scrollLeft <= 5; arrows[1].disabled = r.scrollLeft >= max - 5; // поріг 5 px – субпіксельні зсуви snap
     arrows.forEach(function (a) { a.setAttribute('aria-controls', r.id); });
   }
   tabs(document.querySelector('.tabs'), function () { var r = rail(); if (r) r.scrollLeft = 0; update(); });

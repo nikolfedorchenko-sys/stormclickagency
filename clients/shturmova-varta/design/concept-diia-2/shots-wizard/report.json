@@ -1,6 +1,6 @@
 {
   "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/wizard.html",
-  "takenAt": "2026-11-18T19:23:23.847Z",
+  "takenAt": "2026-11-18T20:03:16.896Z",
   "viewports": {
     "mobile-360": {
       "screenshots": {
@@ -50,7 +50,7 @@
       "fontFamiliesUsed": [
         "Onest"
       ],
-      "pageHeightPx": 1237
+      "pageHeightPx": 1303
     },
     "tablet-768": {
       "screenshots": {
@@ -102,7 +102,7 @@
       "fontFamiliesUsed": [
         "Onest"
       ],
-      "pageHeightPx": 1274
+      "pageHeightPx": 1278
     },
     "desktop-1440": {
       "screenshots": {
@@ -152,7 +152,7 @@
       "fontFamiliesUsed": [
         "Onest"
       ],
-      "pageHeightPx": 1260
+      "pageHeightPx": 1258
     }
   }
 }

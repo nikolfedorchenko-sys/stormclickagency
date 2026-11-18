@@ -3,8 +3,7 @@
      t = object | person | event | unsure   – що охороняти (відкриває крок 2)
      p = обʼєкт, w = кого, e = захід        – точне значення варіанта кроку 2
      q = текст із пошуку на головній        – розбираємо ключовими словами
-     demo = errors | sending | fail | done | long – показати стан для макета
-     theme = light | dark                   – тема (обробляє скрипт у <head>) */
+     demo = errors | sending | fail | done | long – показати стан для макета */
 (function () {
   var TYPES = [
     { v: 'object', t: 'Об’єкт', s: 'Офіс, склад, магазин, будмайданчик, будинок' },
@@ -30,6 +29,12 @@
   if (P.get('p')) a.place = P.get('p');
   if (P.get('w')) a.who = P.get('w');
   if (P.get('e')) a.ev = P.get('e');
+  // приймаємо з адреси лише відомі варіанти кроку 2 для обраного типу; невідоме – ігноруємо
+  (function () {
+    var c = a.type && STEP2[a.type];
+    ['place', 'who', 'ev'].forEach(function (k) { if (a[k] && (!c || c.k !== k || c.o.indexOf(a[k]) < 0)) delete a[k]; });
+    if (a.guests && (!c || !c.extra || c.extra.o.indexOf(a.guests) < 0)) delete a.guests;
+  })();
   var q = (P.get('q') || '').trim().slice(0, 80);
   if (q) {
     found = q; var l = q.toLowerCase();
@@ -64,12 +69,15 @@
   function digits(v) { return (v || '').replace(/\D/g, ''); }
   function say(t) { live.textContent = ''; setTimeout(function () { live.textContent = t; }, 50); }
 
-  /* телефон: маска +380 XX XXX XX XX */
+  /* телефон: маска +380 XX XXX XX XX.
+     Беремо всі цифри поля (разом із префіксом +380, який уже стоїть у полі) і по черзі з початку
+     прибираємо: «380» (лише якщо після нього ще ≥ 9 цифр), потім «38», потім «0»; лишаємо 9 цифр.
+     Так набір і вставка «+380…», «380…», «+38 (0…)», «0…» і «67…» дають той самий номер. */
   function fmt(v) {
-    var sub, m = /\+\s*3\s*8\s*0/.exec(v || '');
-    if (m) sub = digits(v.slice(0, m.index) + v.slice(m.index + m[0].length)); // префікс +380 лишаємо, решта – номер
-    else { sub = digits(v); if (sub.slice(0, 3) === '380') sub = sub.slice(3); else if (sub.slice(0, 2) === '38') sub = sub.slice(2); }
-    if (sub[0] === '0') sub = sub.slice(1); // 067… → 67…
+    var sub = digits(v);
+    if (sub.slice(0, 3) === '380' && sub.length - 3 >= 9) sub = sub.slice(3);
+    if (sub.slice(0, 2) === '38') sub = sub.slice(2);
+    if (sub[0] === '0') sub = sub.slice(1);
     sub = sub.slice(0, 9);
     var parts = [sub.slice(0, 2), sub.slice(2, 5), sub.slice(5, 7), sub.slice(7, 9)].filter(Boolean);
     return '+380 ' + parts.join(' ');
@@ -78,7 +86,7 @@
   function errName() {
     var n = (a.name || '').trim();
     if (!n) return 'Вкажіть ім’я – так менеджер знатиме, як до вас звертатися';
-    if (n.length < 2) return 'Ім’я – хоча б 2 літери';
+    if (!/\p{L}.*\p{L}/u.test(n)) return 'Ім’я – хоча б 2 літери';
     return '';
   }
   function errPhone() {
@@ -120,7 +128,9 @@
     var back = n > 1 ? '<button type="button" class="btn btn-ghost" data-act="back" aria-label="Назад"' + (st.sending ? ' disabled' : '') + '><svg class="i" aria-hidden="true"><use href="#i-back"/></svg><span class="m-hide">Назад</span></button>' : '';
     var main;
     if (last && st.sending) main = '<button type="button" class="btn is-loading" disabled aria-disabled="true"><span class="spin" aria-hidden="true"></span>Надсилаємо…</button>';
-    else main = '<button type="button" class="btn" data-act="' + (last ? 'send' : 'next') + '"' + (can ? '' : ' disabled aria-describedby="why"') + '>' + (last ? 'Надіслати заявку' : 'Далі') + '<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>';
+    else if (last) main = '<button type="submit" class="btn">'; // у формі: Enter у полі теж надсилає
+    else main = '<button type="button" class="btn" data-act="next"' + (can ? '' : ' disabled aria-describedby="why"') + '>';
+    if (!(last && st.sending)) main += (last ? 'Надіслати заявку' : 'Далі') + '<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>';
     return '<div class="w-nav">' + back + main + (can ? '' : '<p class="w-why" id="why">Оберіть варіант, щоб продовжити</p>') + '</div>';
   }
   function field(k, label, opt, type, extra) {
@@ -160,15 +170,16 @@
       h = head(3, 'Коли потрібна охорона?') + opts('when', WHEN, 'wq') + chips('start', START, 'Коли почати') + nav(3);
     } else if (step === 4) {
       if (!a.channel) a.channel = 'Дзвінок';
-      h = head(4, 'Як з вами зв’язатися?') + '<p class="w-sub">Менеджер передзвонить, уточнить деталі і назве ціну.</p>' +
+      h = head(4, 'Як з вами зв’язатися?') + '<p class="w-sub">Менеджер зв’яжеться з вами, уточнить деталі і назве ціну.</p>' +
         '<form id="contact" novalidate' + (st.sending ? ' aria-busy="true"' : '') + '>' +
         field('name', 'Ім’я', false, 'text', 'type="text" maxlength="60" autocomplete="name" placeholder="Як до вас звертатися"') +
-        field('phone', 'Телефон', false, 'tel', 'type="tel" inputmode="tel" maxlength="17" autocomplete="tel"') +
+        field('phone', 'Телефон', false, 'tel', 'type="tel" inputmode="tel" autocomplete="tel"') +
         chips('channel', CH, 'Як зручніше відповісти') +
-        '<p class="fine">Telegram і Viber – [уточнити], чи підключені. Надсилаючи заявку, ви погоджуєтеся на обробку даних для зв’язку – <a href="#">політика конфіденційності</a>.</p>' +
-        (st.sendErr ? '<div class="alert" role="alert" tabindex="-1" id="send-err"><h3><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>Не вдалося надіслати заявку</h3><p>Ваші відповіді збережені. Спробуйте ще раз або подзвоніть – оформимо заявку по телефону.</p>' +
-          '<div class="acts"><button type="button" class="btn" data-act="send">Спробувати ще раз</button><a class="btn btn-ghost" href="tel:+380675495710"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Подзвонити</a></div></div>' : '') +
-        '</form>' + (st.sendErr ? '' : nav(4));
+        '<p class="fine">Надсилаючи заявку, ви погоджуєтеся, що ТОВ «Охоронна компанія „Штурмова варта“» обробить ваші ім’я, телефон і адресу (якщо вказали), щоб зв’язатися з вами щодо заявки. <a href="#">Політика конфіденційності [уточнити]</a></p>' +
+        '<p class="fine">Telegram і Viber – [уточнити], чи підключені.</p>' +
+        (st.sendErr ? '<div class="alert" role="alert" tabindex="-1" id="send-err"><h3><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>Не вдалося надіслати заявку</h3><p>Ваші відповіді збережені. Спробуйте ще раз або подзвоніть – оформимо заявку телефоном.</p>' +
+          '<div class="acts"><button type="submit" class="btn">Спробувати ще раз</button><a class="btn btn-ghost" href="tel:+380675495710"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Подзвонити</a></div></div>' : '') +
+        (st.sendErr ? '' : nav(4)) + '</form>';
     } else {
       var c2 = s2(), rows = [['Послуга', typeName(a.type)], [c2.side, [a[c2.k], a.guests && a.guests + ' гостей'].filter(Boolean).join(', ')], ['Адреса', a.addr || ''], ['Графік', a.when + ', ' + a.start.toLowerCase()], ['Ім’я', a.name], ['Зв’язок', a.channel + ' · ' + a.phone]];
       h = '<div class="done-mark" aria-hidden="true"><svg class="i"><use href="#i-check"/></svg></div><h2 class="w-q" id="wq" tabindex="-1">Заявку надіслано</h2><p class="w-sub">Менеджер зв’яжеться з вами [уточнити: протягом якого часу].</p><dl class="sum">' +
@@ -204,6 +215,7 @@
     if (show) inp.setAttribute('aria-invalid', 'true'); else inp.removeAttribute('aria-invalid');
   }
   function send() {
+    if (st.sending) return;
     st.showAll = true; showErr('name'); showErr('phone');
     var bad = errName() ? 'name' : errPhone() ? 'phone' : '';
     if (bad) {
