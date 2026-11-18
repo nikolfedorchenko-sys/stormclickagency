@@ -1,0 +1,154 @@
+{
+  "url": "file:///home/user/stormclickagency/projects/stormclick-site/design/mockup.html",
+  "takenAt": "2026-11-17T20:46:37.480Z",
+  "viewports": {
+    "mobile-360": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/projects/stormclick-site/design/shots/mobile-360-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots/mobile-360-part-01.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots/mobile-360-part-02.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/projects/stormclick-site/design/shots/mobile-360-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "StormClick – макет першого екрана",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Geologica"
+      ],
+      "pageHeightPx": 964
+    },
+    "tablet-768": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/projects/stormclick-site/design/shots/tablet-768-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots/tablet-768-part-01.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/projects/stormclick-site/design/shots/tablet-768-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "StormClick – макет першого екрана",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Geologica"
+      ],
+      "pageHeightPx": 1024
+    },
+    "desktop-1440": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/projects/stormclick-site/design/shots/desktop-1440-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots/desktop-1440-part-01.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/projects/stormclick-site/design/shots/desktop-1440-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "StormClick – макет першого екрана",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Geologica"
+      ],
+      "pageHeightPx": 900
+    }
+  }
+}
