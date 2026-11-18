@@ -1,0 +1,158 @@
+{
+  "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/wizard.html",
+  "takenAt": "2026-11-18T20:05:44.876Z",
+  "viewports": {
+    "mobile-360": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/mobile-360-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/mobile-360-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/mobile-360-part-02.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/mobile-360-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Замовлення охорони – Штурмова варта (макет)",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Onest"
+      ],
+      "pageHeightPx": 1303
+    },
+    "tablet-768": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/tablet-768-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/tablet-768-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/tablet-768-part-02.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/tablet-768-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Замовлення охорони – Штурмова варта (макет)",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 1,
+        "items": [
+          "p#why.w-why «Оберіть варіант, щоб продовжити» 14px"
+        ]
+      },
+      "fontFamiliesUsed": [
+        "Onest"
+      ],
+      "pageHeightPx": 1278
+    },
+    "desktop-1440": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/desktop-1440-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/desktop-1440-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/desktop-1440-part-02.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r2/wiz/desktop-1440-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Замовлення охорони – Штурмова варта (макет)",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Onest"
+      ],
+      "pageHeightPx": 1258
+    }
+  }
+}
