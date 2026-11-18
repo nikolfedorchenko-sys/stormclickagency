@@ -1,6 +1,6 @@
 {
-  "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/wizard.html?q=%D1%81%D0%BA%D0%BB%D0%B0%D0%B4",
-  "takenAt": "2026-11-18T17:16:07.035Z",
+  "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/wizard.html",
+  "takenAt": "2026-11-18T19:23:23.847Z",
   "viewports": {
     "mobile-360": {
       "screenshots": {
@@ -14,7 +14,7 @@
       "warnings": [],
       "consoleErrors": [],
       "failedRequests": [],
-      "title": "Замовлення охорони – Штурмова варта (концепція)",
+      "title": "Замовлення охорони – Штурмова варта (макет)",
       "lang": "uk",
       "h1Count": 1,
       "contentWiderThanScreenPx": 0,
@@ -36,28 +36,21 @@
         "items": []
       },
       "smallTapTargets": {
-        "count": 3,
-        "items": [
-          "a.logo «ШВ Штурмова варта» 128×40",
-          "a «Головна» 55×21",
-          "a «+380 67 549 5710» 184×33"
-        ]
+        "count": 0,
+        "items": []
       },
       "smallText": {
         "count": 0,
         "items": []
       },
       "bodyTextUnder16": {
-        "count": 2,
-        "items": [
-          "p.w-found «Ви шукали: «склад»» 14px",
-          "p «Не хочете заповнювати? Подзвоніть – офор» 15px"
-        ]
+        "count": 0,
+        "items": []
       },
       "fontFamiliesUsed": [
         "Onest"
       ],
-      "pageHeightPx": 1312
+      "pageHeightPx": 1237
     },
     "tablet-768": {
       "screenshots": {
@@ -71,7 +64,7 @@
       "warnings": [],
       "consoleErrors": [],
       "failedRequests": [],
-      "title": "Замовлення охорони – Штурмова варта (концепція)",
+      "title": "Замовлення охорони – Штурмова варта (макет)",
       "lang": "uk",
       "h1Count": 1,
       "contentWiderThanScreenPx": 0,
@@ -93,28 +86,23 @@
         "items": []
       },
       "smallTapTargets": {
-        "count": 3,
-        "items": [
-          "a.logo «ШВ Штурмова варта» 128×40",
-          "a «Головна» 55×21",
-          "a «+380 67 549 5710» 184×33"
-        ]
+        "count": 0,
+        "items": []
       },
       "smallText": {
         "count": 0,
         "items": []
       },
       "bodyTextUnder16": {
-        "count": 2,
+        "count": 1,
         "items": [
-          "p.w-found «Ви шукали: «склад»» 14px",
-          "p «Не хочете заповнювати? Подзвоніть – офор» 15px"
+          "p#why.w-why «Оберіть варіант, щоб продовжити» 14px"
         ]
       },
       "fontFamiliesUsed": [
         "Onest"
       ],
-      "pageHeightPx": 1436
+      "pageHeightPx": 1274
     },
     "desktop-1440": {
       "screenshots": {
@@ -128,7 +116,7 @@
       "warnings": [],
       "consoleErrors": [],
       "failedRequests": [],
-      "title": "Замовлення охорони – Штурмова варта (концепція)",
+      "title": "Замовлення охорони – Штурмова варта (макет)",
       "lang": "uk",
       "h1Count": 1,
       "contentWiderThanScreenPx": 0,
@@ -154,13 +142,8 @@
         "items": []
       },
       "smallText": {
-        "count": 4,
-        "items": [
-          "small «Крок 1» 13px",
-          "small «Крок 2» 13px",
-          "small «Крок 3» 13px",
-          "small «Крок 4» 13px"
-        ]
+        "count": 0,
+        "items": []
       },
       "bodyTextUnder16": {
         "count": 0,
@@ -169,7 +152,7 @@
       "fontFamiliesUsed": [
         "Onest"
       ],
-      "pageHeightPx": 1493
+      "pageHeightPx": 1260
     }
   }
 }
