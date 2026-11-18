@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Штурмова варта – охорона онлайн (концепція)</title>
+<meta name="description" content="Концепція головної сторінки охоронної компанії «Штурмова варта», Київ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h3.5l1.7 4.3-2.2 1.4a11 11 0 0 0 6.3 6.3l1.4-2.2L20 15.5V19a1.5 1.5 0 0 1-1.6 1.5C10.6 20 4 13.4 3.5 5.6A1.5 1.5 0 0 1 5 4Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-long-r" viewBox="0 0 64 40"><path d="M2 20h58M42 4l18 16-18 16"/></symbol>
+  <symbol id="i-long-l" viewBox="0 0 64 40"><path d="M62 20H4M22 4 4 20l18 16"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-burger" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+</svg>
+
+<!-- ШАПКА -->
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="logo" href="index.html" aria-label="Штурмова варта – на головну">
+      <span class="logo-mark">ШВ</span><span class="logo-word">Штурмова<br>варта</span>
+    </a>
+    <nav class="nav" aria-label="Головне меню">
+      <a href="#posluhy">Послуги</a>
+      <a href="#yak">Як це працює</a>
+      <a href="#kabinet">Кабінет клієнта</a>
+      <a href="#pytannia">Питання</a>
+    </nav>
+    <div class="hdr-right">
+      <a class="hdr-phone" href="tel:+380675495710">+380 67 549 5710</a>
+      <a class="btn" href="wizard.html">Залишити заявку</a>
+    </div>
+    <div class="hdr-mob">
+      <a class="call-round" href="tel:+380675495710" aria-label="Подзвонити: +380 67 549 5710"><svg class="i"><use href="#i-phone"/></svg></a>
+      <button class="burger" type="button" aria-label="Меню"><svg class="i"><use href="#i-burger"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ПЕРШИЙ ЕКРАН -->
+<section class="hero" id="hero">
+  <div class="aurora" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span><span class="b5"></span></div>
+  <div class="hero-in">
+    <h1>Охорона об’єктів і людей онлайн</h1>
+    <div class="switch" role="tablist" aria-label="Як звернутися">
+      <button type="button" role="tab" aria-selected="true" data-mode="find"><svg class="i"><use href="#i-search"/></svg>Підібрати<span class="m-hide"> охорону</span></button>
+      <button type="button" role="tab" aria-selected="false" data-mode="call"><svg class="i"><use href="#i-phone"/></svg>Подзвонити</button>
+    </div>
+    <form class="search" action="wizard.html" method="get" role="search">
+      <label class="sr" for="q">Що потрібно охороняти?</label>
+      <input id="q" name="q" type="text" autocomplete="off" placeholder="Що потрібно охороняти? Наприклад: склад, офіс, захід" data-short="Що охороняти? Склад, офіс…">
+      <button class="round" type="submit" aria-label="Підібрати охорону"><svg class="i"><use href="#i-arrow"/></svg></button>
+    </form>
+    <p class="hint">Наприклад: <a href="wizard.html?t=object&amp;p=Склад%20чи%20виробництво">охорона складу</a> або <a href="wizard.html?t=person">особиста охорона</a></p>
+    <div class="callbox">
+      <div><b>+380 67 549 5710</b><small>Графік роботи лінії – [уточнити]</small></div>
+      <a class="btn" href="tel:+380675495710"><svg class="i"><use href="#i-phone"/></svg>Подзвонити</a>
+    </div>
+  </div>
+  <button class="pause" type="button" aria-label="Зупинити анімацію фону" aria-pressed="false"><svg class="i"><use href="#i-pause"/></svg></button>
+</section>
+
+<!-- ВКЛАДКИ + ПОПУЛЯРНІ ПОСЛУГИ -->
+<section class="pop" id="posluhy" aria-labelledby="pop-h">
+  <div class="wrap">
+    <div class="tabs" role="tablist" aria-label="Для кого">
+      <button type="button" role="tab" aria-selected="true" aria-controls="t-biz" id="tab-biz">Бізнесу</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="t-priv" id="tab-priv">Приватним клієнтам</button>
+    </div>
+  </div>
+  <div class="wrap pop-body">
+    <div class="sec-head">
+      <h2 class="h2" id="pop-h">Популярні<br>послуги</h2>
+      <div class="arrows">
+        <button type="button" data-dir="-1" aria-label="Попередні" disabled><svg class="i"><use href="#i-long-l"/></svg></button>
+        <button type="button" data-dir="1" aria-label="Наступні"><svg class="i"><use href="#i-long-r"/></svg></button>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="t-biz" role="tabpanel" aria-labelledby="tab-biz">
+      <div class="rail">
+        <a class="card" href="wizard.html?t=object&amp;p=Офіс%20або%20бізнес-центр">
+          <div class="card-media"><img src="img/office.jpg" alt="Охоронець біля входу в бізнес-центр увечері" width="900" height="1125" style="object-position:50% 30%"><span class="tag">ілюстративне фото</span></div>
+          <h3>Охорона офісу чи бізнес-центру</h3>
+          <p>Пост на вході, пропускний режим, обходи поверхів</p>
+        </a>
+        <a class="card" href="wizard.html?t=object&amp;p=Склад%20чи%20виробництво">
+          <div class="card-media"><img src="img/warehouse.jpg" alt="КПП складу зі шлагбаумом і будкою охорони" width="900" height="506"><span class="tag">ілюстративне фото</span></div>
+          <h3>Охорона складу</h3>
+          <p>Контроль в’їзду, вантажів і території вдень і вночі</p>
+        </a>
+        <a class="card" href="wizard.html?t=object&amp;p=Будівельний%20майданчик">
+          <div class="card-media"><div class="ph"><b>[фото]</b><span>Будмайданчик удень: паркан, ворота, охоронець у робочій формі біля в’їзду, видно крани</span></div></div>
+          <h3>Охорона будівельного майданчика</h3>
+          <p>Техніка і матеріали під наглядом, облік в’їзду</p>
+        </a>
+        <a class="card" href="wizard.html?t=event">
+          <div class="card-media"><div class="ph"><b>[фото]</b><span>Вхід на захід удень: охоронці перевіряють браслети гостей, світла зала на фоні</span></div></div>
+          <h3>Охорона заходу</h3>
+          <p>Конференції, концерти, корпоративи – вхід і порядок</p>
+        </a>
+        <a class="card" href="wizard.html?t=object&amp;p=КПП">
+          <div class="card-media"><img src="img/kpp.jpg" alt="Рука прикладає ключ-картку до зчитувача" width="900" height="675"><span class="tag">ілюстративне фото</span></div>
+          <h3>КПП і пропускний режим</h3>
+          <p>Перепустки, облік відвідувачів і транспорту</p>
+        </a>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="t-priv" role="tabpanel" aria-labelledby="tab-priv" hidden>
+      <div class="rail">
+        <a class="card" href="wizard.html?t=object&amp;p=Приватний%20будинок">
+          <div class="card-media"><div class="ph"><b>[фото]</b><span>Приватний будинок удень: ворота, доріжка, охоронець біля в’їзду, зелень</span></div></div>
+          <h3>Охорона приватного будинку</h3>
+          <p>Пост на ділянці на час, коли це потрібно</p>
+        </a>
+        <a class="card" href="wizard.html?t=person">
+          <div class="card-media"><div class="ph"><b>[фото]</b><span>Особистий охоронець у цивільному поруч із клієнтом на вулиці міста, денне світло</span></div></div>
+          <h3>Особиста охорона</h3>
+          <p>Для вас, родини, гостей чи партнерів</p>
+        </a>
+        <a class="card" href="wizard.html?t=person&amp;w=Супровід">
+          <div class="card-media"><div class="ph"><b>[фото]</b><span>Супровід: охоронець відчиняє двері авто біля входу в будівлю, день</span></div></div>
+          <h3>Супровід</h3>
+          <p>Поїздки, переговори, перевезення цінностей [уточнити]</p>
+        </a>
+        <a class="card" href="wizard.html?t=event&amp;e=Приватне%20свято">
+          <div class="card-media"><div class="ph"><b>[фото]</b><span>Весілля чи приватне свято на природі, охоронець на вході до майданчика</span></div></div>
+          <h3>Охорона свята</h3>
+          <p>Весілля, ювілей, вечірка – спокійно для гостей</p>
+        </a>
+        <a class="card" href="wizard.html?t=object&amp;p=Будівельний%20майданчик">
+          <div class="card-media"><div class="ph"><b>[фото]</b><span>Ділянка з будинком, що будується: паркан, ворота, денне світло</span></div></div>
+          <h3>Охорона будівництва дому</h3>
+          <p>Матеріали і техніка на ділянці під наглядом</p>
+        </a>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"><i></i></div>
+  </div>
+</section>
+
+<!-- СІТКА ПОСЛУГ -->
+<section class="cats" aria-label="Усі послуги">
+  <div class="wrap">
+    <div class="cat-grid">
+      <a class="cat" href="wizard.html?t=object"><h3>Охорона об’єкта</h3><p>Офіс, склад, магазин, будмайданчик чи будинок – пост охорони за вашим графіком</p></a>
+      <a class="cat" href="wizard.html?t=person"><h3>Особиста охорона</h3><p>Охорона і супровід вас, родини чи гостей – на день, поїздку чи постійно</p></a>
+      <div class="feature" id="yak">
+        <h3>Як замовити охорону онлайн?</h3>
+        <p>Чотири коротких питання – і заявка готова. Менеджер передзвонить і назве вартість, строк дзвінка – [уточнити].</p>
+        <ol class="steps">
+          <li>Що охороняти</li>
+          <li>Який об’єкт чи подія</li>
+          <li>Графік і коли почати</li>
+          <li>Як з вами зв’язатися</li>
+        </ol>
+        <a class="btn btn-lg" href="wizard.html">Почати</a>
+      </div>
+      <a class="cat" href="wizard.html?t=event"><h3>Охорона заходів</h3><p>Конференції, концерти, приватні свята – контроль входу і порядок на місці</p></a>
+      <a class="cat" href="wizard.html?t=object&amp;p=КПП"><h3>КПП і пропускний режим</h3><p>Контроль в’їзду і входу, облік відвідувачів і транспорту</p></a>
+      <div class="cat is-soon"><h3>Пультова охорона <span class="soon">незабаром</span></h3><p>Сигналізація з виведенням на пульт охорони</p></div>
+      <div class="cat is-soon"><h3>Група реагування <span class="soon">незабаром</span></h3><p>Виїзд екіпажу на сигнал тривоги</p></div>
+      <div class="cat is-soon"><h3>Системи безпеки <span class="soon">незабаром</span></h3><p>Відеоспостереження, контроль доступу, сигналізація – проєкт і монтаж</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- СИТУАЦІЇ -->
+<section class="sit" aria-labelledby="sit-h">
+  <div class="wrap">
+    <div class="sit-head">
+      <h2 class="h2" id="sit-h">Ситуації,<br>коли потрібна охорона</h2>
+      <p>Не знаєте, з чого почати? Оберіть свою ситуацію – майстер підкаже, яка охорона підійде.</p>
+    </div>
+    <div class="sit-cols">
+      <div class="sit-col"><details open><summary><h3>Бізнес</h3><svg class="i"><use href="#i-chev"/></svg></summary>
+        <ul><li><a href="wizard.html?t=object&amp;p=Склад%20чи%20виробництво">Відкриваю склад чи магазин</a></li><li><a href="wizard.html?t=object&amp;p=Офіс%20або%20бізнес-центр">Переїжджаю в новий офіс</a></li></ul></details></div>
+      <div class="sit-col"><details open><summary><h3>Дім і ділянка</h3><svg class="i"><use href="#i-chev"/></svg></summary>
+        <ul><li><a href="wizard.html?t=object&amp;p=Будівельний%20майданчик">Будую будинок</a></li><li><a href="wizard.html?t=object&amp;p=Приватний%20будинок">Будинок без нагляду</a></li></ul></details></div>
+      <div class="sit-col"><details open><summary><h3>Події</h3><svg class="i"><use href="#i-chev"/></svg></summary>
+        <ul><li><a href="wizard.html?t=event">Проводжу захід</a></li><li><a href="wizard.html?t=event&amp;e=Приватне%20свято">Святкую весілля чи ювілей</a></li></ul></details></div>
+      <div class="sit-col"><details open><summary><h3>Люди</h3><svg class="i"><use href="#i-chev"/></svg></summary>
+        <ul><li><a href="wizard.html?t=person&amp;w=Супровід">Потрібен супровід</a></li><li><a href="wizard.html?t=person">Важливі переговори</a></li></ul></details></div>
+    </div>
+  </div>
+</section>
+
+<!-- КАБІНЕТ КЛІЄНТА -->
+<section class="cab on-dark" id="kabinet" aria-labelledby="cab-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2" id="cab-h">Кабінет клієнта</h2>
+      <a class="link-arrow" href="#kabinet"><span>Увійти до кабінету</span><svg class="i"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="cab-grid">
+      <div>
+        <div class="demo" aria-label="Демо-екран кабінету">
+          <div class="demo-win">
+            <div class="demo-top"><span class="logo-mark">ШВ</span><b>Склад, [адреса]</b><span class="st">Під охороною</span></div>
+            <div class="demo-cols">
+              <div><h4>Журнал змін · сьогодні</h4>
+                <ol class="demo-log">
+                  <li><time>08:00</time><span>Зміну прийняв пост №1</span></li>
+                  <li><time>13:20</time><span>Обхід території, без зауважень</span></li>
+                  <li><time>17:45</time><span>В’їзд: 2 вантажівки, звірено з перепустками</span></li>
+                </ol>
+              </div>
+              <div class="demo-bill"><h4>Рахунок за [місяць]</h4><div class="sum">[сума] грн</div><span class="mini">Оплатити</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="cab-note">Демо-екран, дані умовні. Чи буде кабінет на старті – [уточнити]</p>
+        <p class="cab-feature-title">Ваш об’єкт – у телефоні: хто на посту, що сталося за зміну, що оплатити</p>
+      </div>
+      <ul class="cab-items">
+        <li><small>Щохвилини</small><h3>Статус об’єкта</h3><p>Видно, чи на місці пост і хто чергує</p></li>
+        <li><small>Кожна зміна</small><h3>Журнал змін</h3><p>Обходи, в’їзди, події – з часом і підписом охоронця</p></li>
+        <li><small>Щомісяця</small><h3>Рахунки</h3><p>Рахунки й акти в одному місці, оплата онлайн [уточнити]</p></li>
+        <li><small>Завжди під рукою</small><h3>Договір</h3><p>Договір, додатки й контакти менеджера</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ПИТАННЯ -->
+<section class="faq" id="pytannia" aria-labelledby="faq-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2" id="faq-h">Питання<br>та відповіді</h2>
+      <a class="link-arrow" href="#pytannia"><span>Всі питання та відповіді</span><svg class="i"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="faq-cols">
+      <div class="faq-col"><h3>Замовлення</h3><ul>
+        <li><details><summary>Скільки коштує охорона?</summary><p>Залежить від об’єкта і графіка. Точну суму менеджер назве після заявки. Орієнтири цін – [уточнити].</p></details></li>
+        <li><details><summary>Як швидко ви почнете?</summary><p>[уточнити: строк від заявки до першої зміни]</p></details></li>
+        <li><details><summary>Чи можна замовити охорону на один день?</summary><p>[уточнити: мінімальний строк замовлення]</p></details></li>
+      </ul></div>
+      <div class="faq-col"><h3>Договір і оплата</h3><ul>
+        <li><details><summary>Чи є у вас ліцензія?</summary><p>[уточнити: номер і дата ліцензії на охоронну діяльність]</p></details></li>
+        <li><details><summary>Працюєте з ФОП і ТОВ?</summary><p>[уточнити]</p></details></li>
+        <li><details><summary>Як оплачувати?</summary><p>[уточнити: рахунок, готівка, картка]</p></details></li>
+      </ul></div>
+      <div class="faq-col"><h3>Охоронці</h3><ul>
+        <li><details><summary>Хто працює на постах?</summary><p>[уточнити: досвід, підготовка, перевірка]</p></details></li>
+        <li><details><summary>Чи можна замінити охоронця?</summary><p>[уточнити]</p></details></li>
+        <li><details><summary>Як контролюєте зміни?</summary><p>[уточнити: обходи, звіти, перевірки]</p></details></li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ФУТЕР -->
+<footer class="ftr on-dark">
+  <div class="wrap">
+    <div class="ftr-top">
+      <div><h3>Бізнесу</h3><ul>
+        <li><a href="wizard.html?t=object&amp;p=Офіс%20або%20бізнес-центр">Охорона офісу</a></li><li><a href="wizard.html?t=object&amp;p=Склад%20чи%20виробництво">Охорона складу</a></li>
+        <li><a href="wizard.html?t=object&amp;p=Будівельний%20майданчик">Будмайданчик</a></li><li><a href="wizard.html?t=event">Охорона заходів</a></li>
+        <li><a href="wizard.html?t=object&amp;p=КПП">КПП і пропускний режим</a></li><li><a href="#posluhy">Пультова охорона – незабаром</a></li>
+      </ul></div>
+      <div><h3>Приватним клієнтам</h3><ul>
+        <li><a href="wizard.html?t=object&amp;p=Приватний%20будинок">Охорона будинку</a></li><li><a href="wizard.html?t=person">Особиста охорона</a></li>
+        <li><a href="wizard.html?t=person&amp;w=Супровід">Супровід</a></li><li><a href="wizard.html?t=event&amp;e=Приватне%20свято">Охорона свята</a></li>
+      </ul></div>
+    </div>
+    <div class="ftr-mid">
+      <ul><li><a href="#yak">Як це працює</a></li><li><a href="#kabinet">Кабінет клієнта</a></li><li><a href="wizard.html">Залишити заявку</a></li></ul>
+      <ul><li><a href="#pytannia">Питання та відповіді</a></li><li><a href="#">Ліцензія [уточнити]</a></li><li><a href="#">Політика конфіденційності</a></li></ul>
+      <ul><li><a class="ftr-phone" href="tel:+380675495710">+380 67 549 5710</a></li><li class="muted">Київ, [адреса – уточнити]</li><li class="muted">[email – уточнити]</li></ul>
+      <ul><li>Ми в мережах:</li><li class="muted">[Telegram, Facebook, Instagram – уточнити]</li></ul>
+    </div>
+    <div class="ftr-bot">
+      <a class="logo" href="index.html"><span class="logo-mark">ШВ</span><span class="logo-word">Штурмова<br>варта</span></a>
+      <span>ТОВ «Охоронна компанія «Штурмова варта» · 2026</span>
+    </div>
+  </div>
+</footer>
+
+<div class="mbar" aria-label="Швидкий зв’язок">
+  <a class="btn btn-ghost" href="tel:+380675495710"><svg class="i"><use href="#i-phone"/></svg>Подзвонити</a>
+  <a class="btn" href="wizard.html">Заявка</a>
+</div>
+
+<!-- ПРИМІТКА КОНЦЕПЦІЇ – не частина сайту -->
+<section class="note" aria-labelledby="note-h">
+  <div class="wrap">
+    <span class="note-badge">Концепція · етап 0 · не частина сайту</span>
+    <h2 class="h2" id="note-h">Що погодити</h2>
+    <p class="note-lead">Структура, ритм і типографіка взяті з реального сайту Дії. Бренд, кольори градієнта, шрифт і всі тексти – свої. Оберіть варіант у кожному питанні.</p>
+    <ol class="agree">
+      <li><h3>Заголовок першого екрана</h3><ol>
+        <li>«Охорона об’єктів і людей онлайн»</li><li>«Замовте охорону онлайн»</li><li>«Охорона для бізнесу і дому»</li></ol></li>
+      <li><h3>Кольори живого градієнта</h3><ol>
+        <li>Теплий: жовтий – абрикос – корал – блакитний (як зараз)</li><li>Холодніший: блакитний – бірюза – лимонний</li><li>Стриманий: світло-сірий – блакитний з одним помаранчевим акцентом</li></ol></li>
+      <li><h3>Фото в картках послуг</h3><ol>
+        <li>Знімаємо реальні денні фото об’єктів і команди клієнта</li><li>Генеруємо денні ілюстративні фото (з підписом)</li><li>Беремо ліцензійний сток з підписом джерела</li></ol></li>
+      <li><h3>Блок «Кабінет клієнта»</h3><ol>
+        <li>Лишити як демо «що буде» і запустити кабінет пізніше</li><li>Замінити на «Як ми звітуємо»: фото-звіти в месенджер</li><li>Прибрати блок до запуску кабінету</li></ol></li>
+      <li><h3>Знак у шапці</h3><ol>
+        <li>Чорний квадрат «ШВ» + назва (як тут, у стилі сайту)</li><li>Знак «Ш» з брендбука замість «ШВ»</li><li>Лише текстова назва без квадрата</li></ol></li>
+    </ol>
+  </div>
+</section>
+
+<script src="home.js"></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+{
+  "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/wizard.html?q=%D1%81%D0%BA%D0%BB%D0%B0%D0%B4",
+  "takenAt": "2026-11-18T17:16:07.035Z",
+  "viewports": {
+    "mobile-360": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/mobile-360-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/mobile-360-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/mobile-360-part-02.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/mobile-360-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Замовлення охорони – Штурмова варта (концепція)",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 3,
+        "items": [
+          "a.logo «ШВ Штурмова варта» 128×40",
+          "a «Головна» 55×21",
+          "a «+380 67 549 5710» 184×33"
+        ]
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 2,
+        "items": [
+          "p.w-found «Ви шукали: «склад»» 14px",
+          "p «Не хочете заповнювати? Подзвоніть – офор» 15px"
+        ]
+      },
+      "fontFamiliesUsed": [
+        "Onest"
+      ],
+      "pageHeightPx": 1312
+    },
+    "tablet-768": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/tablet-768-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/tablet-768-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/tablet-768-part-02.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/tablet-768-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Замовлення охорони – Штурмова варта (концепція)",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 3,
+        "items": [
+          "a.logo «ШВ Штурмова варта» 128×40",
+          "a «Головна» 55×21",
+          "a «+380 67 549 5710» 184×33"
+        ]
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 2,
+        "items": [
+          "p.w-found «Ви шукали: «склад»» 14px",
+          "p «Не хочете заповнювати? Подзвоніть – офор» 15px"
+        ]
+      },
+      "fontFamiliesUsed": [
+        "Onest"
+      ],
+      "pageHeightPx": 1436
+    },
+    "desktop-1440": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/desktop-1440-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/desktop-1440-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/desktop-1440-part-02.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-wizard/desktop-1440-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Замовлення охорони – Штурмова варта (концепція)",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 4,
+        "items": [
+          "small «Крок 1» 13px",
+          "small «Крок 2» 13px",
+          "small «Крок 3» 13px",
+          "small «Крок 4» 13px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Onest"
+      ],
+      "pageHeightPx": 1493
+    }
+  }
+}
