@@ -69,18 +69,42 @@
   function digits(v) { return (v || '').replace(/\D/g, ''); }
   function say(t) { live.textContent = ''; setTimeout(function () { live.textContent = t; }, 50); }
 
-  /* телефон: маска +380 XX XXX XX XX.
-     Беремо всі цифри поля (разом із префіксом +380, який уже стоїть у полі) і по черзі з початку
-     прибираємо: «380» (лише якщо після нього ще ≥ 9 цифр), потім «38», потім «0»; лишаємо 9 цифр.
-     Так набір і вставка «+380…», «380…», «+38 (0…)», «0…» і «67…» дають той самий номер. */
-  function fmt(v) {
-    var sub = digits(v);
-    if (sub.slice(0, 3) === '380' && sub.length - 3 >= 9) sub = sub.slice(3);
-    if (sub.slice(0, 2) === '38') sub = sub.slice(2);
-    if (sub[0] === '0') sub = sub.slice(1);
-    sub = sub.slice(0, 9);
-    var parts = [sub.slice(0, 2), sub.slice(2, 5), sub.slice(5, 7), sub.slice(7, 9)].filter(Boolean);
-    return '+380 ' + parts.join(' ');
+  /* телефон: маска +380 XX XXX XX XX (див. README, «Маска телефону»).
+     У полі завжди «+380 » + до 9 цифр національного номера (N).
+     core() – нормалізація довільного рядка: з початку прибираємо «380» (лише якщо після нього ще ≥ 9 цифр),
+     потім «38», потім «0». Так «+380…», «380…», «+38 (0…)», «0…» і «67…» дають той самий номер. */
+  var PFX = '+380 ';
+  function core(v) {
+    var d = digits(v);
+    if (d.slice(0, 3) === '380' && d.length - 3 >= 9) d = d.slice(3);
+    if (d.slice(0, 2) === '38') d = d.slice(2);
+    if (d[0] === '0') d = d.slice(1);
+    return d;
+  }
+  function show(n) { return PFX + [n.slice(0, 2), n.slice(2, 5), n.slice(5, 7), n.slice(7, 9)].filter(Boolean).join(' '); }
+  function fmt(v) { return show(core(v).slice(0, 9)); }
+  function natOf(v) { return digits(v.slice(PFX.length)).slice(0, 9); } // N з уже відформатованого поля
+  function idxAt(v, pos) { return pos <= PFX.length ? 0 : digits(v.slice(PFX.length, pos)).length; } // позиція курсора → кількість цифр N перед нею
+  function posOf(v, k) { // кількість цифр N → позиція курсора одразу після k-ї цифри
+    if (k <= 0) return PFX.length;
+    for (var i = PFX.length, c = 0; i < v.length; i++) if (/\d/.test(v[i]) && ++c === k) return i + 1;
+    return v.length;
+  }
+  var pend = ''; // набрані в порожнє поле «3», «38», «380» чи «0» – ще не ясно, префікс це чи номер; не показуємо
+  function isPend(c) { return c === '0' || c === '3' || c === '38' || c === '380'; }
+  /* редагування: замінюємо цифри N у діапазоні [s, e) на вставлене; повертаємо нове значення і позицію курсора */
+  function edit(v, s, e, text) {
+    var n = natOf(v), ds = idxAt(v, s), de = idxAt(v, e), t = digits(text);
+    var full = core(text);
+    if (full.length >= 9) { pend = ''; n = full.slice(0, 9); return { v: show(n), k: 9 }; } // фрагмент сам є повним номером – замінює все поле
+    var head = n.slice(0, ds), tail = n.slice(de);
+    if (!head && !tail) { // поле фактично порожнє: розбираємо префікс разом з уже набраним «у запас»
+      var c = pend + t;
+      if (isPend(c)) { pend = c; return { v: PFX, k: 0 }; }
+      pend = ''; t = core(c);
+    } else pend = '';
+    n = (head + t + tail).slice(0, 9);
+    return { v: show(n), k: Math.min(head.length + t.length, n.length) };
   }
   /* перевірка кроку 4: повертає текст помилки або '' */
   function errName() {
@@ -187,7 +211,7 @@
           return '<div><dt>' + r[0] + '</dt><dd' + (r[1] ? '' : ' class="empty"') + '>' + esc(r[1] || 'не вказано') + '</dd></div>';
         }).join('') + '</dl><p class="fine">Демо: заявка нікуди не відправляється.</p><div class="w-nav end"><a class="btn" href="index.html">На головну</a></div>';
     }
-    box.innerHTML = h; renderSide();
+    box.innerHTML = h; pend = ''; renderSide();
     var wc = document.querySelector('.w-call'); if (wc) wc.hidden = step > 4 || st.sendErr;
     box.querySelectorAll('[role="radiogroup"]').forEach(function (g) { SV.roving(g, '[role="radio"]', pick); });
     if (focus) {
@@ -240,18 +264,42 @@
     if (!act || act.disabled) return;
     if (act.dataset.act === 'back') { step--; render(true); }
     if (act.dataset.act === 'next' && ok(step)) { step++; render(true); }
-    if (act.dataset.act === 'send') send();
   });
   box.addEventListener('submit', function (e) { e.preventDefault(); send(); });
+  function changed(k, el) {
+    a[k] = el.value;
+    if (k === 'name' || k === 'phone') { if (el.getAttribute('aria-invalid')) showErr(k); renderSide(); }
+  }
+  /* телефон: набір, вставку і видалення обробляємо самі (beforeinput), щоб курсор лишався на місці
+     за кількістю цифр перед ним. Усе інше (автозаповнення, перетягування, IME) – запасний шлях через fmt() в input. */
+  box.addEventListener('beforeinput', function (e) {
+    var el = e.target; if (!el.dataset || el.dataset.in !== 'phone' || !e.cancelable) return;
+    var v = el.value, s = el.selectionStart, en = el.selectionEnd, it = e.inputType, r;
+    if (it === 'insertText' || it === 'insertFromPaste' || it === 'insertReplacementText') {
+      var text = e.data != null ? e.data : (e.dataTransfer ? e.dataTransfer.getData('text/plain') : '');
+      r = edit(v, s, en, text || '');
+    } else if (it === 'deleteContentBackward' || it === 'deleteContentForward') {
+      if (s === en) {
+        var k = idxAt(v, s);
+        if (it === 'deleteContentBackward') { if (k === 0) { pend = pend.slice(0, -1); e.preventDefault(); return; } s = posOf(v, k - 1); en = posOf(v, k); }
+        else { if (k >= natOf(v).length) { e.preventDefault(); return; } en = posOf(v, k + 1); s = posOf(v, k); }
+      }
+      pend = ''; r = edit(v, s, en, '');
+      if (r.v === PFX) pend = '';
+    } else return;
+    e.preventDefault();
+    el.value = r.v; var p = posOf(r.v, r.k); el.setSelectionRange(p, p);
+    changed('phone', el);
+  });
   box.addEventListener('input', function (e) {
     var k = e.target.dataset.in; if (!k) return;
-    if (k === 'phone') { var v = fmt(e.target.value); if (v !== e.target.value) { e.target.value = v; e.target.setSelectionRange(v.length, v.length); } }
-    a[k] = e.target.value;
-    if (k === 'name' || k === 'phone') { if (e.target.getAttribute('aria-invalid')) showErr(k); renderSide(); }
+    if (k === 'phone') { var v = fmt(e.target.value); if (v !== e.target.value) { pend = ''; e.target.value = v; e.target.setSelectionRange(v.length, v.length); } }
+    changed(k, e.target);
   });
-  box.addEventListener('focusin', function (e) { // курсор – у кінець номера, після +380
-    if (e.target.dataset && e.target.dataset.in === 'phone') { var t = e.target; setTimeout(function () { t.setSelectionRange(t.value.length, t.value.length); }, 0); }
-  });
+  // курсор у префіксі «+380 » (фокус чи клік) – переносимо в кінець; виділення (Tab у заповнене поле) не чіпаємо
+  function caretOut(t) { if (document.activeElement === t && t.selectionStart === t.selectionEnd && t.selectionStart < PFX.length) t.setSelectionRange(t.value.length, t.value.length); }
+  box.addEventListener('focusin', function (e) { var t = e.target; if (t.dataset && t.dataset.in === 'phone') setTimeout(function () { caretOut(t); }, 0); });
+  box.addEventListener('mouseup', function (e) { var t = e.target; if (t.dataset && t.dataset.in === 'phone') setTimeout(function () { caretOut(t); }, 0); });
   box.addEventListener('focusout', function (e) {
     var k = e.target.dataset && e.target.dataset.in;
     if (k === 'name' || k === 'phone') {

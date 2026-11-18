@@ -1,0 +1,220 @@
+{
+  "url": "file:///home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/index.html",
+  "takenAt": "2026-11-18T20:13:56.253Z",
+  "viewports": {
+    "mobile-360": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-part-02.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-part-03.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-part-04.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-part-05.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-part-06.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-part-07.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-part-08.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-part-09.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/mobile-360-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Штурмова варта – охорона онлайн (макет)",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 17,
+        "items": [
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.soon «незабаром» 13px",
+          "span.soon «незабаром» 13px",
+          "span.soon «незабаром» 13px",
+          "span.soon-dark «незабаром» 13px",
+          "span.st «Під охороною» 12px",
+          "h4 «Журнал змін · сьогодні» 12px",
+          "time «08:00» 13px",
+          "span «Зміну прийняв пост №1» 13px",
+          "time «13:20» 13px",
+          "span «Обхід території, без зауважень» 13px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Onest"
+      ],
+      "pageHeightPx": 7118
+    },
+    "tablet-768": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/tablet-768-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/tablet-768-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/tablet-768-part-02.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/tablet-768-part-03.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/tablet-768-part-04.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/tablet-768-part-05.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/tablet-768-part-06.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/tablet-768-part-07.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/tablet-768-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Штурмова варта – охорона онлайн (макет)",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 19,
+        "items": [
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.soon «незабаром» 13px",
+          "span.soon «незабаром» 13px",
+          "span.soon «незабаром» 13px",
+          "span.soon-dark «незабаром» 13px",
+          "span.st «Під охороною» 12px",
+          "h4 «Журнал змін · сьогодні» 12px",
+          "time «08:00» 13px",
+          "span «Зміну прийняв пост №1» 13px",
+          "time «13:20» 13px",
+          "span «Обхід території, без зауважень» 13px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Onest"
+      ],
+      "pageHeightPx": 6312
+    },
+    "desktop-1440": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/desktop-1440-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/desktop-1440-part-01.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/desktop-1440-part-02.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/desktop-1440-part-03.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/desktop-1440-part-04.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/desktop-1440-part-05.png",
+          "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/desktop-1440-part-06.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/clients/shturmova-varta/design/concept-diia-2/shots-review-r3/index/desktop-1440-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "Штурмова варта – охорона онлайн (макет)",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 19,
+        "items": [
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.tag «ілюстративне фото» 11px",
+          "span.soon «незабаром» 13px",
+          "span.soon «незабаром» 13px",
+          "span.soon «незабаром» 13px",
+          "span.soon-dark «незабаром» 13px",
+          "span.st «Під охороною» 12px",
+          "h4 «Журнал змін · сьогодні» 12px",
+          "time «08:00» 13px",
+          "span «Зміну прийняв пост №1» 13px",
+          "time «13:20» 13px",
+          "span «Обхід території, без зауважень» 13px"
+        ]
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Onest"
+      ],
+      "pageHeightPx": 4798
+    }
+  }
+}

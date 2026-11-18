@@ -240,7 +240,7 @@ ul, ol { list-style: none; }
   .switch button { font-size: 17px; padding: 0 16px 0 14px; min-height: 48px; }
   .search input { height: 52px; font-size: 16px; padding-left: 18px; }
   .search .round { top: 4px; right: 4px; }
-  .hero .hint { min-height: 42px; } /* 2 рядки: підказка пошуку і графік однакової висоти – H1 не стрибає */
+  .hero .hint { min-height: 48px; } /* 2 рядки по 24 px: підказка пошуку і графік однакової висоти – H1 не стрибає */
   .callbox { height: 52px; padding: 0 4px 0 18px; }
   .cb-num { font-size: 18px; }
   .callbox .cb-btn { width: 44px; padding: 0; }
@@ -470,6 +470,8 @@ ul, ol { list-style: none; }
   .ftr-legal li { padding: 4px 0; font-size: 16px; }
   .ftr-legal a { display: inline-block; padding: 10px 0; margin: -10px 0; }
   .ftr-slim { padding: 24px 0 calc(24px + env(safe-area-inset-bottom)); }
+  /* на головній є липка панель .mbar (10 + 48 + 10 + 1 = 69 px) – футер не ховається під неї */
+  .ftr-mbar { padding-bottom: calc(32px + 69px + env(safe-area-inset-bottom)); }
 }
 
 /* мобільна нижня панель після першого екрана */
@@ -610,7 +612,7 @@ ul, ol { list-style: none; }
   .cat h3 a { display: inline-block; padding: 11px 0; margin: -11px 0; }
   .crumbs a, .w-call a { display: inline-flex; align-items: center; min-height: 44px; }
   .crumbs { align-items: center; }
-  .card p, .ftr-mid .muted, .cab-note, .ftr-legal li { font-size: 16px; }
+  .card p, .ftr-mid .muted, .cab-note, .ftr-legal li, .hint, .w-why { font-size: 16px; }
 }
 
 /* =========================================================
