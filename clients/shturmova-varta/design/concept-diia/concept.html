@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="uk" data-palette="mint">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Штурмова варта – концепція D</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  body { background-attachment: scroll; }
+  .page { max-width: 1240px; margin: 0 auto; padding: 0 40px 120px; }
+  .sec { padding-top: 120px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; color: var(--ink-2); letter-spacing: .02em; }
+  .num { display: inline-grid; place-items: center; min-width: 34px; height: 34px; padding: 0 10px; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); font-weight: 800; color: var(--ink); }
+  h2.h { margin: 14px 0 12px; font-size: clamp(30px, 3.6vw, 48px); line-height: 1.05; letter-spacing: -.035em; font-weight: 800; max-width: 22ch; }
+  .intro { margin: 0; font-size: 18px; color: var(--ink-2); max-width: 62ch; font-weight: 500; }
+  .muted { color: var(--ink-2); }
+
+  /* ---------- Обкладинка ---------- */
+  .cover { padding-top: 40px; }
+  .cover-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .cover-top .wordmark { font-size: 24px; }
+  .cover h1 { margin: 0; font-size: clamp(40px, 6.4vw, 92px); line-height: .98; letter-spacing: -.05em; font-weight: 800; max-width: 13ch; }
+  .cover h1 em { font-style: normal; color: var(--accent-ink); }
+  .cover-main { display: grid; grid-template-columns: 1.15fr 1fr; gap: 32px; align-items: center; margin-top: 40px; }
+  .cover-lead { margin: 28px 0 0; font-size: 20px; line-height: 1.5; color: var(--ink-2); font-weight: 500; max-width: 40ch; }
+  .cover-art { position: relative; height: 560px; }
+  .cover-art .glow { position: absolute; inset: 8% 4% 6% 6%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,255,255,.95), rgba(255,255,255,0)); }
+  .cover-art .ic { position: absolute; }
+  .a-building { width: 300px; height: 300px; left: 14%; top: 18%; }
+  .a-person { width: 200px; height: 200px; right: 0; bottom: 6%; }
+  .a-journal { width: 140px; height: 140px; left: 0; bottom: 4%; transform: rotate(-8deg); }
+  .a-key { width: 120px; height: 120px; right: 10%; top: 2%; transform: rotate(10deg); }
+  .a-status { position: absolute; left: 2%; top: 6%; display: grid; gap: 10px; padding: 16px 18px; border-radius: var(--r-lg); box-shadow: var(--sh-float); }
+  .a-line { display: flex; justify-content: space-between; gap: 18px; font-size: 14px; color: var(--ink-2); font-weight: 600; }
+  .a-line b { color: var(--ink); }
+  .a-step { position: absolute; right: 0; top: 36%; width: 220px; display: grid; gap: 10px; padding: 16px 18px; border-radius: var(--r-lg); box-shadow: var(--sh-float); font-size: 14px; font-weight: 700; color: var(--ink-2); }
+  .cover-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; margin-top: 32px; align-items: stretch; }
+  .cover-grid .unique { margin: 0; padding: 24px; font-size: 18px; line-height: 1.45; border-radius: var(--r-xl); }
+  .words { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .words .chip { font-size: 15px; min-height: 40px; padding: 8px 16px; background: var(--surface); }
+  .changes { padding: 24px; }
+  .changes h3 { margin: 0 0 12px; font-size: 18px; font-weight: 800; }
+  .changes ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .changes li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; font-size: 16px; font-weight: 500; }
+  .changes li .i { width: 20px; height: 20px; margin-top: 2px; color: var(--ok); stroke-width: 2.6; }
+  .unique { margin-top: 16px; padding: 18px 20px; border-radius: var(--r-lg); background: var(--accent-soft); font-size: 16px; font-weight: 600; }
+  .unique b { display: block; font-size: 13px; letter-spacing: .04em; color: var(--accent-ink); margin-bottom: 4px; }
+  [data-palette="signal"] .unique b { color: var(--ink); }
+
+  /* ---------- Палітри на першому екрані ---------- */
+  .pal { margin-top: 56px; padding: 28px; border-radius: var(--r-xl); background: color-mix(in srgb, var(--surface) 70%, transparent); box-shadow: inset 0 0 0 1px var(--line); }
+  .pal-head { display: grid; grid-template-columns: 1fr auto; gap: 16px 32px; align-items: end; margin-bottom: 24px; }
+  .pal-head h3 { margin: 0; font-size: 28px; letter-spacing: -.02em; font-weight: 800; }
+  .pal-head h3 .rec { display: inline-block; vertical-align: middle; margin-left: 8px; padding: 4px 10px; border-radius: 999px; background: var(--ok-soft); color: var(--ok); font-size: 13px; font-weight: 800; letter-spacing: 0; }
+  .pal-head p { margin: 6px 0 0; color: var(--ink-2); font-size: 16px; max-width: 58ch; }
+  .sw { display: flex; gap: 10px; flex-wrap: wrap; }
+  .sw div { width: 104px; font-size: 13px; line-height: 1.3; color: var(--ink-2); font-weight: 600; }
+  .sw i { display: block; height: 44px; border-radius: 12px; margin-bottom: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
+  .sw b { display: block; color: var(--ink); font-size: 13px; }
+  .ratio { display: flex; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 14px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.05); }
+  .contrast { margin-top: 10px; font-size: 13px; color: var(--ink-2); font-weight: 600; }
+  .frames { display: grid; grid-template-columns: 1fr 296px; gap: 24px; align-items: start; }
+  .fr { position: relative; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 1px var(--line), var(--sh-float); background: #fff; }
+  .fr { display: block; } .fr img { width: 100%; height: 100%; object-fit: cover; } .fr-cap a { color: inherit; }
+  .fr-d { aspect-ratio: 1440 / 900; }
+  .fr-m { aspect-ratio: 360 / 760; border-radius: 30px; }
+  .fr-cap { margin-top: 10px; font-size: 13px; color: var(--ink-2); font-weight: 700; text-align: center; }
+
+  /* ---------- Типографіка і логотип ---------- */
+  .two { display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; margin-top: 40px; }
+  .box { padding: 32px; }
+  .spec-big { font-size: clamp(44px, 5.4vw, 76px); line-height: 1; letter-spacing: -.045em; font-weight: 800; margin: 8px 0 18px; }
+  .spec-p { font-size: 18px; line-height: 1.55; color: var(--ink-2); margin: 0 0 24px; max-width: 46ch; }
+  .scale { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .scale td { padding: 10px 0; border-top: 1px solid var(--line); }
+  .scale td:nth-child(2), .scale td:nth-child(3) { color: var(--ink-2); font-weight: 600; text-align: right; white-space: nowrap; }
+  .why { margin: 20px 0 0; padding: 0 0 0 20px; color: var(--ink-2); font-size: 15px; display: grid; gap: 6px; }
+  .why b { color: var(--ink); }
+  .logo-row { display: grid; gap: 12px; align-content: start; }
+  .logo-cell { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; min-height: 150px; padding: 24px; border-radius: var(--r-lg); background: var(--surface-2); }
+  .logo-cell small { font-size: 14px; color: var(--ink-2); font-weight: 600; }
+  .logo-cell.inv { background: var(--accent); }
+  .logo-cell.inv .wordmark, .logo-cell.inv small { color: var(--on-accent); }
+  .logo-cell.inv .wordmark .dot { background: currentColor; box-shadow: none; }
+  [data-palette="signal"] .logo-cell.inv { background: var(--ink); }
+  [data-palette="signal"] .logo-cell.inv .wordmark, [data-palette="signal"] .logo-cell.inv small { color: #fff; }
+  [data-palette="signal"] .logo-cell.inv .wordmark .dot { background: var(--accent); }
+  .wm-a { font-size: 40px; }
+  .wm-b { font-size: 34px; line-height: .92; display: inline-block; font-weight: 800; letter-spacing: -.04em; }
+  .wm-b .dot { display: inline-block; width: .3em; height: .3em; border-radius: 50%; background: var(--ok-dot); margin-left: 4px; }
+
+  /* ---------- Телефони ---------- */
+  .switch { display: inline-flex; gap: 4px; padding: 4px; margin-top: 24px; border-radius: 16px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); flex-wrap: wrap; }
+  .switch button { min-height: 44px; padding: 0 16px; border: 0; border-radius: 12px; background: none; font-weight: 700; font-size: 15px; cursor: pointer; color: var(--ink-2); }
+  .switch button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+  .phones { display: grid; grid-template-columns: repeat(3, 376px); justify-content: space-between; gap: 56px 24px; margin-top: 40px; }
+  .ph-wrap figcaption { margin-top: 16px; font-size: 15px; color: var(--ink-2); font-weight: 500; max-width: 360px; }
+  .ph-wrap figcaption b { display: block; color: var(--ink); font-size: 17px; font-weight: 800; margin-bottom: 2px; }
+  .ph-wrap { margin: 0; }
+  .phone { position: relative; width: 376px; height: 780px; border-radius: 46px; border: 8px solid #fff; background: var(--bg); background-image: var(--mesh);
+    box-shadow: 0 0 0 1px var(--line), var(--sh-float); overflow: hidden; display: flex; flex-direction: column; }
+  .sbar { display: flex; justify-content: space-between; align-items: center; height: 40px; padding: 4px 26px 0; font-size: 14px; font-weight: 700; flex: none; }
+  .sbar i { width: 64px; height: 12px; border-radius: 6px; background: currentColor; opacity: .12; }
+  .scr { flex: 1; padding: 8px 16px 110px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
+  .scr > *, .wiz > * { flex-shrink: 0; }
+  .phone .tabbar { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 26px 26px 38px 38px; }
+  .phone .tabbar.cab { grid-template-columns: repeat(4, 1fr); }
+  .tab.on { color: var(--accent-ink); }
+  [data-palette="signal"] .tab.on { color: var(--ink); }
+  .tab.on::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; margin-top: 1px; }
+  .appbar { display: flex; align-items: center; justify-content: space-between; min-height: 48px; }
+  .appbar .wordmark { font-size: 19px; }
+  .appbar .round { width: 44px; height: 44px; }
+  .t-xl { margin: 4px 0 2px; font-size: 30px; line-height: 1.05; letter-spacing: -.035em; font-weight: 800; }
+  .t-sub { margin: 0; font-size: 16px; color: var(--ink-2); font-weight: 500; }
+
+  /* Послуги */
+  .svc { position: relative; padding: 18px; border-radius: var(--r-lg); display: grid; grid-template-columns: 1fr 96px; gap: 4px 8px; align-items: start; text-decoration: none; color: var(--ink); }
+  .svc .ic { width: 104px; height: 104px; grid-row: 1 / span 3; grid-column: 2; margin: -8px -10px 0 0; }
+  .svc h4 { margin: 0; font-size: 21px; line-height: 1.15; letter-spacing: -.02em; font-weight: 800; }
+  .svc p { margin: 0; font-size: 15px; color: var(--ink-2); font-weight: 500; }
+  .svc .go { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-weight: 800; font-size: 15px; color: var(--accent-ink); }
+  [data-palette="signal"] .svc .go { color: var(--ink); }
+  .svc .go .i { width: 18px; height: 18px; }
+  .soon { padding: 6px 4px 0; }
+  .soon h5 { margin: 0 0 8px; font-size: 14px; color: var(--ink-2); font-weight: 700; }
+  .soon-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .soon-list div { padding: 12px 10px; border-radius: 16px; background: color-mix(in srgb, var(--surface) 60%, transparent); box-shadow: inset 0 0 0 1px var(--line); font-size: 14px; font-weight: 700; line-height: 1.2; }
+  .soon-list small { display: block; margin-top: 6px; font-size: 12px; color: var(--ink-2); font-weight: 600; }
+
+  /* Майстер */
+  .wiz { display: flex; flex-direction: column; gap: 14px; flex: 1; min-height: 0; }
+  .w-top { display: flex; align-items: center; justify-content: space-between; }
+  .w-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--surface); box-shadow: var(--sh-card); cursor: pointer; color: var(--ink); }
+  .w-ghost { visibility: hidden; }
+  .w-step { font-size: 15px; font-weight: 700; color: var(--ink-2); }
+  .w-q { margin: 8px 0 2px; font-size: 28px; line-height: 1.1; letter-spacing: -.03em; font-weight: 800; }
+  .w-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .w-tiles .tile { min-height: 200px; background: var(--surface); box-shadow: var(--sh-card); }
+  .w-tiles .tile[aria-checked="true"] { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+  [data-palette="signal"] .w-tiles .tile[aria-checked="true"] { box-shadow: inset 0 0 0 2px var(--ink); }
+  .w-tiles .tile { justify-content: flex-start; }
+  .w-tiles .ic { width: 88px; height: 88px; margin: -4px 0 6px -6px; }
+  .w-list { display: grid; gap: 8px; }
+  .w-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; padding: 0 18px; border: 0; border-radius: var(--r-md); background: var(--surface);
+    box-shadow: var(--sh-card); font-weight: 700; font-size: 17px; text-align: left; cursor: pointer; transition: box-shadow .2s, background .2s; }
+  .w-row .i { color: var(--ink-2); }
+  .w-row[aria-checked="true"] { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+  [data-palette="signal"] .w-row[aria-checked="true"] { box-shadow: inset 0 0 0 2px var(--ink); }
+  .w-radio { width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--line); flex: none; transition: box-shadow .2s; }
+  .w-row[aria-checked="true"] .w-radio { box-shadow: inset 0 0 0 7px var(--accent); }
+  [data-palette="signal"] .w-row[aria-checked="true"] .w-radio { box-shadow: inset 0 0 0 7px var(--ink); }
+  .w-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .w-cell { min-height: 84px; padding: 14px; border: 0; border-radius: var(--r-md); background: var(--surface); box-shadow: var(--sh-card); font-weight: 800; font-size: 17px; text-align: left; line-height: 1.2; cursor: pointer; }
+  .w-cell[aria-checked="true"] { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+  [data-palette="signal"] .w-cell[aria-checked="true"] { box-shadow: inset 0 0 0 2px var(--ink); }
+  .w-label { margin: 6px 0 -4px; font-size: 15px; font-weight: 700; color: var(--ink-2); }
+  .w-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .w-chip { min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 700; font-size: 15px; cursor: pointer; }
+  .w-chip[aria-checked="true"] { background: var(--ink); color: #fff; box-shadow: none; }
+  .w-field { display: grid; gap: 6px; font-size: 14px; font-weight: 700; color: var(--ink-2); }
+  .w-field input { height: 56px; padding: 0 16px; border: 0; border-radius: var(--r-md); background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--line); font-size: 17px; font-weight: 600; color: var(--ink); }
+  .w-field input:focus { outline: none; box-shadow: inset 0 0 0 2px var(--accent); }
+  .w-fine { margin: 0; font-size: 13px; color: var(--ink-2); line-height: 1.4; }
+  .w-foot { margin-top: auto; display: grid; gap: 10px; }
+  .w-hint { margin: 0; text-align: center; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+  .w-done { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; flex: 1; padding-top: 24px; }
+  .w-done .ic { width: 132px; height: 132px; }
+  .w-sub { margin: 0 0 8px; color: var(--ink-2); font-size: 16px; max-width: 28ch; }
+  .w-sum { width: 100%; margin: 4px 0 0; padding: 6px 18px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-card); text-align: left; }
+  .w-sum div { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); font-size: 15px; }
+  .w-sum div:first-child { border-top: 0; }
+  .w-sum dt { color: var(--ink-2); font-weight: 600; } .w-sum dd { margin: 0; font-weight: 700; text-align: right; }
+  .w-done .w-foot { width: 100%; }
+  .scr.wizscr { padding-bottom: 24px; }
+
+  /* Кабінет */
+  .hello { display: flex; align-items: center; justify-content: space-between; }
+  .hello small { display: block; font-size: 15px; color: var(--ink-2); font-weight: 600; }
+  .hello b { font-size: 24px; letter-spacing: -.02em; font-weight: 800; }
+  .obj { padding: 18px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-card); position: relative; overflow: hidden; }
+  .obj::before { content: ""; position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: 50%; background: var(--ok-soft); opacity: .8; }
+  .obj > * { position: relative; }
+  .obj h4 { margin: 8px 0 2px; font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
+  .obj p { margin: 0; font-size: 14px; color: var(--ink-2); font-weight: 600; }
+  .obj .ic { position: absolute; right: 8px; top: 10px; width: 84px; height: 84px; }
+  .obj-meta { display: flex; gap: 8px; margin-top: 12px; }
+  .obj-meta span { flex: 1; padding: 10px 12px; border-radius: 14px; background: var(--surface-2); font-size: 13px; color: var(--ink-2); font-weight: 600; line-height: 1.3; }
+  .obj-meta b { display: block; font-size: 15px; color: var(--ink); }
+  .cab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cab-tile { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-card); min-height: 116px; text-decoration: none; color: var(--ink); }
+  .cab-tile .ic { width: 52px; height: 52px; margin: -4px 0 auto -4px; }
+  .cab-tile b { font-size: 16px; font-weight: 800; }
+  .cab-tile span { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+  .cab-tile .due { color: #A3460E; }
+  .mgr { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-card); }
+  .ava { display: grid; place-items: center; width: 48px; height: 48px; font-size: 13px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-ink); font-weight: 800; flex: none; }
+  [data-palette="signal"] .ava { color: var(--ink); }
+  .mgr div { flex: 1; min-width: 0; } .mgr b { display: block; font-size: 15px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .mgr small { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+  .mgr .round { width: 44px; height: 44px; box-shadow: inset 0 0 0 1.5px var(--line); }
+
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); padding: 4px; border-radius: 16px; background: color-mix(in srgb, var(--surface) 70%, transparent); box-shadow: inset 0 0 0 1px var(--line); }
+  .seg span { display: grid; place-items: center; min-height: 40px; border-radius: 12px; font-size: 15px; font-weight: 700; color: var(--ink-2); }
+  .seg .on { background: var(--surface); color: var(--ink); box-shadow: var(--sh-card); }
+  .log { position: relative; display: grid; gap: 8px; }
+  .log::before { content: ""; position: absolute; left: 22px; top: 18px; bottom: 18px; width: 2px; background: var(--line); }
+  .ev { position: relative; display: grid; grid-template-columns: 46px 1fr auto; gap: 0; align-items: center; }
+  .ev .dot { justify-self: center; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); box-shadow: inset 0 0 0 3px var(--ok-dot), 0 0 0 4px var(--bg); }
+  .ev.warn .dot { box-shadow: inset 0 0 0 3px #E39B2D, 0 0 0 4px var(--bg); }
+  .ev .body { padding: 12px 14px; border-radius: 16px; background: var(--surface); box-shadow: var(--sh-card); grid-column: 2 / 4; display: flex; justify-content: space-between; gap: 10px; }
+  .ev b { display: block; font-size: 15px; font-weight: 800; } .ev small { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+  .ev time { font-size: 14px; font-weight: 800; color: var(--ink); white-space: nowrap; }
+  .dl { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; border-radius: var(--r-md); background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 800; font-size: 15px; }
+
+  .bar-note { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 48px; }
+  .bar-note div { padding: 18px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-card); font-size: 15px; color: var(--ink-2); font-weight: 500; }
+  .bar-note b { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; color: var(--ink); font-size: 17px; font-weight: 800; }
+
+  /* ---------- Зображення ---------- */
+  .icons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 40px; }
+  .icons figure { margin: 0; padding: 20px 16px 18px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-card); display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .icons .ic { width: 112px; height: 112px; }
+  .icons figcaption { font-size: 15px; font-weight: 700; }
+  .icons figcaption small { display: block; font-size: 13px; color: var(--ink-2); font-weight: 600; }
+  .photo-verdict { display: grid; grid-template-columns: 340px 1fr; gap: 32px; align-items: center; margin-top: 24px; padding: 24px; }
+  .photo-verdict figure { margin: 0; position: relative; border-radius: var(--r-lg); overflow: hidden; aspect-ratio: 4 / 3; }
+  .photo-verdict img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .photo-verdict figcaption { position: absolute; left: 12px; bottom: 12px; padding: 4px 10px; border-radius: 8px; background: rgba(255,255,255,.92); font-size: 13px; font-weight: 700; color: #0C1424; }
+  .photo-verdict h3 { margin: 0 0 8px; font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+  .photo-verdict p { margin: 0 0 10px; color: var(--ink-2); font-size: 16px; }
+
+  /* ---------- Структура, межі, питання ---------- */
+  .struct { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; counter-reset: s; }
+  .struct li { padding: 22px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-card); font-size: 15px; color: var(--ink-2); font-weight: 500; counter-increment: s; }
+  .struct li::before { content: "0" counter(s); display: block; font-size: 14px; font-weight: 800; color: var(--accent-ink); margin-bottom: 10px; }
+  [data-palette="signal"] .struct li::before { color: var(--ink); }
+  .struct b { display: block; color: var(--ink); font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .guard { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 40px; }
+  .guard div { padding: 24px; }
+  .guard h3 { margin: 0 0 12px; font-size: 18px; font-weight: 800; }
+  .guard ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; color: var(--ink-2); font-size: 16px; }
+  .qs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 40px; }
+  .q { padding: 24px; }
+  .q h3 { margin: 0 0 14px; font-size: 18px; line-height: 1.3; font-weight: 800; }
+  .q ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .q li { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 14px; border-radius: 14px; background: var(--surface-2); font-size: 15px; font-weight: 600; }
+  .q li::before { content: ""; width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--line); flex: none; background: var(--surface); }
+  .q li.rec { background: var(--accent-soft); box-shadow: inset 0 0 0 1.5px var(--accent); }
+  [data-palette="signal"] .q li.rec { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .q li.rec::before { box-shadow: inset 0 0 0 6px var(--accent); }
+  [data-palette="signal"] .q li.rec::before { box-shadow: inset 0 0 0 6px var(--ink); }
+  .q li em { margin-left: auto; font-style: normal; font-size: 12px; font-weight: 800; color: var(--accent-ink); white-space: nowrap; }
+  [data-palette="signal"] .q li em { color: var(--ink); }
+  .foot { margin-top: 80px; font-size: 14px; color: var(--ink-2); }
+
+  /* ---------- Адаптив сторінки концепції ---------- */
+  @media (max-width: 1240px) {
+    .phones { grid-template-columns: repeat(2, 376px); justify-content: center; gap: 56px 40px; }
+    .icons { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 1080px) {
+    .page { padding: 0 32px 96px; }
+    .frames { grid-template-columns: 1fr; }
+    .fr-m-wrap { max-width: 320px; margin: 0 auto; width: 100%; }
+    .cover-main, .cover-grid, .two, .guard, .qs, .photo-verdict { grid-template-columns: 1fr; }
+    .pal-head { grid-template-columns: 1fr; }
+    .struct { grid-template-columns: 1fr 1fr; }
+    .bar-note { grid-template-columns: 1fr 1fr; }
+    .photo-verdict figure { max-width: 420px; }
+  }
+  @media (max-width: 820px) {
+    .phones { grid-template-columns: 376px; }
+    .icons { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .page { padding: 0 16px 80px; }
+    .sec { padding-top: 80px; }
+    .cover-lead { font-size: 18px; }
+    .cover-art { height: 340px; }
+    .a-building { width: 190px; height: 190px; left: 16%; top: 20%; }
+    .a-person { width: 130px; height: 130px; }
+    .a-journal { width: 96px; height: 96px; }
+    .a-key { width: 84px; height: 84px; }
+    .a-step { width: 170px; top: 50%; padding: 12px 14px; }
+    .a-status { padding: 12px 14px; }
+    .intro { font-size: 17px; }
+    .pal { padding: 16px; margin-top: 40px; border-radius: var(--r-lg); }
+    .pal-head h3 { font-size: 24px; }
+    .sw div { width: calc(33.33% - 7px); }
+    .box, .changes, .q, .guard div, .photo-verdict { padding: 20px; }
+    .phones { grid-template-columns: 1fr; justify-items: center; }
+    .ph-wrap { zoom: .87; }
+    .icons { grid-template-columns: 1fr 1fr; }
+    .icons .ic { width: 92px; height: 92px; }
+    .struct, .bar-note { grid-template-columns: 1fr; }
+    .wm-a { font-size: 32px; }
+    .q li em { display: none; }
+  }
+</style>
+</head>
+<body>
+<script src="icons.js"></script>
+<script src="ui-icons.js"></script>
+
+<div class="page">
+
+  <!-- ========== Обкладинка ========== -->
+  <header class="cover">
+    <div class="cover-top">
+      <span class="wordmark">Штурмова варта<span class="dot" aria-hidden="true"></span></span>
+      <span class="eyebrow">Концепція D на погодження · 18.11.2026</span>
+    </div>
+    <div class="cover-main">
+      <div>
+        <h1>Охорона, яку замовляють <em>як послугу в застосунку</em></h1>
+        <p class="cover-lead">Світлий інтерфейс, де клієнт за чотири дотики замовляє охорону, а потім бачить свій обʼєкт у кабінеті: статус, журнал змін, рахунки. Не «грізна охорона», а відчуття, що все просто і під контролем.</p>
+        <div class="words">
+          <span class="chip">Просто</span><span class="chip">Швидко</span><span class="chip">Під контролем</span><span class="chip">Прозоро</span><span class="chip">Спокійно</span>
+        </div>
+      </div>
+      <div class="cover-art" aria-hidden="true">
+        <div class="glow"></div>
+        <svg class="ic a-building"><use href="#ic-building"/></svg>
+        <svg class="ic a-person"><use href="#ic-person"/></svg>
+        <svg class="ic a-journal"><use href="#ic-journal"/></svg>
+        <svg class="ic a-key"><use href="#ic-keycard"/></svg>
+        <div class="card a-status"><span class="status"><span class="pulse"></span>Під охороною</span><span class="a-line"><b>Зміна на посту</b><span>з 08:00</span></span></div>
+        <div class="card a-step"><span>Заявка · крок 2 з 4</span><span class="progress"><span class="done"></span><span class="now"></span><span></span><span></span></span></div>
+      </div>
+    </div>
+    <div class="cover-grid">
+      <div class="card changes">
+        <h3>Що змінилось після відгуку</h3>
+        <ul>
+          <li><svg class="i"><use href="#i-check"/></svg>Світле замість темного, без емблем і «мілітарі»</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Візуал – обʼємні іконки і живі картки інтерфейсу</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Одна дія на екран, мінімум слів</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Заявка-майстер, кабінет, дзвінок в один дотик</li>
+        </ul>
+      </div>
+      <div class="unique"><b>ДЕТАЛЬ, ЯКОЇ НЕМАЄ В КОНКУРЕНТІВ</b>Живий статус «Під охороною» і журнал змін – прямо на першому екрані, як у банківському застосунку. Охоронні сайти показують щити й людей у формі; ми показуємо, як клієнт бачить свою охорону.</div>
+    </div>
+  </header>
+
+  <!-- ========== 01 Палітри ========== -->
+  <section class="sec" id="palettes">
+    <span class="eyebrow"><span class="num">01</span>Палітра · той самий перший екран</span>
+    <h2 class="h">Три палітри на одному екрані</h2>
+    <p class="intro">Ліворуч – десктоп 1440, праворуч – мобільний 360. Клік по екрану відкриває живу версію, де плитки клікаються. Контраст тексту розраховано за WCAG, усі пари – не нижче 4,5:1.</p>
+
+    <div class="pal" data-pal="mint">
+      <div class="pal-head">
+        <div>
+          <h3>1 · Мʼята і ніч <span class="rec">рекомендую</span></h3>
+          <p>Прохолодний, «банківський» спокій. Нічний синій – колір довіри і чергування, мʼята – колір статусу «все гаразд».</p>
+          <div class="ratio" aria-hidden="true"><i style="flex:55;background:#EEF5F8"></i><i style="flex:25;background:#FFFFFF"></i><i style="flex:10;background:#0C1424"></i><i style="flex:7;background:#1F3B8F"></i><i style="flex:3;background:#22B07D"></i></div>
+          <p class="contrast">Текст #0C1424 на білому 18,4:1 · другорядний #475569 – 7,6:1 · білий на #1F3B8F – 10,1:1 · статус #0E6B4A – 6,5:1</p>
+        </div>
+        <div class="sw">
+          <div><i style="background:linear-gradient(135deg,#D5E5FB,#C9EEDF)"></i><b>Фон-градієнт</b>55%</div>
+          <div><i style="background:#fff"></i><b>Картки #FFFFFF</b>25%</div>
+          <div><i style="background:#0C1424"></i><b>Текст #0C1424</b>10%</div>
+          <div><i style="background:#1F3B8F"></i><b>Акцент #1F3B8F</b>кнопки, 7%</div>
+          <div><i style="background:#22B07D"></i><b>Статус #22B07D</b>3%</div>
+        </div>
+      </div>
+      <div class="frames">
+        <div><a class="fr fr-d" href="hero.html?p=mint" target="_blank"><img src="img/hero-mint-1440.png" width="1440" height="900" alt="Перший екран, палітра 1, десктоп 1440"></a><p class="fr-cap">Десктоп 1440 · <a href="hero.html?p=mint" target="_blank">відкрити живий</a></p></div>
+        <div class="fr-m-wrap"><a class="fr fr-m" href="hero.html?p=mint" target="_blank"><img src="img/hero-mint-360.png" width="720" height="1520" alt="Перший екран, палітра 1, мобільний 360"></a><p class="fr-cap">Мобільний 360</p></div>
+      </div>
+    </div>
+
+    <div class="pal" data-pal="brass">
+      <div class="pal-head">
+        <div>
+          <h3>2 · Пісок і латунь</h3>
+          <p>Тепліше і «дорожче», для приватних клієнтів і особистої охорони. Латунь лишилась від попереднього напряму, але на світлому.</p>
+          <div class="ratio" aria-hidden="true"><i style="flex:55;background:#F8F1E4"></i><i style="flex:25;background:#FFFFFF"></i><i style="flex:10;background:#17130E"></i><i style="flex:7;background:#D9A441"></i><i style="flex:3;background:#33405A"></i></div>
+          <p class="contrast">Текст #17130E на білому 18,5:1 · другорядний #5A5146 – 7,8:1 · текст на латунній кнопці 8,2:1 · латунь як текст #8A5A12 – 5,9:1</p>
+        </div>
+        <div class="sw">
+          <div><i style="background:linear-gradient(135deg,#F4E6D6,#F6DDBE)"></i><b>Фон-градієнт</b>55%</div>
+          <div><i style="background:#fff"></i><b>Картки #FFFFFF</b>25%</div>
+          <div><i style="background:#17130E"></i><b>Текст #17130E</b>10%</div>
+          <div><i style="background:#D9A441"></i><b>Акцент #D9A441</b>кнопки, 7%</div>
+          <div><i style="background:#33405A"></i><b>Графіт #33405A</b>іконки, 3%</div>
+        </div>
+      </div>
+      <div class="frames">
+        <div><a class="fr fr-d" href="hero.html?p=brass" target="_blank"><img src="img/hero-brass-1440.png" width="1440" height="900" alt="Перший екран, палітра 2, десктоп 1440"></a><p class="fr-cap">Десктоп 1440 · <a href="hero.html?p=brass" target="_blank">відкрити живий</a></p></div>
+        <div class="fr-m-wrap"><a class="fr fr-m" href="hero.html?p=brass" target="_blank"><img src="img/hero-brass-360.png" width="720" height="1520" alt="Перший екран, палітра 2, мобільний 360"></a><p class="fr-cap">Мобільний 360</p></div>
+      </div>
+    </div>
+
+    <div class="pal" data-pal="signal">
+      <div class="pal-head">
+        <div>
+          <h3>3 · Біле, чорне, сигнал</h3>
+          <p>Найсміливіша і найменш схожа на інші охоронні сайти. Лайм – як світлодіод «на звʼязку», лише на кнопках і прогресі.</p>
+          <div class="ratio" aria-hidden="true"><i style="flex:55;background:#F2F2EE"></i><i style="flex:25;background:#FFFFFF"></i><i style="flex:13;background:#0A0A0A"></i><i style="flex:7;background:#D4F53C"></i></div>
+          <p class="contrast">Текст #0A0A0A на білому 19,8:1 · другорядний #52525B – 7,7:1 · чорний на лаймі 16:1 · лайм як колір тексту не використовуємо</p>
+        </div>
+        <div class="sw">
+          <div><i style="background:#F2F2EE"></i><b>Фон #F2F2EE</b>55%</div>
+          <div><i style="background:#fff"></i><b>Картки #FFFFFF</b>25%</div>
+          <div><i style="background:#0A0A0A"></i><b>Текст #0A0A0A</b>13%</div>
+          <div><i style="background:#D4F53C"></i><b>Сигнал #D4F53C</b>кнопки, 7%</div>
+        </div>
+      </div>
+      <div class="frames">
+        <div><a class="fr fr-d" href="hero.html?p=signal" target="_blank"><img src="img/hero-signal-1440.png" width="1440" height="900" alt="Перший екран, палітра 3, десктоп 1440"></a><p class="fr-cap">Десктоп 1440 · <a href="hero.html?p=signal" target="_blank">відкрити живий</a></p></div>
+        <div class="fr-m-wrap"><a class="fr fr-m" href="hero.html?p=signal" target="_blank"><img src="img/hero-signal-360.png" width="720" height="1520" alt="Перший екран, палітра 3, мобільний 360"></a><p class="fr-cap">Мобільний 360</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 02 Шрифт і логотип ========== -->
+  <section class="sec" id="type">
+    <span class="eyebrow"><span class="num">02</span>Шрифт і логотип</span>
+    <h2 class="h">Один шрифт – Manrope, від 400 до 800</h2>
+    <div class="two">
+      <div class="card box">
+        <span class="eyebrow">Manrope ExtraBold 800 · Google Fonts, OFL</span>
+        <p class="spec-big">Ваш обʼєкт під охороною</p>
+        <p class="spec-p">Оберіть послугу, опишіть обʼєкт і графік – менеджер звʼяжеться і запропонує рішення. Ґанок, їдальня, єдиний пропуск: уся українська абетка на місці.</p>
+        <table class="scale">
+          <tr><td>Заголовок першого екрана</td><td>76 / 34 px</td><td>800 · 1,0</td></tr>
+          <tr><td>Заголовок блоку</td><td>48 / 28 px</td><td>800 · 1,05</td></tr>
+          <tr><td>Питання майстра, картка</td><td>28 / 22 px</td><td>800 · 1,1</td></tr>
+          <tr><td>Текст, лід</td><td>20 / 17 px</td><td>500 · 1,5</td></tr>
+          <tr><td>Підписи, кнопки</td><td>15–17 px</td><td>600–700</td></tr>
+        </table>
+        <ul class="why">
+          <li><b>Чому Manrope:</b> широкі відкриті літери добре читаються на телефоні, жирне накреслення дружнє, а не «силове».</li>
+          <li><b>Повна кирилиця</b> з і, ї, є, ґ і апострофом ʼ; змінна вага – один файл замість кількох.</li>
+          <li><b>Не шрифт Дії</b> (e-Ukraine) – інший малюнок літер, сайт не сплутають із держсервісом.</li>
+          <li>Inter – надто нейтральний, «за замовчуванням»; Onest і Golos Text – вужчі, більш системні.</li>
+        </ul>
+      </div>
+      <div class="logo-row">
+        <div class="logo-cell card"><span class="wordmark wm-a">Штурмова варта<span class="dot" aria-hidden="true"></span></span><small>А · в один рядок, крапка – «на звʼязку, під охороною» (рекомендую)</small></div>
+        <div class="logo-cell inv"><span class="wordmark wm-a">Штурмова варта<span class="dot" aria-hidden="true"></span></span><small>А · інверсія на акценті</small></div>
+        <div class="logo-cell card"><span class="wm-b">штурмова<br>варта<span class="dot" aria-hidden="true"></span></span><small>Б · два рядки, малі літери – для аватарок і соцмереж</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 03 Ключові екрани ========== -->
+  <section class="sec" id="screens">
+    <span class="eyebrow"><span class="num">03</span>Ключові екрани · мобільний головний</span>
+    <h2 class="h">Сайт, що працює як застосунок</h2>
+    <p class="intro">Майстер заявки у другому телефоні – клікабельний: один дотик – і наступне питання. Дані в кабінеті – демо-заглушки. Перемкніть палітру, щоб побачити всі екрани в ній.</p>
+    <div class="switch" role="group" aria-label="Палітра екранів">
+      <button type="button" data-set="mint" aria-pressed="true">1 · Мʼята і ніч</button>
+      <button type="button" data-set="brass" aria-pressed="false">2 · Пісок і латунь</button>
+      <button type="button" data-set="signal" aria-pressed="false">3 · Сигнал</button>
+    </div>
+
+    <div class="phones">
+      <!-- Послуги -->
+      <figure class="ph-wrap">
+        <div class="phone">
+          <div class="sbar"><span>9:41</span><i></i></div>
+          <div class="scr">
+            <div class="appbar"><span class="wordmark">Штурмова варта<span class="dot"></span></span><a class="round" href="tel:+380675495710" aria-label="Подзвонити"><svg class="i"><use href="#i-phone"/></svg></a></div>
+            <h3 class="t-xl">Послуги</h3>
+            <a class="card svc" href="#">
+              <h4>Охорона обʼєкта</h4><p>Офіс, склад, магазин, приватний дім</p>
+              <span class="go">Оформити <svg class="i"><use href="#i-arrow"/></svg></span>
+              <svg class="ic"><use href="#ic-building"/></svg>
+            </a>
+            <a class="card svc" href="#">
+              <h4>Особиста охорона</h4><p>Супровід, події, охорона родини</p>
+              <span class="go">Оформити <svg class="i"><use href="#i-arrow"/></svg></span>
+              <svg class="ic"><use href="#ic-person"/></svg>
+            </a>
+            <div class="soon">
+              <h5>Незабаром</h5>
+              <div class="soon-list">
+                <div>Пультова охорона<small>[уточнити]</small></div>
+                <div>Група реагування<small>[уточнити]</small></div>
+                <div>Системи безпеки<small>[уточнити]</small></div>
+              </div>
+            </div>
+          </div>
+          <nav class="tabbar" aria-label="Швидкі дії">
+            <a class="tab" href="#"><svg class="i"><use href="#i-phone"/></svg>Дзвінок</a>
+            <a class="tab" href="#"><svg class="i"><use href="#i-chat"/></svg>Чат</a>
+            <a class="tab tab-main" href="#"><svg class="i"><use href="#i-plus"/></svg>Заявка</a>
+            <a class="tab" href="#"><svg class="i"><use href="#i-user"/></svg>Кабінет</a>
+          </nav>
+        </div>
+        <figcaption><b>Послуги – двома картками</b>Дві головні послуги великими картками з іконками, майбутні – тихим рядком «незабаром».</figcaption>
+      </figure>
+
+      <!-- Майстер, інтерактивний -->
+      <figure class="ph-wrap">
+        <div class="phone">
+          <div class="sbar"><span>9:41</span><i></i></div>
+          <div class="scr wizscr"><div class="wiz" data-start="1"></div></div>
+        </div>
+        <figcaption><b>Заявка · крок 1 – клікайте</b>Одне питання на екран, прогрес угорі, назад і закрити – завжди на тому самому місці.</figcaption>
+      </figure>
+
+      <!-- Майстер, крок 3 -->
+      <figure class="ph-wrap">
+        <div class="phone">
+          <div class="sbar"><span>9:41</span><i></i></div>
+          <div class="scr wizscr"><div class="wiz" data-start="3" data-static data-preset='{"type":"object","place":"Склад чи виробництво","when":"Лише вночі","start":"Цього тижня"}'></div></div>
+        </div>
+        <figcaption><b>Заявка · крок 3 – графік</b>Великі варіанти замість полів. Кнопка «Далі» активна, коли все обрано.</figcaption>
+      </figure>
+
+      <!-- Готово -->
+      <figure class="ph-wrap">
+        <div class="phone">
+          <div class="sbar"><span>9:41</span><i></i></div>
+          <div class="scr wizscr"><div class="wiz" data-start="5" data-static data-preset='{"type":"object","place":"Склад чи виробництво","when":"Лише вночі","start":"Цього тижня","channel":"Telegram","phone":"+380 [номер]"}'></div></div>
+        </div>
+        <figcaption><b>Заявку надіслано</b>Підсумок відповідей одним списком – людина бачить, що саме замовила.</figcaption>
+      </figure>
+
+      <!-- Кабінет: головна -->
+      <figure class="ph-wrap">
+        <div class="phone">
+          <div class="sbar"><span>9:41</span><i></i></div>
+          <div class="scr">
+            <div class="hello"><div><small>Добрий день,</small><b>[Імʼя клієнта]</b></div><span class="round"><svg class="i"><use href="#i-bell"/></svg></span></div>
+            <div class="obj">
+              <span class="status"><span class="pulse"></span>Під охороною</span>
+              <h4>[Назва обʼєкта]</h4><p>[Адреса] · <span class="demo-tag">демо</span></p>
+              <svg class="ic"><use href="#ic-building"/></svg>
+              <div class="obj-meta"><span><b>з 08:00</b>зміна на посту</span><span><b>12:30</b>останній обхід</span></div>
+            </div>
+            <div class="cab-grid">
+              <a class="cab-tile" href="#"><svg class="ic"><use href="#ic-contract"/></svg><b>Договір</b><span>№ [уточнити]</span></a>
+              <a class="cab-tile" href="#"><svg class="ic"><use href="#ic-journal"/></svg><b>Журнал змін</b><span>звіти щодня</span></a>
+              <a class="cab-tile" href="#"><svg class="ic"><use href="#ic-invoice"/></svg><b>Рахунки</b><span class="due">[сума] до сплати</span></a>
+              <a class="cab-tile" href="#"><svg class="ic"><use href="#ic-clock"/></svg><b>Графік</b><span>[графік охорони]</span></a>
+            </div>
+            <div class="mgr"><span class="ava">[ПІБ]</span><div><b>[Імʼя менеджера]</b><small>ваш відповідальний</small></div><a class="round" href="#" aria-label="Написати"><svg class="i"><use href="#i-chat"/></svg></a><a class="round accent" href="#" aria-label="Подзвонити"><svg class="i"><use href="#i-phone"/></svg></a></div>
+          </div>
+          <nav class="tabbar cab" aria-label="Кабінет">
+            <a class="tab on" href="#"><svg class="i"><use href="#i-home"/></svg>Головна</a>
+            <a class="tab" href="#"><svg class="i"><use href="#i-doc"/></svg>Журнал</a>
+            <a class="tab" href="#"><svg class="i"><use href="#i-download"/></svg>Рахунки</a>
+            <a class="tab" href="#"><svg class="i"><use href="#i-chat"/></svg>Звʼязок</a>
+          </nav>
+        </div>
+        <figcaption><b>Кабінет · головна</b>Статус обʼєкта, договір, звіти, рахунки і живий контакт відповідального – на одному екрані.</figcaption>
+      </figure>
+
+      <!-- Кабінет: журнал -->
+      <figure class="ph-wrap">
+        <div class="phone">
+          <div class="sbar"><span>9:41</span><i></i></div>
+          <div class="scr">
+            <div class="appbar"><span class="w-icon"><svg class="i"><use href="#i-back"/></svg></span><b style="font-size:18px;font-weight:800">Журнал змін</b><span class="demo-tag">демо</span></div>
+            <div class="seg"><span class="on">Сьогодні</span><span>Тиждень</span><span>Місяць</span></div>
+            <div class="log">
+              <div class="ev"><span class="dot"></span><div class="body"><div><b>Зміну прийнято</b><small>[ПІБ охоронця]</small></div><time>08:00</time></div></div>
+              <div class="ev"><span class="dot"></span><div class="body"><div><b>Обхід території</b><small>без зауважень</small></div><time>10:15</time></div></div>
+              <div class="ev warn"><span class="dot"></span><div class="body"><div><b>Відвідувач</b><small>[компанія], пропуск видано</small></div><time>11:40</time></div></div>
+              <div class="ev"><span class="dot"></span><div class="body"><div><b>Обхід території</b><small>без зауважень</small></div><time>12:30</time></div></div>
+              <div class="ev"><span class="dot"></span><div class="body"><div><b>Зміну здано</b><small>акт зміни у PDF</small></div><time>20:00</time></div></div>
+            </div>
+            <div class="dl"><svg class="i"><use href="#i-download"/></svg>Звіт за добу, PDF</div>
+          </div>
+          <nav class="tabbar cab" aria-label="Кабінет">
+            <a class="tab" href="#"><svg class="i"><use href="#i-home"/></svg>Головна</a>
+            <a class="tab on" href="#"><svg class="i"><use href="#i-doc"/></svg>Журнал</a>
+            <a class="tab" href="#"><svg class="i"><use href="#i-download"/></svg>Рахунки</a>
+            <a class="tab" href="#"><svg class="i"><use href="#i-chat"/></svg>Звʼязок</a>
+          </nav>
+        </div>
+        <figcaption><b>Кабінет · журнал змін</b>Що відбувалось на обʼєкті – стрічкою за часом. Які події реально фіксує охорона – [уточнити].</figcaption>
+      </figure>
+    </div>
+
+    <div class="bar-note">
+      <div><b><svg class="i"><use href="#i-phone"/></svg>Дзвінок</b>Одразу набирає +380 67 549 5710, без меню.</div>
+      <div><b><svg class="i"><use href="#i-chat"/></svg>Чат</b>Відкриває вибір месенджера. Які саме – [уточнити].</div>
+      <div><b><svg class="i"><use href="#i-plus"/></svg>Заявка</b>Головна дія – відкриває майстер з кроку 1.</div>
+      <div><b><svg class="i"><use href="#i-user"/></svg>Кабінет</b>Вхід для клієнтів. Спосіб входу – [уточнити].</div>
+    </div>
+  </section>
+
+  <!-- ========== 04 Зображення ========== -->
+  <section class="sec" id="images">
+    <span class="eyebrow"><span class="num">04</span>Стиль зображень</span>
+    <h2 class="h">Обʼємні іконки замість стокових фото</h2>
+    <p class="intro">Мʼякі «глиняні» обʼєкти з власним світлом і тінню, зібрані в SVG – легкі, перефарбовуються під палітру, не потребують генерацій. Кожна іконка означає конкретну річ: послугу, документ, дію.</p>
+    <div class="icons">
+      <figure><svg class="ic"><use href="#ic-building"/></svg><figcaption>Охорона обʼєкта<small>послуга</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#ic-person"/></svg><figcaption>Особиста охорона<small>послуга</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#ic-journal"/></svg><figcaption>Журнал змін<small>кабінет</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#ic-contract"/></svg><figcaption>Договір<small>кабінет</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#ic-invoice"/></svg><figcaption>Рахунки<small>кабінет</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#ic-clock"/></svg><figcaption>Графік, нічні зміни<small>майстер</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#ic-keycard"/></svg><figcaption>Системи безпеки<small>незабаром</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#ic-alarm"/></svg><figcaption>Пульт, реагування<small>незабаром</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#ic-chat"/></svg><figcaption>Звʼязок<small>контакти</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#ic-done"/></svg><figcaption>Готово<small>успіх заявки</small></figcaption></figure>
+    </div>
+    <div class="card photo-verdict">
+      <figure><img src="../concept-ai/02-guard-entrance.jpg" alt="Охоронець біля входу в бізнес-центр увечері" width="1024" height="1280" loading="lazy"><figcaption>ілюстративне фото</figcaption></figure>
+      <div>
+        <h3>Нічні фото з попередньої концепції – не беремо</h3>
+        <p>Вони темні й «силові», ламають світлий спокійний стиль і повертають ту саму естетику, яка не сподобалась. Фоном на першому екрані – точно ні.</p>
+        <p>Що підійде пізніше: реальні денні фото команди й обʼєктів клієнта, у картках послуг, з великим заокругленням. Без них сайт повністю тримається на іконках і інтерфейсі.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 05 Структура ========== -->
+  <section class="sec" id="structure">
+    <span class="eyebrow"><span class="num">05</span>Структура лендингу</span>
+    <h2 class="h">Шість блоків – і нижня панель на кожному</h2>
+    <ol class="struct">
+      <li><b>Перший екран</b>Офер «за 4 кроки», крок 1 заявки і статус обʼєкта як доказ.</li>
+      <li><b>Послуги</b>Дві великі картки, майбутні послуги – рядком «незабаром».</li>
+      <li><b>Як це працює</b>Чотири кроки: заявка → огляд обʼєкта → договір → охорона і кабінет.</li>
+      <li><b>Чому ми</b>Кабінет зі звітами як головна перевага; ліцензія – стисло тут.</li>
+      <li><b>Заявка-майстер</b>Той самий майстер на всю ширину; FAQ – 3–4 картки поруч.</li>
+      <li><b>Контакти</b>Телефон, месенджери [уточнити], адреса [уточнити], кнопка дзвінка.</li>
+    </ol>
+  </section>
+
+  <!-- ========== 06 Межі ========== -->
+  <section class="sec" id="guard">
+    <span class="eyebrow"><span class="num">06</span>Стиль Дії – лише як принципи</span>
+    <h2 class="h">Що беремо і чого не робимо</h2>
+    <div class="guard">
+      <div class="card"><h3>Беремо принципи</h3><ul>
+        <li>Світлий фон із мʼяким градієнтом, великі білі картки</li>
+        <li>Великий жирний гротеск, чорний текст, мінімум слів</li>
+        <li>Одне питання на екран, прогрес, нижня панель дій</li>
+        <li>Дружні обʼємні іконки</li>
+      </ul></div>
+      <div class="card"><h3>Не робимо, щоб не сплутали з держсервісом</h3><ul>
+        <li>Без назви, логотипа і шрифту Дії, без тризуба й державних кольорів у парі</li>
+        <li>Без слів «державна послуга», «е-послуга», «портал»</li>
+        <li>Не копіюємо екрани Дії: свої іконки, свій акцент, свій логотип із крапкою-статусом</li>
+        <li>Чорні кнопки як у Дії – лише в палітрі 3, з лаймовим сигналом</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- ========== 07 Що погодити ========== -->
+  <section class="sec" id="approve">
+    <span class="eyebrow"><span class="num">07</span>Що погодити</span>
+    <h2 class="h">Оберіть варіант – або напишіть свій</h2>
+    <div class="qs">
+      <div class="card q"><h3>1. Палітра</h3><ol>
+        <li class="rec">1 · Мʼята і ніч<em>рекомендую</em></li>
+        <li>2 · Пісок і латунь</li>
+        <li>3 · Біле, чорне, сигнал</li>
+        <li>1, але з латунними деталями з 2</li>
+      </ol></div>
+      <div class="card q"><h3>2. Головний візуал</h3><ol>
+        <li class="rec">Обʼємні іконки й картки інтерфейсу<em>рекомендую</em></li>
+        <li>Те саме + реальні денні фото в картках послуг</li>
+        <li>Велике фото на першому екрані</li>
+        <li>Ілюстрації-сцени замість іконок</li>
+      </ol></div>
+      <div class="card q"><h3>3. Шрифтовий логотип</h3><ol>
+        <li class="rec">А – один рядок із крапкою-статусом<em>рекомендую</em></li>
+        <li>Б – два рядки, малі літери</li>
+        <li>А без крапки</li>
+        <li>А на сайті, Б у соцмережах</li>
+      </ol></div>
+      <div class="card q"><h3>4. Шрифт</h3><ol>
+        <li class="rec">Manrope<em>рекомендую</em></li>
+        <li>Onest</li>
+        <li>Golos Text</li>
+        <li>Inter</li>
+      </ol></div>
+      <div class="card q"><h3>5. Нижня панель</h3><ol>
+        <li class="rec">Дзвінок · Чат · Заявка · Кабінет<em>рекомендую</em></li>
+        <li>Дзвінок · Telegram · Viber · Заявка</li>
+        <li>Лише Дзвінок і Заявка</li>
+        <li>Без панелі, кнопка в шапці</li>
+      </ol></div>
+      <div class="card q"><h3>6. Кабінет клієнта</h3><ol>
+        <li class="rec">На лендингу – демо-блок, кабінет – наступний етап<em>рекомендую</em></li>
+        <li>Робимо кабінет одразу разом із сайтом</li>
+        <li>Звіти в месенджер замість кабінету</li>
+        <li>Не згадувати, доки не готовий</li>
+      </ol></div>
+      <div class="card q"><h3>7. Заголовок першого екрана</h3><ol>
+        <li class="rec">«Охорона обʼєкта чи людини – за 4 кроки»<em>рекомендую</em></li>
+        <li>«Ваш обʼєкт під охороною – і ви це бачите»</li>
+        <li>«Охорона, яку замовляють онлайн»</li>
+        <li>«Охорона в Києві без зайвих дзвінків»</li>
+      </ol></div>
+      <div class="card q"><h3>8. Месенджери для кнопки «Чат»</h3><ol>
+        <li class="rec">Telegram і Viber<em>рекомендую</em></li>
+        <li>Лише Telegram</li>
+        <li>Telegram і WhatsApp</li>
+        <li>Без месенджерів, лише телефон</li>
+      </ol></div>
+      <div class="card q"><h3>9. Ліцензія на сайті</h3><ol>
+        <li class="rec">Надішлемо номер – показати на першому екрані<em>рекомендую</em></li>
+        <li>Показати лише в блоці «Чому ми»</li>
+        <li>Ліцензія ще оформлюється – не показувати</li>
+        <li>Додати скан ліцензії у PDF</li>
+      </ol></div>
+      <div class="card q"><h3>10. Що далі</h3><ol>
+        <li class="rec">Погоджую напрям – робіть повний макет<em>рекомендую</em></li>
+        <li>Погоджую з правками за пунктами вище</li>
+        <li>Показати ще одну палітру на цьому екрані</li>
+        <li>Напрям не той – обговоримо</li>
+      </ol></div>
+    </div>
+    <p class="foot">Концепція, а не повний макет. Усі цифри, номери, імена і дані кабінету – заглушки [уточнити]. Фото з позначкою «ілюстративне» згенеровані раніше і не показують працівників чи обʼєкти клієнта. Шрифт Manrope (SIL OFL) лежить локально в fonts/.</p>
+  </section>
+</div>
+
+<script src="wizard.js"></script>
+<script>
+  // Перемикач палітри для екранів
+  document.querySelectorAll('.switch button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.documentElement.setAttribute('data-palette', b.dataset.set);
+      document.querySelectorAll('.switch button').forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+    });
+  });
+</script>
+</body>
+</html>

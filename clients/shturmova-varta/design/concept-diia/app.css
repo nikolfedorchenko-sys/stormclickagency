@@ -1,0 +1,156 @@
+/* Концепція D «Охорона як застосунок» – спільні стилі і токени.
+   Палітра вмикається атрибутом data-palette на <html>: mint (рекомендована) | brass | signal. */
+
+@font-face { font-family: "Manrope"; font-style: normal; font-weight: 400 800; font-display: swap;
+  src: url(fonts/manrope-cyr.woff2) format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Manrope"; font-style: normal; font-weight: 400 800; font-display: swap;
+  src: url(fonts/manrope-lat.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+:root, [data-palette="mint"] {
+  /* 1 · М'ята і ніч */
+  --bg: #EEF5F8;
+  --mesh: radial-gradient(55% 60% at 88% 8%, #C9EEDF 0, rgba(201,238,223,0) 70%),
+          radial-gradient(50% 65% at 6% 18%, #D5E5FB 0, rgba(213,229,251,0) 70%),
+          radial-gradient(60% 55% at 55% 105%, #E1ECFF 0, rgba(225,236,255,0) 70%),
+          linear-gradient(180deg, #F3F8FA 0%, #EEF5F8 100%);
+  --surface: #FFFFFF;
+  --surface-2: #F3F7FA;
+  --line: #E1E8EE;
+  --ink: #0C1424;          /* 18,4:1 на білому, 16,7:1 на фоні */
+  --ink-2: #475569;        /* 7,6:1 на білому, 6,9:1 на фоні */
+  --accent: #1F3B8F;       /* кнопки, активні стани; білий текст 10,1:1 */
+  --on-accent: #FFFFFF;
+  --accent-soft: #E4ECFF;  /* фон активної плитки; акцент на ньому 8,5:1 */
+  --accent-ink: #1F3B8F;   /* посилання на білому 10,1:1 */
+  --ok: #0E6B4A;           /* статус «під охороною» 6,5:1 */
+  --ok-dot: #22B07D;
+  --ok-soft: #DDF5EA;
+  --ic-deep: #2C4FB8; --ic-deeper: #1F3B8F; --ic-mid: #7C9BF2; --ic-light: #DCE7FF;
+  --ic-alt: #7FDDB8; --ic-alt-d: #2FA57B; --ic-warm: #FFC861;
+}
+[data-palette="brass"] {
+  /* 2 · Пісок і латунь */
+  --bg: #F8F1E4;
+  --mesh: radial-gradient(55% 60% at 88% 8%, #F6DDBE 0, rgba(246,221,190,0) 70%),
+          radial-gradient(50% 65% at 6% 18%, #F4E6D6 0, rgba(244,230,214,0) 70%),
+          radial-gradient(60% 55% at 55% 105%, #E4ECF3 0, rgba(228,236,243,0) 70%),
+          linear-gradient(180deg, #FBF6EE 0%, #F8F1E4 100%);
+  --surface: #FFFFFF;
+  --surface-2: #FAF5EC;
+  --line: #EDE3D2;
+  --ink: #17130E;          /* 18,5:1 */
+  --ink-2: #5A5146;        /* 7,8:1 на білому, 6,9:1 на фоні */
+  --accent: #D9A441;       /* латунна кнопка, текст на ній – ink, 8,2:1 */
+  --on-accent: #17130E;
+  --accent-soft: #F7EBD3;
+  --accent-ink: #8A5A12;   /* текст-акцент на білому 5,9:1, на soft 5,0:1 */
+  --ok: #0E6B4A; --ok-dot: #22B07D; --ok-soft: #DDF5EA;
+  --ic-deep: #33405A; --ic-deeper: #232C40; --ic-mid: #8B97B0; --ic-light: #EEE6D8;
+  --ic-alt: #F0C266; --ic-alt-d: #C48B2A; --ic-warm: #F4B860;
+}
+[data-palette="signal"] {
+  /* 3 · Біле, чорне, сигнал */
+  --bg: #F2F2EE;
+  --mesh: radial-gradient(45% 55% at 90% 6%, #ECF7C4 0, rgba(236,247,196,0) 70%),
+          radial-gradient(50% 60% at 4% 20%, #FFFFFF 0, rgba(255,255,255,0) 70%),
+          linear-gradient(180deg, #F6F6F3 0%, #F0F0EB 100%);
+  --surface: #FFFFFF;
+  --surface-2: #F5F5F2;
+  --line: #E4E4DF;
+  --ink: #0A0A0A;          /* 19,8:1 */
+  --ink-2: #52525B;        /* 7,7:1 */
+  --accent: #D4F53C;       /* сигнальний лайм, текст на ньому – чорний 16:1 */
+  --on-accent: #0A0A0A;
+  --accent-soft: #F1FBC9;
+  --accent-ink: #0A0A0A;   /* лайм як текст не використовуємо */
+  --ok: #0E6B4A; --ok-dot: #22B07D; --ok-soft: #E9F8D6;
+  --ic-deep: #26272B; --ic-deeper: #111214; --ic-mid: #8C8E96; --ic-light: #ECECE8;
+  --ic-alt: #DDF76A; --ic-alt-d: #A6C81E; --ic-warm: #DDF76A;
+}
+
+:root {
+  --font: "Manrope", "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  --r-xl: 32px; --r-lg: 24px; --r-md: 18px; --r-sm: 12px; --r-pill: 999px;
+  --sh-card: 0 1px 2px rgba(15, 25, 50, .04), 0 18px 40px -18px rgba(15, 25, 50, .18);
+  --sh-float: 0 2px 6px rgba(15, 25, 50, .05), 0 30px 60px -24px rgba(15, 25, 50, .28);
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg); background-image: var(--mesh); background-attachment: fixed;
+  font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+img { max-width: 100%; display: block; }
+a { color: var(--accent-ink); }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+.ic { display: block; width: 64px; height: 64px; flex: none; }
+
+/* ---------- Шрифтовий логотип ---------- */
+.wordmark { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; letter-spacing: -.035em; line-height: 1; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.wordmark .dot { width: .34em; height: .34em; border-radius: 50%; background: var(--ok-dot); box-shadow: 0 0 0 .12em color-mix(in srgb, var(--ok-dot) 22%, transparent); transform: translateY(-.02em); }
+
+/* ---------- Кнопки ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 26px; border: 0; border-radius: var(--r-md);
+  font-weight: 700; font-size: 17px; text-decoration: none; cursor: pointer; transition: transform .15s var(--ease), box-shadow .2s var(--ease), background .2s; white-space: nowrap; }
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--accent); color: var(--on-accent); box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--accent) 70%, transparent); }
+.btn-primary:hover { box-shadow: 0 14px 30px -10px color-mix(in srgb, var(--accent) 80%, transparent); }
+.btn-secondary { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+.btn-secondary:hover { box-shadow: inset 0 0 0 1.5px var(--ink-2); }
+.btn[disabled] { opacity: .35; cursor: default; box-shadow: none; }
+.btn-block { width: 100%; }
+.btn svg.i { width: 20px; height: 20px; }
+
+/* Лінійні іконки інтерфейсу (не плутати з об'ємними) */
+.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ---------- Чипи, мітки, статус ---------- */
+.chip { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 6px 14px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--surface) 80%, transparent);
+  box-shadow: inset 0 0 0 1px var(--line); font-size: 14px; font-weight: 600; color: var(--ink); }
+.tbd { color: var(--ink-2); font-weight: 600; }
+.status { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 10px; border-radius: var(--r-pill); background: var(--ok-soft); color: var(--ok); font-size: 14px; font-weight: 700; }
+.pulse { position: relative; width: 10px; height: 10px; border-radius: 50%; background: var(--ok-dot); flex: none; }
+.pulse::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid var(--ok-dot); opacity: 0; animation: pulse 2.4s var(--ease) infinite; }
+@keyframes pulse { 0% { transform: scale(.5); opacity: .8; } 100% { transform: scale(1.6); opacity: 0; } }
+.demo-tag { display: inline-block; padding: 3px 8px; border-radius: 8px; background: var(--surface-2); color: var(--ink-2); font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+
+/* ---------- Картки ---------- */
+.card { background: var(--surface); border-radius: var(--r-xl); box-shadow: var(--sh-card); }
+
+/* Плитка вибору (послуга, варіант відповіді) */
+.tile { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px; border-radius: var(--r-lg); background: var(--surface-2);
+  border: 0; box-shadow: inset 0 0 0 1.5px transparent; text-align: left; cursor: pointer; transition: box-shadow .2s, background .2s, transform .15s var(--ease); }
+.tile:hover { box-shadow: inset 0 0 0 1.5px var(--line); }
+.tile.is-active, .tile[aria-pressed="true"], .tile[aria-checked="true"] { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+[data-palette="signal"] .tile.is-active, [data-palette="signal"] .tile[aria-checked="true"] { box-shadow: inset 0 0 0 2px var(--ink); }
+.tile-title { font-weight: 800; font-size: 18px; line-height: 1.2; letter-spacing: -.01em; }
+.tile-sub { font-size: 14px; color: var(--ink-2); line-height: 1.35; }
+
+/* Прогрес кроків */
+.progress { display: flex; gap: 6px; }
+.progress span { flex: 1; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; position: relative; }
+.progress span.done::after, .progress span.now::after { content: ""; position: absolute; inset: 0; background: var(--accent); border-radius: 3px; }
+[data-palette="signal"] .progress span.done::after, [data-palette="signal"] .progress span.now::after { background: var(--ink); }
+.progress span.now::after { animation: grow .5s var(--ease) both; transform-origin: left; }
+@keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* ---------- Нижня панель як у застосунку ---------- */
+.tabbar { display: grid; grid-template-columns: 1fr 1fr 1.35fr 1fr; align-items: center; gap: 4px; padding: 8px 10px calc(10px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-radius: 26px 26px 0 0; box-shadow: 0 -1px 0 var(--line), 0 -12px 30px -18px rgba(15, 25, 50, .25); }
+.tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; border-radius: 16px; color: var(--ink); text-decoration: none;
+  font-size: 13px; font-weight: 700; background: none; border: 0; cursor: pointer; }
+.tab .i { width: 24px; height: 24px; }
+.tab-main { flex-direction: row; gap: 8px; min-height: 52px; background: var(--accent); color: var(--on-accent); font-size: 15px; border-radius: 18px;
+  box-shadow: 0 10px 22px -10px color-mix(in srgb, var(--accent) 80%, transparent); }
+.tab-main .i { width: 20px; height: 20px; }
+
+/* Кругла кнопка дзвінка */
+.round { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--surface); box-shadow: var(--sh-card); color: var(--ink); text-decoration: none; }
+.round.accent { background: var(--accent); color: var(--on-accent); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
