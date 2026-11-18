@@ -101,7 +101,7 @@ async function deliverLead(env, lead, source) {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.RESEND_API_KEY}` },
-      body: JSON.stringify({ from: 'StormClick <leads@stormclick.agency>', to: [env.LEAD_EMAIL], subject: `Нова заявка: ${lead.name}`, text }),
+      body: JSON.stringify({ from: 'StormClick <leads@storm-click.com>', to: [env.LEAD_EMAIL], subject: `Нова заявка: ${lead.name}`, text }),
     });
     results.email = r.ok;
   }

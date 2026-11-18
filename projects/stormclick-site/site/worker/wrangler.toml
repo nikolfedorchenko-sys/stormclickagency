@@ -5,7 +5,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 # Домен сайту, якому дозволено звертатися до API (кілька через кому)
-ALLOWED_ORIGINS = "https://stormclick.agency,http://localhost:5173,http://localhost:4173"
+ALLOWED_ORIGINS = "https://storm-click.com,https://www.storm-click.com,https://stormclickagency.pages.dev,http://localhost:5173,http://localhost:4173"
 # Куди відправляти заявки на email (необов'язково, потрібен RESEND_API_KEY)
 LEAD_EMAIL = ""
 

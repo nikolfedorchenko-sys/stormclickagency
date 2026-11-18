@@ -17,7 +17,7 @@
    - Build output directory: `dist` (відносно Root directory, тобто `projects/stormclick-site/site/dist`)
    - Node: береться з файлу `.node-version` (22) у тій самій теці
 4. **Save and Deploy**. Через 1–2 хвилини сайт доступний на `<project>.pages.dev`.
-5. **Custom domains** → додати `stormclick.agency` (і `www`). Якщо домен уже в Cloudflare, DNS-запис створиться сам.
+5. **Custom domains** → додати `storm-click.com` (і `www.storm-click.com`) – підключено, домен зареєстровано в HOSTiQ, NS вказують на Cloudflare. Якщо домен уже в Cloudflare, DNS-запис створиться сам.
 
 Гілки, крім production, отримують preview-посилання виду `<branch>.<project>.pages.dev` – зручно дивитися зміни до злиття в `main`.
 
