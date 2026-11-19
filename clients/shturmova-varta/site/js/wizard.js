@@ -10,7 +10,7 @@
     { v: 'object', t: 'Об’єкт', s: 'Офіс, склад, магазин, будмайданчик, будинок' },
     { v: 'person', t: 'Людину', s: 'Особиста охорона і супровід' },
     { v: 'event', t: 'Захід', s: 'Конференція, концерт, свято' },
-    { v: 'unsure', t: 'Ще не знаю – порадьте', s: 'Менеджер допоможе обрати' }
+    { v: 'unsure', t: 'Ще не знаю\u00a0– порадьте', s: 'Менеджер допоможе обрати' }
   ];
   var STEP2 = {
     object: { k: 'place', q: 'Який це об’єкт?', side: 'Об’єкт', o: ['Офіс або бізнес-центр', 'Склад чи виробництво', 'Магазин або ТЦ', 'Будівельний майданчик', 'Приватний будинок', 'КПП', 'Інше'] },
@@ -103,13 +103,13 @@
   /* перевірка кроку 4: повертає текст помилки або '' */
   function errName() {
     var n = (a.name || '').trim();
-    if (!n) return 'Вкажіть ім’я – так менеджер знатиме, як до вас звертатися';
-    if (!/\p{L}.*\p{L}/u.test(n)) return 'Ім’я – хоча б 2 літери';
+    if (!n) return 'Вкажіть ім’я\u00a0– так менеджер знатиме, як до вас звертатися';
+    if (!/\p{L}.*\p{L}/u.test(n)) return 'Ім’я\u00a0– хоча б 2 літери';
     return '';
   }
   function errPhone() {
     var d = digits(a.phone);
-    if (d.length <= 3) return 'Вкажіть телефон – на нього передзвонить менеджер';
+    if (d.length <= 3) return 'Вкажіть телефон\u00a0– на нього передзвонить менеджер';
     if (d.length < 12 || d.slice(0, 3) !== '380') return 'Номер неповний: після +380 потрібно 9 цифр';
     return '';
   }
@@ -215,8 +215,8 @@
         // назва і підпис нейтральні, autocomplete="new-password" – щоб браузер не автозаповнив пастку в людей
         '<div class="hp" aria-hidden="true"><label for="f-hp">Не заповнюйте це поле</label><input id="f-hp" name="hp_url" type="text" tabindex="-1" autocomplete="new-password"></div>' +
         '<p class="fine">Надсилаючи заявку, ви погоджуєтеся, що ТОВ «Охоронна компанія „Штурмова варта“» обробить ваші ім’я, телефон, адресу (якщо вказали), відповіді на питання майстра та службові дані про джерело переходу, щоб зв’язатися з вами щодо заявки. <a href="/privacy">Політика конфіденційності [уточнити]</a></p>' +
-        (C.TELEGRAM_URL || C.VIBER_URL ? '' : '<p class="fine">Telegram і Viber – [уточнити], чи підключені.</p>') +
-        (st.sendErr ? '<div class="alert" role="alert" tabindex="-1" id="send-err"><h3><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>Не вдалося надіслати заявку</h3><p>Ваші відповіді збережені. Спробуйте ще раз або подзвоніть – оформимо заявку телефоном.</p>' +
+        (C.TELEGRAM_URL || C.VIBER_URL ? '' : '<p class="fine">Telegram і Viber\u00a0– [уточнити], чи підключені.</p>') +
+        (st.sendErr ? '<div class="alert" role="alert" tabindex="-1" id="send-err"><h3><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>Не вдалося надіслати заявку</h3><p>Ваші відповіді збережені. Спробуйте ще раз або подзвоніть\u00a0– оформимо заявку телефоном.</p>' +
           '<div class="acts"><button type="submit" class="btn">Спробувати ще раз</button><a class="btn btn-ghost" href="' + TEL + '"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Подзвонити</a></div></div>' : '') +
         (st.sendErr ? '' : nav(4)) + '</form>';
     } else if (st.offline) {
@@ -227,8 +227,8 @@
       if (C.TELEGRAM_URL) alt += '<a class="btn btn-ghost" href="' + esc(C.TELEGRAM_URL) + '" rel="noopener">Telegram</a>';
       if (C.VIBER_URL) alt += '<a class="btn btn-ghost" href="' + esc(C.VIBER_URL) + '" rel="noopener">Viber</a>';
       h = '<div class="done-mark call" aria-hidden="true"><svg class="i"><use href="#i-phone"/></svg></div>' +
-        '<h2 class="w-q" id="wq" tabindex="-1">Залишився один крок – подзвоніть</h2>' +
-        '<p class="w-sub">Заявку приймемо телефоном: наберіть <a class="w-tel" href="' + TEL + '">' + TEL_TXT + '</a>' + (C.EMAIL ? ' або надішліть відповіді e-mail' : '') + ' і назвіть менеджеру відповіді нижче. Графік роботи лінії – ' + esc(C.LINE_HOURS || '[уточнити]') + '.</p>' +
+        '<h2 class="w-q" id="wq" tabindex="-1">Залишився один крок\u00a0– подзвоніть</h2>' +
+        '<p class="w-sub">Заявку приймемо телефоном: наберіть <a class="w-tel" href="' + TEL + '">' + TEL_TXT + '</a>' + (C.EMAIL ? ' або надішліть відповіді e-mail' : '') + ' і назвіть менеджеру відповіді нижче. Графік роботи лінії\u00a0– ' + esc(C.LINE_HOURS || '[уточнити]') + '.</p>' +
         '<div class="w-nav w-off"><a class="btn" href="' + TEL + '"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Подзвонити</a>' + alt + '</div>' +
         '<h3 class="sum-h">Ваші відповіді</h3>' + sumList() +
         '<div class="w-nav end"><button type="button" class="btn btn-ghost" data-act="edit"><svg class="i" aria-hidden="true"><use href="#i-back"/></svg>Змінити відповіді</button></div>';

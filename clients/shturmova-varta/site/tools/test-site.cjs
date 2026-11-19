@@ -35,7 +35,7 @@ async function newPage(browser, opts = {}) {
   return page;
 }
 const val = (p, sel) => p.$eval(sel, e => e.value);
-const text = (p, sel) => p.$eval(sel, e => e.textContent.trim());
+const text = (p, sel) => p.$eval(sel, e => e.textContent.replace(/\u00a0/g, ' ').trim()); // &nbsp; перед тире – як пробіл
 
 async function toStep4(p, query = '') {
   await p.goto(BASE + '/wizard' + query, { waitUntil: 'networkidle' });
@@ -380,9 +380,9 @@ async function toStep4(p, query = '') {
   {
     const p = await newPage(b, { tag: 'v2', allow: /status of 404/ }); // /nope-404 – навмисна відсутня адреса
     await p.goto(BASE + '/', { waitUntil: 'networkidle' });
-    const norm = s => s.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
+    const norm = s => s.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
     ok(norm(await text(p, 'h1')) === 'Охорона з бойовим досвідом', 'H1 – «Охорона з бойовим досвідом»');
-    ok(await p.$eval('h1 + p.hero-sub', e => e.offsetHeight > 0 && e.textContent.replace(/ /g, ' ') === 'Фізична й особиста охорона в Києві. На постах – ветерани та співробітники з бойовим досвідом.'), 'підзаголовок – видимий <p> одразу під H1, текст із site-copy');
+    ok(await p.$eval('h1 + p.hero-sub', e => e.offsetHeight > 0 && e.textContent.replace(/\u00a0/g, ' ') === 'Фізична й особиста охорона в Києві. На постах – ветерани війни та колишні військові.'), 'підзаголовок – видимий <p> одразу під H1, текст за рішенням людини');
     const T = 'Охорона об’єктів і особиста охорона в Києві – Штурмова варта';
     const D = 'Охоронна компанія «Штурмова варта», Київ: фізична охорона об’єктів і особиста охорона. На постах – ветерани та співробітники з бойовим досвідом.';
     const meta = await p.evaluate(() => { const m = s => (document.querySelector(s) || {}).content; return { t: document.title, d: m('meta[name=description]'), ot: m('meta[property="og:title"]'), od: m('meta[property="og:description"]'), tt: m('meta[name="twitter:title"]'), td: m('meta[name="twitter:description"]'), url: m('meta[property="og:url"]') }; });
@@ -390,7 +390,7 @@ async function toStep4(p, query = '') {
     ok(meta.d === D && meta.od === D && meta.td === D && D.length <= 160, 'description = og = twitter (рекомендований, ≤ 160 симв.)', D.length);
     ok(meta.url === 'https://shturmova-varta.example/', 'og:url – корінь /');
     ok(await p.$eval('#q', e => e.dataset.short === 'Що охороняти? Офіс, склад…'), 'короткий placeholder пошуку');
-    const hint = await p.$$eval('#p-find .hint a', as => as.map(a => [a.textContent.replace(/ /g, ' '), a.getAttribute('href')]));
+    const hint = await p.$$eval('#p-find .hint a', as => as.map(a => [a.textContent.replace(/\u00a0/g, ' '), a.getAttribute('href')]));
     ok(JSON.stringify(hint) === JSON.stringify([['офіс', '/wizard?t=object&p=Офіс%20або%20бізнес-центр'], ['склад', '/wizard?t=object&p=Склад%20чи%20виробництво'], ['особиста охорона', '/wizard?t=person']]), 'підказка під пошуком: офіс, склад, особиста охорона', hint);
     // H1 не стрибає між «Підібрати» і «Подзвонити» на трьох ширинах; кількість рядків H1
     for (const [w, h, lines] of [[360, 800, 2], [768, 1024, 1], [1440, 900, 1]]) {
@@ -403,14 +403,14 @@ async function toStep4(p, query = '') {
     }
     await p.setViewportSize({ width: 1440, height: 900 }); await p.reload({ waitUntil: 'networkidle' });
     // «Хто на постах»
-    const posts = await p.evaluate(() => { const s = document.getElementById('posty'); return { h: s.querySelector('h2').textContent, li: s.querySelectorAll('li').length, txt: s.textContent, prev: s.previousElementSibling.className, img: s.querySelectorAll('img, svg').length }; });
-    ok(posts.h === 'Хто на постах' && posts.li === 4 && posts.prev === 'cats' && posts.img === 0, '«Хто на постах»: H2, 4 тези, одразу після сітки послуг, без зображень і символіки', posts.prev);
+    const posts = await p.evaluate(() => { const s = document.getElementById('posty'); return { h: s.querySelector('h2').textContent, li: [...s.querySelectorAll('li')].filter(l => l.querySelector('.posts-n') && l.querySelector('b')).length, txt: s.textContent, prev: s.previousElementSibling.className, img: s.querySelectorAll('img, svg').length }; });
+    ok(posts.h === 'Хто на постах' && posts.li === 4 && posts.prev === 'cats' && posts.img === 0, '«Хто на постах»: H2, 4 тези з номерами 01–04 і жирним вступом, одразу після сітки послуг, без зображень і символіки', posts.prev);
     ok(!/уточнити|\[/.test(posts.txt), '«Хто на постах»: без [уточнити]');
     ok(await p.$$eval('a[href="#posty"]', as => as.length >= 2), 'меню: «Хто на постах» веде на блок');
     ok(!(await p.$('.nav a[href="#kabinet"], .mnav-list a[href="#kabinet"]')), 'меню: «Кабінет клієнта» прибрано з головного меню (блок лишився)');
     ok(!!(await p.$('#kabinet')) && /незабаром/.test(await text(p, '.ftr-mid a[href="#kabinet"]')), 'кабінет: блок на сторінці, у футері – з позначкою «незабаром»');
     // SEO-текст
-    const ab = await p.evaluate(() => { const s = document.getElementById('pro-okhoronu'); return { h2: s.querySelector('h2').textContent.replace(/ /g, ' '), h3: [...s.querySelectorAll('h3')].map(h => h.textContent.replace(/ /g, ' ')), ol: s.querySelectorAll('ol li').length, next: s.nextElementSibling.id, words: s.innerText.split(/\s+/).length, txt: s.textContent }; });
+    const ab = await p.evaluate(() => { const s = document.getElementById('pro-okhoronu'); return { h2: s.querySelector('h2').textContent.replace(/\u00a0/g, ' '), h3: [...s.querySelectorAll('h3')].map(h => h.textContent.replace(/\u00a0/g, ' ')), ol: s.querySelectorAll('ol li').length, next: s.nextElementSibling.id, words: s.innerText.split(/\s+/).length, txt: s.textContent }; });
     ok(ab.h2 === 'Фізична охорона об’єктів і особиста охорона в Києві' && ab.h3.length === 3 && ab.ol === 4 && ab.next === 'pytannia', 'SEO-блок: H2, три H3, 4 кроки, стоїть перед «Питання та відповіді»', ab.h3);
     ok(ab.words > 230 && !/уточнити|\[/.test(ab.txt), 'SEO-блок: ~270 слів, без [уточнити]', ab.words);
     // FAQ
@@ -421,12 +421,15 @@ async function toStep4(p, query = '') {
     const im = await p.$$eval('.card', cs => cs.map(c => ({ alt: c.querySelector('img').alt, tag: c.querySelector('.tag').getAttribute('aria-hidden') })));
     ok(im.length === 10 && im.every(i => i.alt.length > 10 && i.tag === null), '10 фото з alt, плашка «ілюстративне фото» доступна скрінрідеру', im.map(i => i.alt));
     // заголовки без склеєних слів
-    const h2 = await p.$$eval('h2', hs => hs.map(h => h.textContent.replace(/ /g, ' ').replace(/\s+/g, ' ').trim()));
+    const h2 = await p.$$eval('h2', hs => hs.map(h => h.textContent.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim()));
     ok(h2.includes('Популярні послуги') && h2.includes('Ситуації, коли потрібна охорона') && h2.includes('Питання та відповіді'), 'h2 з переносом: слова не склеюються в textContent', h2);
     ok(!(await p.$('h4')) && !(await p.$('.ftr h3')), 'без h4 у демо і h3 у футері');
     // демо кабінету
     const demo = await text(p, '.demo-win');
-    ok(!/\[/.test(demo) && /Ваш об’єкт/.test(demo) && /Рахунок за місяць/.test(demo) && /Сума до сплати/.test(demo), 'демо кабінету: нейтральні слова замість [адреса]/[місяць]/[сума]');
+    ok(!/\[/.test(demo) && /Ваш об’єкт/.test(demo) && /Пост працює/.test(demo) && /Ваш менеджер/.test(demo), 'демо кабінету: лише статус поста і менеджер, без заглушок');
+    const cab = (await text(p, '#kabinet')).toLowerCase();
+    const promised = ['журнал змін', 'договір', 'акти', 'оплат', 'рахун', 'за зміну', 'обхід', 'в’їзд'].filter(w => cab.includes(w));
+    ok(promised.length === 0 && /статус об’єкта/.test(cab) && /контакти менеджера/.test(cab), 'кабінет: нейтральний – статус і контакти менеджера, без журналу змін, договору, актів, оплати онлайн', promised);
     // логотип: доступна назва = видимий текст
     ok(await p.$$eval('a.logo', as => as.every(a => !a.hasAttribute('aria-label') && a.textContent.replace(/\s+/g, ' ').includes('Штурмова варта') && a.getAttribute('href') === '/')), 'логотип: href="/", назва = видимий текст «Штурмова варта»');
     // внутрішні посилання – схема Pages
