@@ -426,8 +426,8 @@ ul, ol { list-style: none; }
 .cab-feature-title { margin-top: 22px; font-size: 30px; font-weight: 500; line-height: 1.1; letter-spacing: -.01em; }
 .soon-dark { display: inline-block; margin-left: 12px; vertical-align: middle; font-size: 13px; font-weight: 500; line-height: 1; padding: 6px 10px; border: 1.5px solid var(--night-muted); color: var(--night-muted); border-radius: var(--radius-pill); letter-spacing: 0; }
 
-.demo { background: var(--hero-grad); padding: 36px 30px 0; height: 300px; overflow: hidden; color: var(--fg); }
-.demo-win { background: var(--surface); border-radius: 14px 14px 0 0; height: 100%; padding: 16px 20px; font-size: 14px; }
+.demo { background: var(--hero-grad); padding: 36px 30px 0; overflow: hidden; color: var(--fg); }
+.demo-win { background: var(--surface); border-radius: 14px 14px 0 0; padding: 16px 20px 32px; font-size: 14px; }
 .demo-top { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid var(--line-soft); }
 .demo-top .logo-mark { width: 26px; height: 26px; border-radius: 7px; font-size: 10px; }
 .demo-top b { font-weight: 500; font-size: 14px; }
@@ -446,8 +446,8 @@ ul, ol { list-style: none; }
 @media (max-width: 640px) {
   .cab { padding: 48px 0 56px; }
   .cab-grid { margin-top: 28px; gap: 32px; }
-  .demo { padding: 20px 14px 0; height: 260px; }
-  .demo-win { padding: 12px; }
+  .demo { padding: 20px 14px 0; }
+  .demo-win { padding: 12px 12px 20px; }
   .demo-cols { grid-template-columns: 1fr; gap: 10px; padding-top: 12px; }
   .cab-feature-title { font-size: 22px; }
   .cab-items { gap: 0 16px; }

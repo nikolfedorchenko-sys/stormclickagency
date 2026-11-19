@@ -428,7 +428,7 @@ async function toStep4(p, query = '') {
     const demo = await text(p, '.demo-win');
     ok(!/\[/.test(demo) && /Ваш об’єкт/.test(demo) && /Пост працює/.test(demo) && /Ваш менеджер/.test(demo), 'демо кабінету: лише статус поста і менеджер, без заглушок');
     const cab = (await text(p, '#kabinet')).toLowerCase();
-    const promised = ['журнал змін', 'договір', 'акти', 'оплат', 'рахун', 'за зміну', 'обхід', 'в’їзд'].filter(w => cab.includes(w));
+    const promised = [/журнал змін/, /договір/, /(^|[^а-яіїєґ’])акт(и|ів)?([^а-яіїєґ]|$)/, /оплат/, /рахун/, /за зміну/, /обхід/, /в’їзд/].filter(r => r.test(cab)).map(String); // «акти» – окремим словом, не в «контакти»
     ok(promised.length === 0 && /статус об’єкта/.test(cab) && /контакти менеджера/.test(cab), 'кабінет: нейтральний – статус і контакти менеджера, без журналу змін, договору, актів, оплати онлайн', promised);
     // логотип: доступна назва = видимий текст
     ok(await p.$$eval('a.logo', as => as.every(a => !a.hasAttribute('aria-label') && a.textContent.replace(/\s+/g, ' ').includes('Штурмова варта') && a.getAttribute('href') === '/')), 'логотип: href="/", назва = видимий текст «Штурмова варта»');
