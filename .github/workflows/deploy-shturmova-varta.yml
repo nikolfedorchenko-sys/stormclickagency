@@ -1,0 +1,34 @@
+# Автоматичне розміщення сайту «Штурмова варта» на Cloudflare Pages (https://shturmova-varta.pages.dev).
+# Запускається, коли в гілку site/shturmova-varta приходить нова версія сайту, або вручну (Actions → Run workflow).
+# Потрібен секрет репозиторію CLOUDFLARE_API_TOKEN (права: Cloudflare Pages – Edit, Account Settings – Read).
+name: Deploy – Штурмова варта
+
+on:
+  push:
+    branches: [site/shturmova-varta]
+    paths:
+      - 'clients/shturmova-varta/site/**'
+      - '.github/workflows/deploy-shturmova-varta.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-shturmova-varta
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Збірка dist
+        run: node clients/shturmova-varta/site/tools/build-dist.cjs
+      - name: Розміщення на Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: fb4873bcbfffd99d5274aa728698f097
+        run: npx -y wrangler@3.112.0 pages deploy clients/shturmova-varta/site/dist --project-name shturmova-varta --branch main --commit-dirty=true
