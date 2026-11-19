@@ -414,7 +414,7 @@ async function toStep4(p, query = '') {
     ok(ab.h2 === 'Фізична охорона об’єктів і особиста охорона в Києві' && ab.h3.length === 3 && ab.ol === 4 && ab.next === 'pytannia', 'SEO-блок: H2, три H3, 4 кроки, стоїть перед «Питання та відповіді»', ab.h3);
     ok(ab.words > 230 && !/уточнити|\[/.test(ab.txt), 'SEO-блок: ~270 слів, без [уточнити]', ab.words);
     // FAQ
-    ok(await p.$$eval('.faq summary', ss => { const s = ss.find(x => x.textContent === 'Хто працює на постах?'); return s && s.nextElementSibling.textContent === 'Ветерани та співробітники з бойовим досвідом.'; }), 'FAQ «Хто працює на постах?» – відповідь із site-copy');
+    ok(await p.$$eval('.faq summary', ss => { const s = ss.find(x => x.textContent === 'Хто працює на постах?'); return s && s.nextElementSibling.textContent.replace(/\u00a0/g, ' ') === 'Ветерани та співробітники з бойовим досвідом.'; }), 'FAQ «Хто працює на постах?» – відповідь із site-copy');
     ok(!(await p.$('script[type="application/ld+json"]:has-text("FAQPage")')) && !(await p.evaluate(() => /FAQPage/.test(document.documentElement.innerHTML))), 'FAQPage-розмітки немає');
     ok(!(await p.$('.faq a.link-arrow')), 'FAQ: посилання саме на себе прибрано');
     // фото: alt і плашка

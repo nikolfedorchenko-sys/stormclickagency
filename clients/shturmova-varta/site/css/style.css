@@ -416,15 +416,16 @@ ul, ol { list-style: none; }
    ========================================================= */
 .cab { background: var(--night); color: var(--night-fg); padding: 88px 0 104px; }
 .cab .sec-head { align-items: center; }
+.cab .sec-head .h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
 .cab-grid { display: grid; grid-template-columns: 547px 1fr; gap: 108px; margin-top: 56px; }
 .cab-note { margin-top: 14px; font-size: 14px; color: var(--night-muted); }
-.cab-items { display: grid; grid-template-columns: 1fr; gap: 0 var(--col-gap); align-content: start; max-width: 520px; }
+.cab-items { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--col-gap); align-content: start; }
 .cab-items li { border-top: 2px solid var(--night-fg); padding: 22px 0 56px; }
 .cab-items small { font-size: 14px; color: var(--night-muted); }
 .cab-items h3 { margin-top: 10px; font-size: 18px; font-weight: 500; line-height: 1.35; }
 .cab-items p { margin-top: 8px; font-size: 16px; color: var(--night-fg-2); line-height: 1.5; }
 .cab-feature-title { margin-top: 22px; font-size: 30px; font-weight: 500; line-height: 1.1; letter-spacing: -.01em; }
-.soon-dark { display: inline-block; margin-left: 12px; vertical-align: middle; font-size: 13px; font-weight: 500; line-height: 1; padding: 6px 10px; border: 1.5px solid var(--night-muted); color: var(--night-muted); border-radius: var(--radius-pill); letter-spacing: 0; }
+.soon-dark { display: inline-block; vertical-align: middle; font-size: 13px; font-weight: 500; line-height: 1; padding: 6px 10px; border: 1.5px solid var(--night-muted); color: var(--night-muted); border-radius: var(--radius-pill); letter-spacing: 0; }
 
 .demo { background: var(--hero-grad); padding: 36px 30px 0; overflow: hidden; color: var(--fg); }
 .demo-win { background: var(--surface); border-radius: 14px 14px 0 0; padding: 16px 20px 32px; font-size: 14px; }
@@ -442,7 +443,7 @@ ul, ol { list-style: none; }
 .demo-mgr .demo-s { margin-top: 0; }
 .demo-call { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--btn-bg); color: var(--btn-fg); display: grid; place-items: center; }
 .demo-call .i { width: 18px; height: 18px; }
-@media (max-width: 1100px) { .cab-grid { grid-template-columns: 1fr; gap: 48px; } .cab-items { grid-template-columns: 1fr 1fr; max-width: none; } }
+@media (max-width: 1100px) { .cab-grid { grid-template-columns: 1fr; gap: 48px; } }
 @media (max-width: 640px) {
   .cab { padding: 48px 0 56px; }
   .cab-grid { margin-top: 28px; gap: 32px; }
