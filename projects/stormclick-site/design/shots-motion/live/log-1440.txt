@@ -1,0 +1,3 @@
+1440 errs []
+ strikes 11 2.2s hero  | 5.5s page right:622/w454 | 14.4s page left:639/w39 | 23s page right:546/w39 | 29.8s page top:440/w149 | 36.2s page band-left:543/w438 | 42.9s page right:352/w31 | 51.2s hero  | 54.1s page left:594/w30 | 60.7s page left:848/w37 | 70.5s page right:550/w53
+ start-to-start 3.3, 8.9, 8.6, 6.8, 6.4, 6.7, 8.3, 2.9, 6.6, 9.8

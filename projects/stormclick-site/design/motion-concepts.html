@@ -182,7 +182,7 @@ h1 .hl{color:var(--c-accent);display:block}
 main{position:relative;z-index:1}
 /* секції прозорі – під ними видно шар шторму; картки, форма, FAQ – непрозорі поверхні */
 .sec{position:relative;z-index:1;padding:96px 0}
-.sec.band{background:rgba(14,16,24,.5)}
+.sec.band{background:linear-gradient(180deg,rgba(14,16,24,0),rgba(14,16,24,.5) 140px,rgba(14,16,24,.5) calc(100% - 140px),rgba(14,16,24,0))} /* краї розтушовано – смуга не ріже блискавку і хмари */
 @media (min-width:768px){.sec{padding:128px 0}}
 @media (min-width:1200px){.sec{padding:144px 0}}
 
@@ -199,7 +199,7 @@ main{position:relative;z-index:1}
 .b2-primary svg{width:11px;height:15px;fill:currentColor}
 .b2-ghost{border:1px solid var(--c-line-strong);color:var(--c-text);background:var(--c-surface)}
 .chip-time{display:inline-block;font-size:14px;font-weight:600;color:var(--c-live);background:rgba(92,227,154,.08);border:1px solid rgba(92,227,154,.22);border-radius:var(--r-pill);padding:2px 10px}
-.price{font:var(--fw-display) 22px/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;color:var(--c-text);transition:color .35s,text-shadow .35s}
+.price{font:var(--fw-display) 22px/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;color:var(--c-text);transition:color .35s}
 
 /* Позначка «Новий рух» біля кожного нового живого елемента (ховається з ?clean) */
 .new-tag{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--c-accent-hi);border:1px dashed rgba(154,163,255,.55);border-radius:var(--r-pill);padding:3px 12px 3px 10px;margin-bottom:var(--s-4)}
@@ -246,7 +246,7 @@ main{position:relative;z-index:1}
 .card::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--c-accent-hi),transparent);opacity:0;transition:opacity .9s}
 .card.lit{border-color:rgba(124,136,255,.55);transition:border-color .12s}
 .card.lit::after{opacity:1;transition:opacity .12s}
-.card.lit .price{color:#fff;text-shadow:0 0 14px rgba(154,163,255,.85);transition:color .12s,text-shadow .12s}
+.card.lit .price{color:var(--c-accent-hi);transition:color .12s}
 .extras{margin-top:var(--s-7);color:var(--c-muted);font-size:14px}
 
 /* ---- «Чому так дешево»: конвеєр задача → ШІ → людина → результат ---- */
@@ -292,34 +292,39 @@ main{position:relative;z-index:1}
 @media (min-width:560px){.facts-grid{grid-template-columns:1fr 1fr}}
 @media (min-width:1100px){.facts-grid{grid-template-columns:repeat(4,1fr);gap:var(--s-4)}}
 .fact{padding:var(--s-5);display:grid;grid-template-rows:auto auto 1fr;gap:var(--s-2);min-width:0}
+.fact-static{align-self:start}
 .fact-num{font:600 clamp(36px,4vw,52px)/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.03em}
 .fact-label{color:var(--c-muted);font-size:14px;line-height:1.45}
 .fact-live{align-self:end;margin-top:var(--s-4);min-height:92px;display:flex;align-items:flex-end}
-/* «годин, а не тижнів»: дві доріжки */
-.race{width:100%;display:grid;gap:10px}
-.race-row{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:10px;font-size:14px;color:var(--c-muted)}
-.race-bar{position:relative;height:6px;border-radius:3px;background:var(--c-surface-2);overflow:hidden}
-.race-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:3px}
-.race-us i{background:var(--c-accent);box-shadow:0 0 10px rgba(124,136,255,.8)}
-.race-them i{background:#4A4E68}
-.race.go .race-us i{animation:race-us 6s cubic-bezier(.3,0,.2,1) infinite}
-.race.go .race-them i{animation:race-them 6s linear infinite}
-@keyframes race-us{0%{width:0}18%{width:100%}22%{width:100%;filter:brightness(1.8)}30%,92%{width:100%;filter:none}100%{width:100%;opacity:0}}
-@keyframes race-them{0%{width:0}92%{width:9%}100%{width:9%;opacity:0}}
+/* «годин, а не тижнів»: дві доріжки з фінішем; підписи в кінці доріжок */
+.race{width:100%;display:grid;gap:12px}
+.race-row{display:grid;grid-template-columns:64px 1fr 58px;align-items:center;gap:10px;font-size:14px;color:var(--c-muted)}
 .race-row em{font-style:normal}
-.race-cap{display:flex;justify-content:space-between;font-size:14px;color:var(--c-muted)}
-.race-cap b{color:var(--c-text);font-weight:600}
+.race-row b{font-weight:600;text-align:right;white-space:nowrap}
+.race-us b{color:var(--c-text)}
+.race-bar{position:relative;height:6px;border-radius:3px;background:var(--c-surface-2)}
+.race-bar::after{content:"";position:absolute;right:0;top:-5px;bottom:-5px;width:2px;border-radius:1px;background:#4A4E68} /* фініш – готовий сайт */
+.race-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:3px}
+.race-us i{width:100%;background:var(--c-accent);box-shadow:0 0 10px rgba(124,136,255,.8)}
+.race-them i{width:9%;background:#6A6F8C}
+.race.go .race-us i{animation:race-us 7s cubic-bezier(.3,0,.2,1) infinite}
+.race.go .race-them i{animation:race-them 7s linear infinite}
+.race.go .race-us b{animation:race-lbl 7s infinite}
+@keyframes race-us{0%{width:0}16%{width:100%;filter:brightness(1.8)}24%,92%{width:100%;filter:none}100%{width:100%;opacity:.2}}
+@keyframes race-them{0%{width:0}16%{width:6%}92%{width:9%}100%{width:9%;opacity:.2}}
+@keyframes race-lbl{0%,12%{opacity:.35}18%,92%{opacity:1}100%{opacity:.35}}
 /* «24/7»: доба-циферблат */
 .dial{display:flex;align-items:center;gap:var(--s-4)}
 .dial svg{width:92px;height:92px;flex:none;overflow:visible}
 .dial .cap{font-size:14px;color:var(--c-muted);line-height:1.45}
-.dial .hand{transform-origin:46px 46px;animation:dial-spin 10s linear infinite}
+.dial .hand{transform-origin:46px 46px}
+.dial.go .hand{animation:dial-spin 10s linear infinite}
 @keyframes dial-spin{to{transform:rotate(360deg)}}
 /* «1 год»: таймер розрахунку */
 .timer{display:flex;align-items:center;gap:var(--s-4)}
 .timer svg{width:92px;height:92px;flex:none}
-.timer .arc{fill:none;stroke:var(--c-accent);stroke-width:4;stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:226;transform:rotate(-90deg);transform-origin:46px 46px}
-.timer .ok{opacity:0;transform-origin:46px 46px}
+.timer .arc{fill:none;stroke:var(--c-accent);stroke-width:4;stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:0;transform:rotate(-90deg);transform-origin:46px 46px} /* поза екраном – кінцевий стан */
+.timer .ok{opacity:1;transform-origin:46px 46px}
 .timer.go .arc{animation:timer-arc 5s cubic-bezier(.4,0,.2,1) infinite}
 .timer.go .ok{animation:timer-ok 5s ease-out infinite}
 @keyframes timer-arc{0%{stroke-dashoffset:226}46%{stroke-dashoffset:0}88%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
@@ -335,13 +340,17 @@ main{position:relative;z-index:1}
 .case-kind{font-size:14px;color:var(--c-accent-hi);font-weight:600}
 .case h3{font:600 18px/1.3 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;margin:var(--s-2) 0}
 .case p{color:var(--c-muted);font-size:14px;line-height:1.5}
-.bubble{max-width:86%;padding:8px 12px;border-radius:14px;font-size:14px;line-height:1.4;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+.case-visual[data-live="chat"]{overflow:hidden;-webkit-mask-image:linear-gradient(180deg,transparent,#000 44px);mask-image:linear-gradient(180deg,transparent,#000 44px)}
+@media (max-width:559px){.case-visual[data-live="chat"]{height:280px}}
+.bubble{flex:none;max-width:86%;padding:8px 12px;border-radius:14px;font-size:14px;line-height:1.4;display:none}
+.bubble.show{display:block;animation:bub .35s var(--ease-out)}
+@keyframes bub{from{opacity:0;transform:translateY(8px)}}
 .bubble.in{align-self:flex-start;background:rgba(255,255,255,.08);border-bottom-left-radius:4px}
 .bubble.out{align-self:flex-end;background:#1C1E33;border:1px solid #2D3050;border-bottom-right-radius:4px}
-.bubble.show{opacity:1;transform:none}
-.typing{align-self:flex-end;display:none;gap:4px;padding:10px 12px;border-radius:14px;background:#1C1E33;border:1px solid #2D3050}
+.typing{flex:none;align-self:flex-end;display:none;gap:4px;padding:10px 12px;border-radius:14px;background:#1C1E33;border:1px solid #2D3050}
 .typing.show{display:flex}
-.typing i{width:6px;height:6px;border-radius:50%;background:var(--c-accent-hi);animation:blink 1s infinite}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--c-accent-hi)}
+.typing.show i{animation:blink 1s infinite}
 .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
 @keyframes blink{0%,100%{opacity:.25}50%{opacity:1}}
 .browser{justify-content:flex-start;gap:0}
@@ -354,7 +363,8 @@ main{position:relative;z-index:1}
 .mock-btn.press{transform:scale(.94)}
 .cursor{position:absolute;left:78%;top:88%;width:14px;height:20px;opacity:0;transition:left .9s cubic-bezier(.4,0,.2,1),top .9s cubic-bezier(.4,0,.2,1),opacity .3s}
 .cursor svg{width:14px;height:20px;fill:#fff;stroke:#05060B;stroke-width:1.2}
-.lead-chip{position:absolute;right:14px;top:14px;font-size:14px;font-weight:600;color:var(--c-live);background:rgba(92,227,154,.1);border:1px solid rgba(92,227,154,.3);border-radius:var(--r-pill);padding:3px 10px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s}
+.mock-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lead-chip{font-size:14px;font-weight:600;color:var(--c-live);background:rgba(92,227,154,.1);border:1px solid rgba(92,227,154,.3);border-radius:var(--r-pill);padding:3px 10px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s}
 .lead-chip.show{opacity:1;transform:none}
 .bars-legend{font-size:14px;color:var(--c-muted)}
 .bars-plot{flex:1;display:flex;align-items:flex-end;gap:8px;border-bottom:1px solid var(--c-line);padding-bottom:2px}
@@ -386,7 +396,8 @@ main{position:relative;z-index:1}
 .quiz-step b{color:var(--c-text)}
 .charge{position:relative;height:4px;border-radius:2px;background:var(--c-line);margin-top:10px}
 .charge i{position:absolute;left:0;top:0;bottom:0;width:25%;border-radius:2px;background:var(--c-accent);transition:width .6s var(--ease-out)}
-.charge i::after{content:"";position:absolute;right:-4px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px rgba(154,163,255,.95),0 0 14px 4px rgba(124,136,255,.6);animation:flicker 1.6s infinite}
+.charge i::after{content:"";position:absolute;right:-4px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px rgba(154,163,255,.95),0 0 14px 4px rgba(124,136,255,.6)}
+.quiz.go .charge i::after{animation:flicker 1.6s infinite}
 @keyframes flicker{0%,100%{opacity:1}45%{opacity:.55}50%{opacity:1}70%{opacity:.75}}
 .quiz legend{font:600 22px/1.25 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;margin-bottom:var(--s-4)}
 .quiz fieldset{border:0;display:grid;gap:var(--s-3)}
@@ -408,6 +419,7 @@ main{position:relative;z-index:1}
 .footer{position:relative;z-index:1;border-top:1px solid var(--c-line);padding:28px 0;color:var(--c-muted);font-size:14px;background:var(--c-bg)}
 
 @media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
   .sky-clouds{animation:none}
   .race .race-us i{width:100%}.race .race-them i{width:9%}
   .timer .arc{stroke-dashoffset:0}.timer .ok{opacity:1}
@@ -496,8 +508,8 @@ main{position:relative;z-index:1}
       <div class="box">
         <b>Макет руху на всьому сайті.</b> Перший екран – без змін. Нове:
         <ol>
-          <li><b>Шторм на фоні всієї сторінки</b> – хмари по краях екрана, удар раз на 5–9 с у вільному місці того блоку, який ви зараз бачите (на телефоні – рідше). Текст, картки, кнопки, FAQ і форму блискавка обходить.</li>
-          <li><b>Послуги</b> – імпульс «біль → рішення» пробігає від болю до карток із цінами.</li>
+          <li><b>Шторм на фоні всієї сторінки</b> – хмари по краях екрана, удар раз на 5–9 с у вільному місці того блоку, який ви зараз бачите; на телефоні – рідше, лише великим ударом через проміжок між блоками. Текст, картки, кнопки, FAQ і форму блискавка обходить.</li>
+          <li><b>Послуги</b> – імпульс «біль → рішення» пробігає від болю до карток із цінами (у макеті для прикладу 2 болі з 4).</li>
           <li><b>Чому так дешево</b> – конвеєр «задача → ШІ → людина → результат».</li>
           <li><b>Факти</b> – живі лічильники: години проти тижнів, доба 24/7, таймер розрахунку.</li>
           <li><b>Кейси</b> – мінісцени: бот відповідає, на лендингу натискають кнопку.</li>
@@ -562,7 +574,7 @@ main{position:relative;z-index:1}
         <canvas aria-hidden="true"></canvas>
         <ol class="flow-steps">
           <li class="st-task"><b>Задача</b><span>люди ставлять задачу</span></li>
-          <li class="st-ai"><b>ШІ</b><span>структура, тексти й код – за хвилини</span></li>
+          <li class="st-ai"><b>ШІ</b><span>генерує структуру, тексти й код</span></li>
           <li class="st-human"><b>Людина</b><span>збирає, перевіряє і доводить до ладу</span></li>
           <li class="st-done"><b>Результат</b><span>за який відповідаємо ми</span></li>
         </ol>
@@ -611,12 +623,11 @@ main{position:relative;z-index:1}
       </div>
       <span class="new-tag">Новий рух: живі лічильники</span>
       <div class="facts-grid">
-        <div class="fact surface"><span class="fact-num">$100</span><span class="fact-label">сайт для бізнесу під ключ</span></div>
+        <div class="fact surface fact-static"><span class="fact-num">$100</span><span class="fact-label">сайт для бізнесу під ключ</span></div>
         <div class="fact surface"><span class="fact-num">годин</span><span class="fact-label">а не тижнів до готового сайту</span>
           <span class="fact-live"><span class="race" data-live="race" aria-hidden="true">
-            <span class="race-row race-us"><em>ми</em><span class="race-bar"><i></i></span></span>
-            <span class="race-row race-them"><em>агенція</em><span class="race-bar"><i></i></span></span>
-            <span class="race-cap"><span><b>години</b></span><span>тижні</span></span>
+            <span class="race-row race-us"><em>ми</em><span class="race-bar"><i></i></span><b>години</b></span>
+            <span class="race-row race-them"><em>агенція</em><span class="race-bar"><i></i></span><b>тижні</b></span>
           </span></span></div>
         <div class="fact surface"><span class="fact-num">24/7</span><span class="fact-label">ШІ-асистент відповідає вашим клієнтам</span>
           <span class="fact-live"><span class="dial" data-live="dial" aria-hidden="true">
@@ -627,7 +638,7 @@ main{position:relative;z-index:1}
               <line class="hand" x1="46" y1="46" x2="46" y2="14" stroke="#9AA3FF" stroke-width="2" stroke-linecap="round"/>
               <circle cx="46" cy="46" r="5" fill="#0E1018" stroke="#9AA3FF" stroke-width="2"/>
             </svg>
-            <span class="cap">доба: повідомлення в будь-яку годину – відповідь одразу</span>
+            <span class="cap">повідомлення в будь-яку годину доби – відповідь за секунди</span>
           </span></span></div>
         <div class="fact surface"><span class="fact-num">1 год</span><span class="fact-label">до безкоштовного розрахунку в робочий час</span>
           <span class="fact-live"><span class="timer" data-live="timer" aria-hidden="true">
@@ -668,8 +679,7 @@ main{position:relative;z-index:1}
             <div class="browser-page">
               <div class="mock-title">Розмовна англійська за 3 місяці</div>
               <div class="mock-lines"><i></i><i></i></div>
-              <div class="mock-btn">Пройти тест рівня</div>
-              <span class="lead-chip">+ заявка</span>
+              <div class="mock-row"><div class="mock-btn">Пройти тест рівня</div><span class="lead-chip">+ заявка</span></div>
               <span class="cursor"><svg viewBox="0 0 14 20"><path d="M1 1 L1 16 L5 12.5 L8 19 L10.5 18 L7.6 11.6 L13 11.6 Z"/></svg></span>
             </div>
           </div>
@@ -1329,7 +1339,7 @@ window.StormBus = window.StormBus || {
     heroShare: .35,              // поки перший екран займає > 35% висоти екрана – б'є лише сцена героя
     leaderMin: 60, leaderMax: 110, pulseGapMin: 170, pulseGapMax: 260, tau: 65, tail: 650, // як у героя
     glowMax: .55,                // максимум підсвітки хмар/повітря
-    minLen: 260, minLenM: 150,   // мінімальний видимий канал
+    minLen: 260, minLenM: 220,   // мінімальний видимий канал (вузькі екрани – діагональ через проміжок, ширина ≥ 80 px)
     margin: 24, marginM: 14,     // відступ ядра від тексту і блоків
     blockMargin: 40              // від секцій-«зон тиші» (FAQ, контакт)
   };
@@ -1344,7 +1354,7 @@ window.StormBus = window.StormBus || {
   function sstep(a, b, x){ x = (x - a) / (b - a); x = x < 0 ? 0 : x > 1 ? 1 : x; return x * x * (3 - 2 * x); }
 
   // ---- Розміри і хмари ----
-  var W = 0, H = 0, DPR = 1, mobile = false, side = 0, HH = 64, S = 4;
+  var W = 0, H = 0, DPR = 1, mobile = false, narrow = false, side = 0, HH = 64, S = 4, cloudA = null;
   var cloudDark, cloudLit, cw, ch;
   function contentEdge(){ // ліве поле контенту: від краю екрана до тексту секцій
     var c = document.querySelector('#services .container'); if (!c) return 16;
@@ -1353,18 +1363,19 @@ window.StormBus = window.StormBus || {
   function build(){
     W = innerWidth; H = innerHeight; mobile = W < 768; DPR = Math.min(devicePixelRatio || 1, mobile ? 1.5 : 2);
     HH = header.getBoundingClientRect().height; side = contentEdge(); S = 4;
+    narrow = side < 56;   // режим за наявністю поля, а не за шириною: 360 і 768 – вузькі, від ~1200 – з полями
     cw = Math.ceil(W / S); ch = Math.ceil(H / S);
     cloudDark = document.createElement('canvas'); cloudLit = document.createElement('canvas');
     cloudDark.width = cloudLit.width = cw; cloudDark.height = cloudLit.height = ch;
     var dctx = cloudDark.getContext('2d'), lctx = cloudLit.getContext('2d');
     var di = dctx.createImageData(cw, ch), li = lctx.createImageData(cw, ch), dd = di.data, ld = li.data;
-    var sc = mobile ? 110 : 190, band = mobile ? 84 : 120, edge = mobile ? 26 : Math.max(70, side + 30);
+    var sc = mobile ? 110 : 190, band = mobile ? 84 : 120, edge = narrow ? 30 : Math.max(70, side + 30);
     for (var y = 0; y < ch; y++) for (var x = 0; x < cw; x++){
       var px = x * S, py = y * S;
       // стеля під шапкою + хмари вздовж бічних країв (на телефоні – вузька смуга)
       var top = 1 - sstep(HH + band * .25, HH + band, py);
       var dx = Math.min(px, W - px), sideM = (1 - sstep(edge * .45, edge + 40, dx)) * (.55 + .45 * (1 - sstep(H * .2, H, py)));
-      var mask = Math.max(top * .95, sideM * (mobile ? .75 : 1));
+      var mask = Math.max(top * .95, sideM * (narrow ? .85 : 1));
       if (mask <= .01) continue;
       var n = fbm(px / sc, py / (sc * .62));
       var d = Math.min(1, sstep(.40, .80, n * .85 + mask * .40) * mask);
@@ -1376,6 +1387,7 @@ window.StormBus = window.StormBus || {
       ld[i] = 150 + 80 * sh; ld[i + 1] = 158 + 74 * sh; ld[i + 2] = 255; ld[i + 3] = 255 * Math.min(1, d * (.45 + .75 * sh));
     }
     dctx.putImageData(di, 0, 0); lctx.putImageData(li, 0, 0);
+    cloudA = new Uint8Array(cw * ch); for (var a = 0; a < cw * ch; a++) cloudA[a] = dd[a * 4 + 3]; // альфа хмар – для cloudAt без getImageData
     cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
     cctx.setTransform(1, 0, 0, 1, 0, 0); cctx.imageSmoothingQuality = 'high';
     cctx.drawImage(cloudDark, 0, 0, cv.width, cv.height);
@@ -1409,11 +1421,11 @@ window.StormBus = window.StormBus || {
       }
     });
   }
-  function blocked(x, y){ if (x < 4 || x > W - 4 || y < 0 || y > H - 4) return true; var gx = Math.floor(x / G), gy = Math.floor(y / G); return occ[gy * gw + gx] === 1; }
+  function blocked(x, y){ var e = narrow ? 4 : 14; if (x < e || x > W - e || y < 0 || y > H - 4) return true; var gx = Math.floor(x / G), gy = Math.floor(y / G); return occ[gy * gw + gx] === 1; }
   function segFree(x1, y1, x2, y2){ var d = Math.hypot(x2 - x1, y2 - y1), n = Math.max(1, Math.ceil(d / 4)); for (var i = 0; i <= n; i++){ var k = i / n; if (blocked(x1 + (x2 - x1) * k, y1 + (y2 - y1) * k)) return false; } return true; }
   function cloudAt(x, y){ // чи є хмара в точці старту (удар завжди виходить із хмари)
     var px = Math.min(cw - 1, Math.max(0, Math.round(x / S))), py = Math.min(ch - 1, Math.max(0, Math.round(y / S)));
-    return cloudDark.getContext('2d').getImageData(px, py, 1, 1).data[3] / 255;
+    return cloudA[py * cw + px] / 255;
   }
 
   // ---- Форма ----
@@ -1445,47 +1457,89 @@ window.StormBus = window.StormBus || {
       pts = out; }
     return pts;
   }
-  function makeBolt(rnd){
-    var k = mobile ? .62 : 1, minLen = mobile ? P.minLenM : P.minLen, best = null;
-    for (var tries = 0; tries < 90; tries++){
-      // джерело: стеля хмар під шапкою або (десктоп) бічні хмари в полях
-      // телефон: картки на всю ширину, тож удар живе в проміжках між блоками – входить з хмари на краю екрана
-      // і йде діагоналлю через вільну смугу; якщо смуги немає – удару немає (тому на телефоні рідше)
-      var sx, sy, fromSide = mobile ? rnd() < .7 : side > 56 && rnd() < .5, edgeM = mobile && fromSide;
-      if (edgeM){ var lft = rnd() < .5; sx = lft ? 5 + rnd() * 8 : W - 5 - rnd() * 8; sy = HH + 16 + rnd() * (H - HH - 140); }
-      else if (fromSide){ var left = rnd() < .5; sx = left ? 10 + rnd() * (side - 30) : W - 10 - rnd() * (side - 30); sy = HH + 14 + rnd() * (H - HH) * .4; }
-      else { sx = 12 + rnd() * (W - 24); sy = HH + 10 + rnd() * (mobile ? 26 : 40); }
-      if (blocked(sx, sy) || cloudAt(sx, sy) < (edgeM ? .04 : .12)) continue;
-      var tgt = null;
-      for (var c = 0; c < 140; c++){
-        var inward = fromSide && !mobile && (c & 1); // десктоп: з бічної хмари – або вздовж поля, або діагоналлю у вільну зону блоку
-        var spread = edgeM ? W : inward ? 560 : fromSide ? 70 : (mobile ? 150 : 380), drop = edgeM ? 50 : 110 * k;
-        var tx = sx + (rnd() - .5) * 2 * spread, ty = sy + drop + rnd() * (Math.min(H - 30, edgeM ? sy + 320 : H) - sy - drop);
-        if (Math.abs(tx - sx) > (ty - sy) * (edgeM ? 2.2 : inward ? 1.7 : 1.3) || blocked(tx, ty) || !segFree(sx, sy, tx, ty)) continue;
-        var sc = Math.hypot(tx - sx, ty - sy) + rnd() * 60;
-        if (!tgt || sc > tgt.s) tgt = { x: tx, y: ty, s: sc };
-      }
-      if (!tgt || tgt.s < minLen * .9) continue;
-      var main = walk(rnd, sx, sy, tgt.x, tgt.y, { sMin: 10 * k, sMax: 32 * k, jit: 1.5, maxSteps: 300, yMin: sy - 8 });
-      if (!main.reached || main.pts.length < 4) continue;
-      var pts = main.pts, branches = [], want = 2 + Math.floor(rnd() * 2);
-      for (var g = 0; g < 60 && branches.length < want; g++){
-        var i = 2 + Math.floor(rnd() * Math.max(1, pts.length * .75 - 2)), p = pts[i], q = pts[i - 1];
-        var md = Math.atan2(p[1] - q[1], p[0] - q[0]), sgn = rnd() < .5 ? -1 : 1, a = md + sgn * (.55 + rnd() * .6);
-        var bl = plen(pts.slice(i)) * (.18 + rnd() * .28) + 24 * k;
-        var br = walk(rnd, p[0], p[1], p[0] + Math.cos(a) * bl * 1.4, p[1] + Math.sin(a) * bl * 1.4, { sMin: 7 * k, sMax: 20 * k, jit: 1.5, maxSteps: 80, yMin: p[1] - 4, budget: bl, down: true });
-        if (br.pts.length > 2) branches.push({ pts: br.pts, w: .55 + rnd() * .2 });
-      }
-      var len = plen(pts);
-      if (len < minLen || branches.length < 2) { if (!best || len > best.len) best = { pts: pts, branches: branches, sx: sx, sy: sy, len: len }; continue; }
-      best = { pts: pts, branches: branches, sx: sx, sy: sy, len: len }; break;
+  // Вільні горизонтальні смуги на всю ширину (проміжки між секціями) – для вузьких екранів
+  function freeBands(){
+    var out = [], run = 0, y0 = 0, x0 = 2, x1 = gw - 3;
+    for (var gy = 0; gy <= gh; gy++){
+      var full = gy < gh;
+      if (full){ var free = 0; for (var gx = x0; gx < x1; gx++) if (!occ[gy * gw + gx]) free++; full = free >= (x1 - x0) * .94; }
+      if (full){ if (!run) y0 = gy; run++; }
+      else { if (run * G >= 108) out.push({ t: y0 * G, b: (y0 + run) * G }); run = 0; }
     }
-    if (!best || best.len < minLen * .8) return null;
+    return out;
+  }
+  function branchesFor(rnd, pts, k, want){
+    var branches = [];
+    for (var g = 0; g < 60 && branches.length < want; g++){
+      var i = 2 + Math.floor(rnd() * Math.max(1, pts.length * .75 - 2)), p = pts[i], q = pts[i - 1];
+      var md = Math.atan2(p[1] - q[1], p[0] - q[0]), sgn = rnd() < .5 ? -1 : 1, a = md + sgn * (.55 + rnd() * .6);
+      var bl = plen(pts.slice(i)) * (.18 + rnd() * .28) + 24 * k;
+      var br = walk(rnd, p[0], p[1], p[0] + Math.cos(a) * bl * 1.4, p[1] + Math.sin(a) * bl * 1.4, { sMin: 7 * k, sMax: 20 * k, jit: 1.5, maxSteps: 80, yMin: p[1] - 4, budget: bl, down: true });
+      if (br.pts.length > 2) branches.push({ pts: br.pts, w: .55 + rnd() * .2 });
+    }
+    return branches;
+  }
+  function finishBolt(rnd, best, diag){
     var main2 = detail(rnd, best.pts, .2);
     best.branches.forEach(function(b){ b.pts = detail(rnd, b.pts, .14); });
-    var yEnd = 0; main2.forEach(function(p){ yEnd = Math.max(yEnd, p[1]); });
+    var yEnd = 0, x0 = 1e9, x1 = -1e9; main2.forEach(function(p){ yEnd = Math.max(yEnd, p[1]); x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); });
     var end = best.pts[best.pts.length - 1];
-    return { main: main2, branches: best.branches, sx: best.sx, sy: best.sy, ex: end[0], ey: end[1], yEnd: yEnd, len: best.len };
+    return { main: main2, branches: best.branches, sx: best.sx, sy: best.sy, ex: end[0], ey: end[1], yEnd: yEnd, len: best.len, width: x1 - x0, diag: !!diag, src: best.src };
+  }
+  // Вузькі екрани (телефон, 768 – поля контенту < 56 px): лише великий удар діагоналлю через
+  // проміжок між секціями на всю ширину, з хмари на краю екрана. Немає проміжку – немає удару.
+  // wide = десктоп: та сама діагональ, але з бічної хмари в полі і на 260–560 px усередину (не через увесь екран)
+  function makeDiag(rnd, wide, side0){
+    var bands = freeBands(); if (!bands.length) return null;
+    var k = wide ? 1 : .8, best = null;
+    for (var tries = 0; tries < 60; tries++){
+      var bd = bands[Math.floor(rnd() * bands.length)], hgt = bd.b - bd.t, left = side0 ? side0 === 'left' : rnd() < .5;
+      var sx = wide ? (left ? 20 + rnd() * Math.max(4, side - 36) : W - 20 - rnd() * Math.max(4, side - 36)) : (left ? 6 + rnd() * 6 : W - 6 - rnd() * 6);
+      var sy = bd.t + 6 + rnd() * Math.min(26, hgt * .2);
+      var span = wide ? 260 + rnd() * 300 : 0;
+      var tx = wide ? (left ? sx + span : sx - span) : left ? W * (.66 + rnd() * .28) : W * (.06 + rnd() * .28), ty = bd.b - 8 - rnd() * Math.min(26, hgt * .2);
+      if (blocked(sx, sy) || blocked(tx, ty)) continue;
+      var main = walk(rnd, sx, sy, tx, ty, { sMin: 12 * k, sMax: 30 * k, jit: 1.4, maxSteps: 200, yMin: sy - 10 });
+      if (!main.reached || main.pts.length < 5) continue;
+      var len = plen(main.pts); if (len < (wide ? P.minLen : P.minLenM)) continue;
+      var br = branchesFor(rnd, main.pts, k, 2 + Math.floor(rnd() * 2)); if (br.length < 2) continue;
+      best = { pts: main.pts, branches: br, sx: sx, sy: sy, len: len, src: (wide ? 'band-' : 'edge-') + (left ? 'left' : 'right') };
+      var bw = Math.abs(tx - sx); if (bw >= 80) break; best = null;   // вузьку «смужку» біля краю не показуємо
+    }
+    return best ? finishBolt(rnd, best, true) : null;
+  }
+  var SRC = ['top', 'left', 'right'];
+  function makeBolt(rnd, pref){
+    if (narrow) return makeDiag(rnd);
+    // десктоп: джерела по черзі; ліве/праве поле – спершу діагоналлю всередину через проміжок між секціями
+    if (pref === 'left' || pref === 'right'){ var d = makeDiag(rnd, true, pref); if (d) return d; }
+    var k = 1, minLen = P.minLen, best = null;
+    for (var tries = 0; tries < 120; tries++){
+      // десктоп: джерело – бічна хмара в полі (ліва/права) або «стеля» під шапкою; спершу пробуємо задане (по черзі)
+      var src = tries < 70 && pref ? pref : SRC[Math.floor(rnd() * 3)], fromSide = src !== 'top', sx, sy;
+      if (fromSide){ var lo = 20, hi = Math.max(lo + 4, side - 16); sx = src === 'left' ? lo + rnd() * (hi - lo) : W - lo - rnd() * (hi - lo); sy = HH + 14 + rnd() * (H - HH) * .4; }
+      else { sx = side + rnd() * (W - 2 * side); sy = HH + 10 + rnd() * 40; }
+      if (blocked(sx, sy) || cloudAt(sx, sy) < .12) continue;
+      var tgt = null;
+      for (var c = 0; c < 140; c++){
+        var inward = fromSide && (c % 10) < 7;   // з бічної хмари – переважно діагоналлю у вільну зону блоку
+        var spread = inward ? 560 : fromSide ? 70 : 380, drop = 110;
+        var tx = sx + (rnd() - .5) * 2 * spread, ty = sy + drop + rnd() * (H - 30 - sy - drop);
+        if (inward && (src === 'left' ? tx < sx + 40 : tx > sx - 40)) continue;
+        if (Math.abs(tx - sx) > (ty - sy) * (inward ? 1.7 : 1.3) || blocked(tx, ty) || !segFree(sx, sy, tx, ty)) continue;
+        var sc = Math.hypot(tx - sx, ty - sy) + Math.abs(tx - sx) * .3 + rnd() * 60;
+        if (!tgt || sc > tgt.s) tgt = { x: tx, y: ty, s: sc };
+      }
+      if (!tgt || Math.hypot(tgt.x - sx, tgt.y - sy) < minLen * .9) continue;
+      var main = walk(rnd, sx, sy, tgt.x, tgt.y, { sMin: 10, sMax: 32, jit: 1.5, maxSteps: 300, yMin: sy - 8 });
+      if (!main.reached || main.pts.length < 4) continue;
+      var br = branchesFor(rnd, main.pts, k, 2 + Math.floor(rnd() * 2)), len = plen(main.pts);
+      var cand = { pts: main.pts, branches: br, sx: sx, sy: sy, len: len, src: src };
+      if (len < minLen || br.length < 2){ if (!best || len > best.len) best = cand; continue; }
+      best = cand; break;
+    }
+    if (!best || best.len < minLen * .8) return null;
+    return finishBolt(rnd, best, false);
   }
 
   // ---- Рендер удару (раз на удар) ----
@@ -1510,13 +1564,17 @@ window.StormBus = window.StormBus || {
     gc.shadowBlur = 0;
     // канал виходить із хмари (верх проявляється) і гасне в повітрі (низ), без тупого обриву
     [c, gc].forEach(function(x){ x.globalCompositeOperation = 'destination-in';
+      if (b.diag){ // діагональ з краю: проявляється з хмари біля старту і гасне біля кінця – по радіусу, а не по вертикалі
+        var r1 = x.createRadialGradient(b.sx, b.sy, 0, b.sx, b.sy, 70); r1.addColorStop(0, 'rgba(0,0,0,0)'); r1.addColorStop(1, 'rgba(0,0,0,1)'); x.fillStyle = r1; x.fillRect(0, 0, W, H);
+        var r2 = x.createRadialGradient(b.ex, b.ey, 0, b.ex, b.ey, 46); r2.addColorStop(0, 'rgba(0,0,0,0)'); r2.addColorStop(1, 'rgba(0,0,0,1)'); x.fillStyle = r2; x.fillRect(0, 0, W, H);
+        x.globalCompositeOperation = 'source-over'; return; }
       var g = x.createLinearGradient(0, b.sy, 0, b.sy + 60); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
       var e = mobile ? 40 : 60, g2 = x.createLinearGradient(0, b.yEnd - e, 0, b.yEnd + 2); g2.addColorStop(0, 'rgba(0,0,0,1)'); g2.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g2; x.fillRect(0, 0, W, H);
       x.globalCompositeOperation = 'source-over'; });
     // спалах: підсвічена хмара біля старту + слабке сяйво вздовж каналу; під текстом і блоками – «дірки»
     litC.width = cw; litC.height = ch; var l = litC.getContext('2d');
     l.drawImage(cloudLit, 0, 0); l.globalCompositeOperation = 'destination-in';
-    var r = (mobile ? 150 : 300) / S, cx = b.sx / S, cy = (b.sy + 20) / S, rg = l.createRadialGradient(cx, cy, 0, cx, cy, r);
+    var r = (narrow ? 190 : 300) / S, cx = b.sx / S, cy = (b.sy + 20) / S, rg = l.createRadialGradient(cx, cy, 0, cx, cy, r);
     rg.addColorStop(0, 'rgba(0,0,0,1)'); rg.addColorStop(.5, 'rgba(0,0,0,.5)'); rg.addColorStop(1, 'rgba(0,0,0,0)'); l.fillStyle = rg; l.fillRect(0, 0, cw, ch);
     l.globalCompositeOperation = 'lighter';
     for (var i = 0; i < b.main.length; i += 6){ var p = b.main[i], gg = l.createRadialGradient(p[0] / S, p[1] / S, 0, p[0] / S, p[1] / S, 60 / S);
@@ -1528,7 +1586,7 @@ window.StormBus = window.StormBus || {
     l.globalCompositeOperation = 'source-over';
   }
   // Малюємо лише прямокутник навколо удару (канал + ореол + спалах біля старту), а не весь екран
-  function bbox(b){ var x0 = b.sx, x1 = b.sx, y0 = b.sy, y1 = b.yEnd, R = mobile ? 150 : 300;
+  function bbox(b){ var x0 = b.sx, x1 = b.sx, y0 = b.sy, y1 = b.yEnd, R = narrow ? 190 : 300;
     b.main.concat.apply(b.main, b.branches.map(function(r){ return r.pts; })).forEach(function(p){ x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); });
     x0 = Math.max(0, Math.min(x0 - 70, b.sx - R)); x1 = Math.min(W, Math.max(x1 + 70, b.sx + R)); y0 = Math.max(0, Math.min(y0 - 70, b.sy - R)); y1 = Math.min(H, y1 + 90);
     return { x: Math.floor(x0 / 4) * 4, y: Math.floor(y0 / 4) * 4, w: Math.ceil((x1 - x0) / 4) * 4 + 4, h: Math.ceil((y1 - y0) / 4) * 4 + 4 }; }
@@ -1556,10 +1614,10 @@ window.StormBus = window.StormBus || {
     var env = 0; pl.pulses.forEach(function(p){ if (t >= p.at) env = Math.max(env, p.peak * Math.exp(-(t - p.at) / P.tau)); });
     var resid = t <= pl.last ? .3 : .3 * Math.exp(-(t - pl.last) / (P.tail / 3.2)); return { bolt: Math.min(1, env + resid), sky: env * P.glowMax, reveal: 1 }; }
 
-  var rnd = mulberry((Math.random() * 1e9) | 0), timer = 0, raf = 0, cur = null, lastScroll = 0, built = false;
+  var srcI = (Math.random() * 3) | 0, rnd = mulberry((Math.random() * 1e9) | 0), timer = 0, raf = 0, cur = null, lastScroll = 0, built = false;
   function heroDominant(){ var r = hero.getBoundingClientRect(); return r.bottom > H * P.heroShare; }
   function running(){ return built && MODE === 'live' && !reduceMQ.matches && !document.hidden; }
-  function gap(){ return mobile ? P.gapMinM + rnd() * (P.gapMaxM - P.gapMinM) : P.gapMin + rnd() * (P.gapMax - P.gapMin); }
+  function gap(){ return narrow ? P.gapMinM + rnd() * (P.gapMaxM - P.gapMinM) : P.gapMin + rnd() * (P.gapMax - P.gapMin); }
   function schedule(ms){ clearTimeout(timer); timer = running() ? setTimeout(fire, ms) : 0; }
   function stop(){ clearTimeout(timer); timer = 0; if (raf) cancelAnimationFrame(raf); raf = 0; if (cur) StormBus.release('page'); cur = null; frame(0, 0, 1, null); }
   function fire(){
@@ -1567,8 +1625,9 @@ window.StormBus = window.StormBus || {
     if (heroDominant()) return schedule(1500);                 // перший екран – його сцена
     if (performance.now() - lastScroll < P.idle) return schedule(500); // гортають – почекати
     if (!StormBus.claim('page')) return schedule(1200);
-    measure(); var b = makeBolt(rnd);
-    if (!b){ StormBus.release('page'); return schedule(mobile ? 2500 : 1800); } // немає вільного місця – спробувати трохи згодом
+    measure(); var b = makeBolt(rnd, SRC[srcI % 3]);
+    if (!b){ StormBus.release('page'); return schedule(1500); } // немає вільного місця (на вузьких – проміжку між секціями) – спробувати згодом
+    srcI++;   // джерела по черзі: стеля → ліве поле → праве поле
     render(b); window.__pageBolt = b;
     cur = { b: b, pl: plan(rnd), y0: scrollY, t0: 0 };
     raf = requestAnimationFrame(function(n){ cur.t0 = n; tick(n); });
@@ -1588,7 +1647,7 @@ window.StormBus = window.StormBus || {
     if (MODE !== 'strike' || heroDominant()) return;
     measure(); var b = null;
     var base = SEED + Math.round(scrollY / 100) * 13; // детерміновано, але різна форма на різних екранах
-    for (var s = 0; !b && s < 12; s++) b = makeBolt(mulberry(base + s * 7));
+    for (var s = 0; !b && s < 12; s++) b = makeBolt(mulberry(base + s * 7), SRC[(Math.round(scrollY / 100) + s) % 3]);
     if (!b) return; render(b); window.__pageBolt = b; frame(1, .85 * P.glowMax, 1, b, 0);
   }
 
@@ -1638,7 +1697,7 @@ window.StormBus = window.StormBus || {
       if (!vis) return; setup();
       var v = vertical(), gr = grid.getBoundingClientRect(), dur = v ? 1700 : 1300;
       var from = v ? -8 : -6, to = v ? gr.height : gr.width + 6;
-      // одна строка в 2 колонки (640–1099): імпульс іде по рядках зліва направо – беремо порядок карток
+      // один рядок у 2 колонки (640–1099): імпульс іде по рядках зліва направо – беремо порядок карток
       anim = spark.animate(v ? [{ transform: 'translate(0,' + from + 'px)', opacity: 0 }, { opacity: 1, offset: .06 }, { opacity: 1, offset: .94 }, { transform: 'translate(0,' + to + 'px)', opacity: 0 }]
                              : [{ transform: 'translate(' + from + 'px,-12px)', opacity: 0 }, { opacity: 1, offset: .06 }, { opacity: 1, offset: .94 }, { transform: 'translate(' + to + 'px,-12px)', opacity: 0 }],
                            { duration: dur, easing: 'cubic-bezier(.45,0,.55,1)' });
@@ -1657,7 +1716,7 @@ window.StormBus = window.StormBus || {
     var cv = flow.querySelector('canvas'), c = cv.getContext('2d');
     var lis = [].slice.call(flow.querySelectorAll('.flow-steps li'));
     var W, H, dpr, horiz, st = [], nodes = [], edges = [], parts = [], fill = 0, queue = [], gateT = 0, cycleT = 0, raf = 0, vis = false, last = 0, flash = 0;
-    var NEED = 8;              // скільки перевірених частин складає «результат»
+    var NEED = 10;             // усі 10 частин задачі (повернуті теж доходять) – один спалах «Результату» на цикл
     function stationPos(li){ var r = li.getBoundingClientRect(), fr = flow.getBoundingClientRect(), b = li.querySelector('b').getBoundingClientRect();
       return horiz ? { x: r.left + r.width / 2 - fr.left, y: 104 } : { x: 48, y: b.top + b.height / 2 - fr.top }; }
     function layout(){
@@ -1738,11 +1797,11 @@ window.StormBus = window.StormBus || {
         c.fillStyle = p.stage === 6 ? 'rgba(163,167,191,.85)' : p.stage === 5 ? '#FFFFFF' : 'rgba(200,206,255,.95)'; c.fill(); });
     }
     function loop(n){ var dt = Math.min(50, n - (last || n)); last = n; step(dt); draw(); if (vis) raf = requestAnimationFrame(loop); }
-    addEventListener('resize', function(){ layout(); });
+    function still(){ edges.forEach(function(e, i){ e.heat = i % 5 === 0 ? .8 : 0; }); fill = 5; draw(); }
+    addEventListener('resize', function(){ layout(); if (reduce) still(); });
     document.fonts.ready.then(function(){
       layout();
-      if (reduce){ // статичний кадр: мережа частково підсвічена, результат наполовину готовий
-        edges.forEach(function(e, i){ e.heat = i % 5 === 0 ? .8 : 0; }); fill = 5; draw(); return; }
+      if (reduce){ still(); return; } // статичний кадр: мережа частково підсвічена, результат наполовину готовий
       onView(flow, function(v){ vis = v; cancelAnimationFrame(raf); last = 0; if (v){ layout(); raf = requestAnimationFrame(loop); } }, .2);
     });
   })();
@@ -1778,18 +1837,20 @@ window.StormBus = window.StormBus || {
   (function(){ // доба: повідомлення приходять у будь-яку годину (точка на колі) – одразу відповідь (імпульс до центру)
     var g = dial.querySelector('.msgs'), NS = 'http://www.w3.org/2000/svg', t = 0, vis = false;
     function el(n, a){ var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
+    // повідомлення – «бульбашка» на колі доби; за мить навколо неї спалах-кільце – відповідь
     function msg(ang, still){
       var x = 46 + Math.sin(ang) * 38, y = 46 - Math.cos(ang) * 38;
-      var dot = el('circle', { cx: x, cy: y, r: 4, fill: '#F2F3F8' }), ln = el('line', { x1: x, y1: y, x2: 46, y2: 46, stroke: '#9AA3FF', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-dasharray': 34, 'stroke-dashoffset': 34 });
-      g.appendChild(ln); g.appendChild(dot);
-      if (still){ ln.setAttribute('stroke-dashoffset', 0); ln.setAttribute('opacity', .5); return; }
-      dot.animate([{ r: 0, opacity: 0 }, { r: 5, opacity: 1, offset: .2 }, { r: 4, opacity: 1, offset: .7 }, { r: 4, opacity: 0 }], { duration: 2200, fill: 'forwards' });
-      ln.animate([{ strokeDashoffset: 34, opacity: 1, offset: 0 }, { strokeDashoffset: 34, offset: .22 }, { strokeDashoffset: 0, opacity: 1, offset: .38 }, { strokeDashoffset: 0, opacity: 0 }], { duration: 2200, fill: 'forwards' });
-      setTimeout(function(){ dot.remove(); ln.remove(); }, 2300);
+      var ring = el('circle', { cx: x, cy: y, r: 5, fill: 'none', stroke: '#9AA3FF', 'stroke-width': 2, opacity: 0 });
+      var dot = el('path', { d: 'M' + (x - 5) + ' ' + (y - 4) + 'h10a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-6l-3 3v-3h-1a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2z', fill: '#F2F3F8' });
+      g.appendChild(ring); g.appendChild(dot);
+      if (still){ dot.setAttribute('fill', '#9AA3FF'); return; }
+      dot.animate([{ opacity: 0, transform: 'translateY(3px)' }, { opacity: 1, transform: 'none', offset: .15 }, { opacity: 1, fill: '#F2F3F8', offset: .3 }, { fill: '#9AA3FF', offset: .38 }, { opacity: 1, offset: .8 }, { opacity: 0 }], { duration: 2600, fill: 'forwards' });
+      ring.animate([{ opacity: 0, r: 5 }, { opacity: 0, r: 5, offset: .3 }, { opacity: 1, r: 7, offset: .38 }, { opacity: 0, r: 15, offset: .62 }, { opacity: 0 }], { duration: 2600, fill: 'forwards' });
+      setTimeout(function(){ dot.remove(); ring.remove(); }, 2700);
     }
-    function run(){ if (!vis) return; msg(Math.random() * Math.PI * 2); t = setTimeout(run, 700 + Math.random() * 900); }
+    function run(){ if (!vis) return; msg(Math.random() * Math.PI * 2); t = setTimeout(run, 1100 + Math.random() * 1100); }
     if (reduce){ [0.6, 2.2, 3.6, 5.1].forEach(function(a){ msg(a, true); }); return; }
-    onView(dial, function(v){ vis = v; clearTimeout(t); if (v) run(); }, .4);
+    onView(dial, function(v){ vis = v; clearTimeout(t); dial.classList.toggle('go', v); if (v) run(); }, .4);
   })();
 
   // ---- 5. Кейси: мінісцени ----
@@ -1798,7 +1859,7 @@ window.StormBus = window.StormBus || {
     function clear(){ t.forEach(clearTimeout); t = []; }
     function play(){
       if (!vis) return; bubbles.forEach(function(b){ b.classList.remove('show'); }); typing.classList.remove('show');
-      // клієнт пише → бот «друкує» 0,8 с → відповідає (бот відповідає за секунди)
+      // клієнт пише → бот «друкує» 0,9 с → відповідає (бот відповідає за секунди)
       var at = 400;
       bubbles.forEach(function(b, i){
         if (b.classList.contains('out')){ t.push(setTimeout(function(){ chat.insertBefore(typing, b); typing.classList.add('show'); }, at)); at += 900;
@@ -1848,6 +1909,7 @@ window.StormBus = window.StormBus || {
       setTimeout(function(){ status.textContent = 'Дякуємо! Заявку отримали, відповімо протягом 15 хвилин у робочий час. (Демо: нічого не надсилається.)'; }, 650);
     });
     show();
+    if (!reduce) onView(f, function(v){ f.classList.toggle('go', v); }, .1);
   })();
 })();
 </script>

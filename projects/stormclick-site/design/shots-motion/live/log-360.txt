@@ -1,0 +1,3 @@
+360 errs []
+ strikes 4 2s hero  | 32.8s page edge-left:384/w320 | 48.1s page edge-left:319/w243 | 64.1s page edge-right:285/w236
+ start-to-start 30.8, 15.3, 16.0
