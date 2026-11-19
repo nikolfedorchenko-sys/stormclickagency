@@ -639,6 +639,7 @@ ul, ol { list-style: none; }
 /* «Залишився один крок – подзвоніть» – як «надіслано», але знак телефону (нейтральний, не помилка) */
 .done-mark.call .i { width: 28px; height: 28px; stroke-width: 2; }
 /* десктоп: після прокрутки до кроку чи результату лишаємо трохи повітря над ним */
+#wiz { scroll-margin-top: 16px; }
 @media (min-width: 900px) { #wiz { scroll-margin-top: 24px; } }
 .w-tel { font-weight: 500; white-space: nowrap; text-underline-offset: 3px; }
 .sum-h { margin-top: 48px; font-size: var(--fs-h3); font-weight: 400; line-height: 1.14; }

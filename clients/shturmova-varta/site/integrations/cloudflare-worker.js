@@ -75,7 +75,7 @@ export default {
     let d;
     try {
       const raw = await req.text();
-      if (raw.length > MAX_BODY) return json(413, { ok: false });
+      if (new TextEncoder().encode(raw).length > MAX_BODY) return json(413, { ok: false });
       const ct = req.headers.get('Content-Type') || '';
       d = ct.includes('application/json') ? JSON.parse(raw) : Object.fromEntries(new URLSearchParams(raw));
     } catch (e) { return json(400, { ok: false, error: 'bad body' }); }

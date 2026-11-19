@@ -214,7 +214,7 @@
         // антиспам-пастка: людина поля не бачить і не заповнює, бот – заповнює
         // назва і підпис нейтральні, autocomplete="new-password" – щоб браузер не автозаповнив пастку в людей
         '<div class="hp" aria-hidden="true"><label for="f-hp">Не заповнюйте це поле</label><input id="f-hp" name="hp_url" type="text" tabindex="-1" autocomplete="new-password"></div>' +
-        '<p class="fine">Надсилаючи заявку, ви погоджуєтеся, що ТОВ «Охоронна компанія „Штурмова варта“» обробить ваші ім’я, телефон, адресу (якщо вказали) та службові дані про джерело переходу, щоб зв’язатися з вами щодо заявки. <a href="privacy.html">Політика конфіденційності [уточнити]</a></p>' +
+        '<p class="fine">Надсилаючи заявку, ви погоджуєтеся, що ТОВ «Охоронна компанія „Штурмова варта“» обробить ваші ім’я, телефон, адресу (якщо вказали), відповіді на питання майстра та службові дані про джерело переходу, щоб зв’язатися з вами щодо заявки. <a href="privacy.html">Політика конфіденційності [уточнити]</a></p>' +
         (C.TELEGRAM_URL || C.VIBER_URL ? '' : '<p class="fine">Telegram і Viber – [уточнити], чи підключені.</p>') +
         (st.sendErr ? '<div class="alert" role="alert" tabindex="-1" id="send-err"><h3><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>Не вдалося надіслати заявку</h3><p>Ваші відповіді збережені. Спробуйте ще раз або подзвоніть – оформимо заявку телефоном.</p>' +
           '<div class="acts"><button type="submit" class="btn">Спробувати ще раз</button><a class="btn btn-ghost" href="' + TEL + '"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Подзвонити</a></div></div>' : '') +
