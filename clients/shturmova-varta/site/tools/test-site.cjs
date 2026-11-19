@@ -38,7 +38,7 @@ const val = (p, sel) => p.$eval(sel, e => e.value);
 const text = (p, sel) => p.$eval(sel, e => e.textContent.trim());
 
 async function toStep4(p, query = '') {
-  await p.goto(BASE + '/wizard.html' + query, { waitUntil: 'networkidle' });
+  await p.goto(BASE + '/wizard' + query, { waitUntil: 'networkidle' });
   await p.click('.opt[data-v="object"]'); await p.click('[data-act="next"]');
   await p.click('.opt[data-v="Склад чи виробництво"]');
   await p.fill('#f-addr', 'Київ, Оболонь');
@@ -56,7 +56,7 @@ async function toStep4(p, query = '') {
   for (const vp of [{ w: 1440, h: 900 }, { w: 768, h: 1024, mobile: true }, { w: 360, h: 800, mobile: true }]) {
     const p = await newPage(b, { viewport: { width: vp.w, height: vp.h }, mobile: vp.mobile, tag: 'wizard-' + vp.w });
     let posted = 0; p.on('request', r => { if (r.method() === 'POST') posted++; });
-    await p.goto(BASE + '/wizard.html', { waitUntil: 'networkidle' });
+    await p.goto(BASE + '/wizard', { waitUntil: 'networkidle' });
     ok(await p.$eval('[data-act="next"]', e => e.disabled), `${vp.w}: «Далі» вимкнена без вибору`);
     await p.click('.opt[data-v="object"]');
     ok(!(await p.$eval('[data-act="next"]', e => e.disabled)), `${vp.w}: «Далі» активна після вибору`);
@@ -184,7 +184,7 @@ async function toStep4(p, query = '') {
     ok(/^mailto:test@example.com\?subject=Заявка з сайту/.test(mail) && /Ім’я: Ія/.test(mail) && /Зв’язок: Дзвінок · \+380 67 123 45 67/.test(mail), 'EMAIL задано → mailto з відповідями', mail);
     ok(!!(await p.$('a[href="https://t.me/example"]')), 'кнопка Telegram');
     ok(/щодня 08:00–22:00/.test(await text(p, '.w-sub')), 'графік лінії з config.js');
-    await p.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    await p.goto(BASE + '/', { waitUntil: 'networkidle' });
     ok((await text(p, '#p-call .hint')) === 'Графік роботи лінії – щодня 08:00–22:00', 'головна: графік лінії з config.js');
     ok(/Коли саме – протягом 30 хвилин\./.test(await text(p, '#yak p')), 'головна: час дзвінка з config.js');
     await p.context().close();
@@ -252,18 +252,18 @@ async function toStep4(p, query = '') {
   console.log('\n5. Головна, 404, політика');
   {
     const p = await newPage(b, { tag: 'home' });
-    await p.goto(BASE + '/index.html?mode=call&still&menu=open', { waitUntil: 'networkidle' });
+    await p.goto(BASE + '/?mode=call&still&menu=open', { waitUntil: 'networkidle' });
     ok(await p.$eval('#p-call', e => e.hidden) && await p.$eval('#mnav', e => e.hidden) && !(await p.$('html.still')), 'службові параметри ?mode=call, ?menu=open, ?still не діють');
     await p.click('#sw-call');
     ok(!(await p.$eval('#p-call', e => e.hidden)), 'перемикач «Подзвонити» працює');
     await p.click('#sw-find');
     await p.fill('#q', 'охорона складу'); await p.press('#q', 'Enter');
-    await p.waitForURL(/wizard\.html\?q=/);
+    await p.waitForURL(/\/wizard\?q=/);
     await p.waitForSelector('#wq');
     ok((await text(p, '#wq')) === 'Який це об’єкт?' && await p.$eval('.opt[data-v="Склад чи виробництво"]', e => e.getAttribute('aria-checked') === 'true'), 'пошук «охорона складу» → крок 2, обрано склад');
-    await p.goto(BASE + '/wizard.html?demo=done&fail=1', { waitUntil: 'networkidle' });
-    ok((await text(p, '#wq')) === 'Що потрібно охороняти?', 'wizard.html?demo=done – демо-параметр ігнорується, крок 1');
-    const imgs = await p.goto(BASE + '/index.html', { waitUntil: 'networkidle' }).then(() => p.$$eval('.card img', is => is.map(i => [i.loading, i.currentSrc.split('/').pop(), i.width > 0])));
+    await p.goto(BASE + '/wizard?demo=done&fail=1', { waitUntil: 'networkidle' });
+    ok((await text(p, '#wq')) === 'Що потрібно охороняти?', '/wizard?demo=done – демо-параметр ігнорується, крок 1');
+    const imgs = await p.goto(BASE + '/', { waitUntil: 'networkidle' }).then(() => p.$$eval('.card img', is => is.map(i => [i.loading, i.currentSrc.split('/').pop(), i.width > 0])));
     ok(imgs.length === 10 && imgs.every(i => i[0] === 'lazy'), 'фото каруселі: loading=lazy', imgs.length);
     await p.$eval('#posluhy', e => e.scrollIntoView()); await p.waitForTimeout(500);
     const cur = await p.$$eval('#t-biz .card img', is => is.map(i => i.currentSrc.split('/').pop()).filter(Boolean));
@@ -280,31 +280,37 @@ async function toStep4(p, query = '') {
     ok((await text(p, 'h1')) === 'Сторінку не знайдено', '404: заголовок');
     ok(await p.$eval('.doc-acts .btn', e => getComputedStyle(e).backgroundColor === 'rgb(0, 0, 0)'), '404 з глибокої адреси: стилі підвантажились (кореневі шляхи)');
     ok(await p.$eval('meta[name="robots"]', m => m.content) === 'noindex, follow', '404: noindex');
-    await p.click('.doc-acts .btn-ghost'); await p.waitForURL(/\/index\.html$/);
+    await p.click('.doc-acts .btn-ghost'); await p.waitForURL(BASE + '/');
     ok(true, '404: «На головну» веде на головну');
-    await p.goto(BASE + '/privacy.html', { waitUntil: 'networkidle' });
+    await p.goto(BASE + '/privacy', { waitUntil: 'networkidle' });
     ok(/Текст готує юрист \[уточнити\]/.test(await text(p, '.doc-note')), 'політика: позначка «текст готує юрист [уточнити]»');
     await p.context().close();
   }
   {
     // SEO-база: по одному h1, title, description, canonical, OG на основних сторінках
     const p = await newPage(b, { tag: 'seo' });
-    for (const u of ['/index.html', '/wizard.html', '/privacy.html']) {
+    for (const u of ['/', '/wizard', '/privacy']) {
       await p.goto(BASE + u, { waitUntil: 'networkidle' });
       const s = await p.evaluate(() => ({ h1: document.querySelectorAll('h1').length, lang: document.documentElement.lang, t: document.title,
         d: !!document.querySelector('meta[name=description]'), c: (document.querySelector('link[rel=canonical]') || {}).href, ico: !!document.querySelector('link[rel=icon]'),
         robots: (document.querySelector('meta[name=robots]') || {}).content || '' }));
       const noindex = /noindex/.test(s.robots);
-      ok(s.h1 === 1 && s.lang === 'uk' && s.t && s.d && s.ico && (noindex ? !s.c : !!s.c), `${u}: h1, lang, title, description, favicon, ${noindex ? 'noindex без canonical' : 'canonical'}`, s);
+      // майстер: noindex, follow, але canonical на себе (аудит В-5); політика – noindex без canonical
+      const wantC = u === '/wizard' ? s.c === 'https://shturmova-varta.example/wizard' && s.robots === 'noindex, follow' : noindex ? !s.c : !!s.c;
+      ok(s.h1 === 1 && s.lang === 'uk' && s.t && s.d && s.ico && wantC, `${u}: h1, lang, title, description, favicon, ${u === '/wizard' ? 'noindex, follow + canonical /wizard' : noindex ? 'noindex без canonical' : 'canonical'}`, s);
     }
-    const ld = await p.goto(BASE + '/index.html').then(() => p.$eval('script[type="application/ld+json"]', s => JSON.parse(s.textContent)));
+    const ldAll = await p.goto(BASE + '/').then(() => p.$eval('script[type="application/ld+json"]', s => JSON.parse(s.textContent)));
+    const ld = ldAll['@graph'].find(n => n['@type'] === 'LocalBusiness');
+    ok(ldAll['@graph'].some(n => n['@type'] === 'WebSite' && n.inLanguage === 'uk'), 'schema.org: вузол WebSite');
+    const ftrLegal = await p.$eval('.ftr-legal li', e => e.textContent.replace(/\u00a0/g, ' ').trim());
+    ok(ld.legalName === ftrLegal && /^ТОВ «Охоронна компанія „Штурмова варта“»$/.test(ftrLegal), 'юридична назва однакова в JSON-LD і футері', [ld.legalName, ftrLegal]);
     ok(ld['@type'] === 'LocalBusiness' && ld.telephone === '+380675495710' && !ld.address.streetAddress, 'schema.org: LocalBusiness, телефон, без вигаданої адреси');
     ok(ld.areaServed.name === 'Київ' && ld.contactPoint.areaServed.name === 'Київ', 'schema.org: areaServed – Київ (і в contactPoint)');
     const man = await p.goto(BASE + '/site.webmanifest').then(r => r.json());
     ok(man.icons.every(i => i.purpose === 'any' || i.purpose === 'maskable') && man.icons.some(i => i.purpose === 'maskable'), 'manifest: any і maskable – окремі іконки');
     for (const i of man.icons) { const r = await p.goto(BASE + i.src); ok(r.status() === 200, `${i.src} віддається`); }
     const r400 = await p.request.get(BASE + '/%E0%A4%A'); ok(r400.status() === 400, 'serve.cjs: зламане кодування адреси → 400, сервер не падає', r400.status());
-    const r200 = await p.request.get(BASE + '/index.html'); ok(r200.status() === 200, 'serve.cjs працює після зламаної адреси');
+    const r200 = await p.request.get(BASE + '/'); ok(r200.status() === 200, 'serve.cjs працює після зламаної адреси');
     for (const f of ['/robots.txt', '/sitemap.xml', '/site.webmanifest', '/favicon.ico', '/icons/apple-touch-icon.png', '/icons/icon-512.png', '/img/og.jpg']) {
       const r = await p.goto(BASE + f); ok(r.status() === 200, `${f} віддається`);
     }
@@ -337,7 +343,7 @@ async function toStep4(p, query = '') {
   {
     // кроки 1–4 на десктопі: якщо долистали вниз – після «Далі»/«Назад» початок кроку видно
     const p = await newPage(b, { viewport: { width: 1440, height: 800 }, tag: 'scroll-steps' });
-    await p.goto(BASE + '/wizard.html', { waitUntil: 'networkidle' });
+    await p.goto(BASE + '/wizard', { waitUntil: 'networkidle' });
     await p.click('.opt[data-v="object"]');
     await p.evaluate(() => scrollTo(0, document.documentElement.scrollHeight)); await p.click('[data-act="next"]'); await p.waitForTimeout(100);
     ok(await inView(p, '#wq'), '1440×800: крок 2 – заголовок у межах екрана після «Далі» з прокрученої сторінки');
@@ -352,21 +358,121 @@ async function toStep4(p, query = '') {
   {
     const p = await newPage(b, { tag: 'font', allow: /status of 404/ });
     const ext = []; p.on('request', r => { if (!r.url().startsWith(BASE)) ext.push(r.url()); });
-    for (const u of ['/index.html', '/wizard.html', '/privacy.html', '/deep/missing']) await p.goto(BASE + u, { waitUntil: 'networkidle' }).catch(() => {});
+    for (const u of ['/', '/wizard', '/privacy', '/deep/missing']) await p.goto(BASE + u, { waitUntil: 'networkidle' }).catch(() => {});
     ok(ext.length === 0, 'жодного зовнішнього запиту (Google Fonts прибрано)', ext);
-    await p.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    await p.goto(BASE + '/', { waitUntil: 'networkidle' });
     ok(await p.evaluate(async () => { await document.fonts.ready; return document.fonts.check('500 16px Onest', 'Охорона') && [...document.fonts].some(f => f.family.replace(/"/g, '') === 'Onest' && f.status === 'loaded'); }), 'Onest завантажено локально');
     ok(await p.$eval('link[rel=preload][as=font]', l => /fonts\/onest-cyrillic\.woff2$/.test(l.href) && l.crossOrigin === 'anonymous'), 'preload основного файлу шрифту');
     const lic = await p.$$eval('[data-cfg="license"]', es => es.map(e => e.tagName));
     ok(lic.length > 0 && lic.every(t => t === 'SPAN') && !(await p.$('.ftr a[href="#"]')), 'футер: ліцензія – текст, без href="#", поки LICENSE_URL порожній', lic);
     await p.context().close();
     const p2 = await newPage(b, { cfg: { LICENSE_URL: 'https://example.com/license' }, tag: 'license' });
-    await p2.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    await p2.goto(BASE + '/', { waitUntil: 'networkidle' });
     ok(await p2.$eval('.ftr [data-cfg="license"]', e => e.tagName === 'A' && e.href === 'https://example.com/license'), 'LICENSE_URL задано → у футері посилання');
     await toStep4(p2);
-    ok(/службові дані про джерело переходу/.test(await text(p2, '#contact .fine')) && !!(await p2.$('#contact .fine a[href="privacy.html"]')), 'згода: згадано службові дані про джерело переходу, посилання на політику');
+    ok(/службові дані про джерело переходу/.test(await text(p2, '#contact .fine')) && !!(await p2.$('#contact .fine a[href="/privacy"]')), 'згода: згадано службові дані про джерело переходу, посилання на політику');
     ok(!(await p2.$('#ts')), 'Turnstile без TURNSTILE_SITEKEY не підключається');
     await p2.context().close();
+  }
+
+  /* ---------- 7. Тексти v2, SEO-правки, адреси Cloudflare Pages, _headers ---------- */
+  console.log('\n7. Тексти v2, SEO, адреси Cloudflare Pages, заголовки');
+  {
+    const p = await newPage(b, { tag: 'v2', allow: /status of 404/ }); // /nope-404 – навмисна відсутня адреса
+    await p.goto(BASE + '/', { waitUntil: 'networkidle' });
+    const norm = s => s.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
+    ok(norm(await text(p, 'h1')) === 'Охорона з бойовим досвідом', 'H1 – «Охорона з бойовим досвідом»');
+    ok(await p.$eval('h1 + p.hero-sub', e => e.offsetHeight > 0 && e.textContent.replace(/ /g, ' ') === 'Фізична й особиста охорона в Києві. На постах – ветерани та співробітники з бойовим досвідом.'), 'підзаголовок – видимий <p> одразу під H1, текст із site-copy');
+    const T = 'Охорона об’єктів і особиста охорона в Києві – Штурмова варта';
+    const D = 'Охоронна компанія «Штурмова варта», Київ: фізична охорона об’єктів і особиста охорона. На постах – ветерани та співробітники з бойовим досвідом.';
+    const meta = await p.evaluate(() => { const m = s => (document.querySelector(s) || {}).content; return { t: document.title, d: m('meta[name=description]'), ot: m('meta[property="og:title"]'), od: m('meta[property="og:description"]'), tt: m('meta[name="twitter:title"]'), td: m('meta[name="twitter:description"]'), url: m('meta[property="og:url"]') }; });
+    ok(meta.t === T && meta.ot === T && meta.tt === T, 'title = og:title = twitter:title (рекомендований)', meta.t);
+    ok(meta.d === D && meta.od === D && meta.td === D && D.length <= 160, 'description = og = twitter (рекомендований, ≤ 160 симв.)', D.length);
+    ok(meta.url === 'https://shturmova-varta.example/', 'og:url – корінь /');
+    ok(await p.$eval('#q', e => e.dataset.short === 'Що охороняти? Офіс, склад…'), 'короткий placeholder пошуку');
+    const hint = await p.$$eval('#p-find .hint a', as => as.map(a => [a.textContent.replace(/ /g, ' '), a.getAttribute('href')]));
+    ok(JSON.stringify(hint) === JSON.stringify([['офіс', '/wizard?t=object&p=Офіс%20або%20бізнес-центр'], ['склад', '/wizard?t=object&p=Склад%20чи%20виробництво'], ['особиста охорона', '/wizard?t=person']]), 'підказка під пошуком: офіс, склад, особиста охорона', hint);
+    // H1 не стрибає між «Підібрати» і «Подзвонити» на трьох ширинах; кількість рядків H1
+    for (const [w, h, lines] of [[360, 800, 2], [768, 1024, 1], [1440, 900, 1]]) {
+      await p.setViewportSize({ width: w, height: h }); await p.reload({ waitUntil: 'networkidle' });
+      const y1 = await p.$eval('h1', e => e.getBoundingClientRect().top);
+      const n = await p.$eval('h1', e => Math.round(e.getBoundingClientRect().height / parseFloat(getComputedStyle(e).lineHeight)));
+      await p.click('#sw-call'); const y2 = await p.$eval('h1', e => e.getBoundingClientRect().top); await p.click('#sw-find');
+      ok(Math.abs(y1 - y2) < 1 && n === lines, `${w}: H1 у ${lines} рядк., не зсувається при перемиканні «Подзвонити»`, { y1, y2, n });
+      ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${w}: без горизонтальної прокрутки`);
+    }
+    await p.setViewportSize({ width: 1440, height: 900 }); await p.reload({ waitUntil: 'networkidle' });
+    // «Хто на постах»
+    const posts = await p.evaluate(() => { const s = document.getElementById('posty'); return { h: s.querySelector('h2').textContent, li: s.querySelectorAll('li').length, txt: s.textContent, prev: s.previousElementSibling.className, img: s.querySelectorAll('img, svg').length }; });
+    ok(posts.h === 'Хто на постах' && posts.li === 4 && posts.prev === 'cats' && posts.img === 0, '«Хто на постах»: H2, 4 тези, одразу після сітки послуг, без зображень і символіки', posts.prev);
+    ok(!/уточнити|\[/.test(posts.txt), '«Хто на постах»: без [уточнити]');
+    ok(await p.$$eval('a[href="#posty"]', as => as.length >= 2), 'меню: «Хто на постах» веде на блок');
+    ok(!(await p.$('.nav a[href="#kabinet"], .mnav-list a[href="#kabinet"]')), 'меню: «Кабінет клієнта» прибрано з головного меню (блок лишився)');
+    ok(!!(await p.$('#kabinet')) && /незабаром/.test(await text(p, '.ftr-mid a[href="#kabinet"]')), 'кабінет: блок на сторінці, у футері – з позначкою «незабаром»');
+    // SEO-текст
+    const ab = await p.evaluate(() => { const s = document.getElementById('pro-okhoronu'); return { h2: s.querySelector('h2').textContent.replace(/ /g, ' '), h3: [...s.querySelectorAll('h3')].map(h => h.textContent.replace(/ /g, ' ')), ol: s.querySelectorAll('ol li').length, next: s.nextElementSibling.id, words: s.innerText.split(/\s+/).length, txt: s.textContent }; });
+    ok(ab.h2 === 'Фізична охорона об’єктів і особиста охорона в Києві' && ab.h3.length === 3 && ab.ol === 4 && ab.next === 'pytannia', 'SEO-блок: H2, три H3, 4 кроки, стоїть перед «Питання та відповіді»', ab.h3);
+    ok(ab.words > 230 && !/уточнити|\[/.test(ab.txt), 'SEO-блок: ~270 слів, без [уточнити]', ab.words);
+    // FAQ
+    ok(await p.$$eval('.faq summary', ss => { const s = ss.find(x => x.textContent === 'Хто працює на постах?'); return s && s.nextElementSibling.textContent === 'Ветерани та співробітники з бойовим досвідом.'; }), 'FAQ «Хто працює на постах?» – відповідь із site-copy');
+    ok(!(await p.$('script[type="application/ld+json"]:has-text("FAQPage")')) && !(await p.evaluate(() => /FAQPage/.test(document.documentElement.innerHTML))), 'FAQPage-розмітки немає');
+    ok(!(await p.$('.faq a.link-arrow')), 'FAQ: посилання саме на себе прибрано');
+    // фото: alt і плашка
+    const im = await p.$$eval('.card', cs => cs.map(c => ({ alt: c.querySelector('img').alt, tag: c.querySelector('.tag').getAttribute('aria-hidden') })));
+    ok(im.length === 10 && im.every(i => i.alt.length > 10 && i.tag === null), '10 фото з alt, плашка «ілюстративне фото» доступна скрінрідеру', im.map(i => i.alt));
+    // заголовки без склеєних слів
+    const h2 = await p.$$eval('h2', hs => hs.map(h => h.textContent.replace(/ /g, ' ').replace(/\s+/g, ' ').trim()));
+    ok(h2.includes('Популярні послуги') && h2.includes('Ситуації, коли потрібна охорона') && h2.includes('Питання та відповіді'), 'h2 з переносом: слова не склеюються в textContent', h2);
+    ok(!(await p.$('h4')) && !(await p.$('.ftr h3')), 'без h4 у демо і h3 у футері');
+    // демо кабінету
+    const demo = await text(p, '.demo-win');
+    ok(!/\[/.test(demo) && /Ваш об’єкт/.test(demo) && /Рахунок за місяць/.test(demo) && /Сума до сплати/.test(demo), 'демо кабінету: нейтральні слова замість [адреса]/[місяць]/[сума]');
+    // логотип: доступна назва = видимий текст
+    ok(await p.$$eval('a.logo', as => as.every(a => !a.hasAttribute('aria-label') && a.textContent.replace(/\s+/g, ' ').includes('Штурмова варта') && a.getAttribute('href') === '/')), 'логотип: href="/", назва = видимий текст «Штурмова варта»');
+    // внутрішні посилання – схема Pages
+    for (const u of ['/', '/wizard', '/privacy', '/nope-404']) {
+      await p.goto(BASE + u, { waitUntil: 'networkidle' }).catch(() => {});
+      const bad = await p.$$eval('a[href]', as => as.map(a => a.getAttribute('href')).filter(h => /\.html/.test(h)));
+      ok(bad.length === 0, `${u}: жодного внутрішнього посилання на .html`, bad.slice(0, 5));
+      ok(await p.$$eval('script[src]', ss => ss.length > 0 && ss.every(s => s.defer)), `${u}: усі скрипти з defer`);
+    }
+    ok(!/[ʼ']/.test(await p.goto(BASE + '/').then(() => p.evaluate(() => document.body.innerText))), 'головна: апостроф лише типографський (’)');
+    // аналітика: клік по посиланню на майстер дає click_wizard
+    await p.evaluate(() => { window.__ev = []; window.gtag = (a, n) => window.__ev.push(n); document.addEventListener('click', e => e.preventDefault(), true); });
+    await p.click('.hdr-right .btn');
+    ok(await p.evaluate(() => window.__ev.includes('click_wizard')), 'подія click_wizard на /wizard');
+    await p.context().close();
+  }
+  {
+    // сервер як Cloudflare Pages: .html → 308 на адресу без .html; robots, sitemap, _headers
+    const p = await newPage(b, { tag: 'pages' });
+    const R = async (u) => { const r = await p.request.get(BASE + u, { maxRedirects: 0 }); return [r.status(), r.headers().location || '']; };
+    ok(JSON.stringify(await R('/index.html')) === JSON.stringify([308, '/']), '/index.html → 308 /');
+    ok(JSON.stringify(await R('/wizard.html?t=person')) === JSON.stringify([308, '/wizard?t=person']), '/wizard.html → 308 /wizard (параметри збережено)');
+    ok((await R('/wizard'))[0] === 200 && (await R('/privacy'))[0] === 200, '/wizard і /privacy – 200');
+    ok((await R('/_headers'))[0] === 404 && (await R('/tools/serve.cjs'))[0] === 404, 'службові файли не віддаються');
+    const sm = await (await p.request.get(BASE + '/sitemap.xml')).text();
+    ok(/<loc>https:\/\/shturmova-varta\.example\/<\/loc>/.test(sm) && !/wizard/.test(sm.replace(/<!--[\s\S]*?-->/g, '')), 'sitemap: лише головна, без майстра');
+    const rb = await (await p.request.get(BASE + '/robots.txt')).text();
+    ok(!/Disallow/.test(rb) && /Sitemap:/.test(rb), 'robots.txt: нічого не закрито (і майстер теж), є Sitemap');
+    const h = (await p.request.get(BASE + '/')).headers();
+    ok(h['x-content-type-options'] === 'nosniff' && /frame-ancestors 'none'/.test(h['content-security-policy'] || '') && h['referrer-policy'], '_headers: безпечні заголовки на сторінках', h);
+    const hdr = fs.readFileSync(path.join(__dirname, '..', '_headers'), 'utf8');
+    ok(/\/fonts\/\*\n\s+Cache-Control: public, max-age=31536000, immutable/.test(hdr) && /\/img\/\*\n\s+Cache-Control:/.test(hdr) && !/^\/\*\n(?:\s+.+\n)*?\s+Cache-Control/m.test(hdr), '_headers: кеш статики в окремих правилах, не в /*');
+    const man = await (await p.request.get(BASE + '/site.webmanifest')).json();
+    ok(man.start_url === '/', 'manifest: start_url /');
+    await p.context().close();
+  }
+  {
+    // CSP з _headers не ламає сторінки: жодних порушень у консолі на головній, майстрі (з надсиланням), політиці
+    const p = await newPage(b, { tag: 'csp', cfg: { ENDPOINT: FAKE, MIN_FILL_MS: 0 } });
+    const vio = []; p.on('console', m => { if (/Content Security Policy/i.test(m.text())) vio.push(m.text()); });
+    await p.route(FAKE, r => r.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }));
+    for (const u of ['/', '/privacy']) await p.goto(BASE + u, { waitUntil: 'networkidle' });
+    await toStep4(p); await p.fill('#f-name', 'Олена'); await p.fill('#f-phone', '671234567'); await p.click('button[type="submit"]');
+    await p.waitForSelector('.done-mark:not(.call)');
+    ok(vio.length === 0, 'CSP: без порушень на головній, політиці і при надсиланні заявки', vio);
+    await p.context().close();
   }
 
   await b.close();

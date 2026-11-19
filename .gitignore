@@ -3,3 +3,4 @@ shots-review/
 !**/design/shots/
 **/design/refs/
 __pycache__/
+dist/

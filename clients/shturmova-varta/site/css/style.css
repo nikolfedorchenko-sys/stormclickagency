@@ -387,23 +387,22 @@ ul, ol { list-style: none; }
    10a. ХТО НА ПОСТАХ (після сітки послуг)
    ========================================================= */
 .posts { padding: 96px 0 0; }
-.posts-head { display: grid; grid-template-columns: 1fr 1fr; gap: var(--col-gap); align-items: start; }
-.posts-lead { max-width: 560px; padding-top: 8px; font-size: 20px; line-height: 1.45; }
-.posts-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--col-gap); margin-top: 72px; }
-.posts-list li { position: relative; padding-top: 22px; font-size: 17px; line-height: 1.5; color: var(--fg-2); }
-.posts-list li::before { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 2px; background: var(--accent-line); }
+/* два білі блоки поспіль («Хто на постах» і «Ситуації») – розділяємо тонкою лінією в межах сітки */
+.posts-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--col-gap); align-items: start; }
+.posts-in::after { content: ""; grid-column: 1 / -1; height: 1px; margin-top: 66px; background: var(--line-soft); }
+.posts-lead { max-width: 520px; margin-top: 32px; font-size: 20px; line-height: 1.45; }
+.posts-list { display: grid; padding-top: 8px; }
+.posts-list li { padding: 20px 0 22px; border-top: 2px solid var(--line); font-size: 18px; line-height: 1.5; color: var(--fg-2); }
+.posts-list li + li { border-top-width: 1px; border-top-color: var(--line-soft); }
 .posts-list b { font-weight: 500; color: var(--fg); }
-/* «Ситуації» йдуть одразу після – тонка лінія між двома білими блоками */
-.posts + .sit .wrap { border-top: 1px solid var(--line-soft); padding-top: 96px; }
-.posts + .sit { padding-top: 96px; }
-@media (max-width: 1100px) { .posts-list { grid-template-columns: 1fr 1fr; row-gap: 40px; } }
+@media (max-width: 1100px) { .posts-in { grid-template-columns: minmax(0, 1fr); gap: 40px; } .posts-in::after { margin-top: 16px; } .posts-lead { max-width: 640px; } }
 @media (max-width: 640px) {
   .posts { padding: 48px 0 0; }
-  .posts-head { grid-template-columns: 1fr; gap: 16px; }
-  .posts-lead { padding-top: 0; font-size: 17px; }
-  .posts-list { grid-template-columns: 1fr; gap: 24px; margin-top: 32px; }
-  .posts-list li { padding-top: 16px; font-size: 16px; }
-  .posts + .sit, .posts + .sit .wrap { padding-top: 48px; }
+  .posts-in { gap: 28px; }
+  .posts-in::after { margin-top: 20px; }
+  .posts-lead { margin-top: 16px; font-size: 17px; }
+  .posts-list { padding-top: 0; }
+  .posts-list li { padding: 16px 0 18px; font-size: 16px; }
 }
 
 /* =========================================================
@@ -433,7 +432,7 @@ ul, ol { list-style: none; }
 .demo-log li { display: grid; grid-template-columns: 44px 1fr; gap: 8px; padding: 7px 0; border-top: 1px solid var(--line-soft); line-height: 1.3; font-size: 13px; }
 .demo-log time { font-weight: 600; }
 .demo-bill { border: 1px solid var(--line-soft); border-radius: 10px; padding: 12px; }
-.demo-bill .sum { font-size: 22px; font-weight: 500; margin: 2px 0 10px; }
+.demo-bill .demo-sum { font-size: 18px; font-weight: 500; white-space: nowrap; margin: 4px 0 12px; }
 .demo-bill .mini { display: inline-block; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line-soft); color: var(--muted); font-size: 12px; }
 @media (max-width: 1100px) { .cab-grid { grid-template-columns: 1fr; gap: 48px; } }
 @media (max-width: 640px) {
@@ -454,20 +453,21 @@ ul, ol { list-style: none; }
    11a. ПРО ПОСЛУГИ – текстовий блок перед «Питаннями» (спокійна типографіка)
    ========================================================= */
 .about { padding: 104px 0 104px; }
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--col-gap); align-items: start; }
+.about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--col-gap); align-items: start; }
 .about-grid > .h2 { font-size: 40px; line-height: 1.08; letter-spacing: -.02em; max-width: 520px; }
+@media (min-width: 1101px) { .about-grid > .h2 { position: sticky; top: 32px; } }
 .about-body { max-width: 640px; }
 .about-body p { margin-top: 14px; font-size: 17px; line-height: 1.6; color: var(--fg-2); }
 .about-body p.about-lead { margin-top: 0; font-size: 20px; line-height: 1.5; color: var(--fg); }
 .about-body h3 { margin-top: 48px; font-size: var(--fs-h3); font-weight: 500; line-height: 1.15; letter-spacing: -.01em; }
 .about-body a { text-underline-offset: 3px; }
 .about-steps { margin-top: 16px; counter-reset: s; display: grid; }
-.about-steps li { counter-increment: s; display: flex; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line-soft); font-size: 17px; line-height: 1.55; color: var(--fg-2); }
+.about-steps li { counter-increment: s; position: relative; padding: 14px 0 14px 32px; border-top: 1px solid var(--line-soft); font-size: 17px; line-height: 1.55; color: var(--fg-2); }
 .about-steps li:last-child { border-bottom: 1px solid var(--line-soft); }
-.about-steps li::before { content: counter(s); flex: none; width: 16px; font-weight: 600; color: var(--fg); }
+.about-steps li::before { content: counter(s); position: absolute; left: 0; top: 14px; font-weight: 600; color: var(--fg); }
 .about-steps b { font-weight: 500; color: var(--fg); }
 .about-steps + p { margin-top: 20px; }
-@media (max-width: 1100px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } .about-grid > .h2 { max-width: 640px; } }
+@media (max-width: 1100px) { .about-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; } .about-grid > .h2 { max-width: 640px; } }
 @media (max-width: 640px) {
   .about { padding: 48px 0 56px; }
   .about-grid { gap: 20px; }
