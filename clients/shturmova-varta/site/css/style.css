@@ -2,6 +2,20 @@
    Усі кольори – лише через токени нижче. Одна світла тема. */
 
 /* =========================================================
+   0. ШРИФТ Onest – локально (fonts/, OFL 1.1), змінний: ваги 400–600 в одному файлі на набір символів
+   ========================================================= */
+@font-face {
+  font-family: "Onest"; font-style: normal; font-weight: 400 600; font-display: swap;
+  src: url("../fonts/onest-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Onest"; font-style: normal; font-weight: 400 600; font-display: swap;
+  src: url("../fonts/onest-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* =========================================================
    1. ТОКЕНИ
    ========================================================= */
 :root {
@@ -620,8 +634,12 @@ ul, ol { list-style: none; }
    ========================================================= */
 /* антиспам-пастка: поза екраном, для людей і читачів екрана невидима */
 .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
-/* «Заявку не вдалося надіслати онлайн» – як «надіслано», але знак помилки */
-.done-mark.warn { background: var(--err-bg); color: var(--err); }
+/* Cloudflare Turnstile (лише якщо задано TURNSTILE_SITEKEY): зазвичай невидимий, місце займає лише коли просить дію */
+.ts:not(:empty) { margin-top: 20px; }
+/* «Залишився один крок – подзвоніть» – як «надіслано», але знак телефону (нейтральний, не помилка) */
+.done-mark.call .i { width: 28px; height: 28px; stroke-width: 2; }
+/* десктоп: після прокрутки до кроку чи результату лишаємо трохи повітря над ним */
+@media (min-width: 900px) { #wiz { scroll-margin-top: 24px; } }
 .w-tel { font-weight: 500; white-space: nowrap; text-underline-offset: 3px; }
 .sum-h { margin-top: 48px; font-size: var(--fs-h3); font-weight: 400; line-height: 1.14; }
 .sum-h + .sum { margin-top: 20px; }
@@ -647,7 +665,8 @@ ul, ol { list-style: none; }
   .doc-note { padding: 16px; }
   .doc-acts .btn { flex: 1 1 100%; }
   .sum-h { margin-top: 36px; }
-  .w-off { flex-wrap: wrap; }
+  /* блок «Подзвонити» в стані «один крок» – не липка панель, а звичайний ряд, як .w-nav.end */
+  .w-nav.w-off { position: static; margin: 32px 0 0; padding: 0; background: none; border: 0; flex-wrap: wrap; }
 }
 
 /* =========================================================

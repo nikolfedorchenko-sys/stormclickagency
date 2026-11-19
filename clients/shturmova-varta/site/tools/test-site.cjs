@@ -53,7 +53,7 @@ async function toStep4(p, query = '') {
 
   /* ---------- 1. Повний прохід майстра, ENDPOINT порожній (як зараз у config.js) ---------- */
   console.log('\n1. Майстер, ENDPOINT не задано');
-  for (const vp of [{ w: 1440, h: 900 }, { w: 360, h: 800, mobile: true }]) {
+  for (const vp of [{ w: 1440, h: 900 }, { w: 768, h: 1024, mobile: true }, { w: 360, h: 800, mobile: true }]) {
     const p = await newPage(b, { viewport: { width: vp.w, height: vp.h }, mobile: vp.mobile, tag: 'wizard-' + vp.w });
     let posted = 0; p.on('request', r => { if (r.method() === 'POST') posted++; });
     await p.goto(BASE + '/wizard.html', { waitUntil: 'networkidle' });
@@ -81,8 +81,12 @@ async function toStep4(p, query = '') {
     await p.fill('#f-name', 'Олена'); await p.fill('#f-phone', '0671234567');
     await p.waitForTimeout(3100); // мінімальний час заповнення
     await p.click('button[type="submit"]');
-    await p.waitForSelector('.done-mark.warn');
-    ok((await text(p, '#wq')) === 'Заявку не вдалося надіслати онлайн', `${vp.w}: стан «не вдалося надіслати онлайн»`);
+    await p.waitForSelector('.done-mark.call');
+    ok((await text(p, '#wq')) === 'Залишився один крок – подзвоніть', `${vp.w}: стан «Залишився один крок – подзвоніть»`);
+    ok(await p.$eval('.done-mark', e => e.classList.contains('call') && !!e.querySelector('use[href="#i-phone"]') && getComputedStyle(e).backgroundColor === 'rgb(0, 0, 0)'), `${vp.w}: знак – телефон на чорному колі, не «!»`);
+    ok(/назвіть менеджеру відповіді нижче/.test(await text(p, '.w-sub')), `${vp.w}: підтекст «назвіть менеджеру відповіді»`);
+    ok(await p.$eval('.w-nav.w-off', e => { const c = getComputedStyle(e); return c.position === 'static' && c.borderTopStyle === 'none'; }), `${vp.w}: блок «Подзвонити» не липкий, без лінії зверху`);
+    if (vp.w === 360) ok(await p.$eval('.w-nav.w-off', e => getComputedStyle(e).marginTop === '32px'), '360: відступ блоку «Подзвонити» 32 px, як у .w-nav.end');
     ok(!(await p.$('text=Заявку надіслано')), `${vp.w}: немає хибного «Заявку надіслано»`);
     ok(posted === 0, `${vp.w}: жодного POST-запиту`, posted);
     const sum = await p.$$eval('.sum div', ds => ds.map(d => d.textContent));
@@ -119,11 +123,11 @@ async function toStep4(p, query = '') {
     ok(await p.evaluate(() => document.activeElement.id) === 'send-err', 'фокус на блоці помилки');
     if (SHOTS) await p.screenshot({ path: path.join(SHOTS, 'wizard-1440-send-error.png'), fullPage: true });
     await p.click('#send-err button[type="submit"]');
-    await p.waitForSelector('.done-mark:not(.warn)');
+    await p.waitForSelector('.done-mark:not(.call)');
     ok((await text(p, '#wq')) === 'Заявку надіслано', 'повтор → «Заявку надіслано»');
     ok(calls === 2, 'два запити: помилка і повтор', calls);
     ok(body && body.phone === '+380671234567' && body.name === 'Петро' && body.details === 'Склад чи виробництво' && body.address === 'Київ, Оболонь'
-      && body.schedule === 'Цілодобово' && body.start === 'Якнайшвидше' && body.channel === 'Дзвінок' && body.company === '' && body.utm_source === 'test' && body.utm_campaign === 'c1'
+      && body.schedule === 'Цілодобово' && body.start === 'Якнайшвидше' && body.channel === 'Дзвінок' && body.hp_url === '' && !('company' in body) && !('cf_turnstile' in body) && body.utm_source === 'test' && body.utm_campaign === 'c1'
       && /Ім’я: Петро/.test(body.message), 'тіло заявки (JSON)', body);
     if (SHOTS) await p.screenshot({ path: path.join(SHOTS, 'wizard-1440-done.png'), fullPage: true });
     await p.context().close();
@@ -133,7 +137,7 @@ async function toStep4(p, query = '') {
     let ct = '', body = '';
     await p.route(FAKE, r => { ct = r.request().headers()['content-type']; body = r.request().postData(); r.fulfill({ status: 200, body: '{}' }); });
     await toStep4(p); await p.fill('#f-name', 'Ія'); await p.fill('#f-phone', '671234567'); await p.click('button[type="submit"]');
-    await p.waitForSelector('.done-mark:not(.warn)');
+    await p.waitForSelector('.done-mark:not(.call)');
     ok(/x-www-form-urlencoded/.test(ct) && /phone=%2B380671234567/.test(body), 'ENDPOINT_FORMAT: form', ct);
     await p.context().close();
   }
@@ -152,20 +156,21 @@ async function toStep4(p, query = '') {
     const p = await newPage(b, { cfg: { ENDPOINT: FAKE, MIN_FILL_MS: 0 }, tag: 'honeypot' });
     let calls = 0; await p.route(FAKE, r => { calls++; r.fulfill({ status: 200, body: '{}' }); });
     await toStep4(p);
-    ok(await p.$eval('#f-company', e => e.tabIndex === -1 && e.closest('.hp').getAttribute('aria-hidden') === 'true' && e.getBoundingClientRect().right < 0), 'пастка поза екраном, tabindex −1, aria-hidden');
+    ok(await p.$eval('#f-hp', e => e.name === 'hp_url' && e.autocomplete === 'new-password' && e.tabIndex === -1 && e.closest('.hp').getAttribute('aria-hidden') === 'true' && e.getBoundingClientRect().right < 0), 'пастка hp_url: autocomplete=new-password, поза екраном, tabindex −1, aria-hidden');
+    ok(!/компан/i.test(await text(p, '.hp label')), 'підпис пастки нейтральний (без «Компанія»)');
     await p.fill('#f-name', 'Бот'); await p.fill('#f-phone', '671234567');
-    await p.$eval('#f-company', e => { e.value = 'spam inc'; });
+    await p.$eval('#f-hp', e => { e.value = 'http://spam'; });
     await p.click('button[type="submit"]');
-    await p.waitForSelector('.done-mark.warn');
+    await p.waitForSelector('.done-mark.call');
     ok(calls === 0, 'заповнена пастка → запит не надіслано', calls);
-    ok((await text(p, '#wq')) === 'Заявку не вдалося надіслати онлайн', 'заповнена пастка → «подзвоніть», не «надіслано»');
+    ok((await text(p, '#wq')) === 'Залишився один крок – подзвоніть', 'заповнена пастка → «подзвоніть», не «надіслано»');
     await p.context().close();
   }
   {
     const p = await newPage(b, { cfg: { ENDPOINT: FAKE, MIN_FILL_MS: 60000 }, tag: 'too-fast' });
     let calls = 0; await p.route(FAKE, r => { calls++; r.fulfill({ status: 200, body: '{}' }); });
     await toStep4(p); await p.fill('#f-name', 'Швидкий'); await p.fill('#f-phone', '671234567'); await p.click('button[type="submit"]');
-    await p.waitForSelector('.done-mark.warn');
+    await p.waitForSelector('.done-mark.call');
     ok(calls === 0, 'надто швидко (< MIN_FILL_MS) → запит не надіслано', calls);
     await p.context().close();
   }
@@ -174,7 +179,7 @@ async function toStep4(p, query = '') {
     await toStep4(p);
     ok(!(await p.$('text=Telegram і Viber – [уточнити], чи підключені.')), 'TELEGRAM_URL задано → рядок «[уточнити], чи підключені» сховано');
     await p.fill('#f-name', 'Ія'); await p.fill('#f-phone', '671234567'); await p.waitForTimeout(3100); await p.click('button[type="submit"]');
-    await p.waitForSelector('.done-mark.warn');
+    await p.waitForSelector('.done-mark.call');
     const mail = await p.$eval('a[href^="mailto:"]', a => decodeURIComponent(a.href));
     ok(/^mailto:test@example.com\?subject=Заявка з сайту/.test(mail) && /Ім’я: Ія/.test(mail) && /Зв’язок: Дзвінок · \+380 67 123 45 67/.test(mail), 'EMAIL задано → mailto з відповідями', mail);
     ok(!!(await p.$('a[href="https://t.me/example"]')), 'кнопка Telegram');
@@ -287,15 +292,81 @@ async function toStep4(p, query = '') {
     for (const u of ['/index.html', '/wizard.html', '/privacy.html']) {
       await p.goto(BASE + u, { waitUntil: 'networkidle' });
       const s = await p.evaluate(() => ({ h1: document.querySelectorAll('h1').length, lang: document.documentElement.lang, t: document.title,
-        d: !!document.querySelector('meta[name=description]'), c: (document.querySelector('link[rel=canonical]') || {}).href, ico: !!document.querySelector('link[rel=icon]') }));
-      ok(s.h1 === 1 && s.lang === 'uk' && s.t && s.d && s.c && s.ico, `${u}: h1, lang, title, description, canonical, favicon`, s);
+        d: !!document.querySelector('meta[name=description]'), c: (document.querySelector('link[rel=canonical]') || {}).href, ico: !!document.querySelector('link[rel=icon]'),
+        robots: (document.querySelector('meta[name=robots]') || {}).content || '' }));
+      const noindex = /noindex/.test(s.robots);
+      ok(s.h1 === 1 && s.lang === 'uk' && s.t && s.d && s.ico && (noindex ? !s.c : !!s.c), `${u}: h1, lang, title, description, favicon, ${noindex ? 'noindex без canonical' : 'canonical'}`, s);
     }
     const ld = await p.goto(BASE + '/index.html').then(() => p.$eval('script[type="application/ld+json"]', s => JSON.parse(s.textContent)));
     ok(ld['@type'] === 'LocalBusiness' && ld.telephone === '+380675495710' && !ld.address.streetAddress, 'schema.org: LocalBusiness, телефон, без вигаданої адреси');
+    ok(ld.areaServed.name === 'Київ' && ld.contactPoint.areaServed.name === 'Київ', 'schema.org: areaServed – Київ (і в contactPoint)');
+    const man = await p.goto(BASE + '/site.webmanifest').then(r => r.json());
+    ok(man.icons.every(i => i.purpose === 'any' || i.purpose === 'maskable') && man.icons.some(i => i.purpose === 'maskable'), 'manifest: any і maskable – окремі іконки');
+    for (const i of man.icons) { const r = await p.goto(BASE + i.src); ok(r.status() === 200, `${i.src} віддається`); }
+    const r400 = await p.request.get(BASE + '/%E0%A4%A'); ok(r400.status() === 400, 'serve.cjs: зламане кодування адреси → 400, сервер не падає', r400.status());
+    const r200 = await p.request.get(BASE + '/index.html'); ok(r200.status() === 200, 'serve.cjs працює після зламаної адреси');
     for (const f of ['/robots.txt', '/sitemap.xml', '/site.webmanifest', '/favicon.ico', '/icons/apple-touch-icon.png', '/icons/icon-512.png', '/img/og.jpg']) {
       const r = await p.goto(BASE + f); ok(r.status() === 200, `${f} віддається`);
     }
     await p.context().close();
+  }
+
+  /* ---------- 6. Прокрутка до кроку і результату на десктопі (блокер B1), шрифт, футер, згода ---------- */
+  console.log('\n6. Прокрутка на десктопі, шрифт, футер, згода');
+  const inView = (p, sel) => p.$eval(sel, e => { const r = e.getBoundingClientRect(); return r.top >= 0 && r.top < innerHeight - 40; });
+  for (const h of [800, 900]) for (const mode of ['offline', 'done', 'error']) {
+    const cfg = mode === 'offline' ? null : { ENDPOINT: FAKE, MIN_FILL_MS: 0 };
+    const p = await newPage(b, { viewport: { width: 1440, height: h }, cfg, tag: `scroll-${h}-${mode}`, allow: /status of 500/ });
+    if (cfg) await p.route(FAKE, r => r.fulfill(mode === 'error' ? { status: 500, body: '{}' } : { status: 200, contentType: 'application/json', body: '{"ok":true}' }));
+    await toStep4(p); await p.fill('#f-name', 'Олена'); await p.fill('#f-phone', '671234567');
+    if (mode === 'offline') await p.waitForTimeout(3100);
+    await p.evaluate(() => scrollTo(0, document.documentElement.scrollHeight)); // як людина: долистала до кнопки
+    await p.click('button[type="submit"]');
+    if (mode === 'error') {
+      await p.waitForSelector('#send-err'); await p.waitForTimeout(150);
+      ok(await inView(p, '#send-err'), `1440×${h}: помилка надсилання – блок «Не вдалося надіслати заявку» в межах екрана`);
+      if (SHOTS) await p.screenshot({ path: path.join(SHOTS, `wizard-1440x${h}-error-viewport.png`) });
+    } else {
+      await p.waitForSelector(mode === 'offline' ? '.done-mark.call' : '.done-mark:not(.call)'); await p.waitForTimeout(150);
+      ok(await inView(p, '#wq') && await p.$eval('#wiz', e => e.getBoundingClientRect().top >= 0), `1440×${h}: ${mode === 'offline' ? '«Залишився один крок»' : '«Заявку надіслано»'} – заголовок у межах екрана`,
+        await p.$eval('#wq', e => Math.round(e.getBoundingClientRect().top)));
+      if (SHOTS) await p.screenshot({ path: path.join(SHOTS, `wizard-1440x${h}-${mode}-viewport.png`) });
+    }
+    await p.context().close();
+  }
+  {
+    // кроки 1–4 на десктопі: якщо долистали вниз – після «Далі»/«Назад» початок кроку видно
+    const p = await newPage(b, { viewport: { width: 1440, height: 800 }, tag: 'scroll-steps' });
+    await p.goto(BASE + '/wizard.html', { waitUntil: 'networkidle' });
+    await p.click('.opt[data-v="object"]');
+    await p.evaluate(() => scrollTo(0, document.documentElement.scrollHeight)); await p.click('[data-act="next"]'); await p.waitForTimeout(100);
+    ok(await inView(p, '#wq'), '1440×800: крок 2 – заголовок у межах екрана після «Далі» з прокрученої сторінки');
+    await p.click('.opt[data-v="Склад чи виробництво"]');
+    await p.evaluate(() => scrollTo(0, document.documentElement.scrollHeight)); await p.click('[data-act="next"]'); await p.waitForTimeout(100);
+    ok(await inView(p, '#wq'), '1440×800: крок 3 – заголовок у межах екрана');
+    await p.evaluate(() => scrollTo(0, 0)); const y0 = await p.evaluate(() => scrollY);
+    await p.$eval('[data-act="back"]', e => e.click()); await p.waitForTimeout(100); // клік без автопрокрутки Playwright
+    ok(await p.evaluate(() => scrollY) === y0, '1440×800: якщо крок і так видно – сторінка не стрибає');
+    await p.context().close();
+  }
+  {
+    const p = await newPage(b, { tag: 'font', allow: /status of 404/ });
+    const ext = []; p.on('request', r => { if (!r.url().startsWith(BASE)) ext.push(r.url()); });
+    for (const u of ['/index.html', '/wizard.html', '/privacy.html', '/deep/missing']) await p.goto(BASE + u, { waitUntil: 'networkidle' }).catch(() => {});
+    ok(ext.length === 0, 'жодного зовнішнього запиту (Google Fonts прибрано)', ext);
+    await p.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    ok(await p.evaluate(async () => { await document.fonts.ready; return document.fonts.check('500 16px Onest', 'Охорона') && [...document.fonts].some(f => f.family.replace(/"/g, '') === 'Onest' && f.status === 'loaded'); }), 'Onest завантажено локально');
+    ok(await p.$eval('link[rel=preload][as=font]', l => /fonts\/onest-cyrillic\.woff2$/.test(l.href) && l.crossOrigin === 'anonymous'), 'preload основного файлу шрифту');
+    const lic = await p.$$eval('[data-cfg="license"]', es => es.map(e => e.tagName));
+    ok(lic.length > 0 && lic.every(t => t === 'SPAN') && !(await p.$('.ftr a[href="#"]')), 'футер: ліцензія – текст, без href="#", поки LICENSE_URL порожній', lic);
+    await p.context().close();
+    const p2 = await newPage(b, { cfg: { LICENSE_URL: 'https://example.com/license' }, tag: 'license' });
+    await p2.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    ok(await p2.$eval('.ftr [data-cfg="license"]', e => e.tagName === 'A' && e.href === 'https://example.com/license'), 'LICENSE_URL задано → у футері посилання');
+    await toStep4(p2);
+    ok(/службові дані про джерело переходу/.test(await text(p2, '#contact .fine')) && !!(await p2.$('#contact .fine a[href="privacy.html"]')), 'згода: згадано службові дані про джерело переходу, посилання на політику');
+    ok(!(await p2.$('#ts')), 'Turnstile без TURNSTILE_SITEKEY не підключається');
+    await p2.context().close();
   }
 
   await b.close();

@@ -47,7 +47,11 @@
   function setText(sel, v) { if (v) document.querySelectorAll(sel).forEach(function (el) { el.textContent = v; }); }
   setText('[data-cfg="hours"]', C.LINE_HOURS);
   setText('[data-cfg="callback"]', C.CALLBACK_TIME);
-  if (C.LICENSE_URL) document.querySelectorAll('[data-cfg="license"]').forEach(function (a) { a.href = C.LICENSE_URL; a.rel = 'noopener'; });
+  // ліцензія: поки LICENSE_URL порожній – звичайний текст (без посилання в нікуди); задано – робимо посиланням
+  if (C.LICENSE_URL) document.querySelectorAll('[data-cfg="license"]').forEach(function (el) {
+    var a = document.createElement('a'); a.href = C.LICENSE_URL; a.rel = 'noopener'; a.textContent = el.textContent; a.dataset.cfg = 'license';
+    el.replaceWith(a);
+  });
 
   /* ---------- аналітика: лише передаємо події, якщо лічильник підключено (див. config.js) ---------- */
   function track(name, params) {

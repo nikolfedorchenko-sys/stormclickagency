@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""favicon.ico (16/32/48) з PNG, які зробив make-icons-og.cjs, і og.jpg з og.png. Запуск із теки site/."""
+"""favicon.ico (16/32/48) з PNG, які зробив make-icons-og.cjs (og.jpg він тепер пише сам; гілка og.png – для старих запусків). Запуск із теки site/."""
 from pathlib import Path
 from PIL import Image
 

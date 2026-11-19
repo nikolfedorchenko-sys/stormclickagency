@@ -4,7 +4,7 @@
      p = обʼєкт, w = кого, e = захід        – точне значення варіанта кроку 2
      q = текст із пошуку на головній        – розбираємо ключовими словами
    Надсилання – на SV_CONFIG.ENDPOINT (js/config.js). Якщо його немає – НЕ вдаємо успіх,
-   а показуємо «Заявку не вдалося надіслати онлайн – подзвоніть» з усіма відповідями. */
+   а показуємо «Залишився один крок – подзвоніть» з усіма відповідями. */
 (function () {
   var TYPES = [
     { v: 'object', t: 'Об’єкт', s: 'Офіс, склад, магазин, будмайданчик, будинок' },
@@ -24,6 +24,7 @@
   var C = window.SV_CONFIG || {};
   var TEL = 'tel:' + (C.PHONE || '+380675495710'), TEL_TXT = C.PHONE_DISPLAY || '+380 67 549 5710';
   var T0 = Date.now(); // антиспам: час відкриття майстра
+  var TS = C.TURNSTILE_SITEKEY || '', tsToken = '', tsLoading = false; // Cloudflare Turnstile – лише якщо задано site key
 
   var a = {}, step = 1, found = '', foundOk = false;
   var st = { sending: false, sendErr: false, offline: false, touched: {}, showAll: false };
@@ -59,6 +60,7 @@
   function typeName(v) { for (var i = 0; i < TYPES.length; i++) if (TYPES[i].v === v) return TYPES[i].t; return ''; }
   function s2() { return STEP2[a.type] || STEP2.object; }
   function digits(v) { return (v || '').replace(/\D/g, ''); }
+  function motion() { return matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'; }
   function say(t) { live.textContent = ''; setTimeout(function () { live.textContent = t; }, 50); }
 
   /* телефон: маска +380 XX XXX XX XX (див. README, «Маска телефону»).
@@ -208,22 +210,25 @@
         field('name', 'Ім’я', false, 'text', 'type="text" maxlength="60" autocomplete="name" placeholder="Як до вас звертатися"') +
         field('phone', 'Телефон', false, 'tel', 'type="tel" inputmode="tel" autocomplete="tel"') +
         chips('channel', CH, 'Як зручніше відповісти') +
+        (TS ? '<div class="ts" id="ts"></div>' : '') +
         // антиспам-пастка: людина поля не бачить і не заповнює, бот – заповнює
-        '<div class="hp" aria-hidden="true"><label for="f-company">Компанія</label><input id="f-company" name="company" type="text" tabindex="-1" autocomplete="off"></div>' +
-        '<p class="fine">Надсилаючи заявку, ви погоджуєтеся, що ТОВ «Охоронна компанія „Штурмова варта“» обробить ваші ім’я, телефон і адресу (якщо вказали), щоб зв’язатися з вами щодо заявки. <a href="privacy.html">Політика конфіденційності [уточнити]</a></p>' +
+        // назва і підпис нейтральні, autocomplete="new-password" – щоб браузер не автозаповнив пастку в людей
+        '<div class="hp" aria-hidden="true"><label for="f-hp">Не заповнюйте це поле</label><input id="f-hp" name="hp_url" type="text" tabindex="-1" autocomplete="new-password"></div>' +
+        '<p class="fine">Надсилаючи заявку, ви погоджуєтеся, що ТОВ «Охоронна компанія „Штурмова варта“» обробить ваші ім’я, телефон, адресу (якщо вказали) та службові дані про джерело переходу, щоб зв’язатися з вами щодо заявки. <a href="privacy.html">Політика конфіденційності [уточнити]</a></p>' +
         (C.TELEGRAM_URL || C.VIBER_URL ? '' : '<p class="fine">Telegram і Viber – [уточнити], чи підключені.</p>') +
         (st.sendErr ? '<div class="alert" role="alert" tabindex="-1" id="send-err"><h3><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>Не вдалося надіслати заявку</h3><p>Ваші відповіді збережені. Спробуйте ще раз або подзвоніть – оформимо заявку телефоном.</p>' +
           '<div class="acts"><button type="submit" class="btn">Спробувати ще раз</button><a class="btn btn-ghost" href="' + TEL + '"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Подзвонити</a></div></div>' : '') +
         (st.sendErr ? '' : nav(4)) + '</form>';
     } else if (st.offline) {
-      // заявка НЕ надіслана (немає ENDPOINT або спрацював антиспам): лишаємо клієнту телефон і всі відповіді
+      // заявка НЕ надіслана (немає ENDPOINT або спрацював антиспам): це не помилка клієнта, а наступний крок –
+      // нейтральний знак телефону, номер і всі відповіді, які треба назвати менеджеру
       var alt = '';
       if (C.EMAIL) alt += '<a class="btn btn-ghost" href="' + esc(mailto()) + '">Надіслати e-mail</a>';
       if (C.TELEGRAM_URL) alt += '<a class="btn btn-ghost" href="' + esc(C.TELEGRAM_URL) + '" rel="noopener">Telegram</a>';
       if (C.VIBER_URL) alt += '<a class="btn btn-ghost" href="' + esc(C.VIBER_URL) + '" rel="noopener">Viber</a>';
-      h = '<div class="done-mark warn" aria-hidden="true"><svg class="i"><use href="#i-alert"/></svg></div>' +
-        '<h2 class="w-q" id="wq" tabindex="-1">Заявку не вдалося надіслати онлайн</h2>' +
-        '<p class="w-sub">Подзвоніть <a class="w-tel" href="' + TEL + '">' + TEL_TXT + '</a>' + (C.EMAIL ? ' або надішліть відповіді e-mail' : '') + ' – менеджер оформить заявку за вашими відповідями. Графік роботи лінії – ' + esc(C.LINE_HOURS || '[уточнити]') + '.</p>' +
+      h = '<div class="done-mark call" aria-hidden="true"><svg class="i"><use href="#i-phone"/></svg></div>' +
+        '<h2 class="w-q" id="wq" tabindex="-1">Залишився один крок – подзвоніть</h2>' +
+        '<p class="w-sub">Заявку приймемо телефоном: наберіть <a class="w-tel" href="' + TEL + '">' + TEL_TXT + '</a>' + (C.EMAIL ? ' або надішліть відповіді e-mail' : '') + ' і назвіть менеджеру відповіді нижче. Графік роботи лінії – ' + esc(C.LINE_HOURS || '[уточнити]') + '.</p>' +
         '<div class="w-nav w-off"><a class="btn" href="' + TEL + '"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Подзвонити</a>' + alt + '</div>' +
         '<h3 class="sum-h">Ваші відповіді</h3>' + sumList() +
         '<div class="w-nav end"><button type="button" class="btn btn-ghost" data-act="edit"><svg class="i" aria-hidden="true"><use href="#i-back"/></svg>Змінити відповіді</button></div>';
@@ -232,15 +237,38 @@
         sumList() + '<div class="w-nav end"><a class="btn" href="index.html">На головну</a></div>';
     }
     box.innerHTML = h; pend = ''; renderSide();
+    if (TS && step === 4 && !st.sending) tsMount();
     var wc = document.querySelector('.w-call'); if (wc) wc.hidden = step > 4 || st.sendErr;
     if (step <= 4 && step !== lastStep) { lastStep = step; SV.track('wizard_step', { step: step }); }
     box.querySelectorAll('[role="radiogroup"]').forEach(function (g) { SV.roving(g, '[role="radio"]', pick); });
     if (focus) {
       var t = box.querySelector('#wq'); t && t.focus({ preventScroll: true });
-      if (innerWidth < 900) box.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      // мобільний – завжди до початку кроку; десктоп – лише якщо початок кроку чи результату вище краю екрана
+      if (innerWidth < 900 || box.getBoundingClientRect().top < 0) box.scrollIntoView({ block: 'start', behavior: motion() });
     }
   }
 
+  /* Turnstile: скрипт Cloudflare вантажимо лише на кроці 4 і лише з TURNSTILE_SITEKEY. Віджет перемальовується разом
+     з кроком, тож кожна спроба надсилання має свіжий одноразовий токен. Немає токена – приймач відповість 403,
+     сайт покаже «Не вдалося надіслати заявку» з повтором і «Подзвонити». */
+  function tsMount() {
+    var el = box.querySelector('#ts'); if (!el) return;
+    if (!window.turnstile) {
+      if (!tsLoading) {
+        tsLoading = true;
+        var sc = document.createElement('script'); sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; sc.async = true;
+        sc.onload = function () { if (step === 4 && !st.sending) tsMount(); };
+        sc.onerror = function () { tsLoading = false; sc.remove(); }; // не завантажився – спробуємо на наступному показі кроку 4
+        document.head.appendChild(sc);
+      }
+      return;
+    }
+    tsToken = '';
+    try {
+      window.turnstile.render(el, { sitekey: TS, size: 'flexible', appearance: 'interaction-only', language: 'uk',
+        callback: function (t) { tsToken = t; }, 'expired-callback': function () { tsToken = ''; }, 'error-callback': function () { tsToken = ''; } });
+    } catch (e) { /* без токена приймач відмовить – клієнт побачить «Подзвонити» */ }
+  }
   function refreshNext() {
     var b = box.querySelector('[data-act="next"]'); if (!b) return;
     var can = ok(step); b.disabled = !can;
@@ -268,7 +296,7 @@
       say(n > 1 ? 'Перевірте два поля: ім’я і телефон' : 'Перевірте поле: ' + (bad === 'name' ? 'ім’я' : 'телефон'));
       box.querySelector('#f-' + bad).focus(); return;
     }
-    var hp = box.querySelector('#f-company'), bot = !!(hp && hp.value) || Date.now() - T0 < (C.MIN_FILL_MS || 0);
+    var hp = box.querySelector('#f-hp'), bot = !!(hp && hp.value) || Date.now() - T0 < (C.MIN_FILL_MS || 0);
     SV.track('lead_submit', { service: a.type });
     // немає куди надсилати або схоже на бота – нічого не відправляємо і НЕ показуємо «надіслано»
     if (!C.ENDPOINT || bot) { SV.track('lead_offline', { reason: !C.ENDPOINT ? 'no_endpoint' : 'antispam' }); offline(); return; }
@@ -277,7 +305,9 @@
       st.sending = false; step = 5; render(true); SV.track('generate_lead', { service: a.type });
     }, function () {
       st.sending = false; st.sendErr = true; render(false); SV.track('lead_error', { service: a.type });
-      var al = box.querySelector('#send-err'); al && al.focus();
+      var al = box.querySelector('#send-err'); if (!al) return;
+      al.focus({ preventScroll: true });
+      var r = al.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) al.scrollIntoView({ block: 'center', behavior: motion() });
     });
   }
   function offline() { st.offline = true; st.sendErr = false; step = 5; render(true); }
@@ -286,8 +316,9 @@
       service: typeName(a.type), service_code: a.type, details: a[c.k] || '', guests: a.guests || '', address: (a.addr || '').trim(),
       schedule: a.when, start: a.start, name: (a.name || '').trim(), phone: '+' + digits(a.phone), channel: a.channel,
       search: found, message: sumText(), page: location.href.split('#')[0], referrer: document.referrer,
-      elapsed_ms: Date.now() - T0, company: '' // company – антиспам-поле, сервер відкидає заявки, де воно не порожнє
+      elapsed_ms: Date.now() - T0, hp_url: '' // hp_url – антиспам-поле, приймач відкидає заявки, де воно не порожнє
     };
+    if (TS) d.cf_turnstile = tsToken;
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'].forEach(function (k) { if (u.get(k)) d[k] = u.get(k).slice(0, 200); });
     return d;
   }
