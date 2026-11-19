@@ -1,0 +1,1855 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StormClick – макет руху на всьому сайті</title>
+<meta name="theme-color" content="#05060B">
+<!-- Макет для погодження: «Шторм на фоні» на всю сторінку + нові живі елементи. Перший екран – погоджений
+     mockup.html без змін (сцена – код сайту src/storm.js з одним доповненням: StormBus, «одна блискавка на екран»).
+     Правила – design-brief.md, розділ «Рух на всьому сайті». ?strike – застиглий удар у видимому екрані, ?calm – без ударів,
+     ?clean – без позначок «Новий рух». -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght,CRSV,SHRP@400..700,0..1,0..100&display=swap" rel="stylesheet">
+<style>
+/* ---- Токени (копія tokens.css, щоб макет був самодостатнім) ---- */
+:root{
+  --c-bg:#05060B;--c-surface:#0E1018;--c-surface-2:#1A1D2B;--c-line:#22253A;--c-line-strong:#34384F;
+  --c-text:#F2F3F8;--c-muted:#A3A7BF;
+  --c-accent:#7C88FF;--c-accent-hi:#9AA3FF;--c-on-accent:#05060B;--c-violet:#A98BFF;--c-live:#5CE39A;
+  --glow-accent:0 0 0 1px rgba(124,136,255,.55),0 8px 32px -8px rgba(124,136,255,.65);
+  --font-display:'Geologica',system-ui,sans-serif;
+  --font-body:'Geologica',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fvs-display:'SHRP' 100,'CRSV' 0;--fvs-body:'SHRP' 0;--fw-display:600;
+  --fs-h1:33px;--lh-h1:1.12;--fs-price:22px;--fs-lead:16px;--lh-lead:1.55;--fs-body:16px;--lh-body:1.55;--fs-ui:16px;--fs-small:14px;
+  --tracking-display:-0.03em;--tracking-caps:0.08em;
+  --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:24px;--s-6:32px;--s-7:40px;--s-8:64px;--s-9:96px;--s-10:128px;
+  --container:1280px;--gutter:16px;--cols:4;--col-gap:16px;--header-h:64px;
+  --r-sm:8px;--r-md:14px;--r-pill:999px;--shadow-pop:0 24px 64px -24px rgba(0,0,0,.8);
+  --tap:44px;--btn-h:56px;
+  --ease-out:cubic-bezier(.2,.8,.2,1);--dur-fast:160ms;--dur-base:320ms;
+}
+@media (min-width:768px){:root{--fs-h1:52px;--lh-h1:1.06;--fs-price:26px;--fs-lead:18px;--gutter:32px;--cols:8}}
+@media (min-width:1200px){:root{--fs-h1:84px;--lh-h1:1.02;--fs-price:32px;--fs-lead:20px;--lh-lead:1.5;--fs-body:17px;--gutter:48px;--cols:12;--col-gap:24px;--header-h:80px}}
+
+/* ---- База ---- */
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--c-bg)}
+body{background:var(--c-bg);color:var(--c-text);font:400 var(--fs-body)/var(--lh-body) var(--font-body);font-variation-settings:var(--fvs-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--c-accent-hi);outline-offset:3px;border-radius:var(--r-sm)}
+.container{width:100%;max-width:calc(var(--container) + 2*var(--gutter));margin:0 auto;padding:0 var(--gutter)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---- Шапка ---- */
+.header{position:fixed;inset:0 0 auto;z-index:10;height:var(--header-h);border-bottom:1px solid transparent;transition:background var(--dur-base),border-color var(--dur-base)}
+.header.is-scrolled{background:rgba(5,6,11,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--c-line)}
+.header .container{height:100%;display:flex;align-items:center;gap:var(--s-2)}
+.logo{display:flex;align-items:center;gap:10px;min-height:var(--tap);margin-right:auto}
+.logo svg{width:16px;height:22px;fill:var(--c-accent)}
+.logo span{font:var(--fw-display) 17px/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:var(--tracking-display)}
+.nav{display:none}
+.lang{display:flex}
+.lang-full{display:none}
+.lang-toggle{width:var(--tap);height:var(--tap);border-radius:var(--r-md);font-weight:600;font-size:var(--fs-small);letter-spacing:var(--tracking-caps);color:var(--c-muted);border:1px solid var(--c-line)}
+.burger{width:var(--tap);height:var(--tap);border-radius:var(--r-md);display:grid;place-content:center;gap:6px;border:1px solid var(--c-line)}
+.burger i{display:block;width:18px;height:2px;background:var(--c-text);border-radius:2px}
+.header-cta{display:none}
+
+/* ---- Перший екран ---- */
+.hero{position:relative;z-index:2;background:var(--c-bg);min-height:100svh;display:flex;flex-direction:column;isolation:isolate;overflow:hidden}
+/* Сцена шторму: хмари (статичний canvas) + блискавка (canvas, малюється лише під час удару).
+   Займає весь герой; де можна бити – рахує скрипт за положенням тексту, кнопок і табло. */
+.storm{position:absolute;z-index:-1;pointer-events:none;inset:0;overflow:hidden}
+.storm canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.storm-sky{filter:blur(4px)} /* згладжує сітку шуму хмар; шар статичний, тому дешево */
+.storm::before{content:"";position:absolute;inset:0 0 auto;height:calc(var(--header-h) + 24px);background:linear-gradient(180deg,var(--c-bg) 35%,rgba(5,6,11,0));z-index:1}
+.hero-main{flex:1;display:flex;align-items:flex-end}
+.hero-main .container{padding-top:calc(var(--header-h) + 52px);padding-bottom:var(--s-6)}
+.announce{display:inline-flex;align-items:center;gap:var(--s-3);min-height:var(--tap);padding:6px 16px 6px 6px;border-radius:var(--r-pill);border:1px solid var(--c-line);background:rgba(14,16,24,.72);backdrop-filter:blur(8px);font-size:var(--fs-small);font-weight:500;color:var(--c-text);margin-bottom:var(--s-5);transition:border-color var(--dur-fast)}
+.announce b{margin-right:0;font-weight:700;font-size:var(--fs-small);padding:4px 10px;border-radius:var(--r-pill);background:var(--c-surface-2);color:var(--c-accent-hi)}
+.announce:hover{border-color:var(--c-line-strong)}
+.announce .arr{color:var(--c-accent-hi)}
+h1{font:var(--fw-display) var(--fs-h1)/var(--lh-h1) var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:var(--tracking-display);text-wrap:balance;max-width:10.5ch} /* телефон: 4 рядки «Сайт, бот / або CRM / за ціною / нижче ринку» (EN теж 4) – праворуч кишеня для удару */
+h1 .hl{color:var(--c-accent);display:block}
+.lead{margin-top:var(--s-4);font-size:var(--fs-lead);line-height:var(--lh-lead);color:var(--c-muted);max-width:34ch}
+.lead strong{color:var(--c-text);font-weight:600}
+.actions{margin-top:var(--s-6);display:flex;flex-direction:column;gap:var(--s-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-3);height:var(--btn-h);padding:0 var(--s-5);border-radius:var(--r-md);font:600 var(--fs-ui)/1 var(--font-body);transition:transform var(--dur-fast) var(--ease-out),background var(--dur-fast),box-shadow var(--dur-base)}
+.btn-primary{background:var(--c-accent);color:var(--c-on-accent);box-shadow:var(--glow-accent)}
+.btn-primary svg{width:12px;height:17px;fill:currentColor}
+.btn-primary:hover{background:var(--c-accent-hi);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0) scale(.98)}
+.ask{display:inline-flex;align-items:center;justify-content:flex-start;align-self:flex-start;gap:var(--s-3);min-height:48px;padding:0 var(--s-1) 0 0;font-weight:600;color:var(--c-text);border-radius:var(--r-md)}
+.ask .dot{width:8px;height:8px;border-radius:50%;background:var(--c-live);box-shadow:0 0 0 4px rgba(92,227,154,.16)}
+.ask .u{border-bottom:1px solid var(--c-line-strong);padding-bottom:2px;transition:border-color var(--dur-fast)}
+.ask:hover .u{border-color:var(--c-text)}
+
+/* ---- Смуга доказу: ціни й терміни ---- */
+.proof{position:relative;z-index:1;border-top:1px solid var(--c-line);background:linear-gradient(180deg,#0A0B12,var(--c-bg))}
+.proof .container{display:grid;grid-template-columns:1fr}
+.p-list{list-style:none;display:grid;grid-template-columns:1fr}
+.p-item{display:grid;grid-template-columns:1fr auto;grid-template-areas:"name price" "time price";column-gap:var(--s-4);align-items:center;padding:var(--s-3) 0;border-bottom:1px solid var(--c-line)}
+.p-name{grid-area:name;font-size:var(--fs-body);font-weight:600}
+.p-time{grid-area:time;font-size:var(--fs-small);color:var(--c-muted);display:flex;align-items:center;gap:6px}
+.p-time svg{width:14px;height:14px;stroke:var(--c-accent-hi);fill:none;stroke-width:2}
+.p-price{grid-area:price;font:var(--fw-display) var(--fs-price)/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:var(--tracking-display);text-align:right;white-space:nowrap}
+.p-price small{font:500 var(--fs-small)/1 var(--font-body);color:var(--c-muted);letter-spacing:0}
+.p-note{padding:var(--s-4) 0 var(--s-5);font-size:var(--fs-body);color:var(--c-muted);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2) var(--s-4)}
+.p-note a{display:inline-flex;align-items:center;min-height:var(--tap);color:var(--c-text);font-weight:600;gap:6px}
+.p-note a span{color:var(--c-accent-hi)}
+
+/* Анотація для погодження (вмикається ?notes) */
+.annot{display:none;position:absolute;z-index:5;right:var(--gutter);top:calc(var(--header-h) + 12px);max-width:260px;padding:10px 12px;border:1px dashed var(--c-accent);border-radius:var(--r-sm);font-size:var(--fs-small);color:var(--c-accent-hi);background:rgba(5,6,11,.8)}
+.show-notes .annot{display:block}
+
+/* ---- Телефони: з Geologica H1 на 4 рядки (33 px) на рядок вищий, ніж був; щоб на 360×800 табло цін
+   лишилось у першому екрані, верхній відступ 52 → 36 px (на всіх телефонах, щоб композиція була однакова). ---- */
+@media (max-width:767px){
+  .hero-main .container{padding-top:calc(var(--header-h) + 36px)}
+}
+/* 360 px: плашка-анонс у Geologica ширша – праворуч від неї має лишитись прохід для удару (типи A/B) */
+@media (max-width:374px){
+  .announce{gap:var(--s-2);padding-right:12px}
+  .announce b{padding:4px 8px}
+}
+
+/* ---- 768 ---- */
+@media (min-width:768px){
+  .hero{min-height:min(100svh,940px)}
+  .hero-main{align-items:center}
+  .hero-main .container{padding-top:calc(var(--header-h) + 160px);padding-bottom:var(--s-7)}
+  h1{max-width:14ch}
+  .lead{max-width:42ch}
+  .actions{flex-direction:row;align-items:center;gap:var(--s-5)}
+  .p-list{grid-template-columns:repeat(3,1fr);column-gap:var(--s-5)}
+  .p-item{grid-template-columns:1fr;grid-template-areas:"name" "price" "time";row-gap:var(--s-2);padding:var(--s-5) 0;border-bottom:0}
+  .p-price{text-align:left;margin-top:var(--s-1)}
+  .p-note{border-top:1px solid var(--c-line)}
+}
+/* ---- 1440 ---- */
+@media (min-width:1200px){
+  .nav{display:flex;gap:var(--s-1);margin-right:var(--s-5)}
+  .nav a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s-3);font-size:15px;font-weight:500;color:var(--c-muted);border-radius:var(--r-sm);transition:color var(--dur-fast)}
+  .nav a:hover{color:var(--c-text)}
+  .lang-toggle{display:none}
+  .lang-full{display:flex;border:1px solid var(--c-line);border-radius:var(--r-md);padding:3px;margin-right:var(--s-3)}
+  .lang-full button{min-width:44px;height:36px;border-radius:10px;font-weight:600;font-size:var(--fs-small);letter-spacing:var(--tracking-caps);color:var(--c-muted)}
+  .lang-full button[aria-pressed="true"]{background:var(--c-surface-2);color:var(--c-text)}
+  .burger{display:none}
+  .header-cta{display:inline-flex;align-items:center;height:var(--tap);padding:0 var(--s-5);border-radius:var(--r-md);border:1px solid var(--c-line-strong);font-weight:600;font-size:15px;transition:border-color var(--dur-fast),background var(--dur-fast)}
+  .header-cta:hover{border-color:var(--c-text);background:var(--c-surface)}
+  .hero{min-height:100svh}
+  .hero-main{align-items:center}
+  .hero-main .container{padding-top:calc(var(--header-h) + var(--s-7));padding-bottom:var(--s-7)}
+  .lead{margin-top:var(--s-5);max-width:40ch}
+  .actions{margin-top:var(--s-7);gap:var(--s-6)}
+  .btn{padding:0 var(--s-6);font-size:17px}
+  .proof .container{grid-template-columns:3fr 1.15fr;column-gap:var(--s-6)}
+  .p-list{column-gap:var(--s-6)}
+  .p-item{position:relative;padding:var(--s-6) 0 var(--s-6)}
+  .p-item + .p-item::before{content:"";position:absolute;left:calc(-1 * var(--s-6) / 2);top:var(--s-6);bottom:var(--s-6);width:1px;background:var(--c-line)}
+  .p-note{grid-column:auto;border-top:0;flex-direction:column;align-items:flex-start;justify-content:center;padding:var(--s-6) 0 var(--s-6) var(--s-6);border-left:1px solid var(--c-line);font-size:15px;line-height:1.5;text-wrap:balance}
+}
+/* Планшет у ландшафті (1024×768): контент вище, щоб смуга цін була видна */
+@media (min-width:768px) and (max-width:1199px) and (max-height:820px){
+  .hero-main .container{padding-top:calc(var(--header-h) + 64px);padding-bottom:var(--s-5)}
+}
+/* Низькі десктопні екрани (1280×720, 1366×768): усе до смуги цін влазить у перший екран */
+@media (min-width:1200px) and (max-height:820px){
+  :root{--fs-h1:clamp(52px,8.5vh,84px);--fs-lead:18px;--fs-price:28px}
+  .hero-main .container{padding-top:calc(var(--header-h) + var(--s-4));padding-bottom:var(--s-5)}
+  .announce{margin-bottom:var(--s-4)}
+  .lead{margin-top:var(--s-4)}
+  .actions{margin-top:var(--s-5)}
+  .p-item{padding:var(--s-5) 0}
+  .p-item + .p-item::before{top:var(--s-5);bottom:var(--s-5)}
+  .p-note{padding:var(--s-5) 0 var(--s-5) var(--s-6)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* =====================================================================
+   НОВЕ: рух на всьому сайті (motion-concepts). Правила – design-brief.md, «Рух на всьому сайті».
+   ===================================================================== */
+
+/* ---- Фоновий шторм сторінки: один шар на весь екран, під усіма секціями ---- */
+.sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.sky canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.sky-clouds{filter:blur(4px);animation:sky-drift 90s ease-in-out infinite alternate}
+@keyframes sky-drift{from{transform:translate3d(-10px,0,0)}to{transform:translate3d(10px,-6px,0)}}
+main{position:relative;z-index:1}
+/* секції прозорі – під ними видно шар шторму; картки, форма, FAQ – непрозорі поверхні */
+.sec{position:relative;z-index:1;padding:96px 0}
+.sec.band{background:rgba(14,16,24,.5)}
+@media (min-width:768px){.sec{padding:128px 0}}
+@media (min-width:1200px){.sec{padding:144px 0}}
+
+/* ---- Загальна типографіка секцій (Geologica, як на сайті; мінімум 14 px) ---- */
+.eyebrow{font-size:var(--fs-small);font-weight:600;color:var(--c-accent-hi);margin-bottom:var(--s-4);letter-spacing:.01em}
+.h2{font:var(--fw-display) clamp(28px,3.6vw,48px)/1.1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:var(--tracking-display);text-wrap:balance;max-width:18ch}
+.stext{color:var(--c-muted);max-width:52ch;font-size:16px;line-height:1.6;margin-top:var(--s-4)}
+@media (min-width:1200px){.stext{font-size:18px}}
+.shead{margin-bottom:var(--s-7)}
+@media (min-width:768px){.shead{margin-bottom:var(--s-8)}}
+.surface{background:var(--c-surface);border:1px solid var(--c-line);border-radius:var(--r-md)}
+.b2{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);min-height:52px;padding:0 var(--s-5);border-radius:var(--r-md);font:600 15px/1 var(--font-body);white-space:nowrap}
+.b2-primary{background:var(--c-accent);color:var(--c-on-accent);box-shadow:var(--glow-accent)}
+.b2-primary svg{width:11px;height:15px;fill:currentColor}
+.b2-ghost{border:1px solid var(--c-line-strong);color:var(--c-text);background:var(--c-surface)}
+.chip-time{display:inline-block;font-size:14px;font-weight:600;color:var(--c-live);background:rgba(92,227,154,.08);border:1px solid rgba(92,227,154,.22);border-radius:var(--r-pill);padding:2px 10px}
+.price{font:var(--fw-display) 22px/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;color:var(--c-text);transition:color .35s,text-shadow .35s}
+
+/* Позначка «Новий рух» біля кожного нового живого елемента (ховається з ?clean) */
+.new-tag{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--c-accent-hi);border:1px dashed rgba(154,163,255,.55);border-radius:var(--r-pill);padding:3px 12px 3px 10px;margin-bottom:var(--s-4)}
+.new-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c-accent-hi)}
+.clean .new-tag,.clean .whatsnew{display:none}
+
+/* ---- Підпис-легенда для власника (одразу після першого екрана) ---- */
+.whatsnew{position:relative;z-index:1;padding:var(--s-6) 0 0}
+.whatsnew .box{border:1px dashed rgba(154,163,255,.45);border-radius:var(--r-md);padding:var(--s-4) var(--s-5);background:rgba(5,6,11,.85);font-size:14px;line-height:1.55;color:var(--c-muted)}
+.whatsnew b{color:var(--c-text);font-weight:600}
+.whatsnew ol{margin:var(--s-2) 0 0 18px;display:grid;gap:2px}
+.whatsnew a{color:var(--c-accent-hi);border-bottom:1px solid rgba(154,163,255,.35)}
+@media (min-width:1200px){.whatsnew ol{grid-template-columns:1fr 1fr;column-gap:var(--s-7)}}
+
+/* ---- Послуги: імпульс «біль → рішення» ---- */
+.entry{display:grid;gap:var(--s-5);padding:var(--s-5);margin-bottom:var(--s-8);border-color:#2E3260;background:linear-gradient(120deg,#16182C,#0E1018)}
+.entry h3{font:var(--fw-display) 24px/1.2 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;margin:var(--s-3) 0 var(--s-2)}
+.entry p{color:var(--c-muted);max-width:60ch}
+.entry .side{display:flex;align-items:center;gap:var(--s-5);flex-wrap:wrap}
+.entry .price{font-size:36px}
+@media (min-width:900px){.entry{grid-template-columns:1fr auto;align-items:center;padding:var(--s-6)}.entry .side{flex-direction:column;align-items:flex-end}}
+.pains{display:grid;gap:var(--s-8)}
+.pain{position:relative}
+.pain-head{display:flex;gap:var(--s-4);align-items:flex-start;margin-bottom:var(--s-5)}
+.pain-num{color:var(--c-accent-hi);font:600 15px/1 var(--font-display);font-variation-settings:var(--fvs-display);padding-top:8px;min-width:22px}
+.pain-head h3{font:var(--fw-display) clamp(20px,2.2vw,28px)/1.2 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.025em}
+.pain-head p{color:var(--c-muted);margin-top:6px;font-size:15px}
+.pain-grid{position:relative;display:grid;grid-template-columns:1fr;gap:var(--s-3)}
+@media (min-width:640px){.pain-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:1100px){.pain-grid{grid-template-columns:repeat(4,1fr);gap:var(--s-4)}}
+.card{position:relative;display:flex;flex-direction:column;padding:20px;min-height:0;overflow:hidden;transition:border-color .4s}
+@media (min-width:1100px){.card{min-height:236px}}
+.card h4{font:600 17px/1.3 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;margin:var(--s-4) 0 var(--s-2)}
+.card p{color:var(--c-muted);font-size:14px;line-height:1.5;flex:1}
+.card .foot{margin-top:var(--s-4);display:flex;justify-content:space-between;align-items:center}
+.card .go{width:44px;height:44px;display:grid;place-items:center;border-radius:10px;border:1px solid var(--c-line);font-weight:600}
+/* «дріт»: від номера болю через усі картки; імпульс біжить ним і по черзі «вмикає» картки */
+.wire{position:absolute;pointer-events:none;background:linear-gradient(90deg,rgba(124,136,255,.0),rgba(124,136,255,.35) 6%,rgba(124,136,255,.35) 94%,rgba(124,136,255,0))}
+.wire.h{height:1px;left:0;right:0;top:-12px}
+.wire.v{width:1px;top:-8px;bottom:0;left:-9px;background:linear-gradient(180deg,rgba(124,136,255,.35),rgba(124,136,255,.35) 90%,rgba(124,136,255,0))}
+.spark{position:absolute;left:0;top:0;width:8px;height:8px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px rgba(154,163,255,.95),0 0 18px 6px rgba(124,136,255,.55);opacity:0;pointer-events:none}
+.spark::after{content:"";position:absolute;top:3px;right:6px;width:64px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(124,136,255,0),rgba(200,206,255,.9))}
+.wire.v .spark::after{top:auto;bottom:6px;right:3px;width:2px;height:56px;background:linear-gradient(180deg,rgba(124,136,255,0),rgba(200,206,255,.9))}
+.card::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--c-accent-hi),transparent);opacity:0;transition:opacity .9s}
+.card.lit{border-color:rgba(124,136,255,.55);transition:border-color .12s}
+.card.lit::after{opacity:1;transition:opacity .12s}
+.card.lit .price{color:#fff;text-shadow:0 0 14px rgba(154,163,255,.85);transition:color .12s,text-shadow .12s}
+.extras{margin-top:var(--s-7);color:var(--c-muted);font-size:14px}
+
+/* ---- «Чому так дешево»: конвеєр задача → ШІ → людина → результат ---- */
+.flow{position:relative;margin-bottom:var(--s-7);padding:var(--s-5) var(--s-4) var(--s-4) 96px;overflow:hidden}
+.flow canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.flow-steps{position:relative;list-style:none;display:grid;gap:0}
+.flow-steps li{min-height:118px;display:flex;flex-direction:column;justify-content:flex-start;padding-top:6px}
+.flow-steps li:last-child{min-height:84px}
+.flow-steps b{font:600 17px/1.3 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;display:block}
+.flow-steps span{color:var(--c-muted);font-size:14px;line-height:1.45;display:block;margin-top:4px;max-width:28ch}
+.flow-steps .st-done b{transition:color .3s,text-shadow .3s}
+.flow.done-flash .st-done b{color:#fff;text-shadow:0 0 14px rgba(154,163,255,.9)}
+@media (min-width:900px){
+  .flow{padding:212px var(--s-6) var(--s-6)}
+  .flow-steps{grid-template-columns:repeat(4,1fr);column-gap:var(--s-5)}
+  .flow-steps li,.flow-steps li:last-child{min-height:0;align-items:center;text-align:center;padding-top:0}
+  .flow-steps span{margin-left:auto;margin-right:auto}
+}
+.ai-grid{display:grid;grid-template-columns:1fr;gap:var(--s-3)}
+@media (min-width:640px){.ai-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:1100px){.ai-grid{grid-template-columns:repeat(4,1fr);gap:var(--s-4)}}
+.ai-card{padding:var(--s-5)}
+.ai-card .n{color:var(--c-accent-hi);font:600 15px/1 var(--font-display);font-variation-settings:var(--fvs-display);display:block;margin-bottom:var(--s-5)}
+.ai-card h3{font:600 18px/1.3 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;margin-bottom:var(--s-2)}
+.ai-card p{color:var(--c-muted);font-size:14px;line-height:1.55}
+
+/* ---- Трафік → заявки: воронка (чинний живий елемент сайту, без змін) ---- */
+.traffic-grid{display:grid;gap:var(--s-7)}
+@media (min-width:1000px){.traffic-grid{grid-template-columns:1fr 1fr;align-items:center;gap:var(--s-8)}}
+.counters{display:flex;gap:var(--s-7);margin-top:var(--s-6)}
+.counter b{display:block;font:600 clamp(32px,3.5vw,48px)/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.03em}
+.counter span{color:var(--c-muted);font-size:14px}
+.demo-note{font-size:14px;color:var(--c-muted);margin-top:var(--s-4)}
+.traffic-viz{display:grid;gap:var(--s-5);align-items:center}
+@media (min-width:1000px){.traffic-viz{grid-template-columns:1fr 1.2fr}}
+.funnel{width:100%;height:320px;display:block}
+.chart{padding:20px}
+.chart figcaption{font-size:14px;color:var(--c-muted);margin-bottom:12px}
+.chart svg{width:100%;height:auto;display:block}
+
+/* ---- Факти: живі лічильники ---- */
+.facts-grid{display:grid;grid-template-columns:1fr;gap:var(--s-3)}
+@media (min-width:560px){.facts-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:1100px){.facts-grid{grid-template-columns:repeat(4,1fr);gap:var(--s-4)}}
+.fact{padding:var(--s-5);display:grid;grid-template-rows:auto auto 1fr;gap:var(--s-2);min-width:0}
+.fact-num{font:600 clamp(36px,4vw,52px)/1 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.03em}
+.fact-label{color:var(--c-muted);font-size:14px;line-height:1.45}
+.fact-live{align-self:end;margin-top:var(--s-4);min-height:92px;display:flex;align-items:flex-end}
+/* «годин, а не тижнів»: дві доріжки */
+.race{width:100%;display:grid;gap:10px}
+.race-row{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:10px;font-size:14px;color:var(--c-muted)}
+.race-bar{position:relative;height:6px;border-radius:3px;background:var(--c-surface-2);overflow:hidden}
+.race-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:3px}
+.race-us i{background:var(--c-accent);box-shadow:0 0 10px rgba(124,136,255,.8)}
+.race-them i{background:#4A4E68}
+.race.go .race-us i{animation:race-us 6s cubic-bezier(.3,0,.2,1) infinite}
+.race.go .race-them i{animation:race-them 6s linear infinite}
+@keyframes race-us{0%{width:0}18%{width:100%}22%{width:100%;filter:brightness(1.8)}30%,92%{width:100%;filter:none}100%{width:100%;opacity:0}}
+@keyframes race-them{0%{width:0}92%{width:9%}100%{width:9%;opacity:0}}
+.race-row em{font-style:normal}
+.race-cap{display:flex;justify-content:space-between;font-size:14px;color:var(--c-muted)}
+.race-cap b{color:var(--c-text);font-weight:600}
+/* «24/7»: доба-циферблат */
+.dial{display:flex;align-items:center;gap:var(--s-4)}
+.dial svg{width:92px;height:92px;flex:none;overflow:visible}
+.dial .cap{font-size:14px;color:var(--c-muted);line-height:1.45}
+.dial .hand{transform-origin:46px 46px;animation:dial-spin 10s linear infinite}
+@keyframes dial-spin{to{transform:rotate(360deg)}}
+/* «1 год»: таймер розрахунку */
+.timer{display:flex;align-items:center;gap:var(--s-4)}
+.timer svg{width:92px;height:92px;flex:none}
+.timer .arc{fill:none;stroke:var(--c-accent);stroke-width:4;stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:226;transform:rotate(-90deg);transform-origin:46px 46px}
+.timer .ok{opacity:0;transform-origin:46px 46px}
+.timer.go .arc{animation:timer-arc 5s cubic-bezier(.4,0,.2,1) infinite}
+.timer.go .ok{animation:timer-ok 5s ease-out infinite}
+@keyframes timer-arc{0%{stroke-dashoffset:226}46%{stroke-dashoffset:0}88%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes timer-ok{0%,44%{opacity:0;transform:scale(.6)}52%{opacity:1;transform:scale(1.12)}58%,88%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.timer .cap{font-size:14px;color:var(--c-muted);line-height:1.45}
+
+/* ---- Кейси: мінісцени ---- */
+.cases-grid{display:grid;grid-template-columns:1fr;gap:var(--s-4)}
+@media (min-width:900px){.cases-grid{grid-template-columns:repeat(3,1fr)}}
+.case{overflow:hidden}
+.case-visual{height:240px;padding:20px;background:var(--c-surface-2);display:flex;flex-direction:column;justify-content:flex-end;gap:8px;position:relative}
+.case-body{padding:var(--s-5)}
+.case-kind{font-size:14px;color:var(--c-accent-hi);font-weight:600}
+.case h3{font:600 18px/1.3 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;margin:var(--s-2) 0}
+.case p{color:var(--c-muted);font-size:14px;line-height:1.5}
+.bubble{max-width:86%;padding:8px 12px;border-radius:14px;font-size:14px;line-height:1.4;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+.bubble.in{align-self:flex-start;background:rgba(255,255,255,.08);border-bottom-left-radius:4px}
+.bubble.out{align-self:flex-end;background:#1C1E33;border:1px solid #2D3050;border-bottom-right-radius:4px}
+.bubble.show{opacity:1;transform:none}
+.typing{align-self:flex-end;display:none;gap:4px;padding:10px 12px;border-radius:14px;background:#1C1E33;border:1px solid #2D3050}
+.typing.show{display:flex}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--c-accent-hi);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,100%{opacity:.25}50%{opacity:1}}
+.browser{justify-content:flex-start;gap:0}
+.browser-bar{display:flex;gap:6px;margin-bottom:12px}
+.browser-bar i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2)}
+.browser-page{flex:1;border-radius:12px;background:rgba(5,6,11,.7);border:1px solid var(--c-line);padding:18px;display:grid;align-content:center;gap:12px;position:relative}
+.mock-title{font:600 16px/1.25 var(--font-display);font-variation-settings:var(--fvs-display)}
+.mock-lines{display:grid;gap:6px}.mock-lines i{height:6px;border-radius:3px;background:rgba(255,255,255,.12)}.mock-lines i:last-child{width:70%}
+.mock-btn{justify-self:start;padding:8px 14px;border-radius:8px;font-size:14px;font-weight:600;background:#fff;color:var(--c-bg);transition:transform .15s}
+.mock-btn.press{transform:scale(.94)}
+.cursor{position:absolute;left:78%;top:88%;width:14px;height:20px;opacity:0;transition:left .9s cubic-bezier(.4,0,.2,1),top .9s cubic-bezier(.4,0,.2,1),opacity .3s}
+.cursor svg{width:14px;height:20px;fill:#fff;stroke:#05060B;stroke-width:1.2}
+.lead-chip{position:absolute;right:14px;top:14px;font-size:14px;font-weight:600;color:var(--c-live);background:rgba(92,227,154,.1);border:1px solid rgba(92,227,154,.3);border-radius:var(--r-pill);padding:3px 10px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s}
+.lead-chip.show{opacity:1;transform:none}
+.bars-legend{font-size:14px;color:var(--c-muted)}
+.bars-plot{flex:1;display:flex;align-items:flex-end;gap:8px;border-bottom:1px solid var(--c-line);padding-bottom:2px}
+.bars-plot i{flex:1;height:var(--h);border-radius:4px 4px 0 0;background:#8EA2FF}
+
+/* ---- FAQ: зона тиші (шторм тут не б'є) ---- */
+.faq-grid{display:grid;gap:var(--s-6)}
+@media (min-width:1000px){.faq-grid{grid-template-columns:1fr 1.6fr;gap:var(--s-7)}}
+.faq-list{background:var(--c-bg)}
+.faq-list details{border-top:1px solid var(--c-line)}
+.faq-list details:last-child{border-bottom:1px solid var(--c-line)}
+.faq-list summary{cursor:pointer;list-style:none;padding:20px 40px 20px 0;font-weight:600;font-size:16px;line-height:1.4;position:relative;min-height:44px}
+.faq-list summary::-webkit-details-marker{display:none}
+.faq-list summary::after{content:"+";position:absolute;right:4px;top:16px;font-size:24px;color:var(--c-accent-hi)}
+.faq-list details[open] summary::after{content:"–"}
+.faq-list p{color:var(--c-muted);padding:0 0 20px;max-width:60ch}
+
+/* ---- Контакт: квіз-«заряд» і імпульс при відправці ---- */
+.contact-grid{display:grid;gap:var(--s-7)}
+@media (min-width:1000px){.contact-grid{grid-template-columns:1fr 1fr;gap:var(--s-8);align-items:start}}
+.messengers{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-6)}
+.contact-email{margin-top:var(--s-4);color:var(--c-muted);font-size:14px}
+.contact-email a{color:var(--c-text)}
+.quiz{position:relative;padding:var(--s-5);display:grid;gap:var(--s-5)}
+@media (min-width:768px){.quiz{padding:var(--s-6)}}
+.quiz-trace{position:absolute;inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);pointer-events:none;overflow:visible}
+.quiz-trace rect{fill:none;stroke:#FFFFFF;stroke-width:3;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(124,136,255,.95)) drop-shadow(0 0 14px rgba(124,136,255,.6));opacity:0}
+.quiz-step{font-size:14px;color:var(--c-muted)}
+.quiz-step b{color:var(--c-text)}
+.charge{position:relative;height:4px;border-radius:2px;background:var(--c-line);margin-top:10px}
+.charge i{position:absolute;left:0;top:0;bottom:0;width:25%;border-radius:2px;background:var(--c-accent);transition:width .6s var(--ease-out)}
+.charge i::after{content:"";position:absolute;right:-4px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px rgba(154,163,255,.95),0 0 14px 4px rgba(124,136,255,.6);animation:flicker 1.6s infinite}
+@keyframes flicker{0%,100%{opacity:1}45%{opacity:.55}50%{opacity:1}70%{opacity:.75}}
+.quiz legend{font:600 22px/1.25 var(--font-display);font-variation-settings:var(--fvs-display);letter-spacing:-.02em;margin-bottom:var(--s-4)}
+.quiz fieldset{border:0;display:grid;gap:var(--s-3)}
+.quiz fieldset[hidden]{display:none}
+.choices{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:560px){.choices{grid-template-columns:1fr 1fr}}
+.choices label{display:flex;align-items:center;min-height:52px;padding:12px 16px;border-radius:10px;border:1px solid var(--c-line);background:rgba(255,255,255,.02);cursor:pointer;font-size:15px;line-height:1.35}
+.choices input{position:absolute;opacity:0;pointer-events:none}
+.choices label:has(input:checked){border-color:var(--c-accent);background:rgba(124,136,255,.12)}
+.field{display:grid;gap:6px;font-size:14px;color:var(--c-muted)}
+.field input{font:inherit;font-size:16px;color:var(--c-text);background:var(--c-bg);border:1px solid var(--c-line);border-radius:10px;padding:0 14px;height:48px}
+.quiz-nav{display:flex;gap:var(--s-3)}
+.quiz-nav .b2-primary{margin-left:auto}
+.quiz-nav button[hidden]{display:none}
+.quiz-status{min-height:1.5em;font-size:15px;color:var(--c-accent-hi)}
+.b2-primary.zap svg{animation:zap .5s steps(2) 2}
+@keyframes zap{50%{filter:drop-shadow(0 0 6px #fff)}}
+
+.footer{position:relative;z-index:1;border-top:1px solid var(--c-line);padding:28px 0;color:var(--c-muted);font-size:14px;background:var(--c-bg)}
+
+@media (prefers-reduced-motion:reduce){
+  .sky-clouds{animation:none}
+  .race .race-us i{width:100%}.race .race-them i{width:9%}
+  .timer .arc{stroke-dashoffset:0}.timer .ok{opacity:1}
+  .bubble{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<script>if (/[?&]clean/.test(location.search)) document.documentElement.classList.add("clean");</script>
+<!-- НОВЕ: фоновий шторм сторінки – один шар на весь екран -->
+<div class="sky" aria-hidden="true"><canvas class="sky-clouds"></canvas><canvas class="sky-fx"></canvas></div>
+
+<header class="header">
+  <div class="container">
+    <a href="#" class="logo" aria-label="StormClick – на головну">
+      <svg viewBox="0 0 100 140" aria-hidden="true"><path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z"/></svg>
+      <span>StormClick</span>
+    </a>
+    <nav class="nav" aria-label="Основна навігація">
+      <a href="#services">Послуги</a>
+      <a href="#cases">Кейси</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Контакти</a>
+    </nav>
+    <div class="lang-full" role="group" aria-label="Мова сайту">
+      <button type="button" aria-pressed="true">UA</button>
+      <button type="button" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <button type="button" class="lang-toggle" lang="en" aria-label="Switch to English">EN</button>
+    <a href="#contact" class="header-cta">Обговорити проєкт</a>
+    <button type="button" class="burger" aria-label="Відкрити меню" aria-expanded="false"><i></i><i></i></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <!-- Сцена шторму: процедурна блискавка на canvas. ?strike – кадр удару, ?calm – між ударами. -->
+    <div class="storm" id="storm" aria-hidden="true">
+      <canvas class="storm-sky"></canvas>
+      <canvas class="storm-fx"></canvas>
+    </div>
+
+    <div class="hero-main">
+      <div class="container">
+        <a href="#audit" class="announce"><b>Новинка</b> ШІ-аудит бізнесу за $100 <span class="arr" aria-hidden="true">→</span></a>
+        <h1 id="hero-title">Сайт, бот або CRM <span class="hl">за ціною нижче ринку</span></h1>
+        <p class="lead">Команда професіоналів, яка працює з&nbsp;інструментами ШІ. Тому це коштує <strong>в&nbsp;рази менше</strong>, ніж у&nbsp;класичній&nbsp;агенції.</p>
+        <div class="actions">
+          <a href="#contact" class="btn btn-primary">
+            <svg viewBox="0 0 100 140" aria-hidden="true"><path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z"/></svg>
+            Отримати розрахунок
+          </a>
+          <a href="#assistant" class="ask"><span class="dot" aria-hidden="true"></span><span class="u">Спитати ціну у ШІ-асистента</span></a>
+        </div>
+      </div>
+    </div>
+
+    <section class="proof" aria-label="Орієнтовні ціни і терміни">
+      <div class="container">
+        <ul class="p-list">
+        <li class="p-item">
+          <span class="p-name">Сайт для бізнесу</span>
+          <span class="p-price">$100</span>
+          <span class="p-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>кілька годин</span>
+        </li>
+        <li class="p-item">
+          <span class="p-name">Telegram-бот</span>
+          <span class="p-price"><small>від</small> $150</span>
+          <span class="p-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>від години</span>
+        </li>
+        <li class="p-item">
+          <span class="p-name">CRM під ваш бізнес</span>
+          <span class="p-price"><small>від</small> $1 000</span>
+          <span class="p-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>2–3 дні</span>
+        </li>
+        </ul>
+        <p class="p-note">Ціни орієнтовні. Точний розрахунок – безкоштовно, протягом години в робочий час.
+          <a href="#services">Усі послуги <span aria-hidden="true">→</span></a></p>
+      </div>
+    </section>
+  </section>
+
+  <!-- НОВЕ: підпис для власника – що змінилось у макеті (ховається з ?clean) -->
+  <aside class="whatsnew" aria-label="Що нового в макеті" data-storm-block>
+    <div class="container">
+      <div class="box">
+        <b>Макет руху на всьому сайті.</b> Перший екран – без змін. Нове:
+        <ol>
+          <li><b>Шторм на фоні всієї сторінки</b> – хмари по краях екрана, удар раз на 5–9 с у вільному місці того блоку, який ви зараз бачите (на телефоні – рідше). Текст, картки, кнопки, FAQ і форму блискавка обходить.</li>
+          <li><b>Послуги</b> – імпульс «біль → рішення» пробігає від болю до карток із цінами.</li>
+          <li><b>Чому так дешево</b> – конвеєр «задача → ШІ → людина → результат».</li>
+          <li><b>Факти</b> – живі лічильники: години проти тижнів, доба 24/7, таймер розрахунку.</li>
+          <li><b>Кейси</b> – мінісцени: бот відповідає, на лендингу натискають кнопку.</li>
+          <li><b>Заявка</b> – «заряд» кроків і імпульс по рамці форми при відправці.</li>
+        </ol>
+        <p style="margin-top:8px">Кожен новий елемент позначено «Новий рух». Воронка в блоці «Трафік → заявки» – як на сайті. Перевірка: <a href="?strike">?strike</a> – застиглий удар, <a href="?calm">?calm</a> – без ударів, <a href="?clean">?clean</a> – без позначок.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Послуги -->
+  <section class="sec" id="services" aria-labelledby="services-title">
+    <div class="container">
+      <div class="shead">
+        <p class="eyebrow">Що болить і що з цим робимо</p>
+        <h2 class="h2" id="services-title">Назвіть біль. Ми назвемо ціну і термін.</h2>
+        <p class="stext">Ціни орієнтовні і залежать від технічного завдання. Точний розрахунок безкоштовно, протягом години.</p>
+      </div>
+      <div class="entry surface">
+        <div>
+          <span class="chip-time">1 день</span>
+          <h3>ШІ-аудит бізнесу</h3>
+          <p>За день розбираємо, що у вашому бізнесі автоматизувати, скільки це заощадить і з чого почати. $100 зараховуємо в будь-який наступний проєкт.</p>
+        </div>
+        <div class="side"><b class="price">$100</b><a href="#contact" class="b2 b2-primary">Замовити аудит</a></div>
+      </div>
+      <span class="new-tag">Новий рух: імпульс «біль → рішення»</span>
+      <div class="pains">
+        <section class="pain" data-pain>
+          <header class="pain-head"><span class="pain-num">01</span><div><h3>Не встигаю відповідати клієнтам</h3><p>Повідомлення в усіх месенджерах, пропущені дзвінки, клієнти, що не приходять</p></div></header>
+          <div class="pain-grid">
+            <article class="card surface"><span><span class="chip-time">1 день</span></span><h4>ШІ-асистент у Telegram, Instagram і на сайті</h4><p>Відповідає 24/7 на базі ваших даних, записує, збирає заявки, передає гарячі вам.</p><div class="foot"><b class="price">від $300</b><a href="#contact" class="go" aria-label="Обговорити">→</a></div></article>
+            <article class="card surface"><span><span class="chip-time">2 дні</span></span><h4>ШІ-секретар на телефоні</h4><p>Приймає дзвінок, записує клієнта, надсилає вам резюме розмови.</p><div class="foot"><b class="price">від $400</b><a href="#contact" class="go" aria-label="Обговорити">→</a></div></article>
+            <article class="card surface"><span><span class="chip-time">година</span></span><h4>Бот запису з нагадуваннями</h4><p>Запис, підтвердження, нагадування за 2 години. Менше неявок.</p><div class="foot"><b class="price">від $150</b><a href="#contact" class="go" aria-label="Обговорити">→</a></div></article>
+            <article class="card surface"><span><span class="chip-time">година</span></span><h4>Автозбір відгуків</h4><p>Після візиту бот просить відгук, ШІ відповідає на нього від вашого імені.</p><div class="foot"><b class="price">$100</b><a href="#contact" class="go" aria-label="Обговорити">→</a></div></article>
+          </div>
+        </section>
+        <section class="pain" data-pain>
+          <header class="pain-head"><span class="pain-num">04</span><div><h3>Потрібен сайт, магазин або CRM</h3><p>Агенції просять тисячі доларів і місяці, фрилансери зникають</p></div></header>
+          <div class="pain-grid">
+            <article class="card surface"><span><span class="chip-time">кілька годин</span></span><h4>Сайт для бізнесу</h4><p>Кав’ярня, салон, майстер. До 5 екранів, мобільна версія, кнопка в Telegram, хостинг на рік.</p><div class="foot"><b class="price">$100</b><a href="#contact" class="go" aria-label="Обговорити">→</a></div></article>
+            <article class="card surface"><span><span class="chip-time">1–2 дні</span></span><h4>Інтернет-магазин</h4><p>До 100 товарів, оплата, доставка, адмінка, Instagram-каталог.</p><div class="foot"><b class="price">від $400</b><a href="#contact" class="go" aria-label="Обговорити">→</a></div></article>
+            <article class="card surface"><span><span class="chip-time">2–3 дні</span></span><h4>CRM під ваш бізнес</h4><p>Клієнти, угоди, задачі, звіти, ролі. Інтеграція з сайтом, ботом і платіжками.</p><div class="foot"><b class="price">від $1 000</b><a href="#contact" class="go" aria-label="Обговорити">→</a></div></article>
+            <article class="card surface"><span><span class="chip-time">1 день</span></span><h4>Сайт є, але не продає</h4><p>Аудит, переробка на конверсію, пікселі й аналітика.</p><div class="foot"><b class="price">$150</b><a href="#contact" class="go" aria-label="Обговорити">→</a></div></article>
+          </div>
+        </section>
+      </div>
+      <!-- у макеті – 2 з 4 болів --><p class="extras">Також: логотип і фірмовий стиль – $80, презентація або комерційна пропозиція – $60, лендинг під рекламу – $150.</p>
+    </div>
+  </section>
+
+  <!-- ШІ – наш козир -->
+  <section class="sec band" id="ai" aria-labelledby="ai-title">
+    <div class="container">
+      <div class="shead">
+        <p class="eyebrow">Чому так дешево і швидко</p>
+        <h2 class="h2" id="ai-title">Ми команда професіоналів, яка працює з&nbsp;інструментами ШІ</h2>
+        <p class="stext">Те, на що агенція витрачає тижні роботи дизайнера, копірайтера й розробника, ШІ робить за хвилини. Люди ставлять задачу, перевіряють і відповідають за результат. Тому ціна нижча, а термін коротший.</p>
+      </div>
+      <span class="new-tag">Новий рух: конвеєр «задача → ШІ → людина → результат»</span>
+      <div class="flow surface" data-flow>
+        <canvas aria-hidden="true"></canvas>
+        <ol class="flow-steps">
+          <li class="st-task"><b>Задача</b><span>люди ставлять задачу</span></li>
+          <li class="st-ai"><b>ШІ</b><span>структура, тексти й код – за хвилини</span></li>
+          <li class="st-human"><b>Людина</b><span>збирає, перевіряє і доводить до ладу</span></li>
+          <li class="st-done"><b>Результат</b><span>за який відповідаємо ми</span></li>
+        </ol>
+      </div>
+      <div class="ai-grid">
+        <article class="ai-card surface"><span class="n">01</span><h3>Код і дизайн за години</h3><p>ШІ генерує структуру, тексти й код, людина збирає, перевіряє і доводить до ладу.</p></article>
+        <article class="ai-card surface"><span class="n">02</span><h3>Без переплати за штат</h3><p>Ви не платите за офіс, менеджерів і простій команди. Платите за результат.</p></article>
+        <article class="ai-card surface"><span class="n">03</span><h3>Фіксована ціна</h3><p>Домовляємось про ціну і термін до старту. Зміни за ТЗ – окремо і прозоро.</p></article>
+        <article class="ai-card surface"><span class="n">04</span><h3>Підтримка після запуску</h3><p>Дрібні правки протягом місяця безкоштовно. Далі – за домовленістю або самостійно.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Трафік → заявки (як на сайті) -->
+  <section class="sec" id="traffic" aria-labelledby="traffic-title">
+    <div class="container traffic-grid">
+      <div>
+        <p class="eyebrow">Трафік → заявки</p>
+        <h2 class="h2" id="traffic-title">Ми рахуємо не охоплення, а заявки</h2>
+        <p class="stext">Кожен клік має куди вести: на сайт, що продає, або в бота, що відповідає за 15 секунд. Тому реклама, сайт і автоматизація у нас працюють як одна система.</p>
+        <div class="counters">
+          <div class="counter"><b>12 480</b><span>Відвідувачі</span></div>
+          <div class="counter"><b>384</b><span>Заявки</span></div>
+        </div>
+        <p class="demo-note">Демо-дані для ілюстрації · воронка – чинний елемент сайту, без змін</p>
+      </div>
+      <div class="traffic-viz">
+        <canvas class="funnel" aria-hidden="true"></canvas>
+        <figure class="chart surface">
+          <figcaption>Заявки за тиждень, демо</figcaption>
+          <svg viewBox="0 0 320 140" role="img" aria-label="Заявки за тиждень, демо">
+            <g stroke="rgba(160,170,255,.12)"><line x1="30" x2="310" y1="108" y2="108"/><line x1="30" x2="310" y1="81.5" y2="81.5"/><line x1="30" x2="310" y1="55" y2="55"/><line x1="30" x2="310" y1="28.5" y2="28.5"/></g>
+            <path d="M30 92.1 L55.5 84.2 L80.9 88.1 L106.4 76.2 L131.8 67 L157.3 69.6 L182.7 57.7 L208.2 45.8 L233.6 49.7 L259.1 33.8 L284.5 24.6 L310 14" fill="none" stroke="#8EA2FF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            <circle cx="310" cy="14" r="4" fill="#fff" stroke="#05060B" stroke-width="2"/>
+          </svg>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Факти -->
+  <section class="sec band" id="facts" aria-labelledby="facts-title">
+    <div class="container">
+      <div class="shead">
+        <h2 class="h2" id="facts-title">Факти без прикрас</h2>
+      </div>
+      <span class="new-tag">Новий рух: живі лічильники</span>
+      <div class="facts-grid">
+        <div class="fact surface"><span class="fact-num">$100</span><span class="fact-label">сайт для бізнесу під ключ</span></div>
+        <div class="fact surface"><span class="fact-num">годин</span><span class="fact-label">а не тижнів до готового сайту</span>
+          <span class="fact-live"><span class="race" data-live="race" aria-hidden="true">
+            <span class="race-row race-us"><em>ми</em><span class="race-bar"><i></i></span></span>
+            <span class="race-row race-them"><em>агенція</em><span class="race-bar"><i></i></span></span>
+            <span class="race-cap"><span><b>години</b></span><span>тижні</span></span>
+          </span></span></div>
+        <div class="fact surface"><span class="fact-num">24/7</span><span class="fact-label">ШІ-асистент відповідає вашим клієнтам</span>
+          <span class="fact-live"><span class="dial" data-live="dial" aria-hidden="true">
+            <svg viewBox="0 0 92 92">
+              <circle cx="46" cy="46" r="38" fill="none" stroke="#22253A" stroke-width="6"/>
+              <path d="M46 8 A38 38 0 0 1 46 84" fill="none" stroke="#2E3258" stroke-width="6"/>
+              <g class="msgs"></g>
+              <line class="hand" x1="46" y1="46" x2="46" y2="14" stroke="#9AA3FF" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="46" cy="46" r="5" fill="#0E1018" stroke="#9AA3FF" stroke-width="2"/>
+            </svg>
+            <span class="cap">доба: повідомлення в будь-яку годину – відповідь одразу</span>
+          </span></span></div>
+        <div class="fact surface"><span class="fact-num">1 год</span><span class="fact-label">до безкоштовного розрахунку в робочий час</span>
+          <span class="fact-live"><span class="timer" data-live="timer" aria-hidden="true">
+            <svg viewBox="0 0 92 92">
+              <circle cx="46" cy="46" r="36" fill="none" stroke="#22253A" stroke-width="4"/>
+              <circle class="arc" cx="46" cy="46" r="36"/>
+              <g class="ok"><circle cx="46" cy="46" r="17" fill="rgba(124,136,255,.16)"/><path d="M38 46.5 L43.5 52 L54.5 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+            </svg>
+            <span class="cap">запит → розрахунок</span>
+          </span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Кейси (демо) -->
+  <section class="sec" id="cases" aria-labelledby="cases-title">
+    <div class="container">
+      <div class="shead">
+        <p class="eyebrow">Кейси</p>
+        <h2 class="h2" id="cases-title">Демо-проєкти</h2>
+        <p class="stext">Реальні кейси з’являться після перших проєктів. Поки показуємо, що саме ви отримуєте за ці гроші.</p>
+      </div>
+      <span class="new-tag">Новий рух: мінісцени</span>
+      <div class="cases-grid">
+        <article class="case surface">
+          <div class="case-visual" data-live="chat" aria-hidden="true">
+            <div class="bubble in">Привіт! Хочу записатися на манікюр</div>
+            <div class="bubble out">Є вільно завтра о 12:00 і 16:30. Коли зручно?</div>
+            <div class="bubble in">О 16:30</div>
+            <div class="bubble out">Записала. Нагадаю за 2 години до візиту.</div>
+            <div class="typing"><i></i><i></i><i></i></div>
+          </div>
+          <div class="case-body"><span class="case-kind">Telegram-бот · Демо</span><h3>Бот-адміністратор для салону краси</h3><p>Запис, нагадування, відгуки й повторні продажі без адміністратора на телефоні.</p></div>
+        </article>
+        <article class="case surface">
+          <div class="case-visual browser" data-live="landing" aria-hidden="true">
+            <div class="browser-bar"><i></i><i></i><i></i></div>
+            <div class="browser-page">
+              <div class="mock-title">Розмовна англійська за 3 місяці</div>
+              <div class="mock-lines"><i></i><i></i></div>
+              <div class="mock-btn">Пройти тест рівня</div>
+              <span class="lead-chip">+ заявка</span>
+              <span class="cursor"><svg viewBox="0 0 14 20"><path d="M1 1 L1 16 L5 12.5 L8 19 L10.5 18 L7.6 11.6 L13 11.6 Z"/></svg></span>
+            </div>
+          </div>
+          <div class="case-body"><span class="case-kind">Лендинг · Демо</span><h3>Сторінка для курсу з англійської</h3><p>Один екран, один оффер, квіз замість форми. Конверсія в заявку як головна метрика.</p></div>
+        </article>
+        <article class="case surface">
+          <div class="case-visual" aria-hidden="true">
+            <div class="bars-legend">Заявки на день, демо</div>
+            <div class="bars-plot"><i style="--h:22%"></i><i style="--h:30%"></i><i style="--h:28%"></i><i style="--h:46%"></i><i style="--h:58%"></i><i style="--h:71%"></i><i style="--h:88%"></i></div>
+          </div>
+          <div class="case-body"><span class="case-kind">Рекламна кампанія · Демо</span><h3>Запуск Meta Ads для доставки їжі</h3><p>Тест креативів, масштабування переможців, щоденний звіт у Telegram.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ: зона тиші, шторм тут не б'є -->
+  <section class="sec" id="faq" data-storm="off" aria-labelledby="faq-title">
+    <div class="container faq-grid">
+      <h2 class="h2" id="faq-title">Часті запитання</h2>
+      <div class="faq-list">
+        <details><summary>Чому так дешево? У чому підступ?</summary><p>Підступу немає. Рутину (тексти, верстку, код, дизайн-варіанти) робить ШІ за хвилини, а не люди за тижні. Ми ставимо задачу, перевіряємо і відповідаємо за результат. Тому собівартість нижча, і ми ділимося цим із вами.</p></details>
+        <details><summary>Бот за годину, сайт за кілька годин – це реально?</summary><p>Так, якщо є тексти, фото та зрозуміле ТЗ. Простий Telegram-бот збираємо за годину, візитівку для кав’ярні чи салону – того ж дня. Магазин – 1–2 дні, CRM – 2–3 дні. Точний термін називаємо після короткого брифу.</p></details>
+        <details><summary>Від чого залежить фінальна ціна?</summary><p>Від технічного завдання: кількості екранів, інтеграцій, складності логіки. Ціни на сайті орієнтовні. Точну суму фіксуємо до старту, і вона не змінюється, якщо не змінюється ТЗ.</p></details>
+        <details><summary>Що потрібно від мене для старту?</summary><p>Опис задачі і 20 хвилин на дзвінок або листування. Тексти, фото й доступи збираємо разом за чек-листом. Якщо текстів немає – напише ШІ, ви перевірите.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Контакти + квіз -->
+  <section class="sec" id="contact" data-storm="off" aria-labelledby="contact-title">
+    <div class="container contact-grid">
+      <div>
+        <p class="eyebrow">Контакти</p>
+        <h2 class="h2" id="contact-title">Обговоримо ваш проєкт</h2>
+        <p class="stext">Опишіть задачу у 4 кроки, і ми повернемося з точною ціною протягом години в робочий час.</p>
+        <div class="messengers"><a href="#" class="b2 b2-ghost">Telegram</a><a href="#" class="b2 b2-ghost">WhatsApp</a></div>
+        <p class="contact-email">Email: <a href="#">storm.click.agency@gmail.com</a></p>
+      </div>
+      <div>
+        <span class="new-tag">Новий рух: «заряд» кроків і імпульс при відправці</span>
+        <form class="quiz surface" id="quiz" novalidate>
+          <svg class="quiz-trace" aria-hidden="true"><rect x="1" y="1" rx="14" ry="14"/></svg>
+          <div><span class="quiz-step">Крок <b class="q-cur">1</b> з 4</span><div class="charge" aria-hidden="true"><i></i></div></div>
+          <fieldset data-pane="0"><legend>Що болить найбільше?</legend><div class="choices">
+            <label><input type="radio" name="s" value="audit">ШІ-аудит бізнесу</label>
+            <label><input type="radio" name="s" value="clients">Не встигаю відповідати клієнтам</label>
+            <label><input type="radio" name="s" value="content">Не встигаю з контентом і рекламою</label>
+            <label><input type="radio" name="s" value="routine">Рутина забирає час</label>
+            <label><input type="radio" name="s" value="build">Потрібен сайт, магазин або CRM</label>
+            <label><input type="radio" name="s" value="other">Інше / ще не знаю</label>
+          </div></fieldset>
+          <fieldset data-pane="1" hidden><legend>Орієнтовний бюджет</legend><div class="choices">
+            <label><input type="radio" name="b">до $200</label><label><input type="radio" name="b">$200 – 500</label><label><input type="radio" name="b">$500 – 1 500</label><label><input type="radio" name="b">$1 500+ / ще не знаю</label>
+          </div></fieldset>
+          <fieldset data-pane="2" hidden><legend>Коли потрібно запуститись?</legend><div class="choices">
+            <label><input type="radio" name="t">Якнайшвидше</label><label><input type="radio" name="t">Протягом місяця</label><label><input type="radio" name="t">За 1–3 місяці</label><label><input type="radio" name="t">Поки вивчаю</label>
+          </div></fieldset>
+          <fieldset data-pane="3" hidden><legend>Куди надіслати розрахунок?</legend>
+            <label class="field">Ім’я<input type="text" autocomplete="off"></label>
+            <label class="field">Telegram, WhatsApp або телефон<input type="text" autocomplete="off"></label>
+          </fieldset>
+          <div class="quiz-nav">
+            <button type="button" class="b2 b2-ghost q-back" hidden>Назад</button>
+            <button type="button" class="b2 b2-primary q-next">Далі</button>
+            <button type="submit" class="b2 b2-primary q-send" hidden><svg viewBox="0 0 100 140" aria-hidden="true"><path d="M58 0 L12 78 L44 78 L30 140 L90 52 L57 52 L76 0 Z"/></svg>Надіслати</button>
+          </div>
+          <p class="quiz-status" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer"><div class="container">© 2026 StormClick. Усі права захищено.</div></footer>
+<script>
+// ===== Сцена першого екрана – src/storm.js сайту без змін, крім позначених «НОВЕ» (StormBus) і селекторів макета =====
+// Сцена шторму першого екрана: процедурні хмари + блискавка на canvas, без бібліотек.
+// Перенесено з design/mockup.html (див. design/design-brief.md, «Сцена шторму»).
+// ?strike – застиглий кадр удару (фіксований seed), ?strike=N – інший варіант (на 360: N mod 3 = A/B/C),
+// ?calm – хмари між ударами. prefers-reduced-motion – один статичний кадр блискавки.
+//
+// Заборонені зони рахуються з розмітки (селектори – SEL нижче). Перераховуються при довантаженні
+// шрифтів, ресайзі та зміні мови (relayout()), хмари будуються один раз (і заново – лише якщо
+// змінився розмір героя).
+
+const SEL = {
+  header: '.header',
+  headerItems: '.header .container > *', // елементи шапки
+  announce: '.announce',              // плашка-анонс (від її правого краю залежать типи A/B/C на 360)
+  title: 'h1',
+  lead: '.lead',
+  actions: '.actions > *',            // кнопка і посилання на асистента
+  proof: '.proof',                    // табло цін (непрозоре, «горизонт» на десктопі)
+};
+
+function initStorm(hero) {
+  const box = hero && hero.querySelector('.storm');
+  if (!box) return { relayout() {} };
+  const params = new URLSearchParams(location.search);
+  const MODE = params.has('strike') ? 'strike' : (params.has('calm') ? 'calm' : 'live');
+  const SEED = 20261117 + (parseInt(params.get('strike'), 10) || 0);
+  const reduceMQ = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+
+  const sky = box.querySelector('.storm-sky'), fx = box.querySelector('.storm-fx');
+  const sctx = sky.getContext('2d'), fctx = fx.getContext('2d');
+
+  // ---- Параметри (ті самі – у design-brief.md) ----
+  var P = {
+    firstDelay: 1200,          // перший удар після завантаження, мс
+    gapMin: 3000, gapMax: 6000, // пауза між ударами, мс
+    leaderMin: 60, leaderMax: 110,   // «лідер» – розряд проростає згори
+    pulseGapMin: 170, pulseGapMax: 260, // між спалахами одного удару
+    tau: 65,                   // згасання спалаху, мс
+    tail: 650,                 // догоряння після останнього спалаху, мс
+    skyMax: .62,               // максимум підсвітки хмар (не сліпить)
+    minLenNarrow: 180,         // мінімальна видима довжина каналу на <768 px
+    minLenWide: 300,           // і на ширших
+    endFade: 55                // на 768 нижні 55 px каналу гаснуть (на <768 – 40 px) – «йде за кадр»
+  };
+
+  // ---- Детермінований генератор ----
+  function mulberry(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  // ---- Value noise для хмар ----
+  function hash(ix, iy){ var h = Math.imul(ix, 374761393) + Math.imul(iy, 668265263) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967295; }
+  function vnoise(x, y){
+    var ix = Math.floor(x), iy = Math.floor(y), fx_ = x - ix, fy = y - iy;
+    var u = fx_ * fx_ * (3 - 2 * fx_), v = fy * fy * (3 - 2 * fy);
+    var a = hash(ix, iy), b = hash(ix + 1, iy), c = hash(ix, iy + 1), d = hash(ix + 1, iy + 1);
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+  }
+  function fbm(x, y){
+    var s = 0, amp = .5, f = 1;
+    for (var o = 0; o < 4; o++){ s += amp * vnoise(x * f + o * 17.3, y * f - o * 9.1); f *= 2.03; amp *= .5;
+      var t = x; x = x * .8 - y * .6; y = t * .6 + y * .8; }
+    return s / .94;
+  }
+  function sstep(a, b, x){ x = (x - a) / (b - a); x = x < 0 ? 0 : x > 1 ? 1 : x; return x * x * (3 - 2 * x); }
+
+  // ---- Розмітка: де бити не можна ----
+  var W, H, DPR, L; // L – геометрія поточного макета
+  function rel(r, hr){ return { l: r.left - hr.left, t: r.top - hr.top, r: r.right - hr.left, b: r.bottom - hr.top }; }
+  function visibleBox(el){ var r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 ? r : null; }
+  function textLines(el, out, hr){
+    var tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), n, rg = document.createRange();
+    while ((n = tw.nextNode())){ if (!n.nodeValue.trim()) continue; rg.selectNodeContents(n);
+      var rs = rg.getClientRects(); for (var i = 0; i < rs.length; i++) if (rs[i].width > 0) out.push(rel(rs[i], hr)); }
+  }
+  function measure(){
+    var hr = hero.getBoundingClientRect();
+    W = Math.round(hr.width); H = Math.round(hr.height);
+    var mobile = W < 768;
+    DPR = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
+    var m = mobile ? 14 : 24;               // відступ ядра блискавки від тексту
+    var blocks = [], text = [];
+    // Шапка фіксована і лежить над героєм, який починається з верху сторінки: її елементи рахуємо
+    // від верху шапки – так зони правильні, навіть якщо сторінку відкрито не з самого верху.
+    var headEl = document.querySelector(SEL.header), headR = headEl.getBoundingClientRect();
+    var headOrigin = { left: hr.left, top: headR.top };
+    var headItems = [];
+    document.querySelectorAll(SEL.headerItems).forEach(function(el){ var r = visibleBox(el); if (r) { var q = rel(r, headOrigin); headItems.push(q); blocks.push(q); } });
+    document.querySelectorAll(SEL.actions).forEach(function(el){ var r = visibleBox(el); if (r) blocks.push(rel(r, hr)); });
+    textLines(hero.querySelector(SEL.title), text, hr);
+    textLines(hero.querySelector(SEL.lead), text, hr);
+    var all = blocks.concat(text);
+    var annEl = hero.querySelector(SEL.announce);
+    var ex = all.map(function(r){ return { l: r.l - m, t: r.t - m, r: r.r + m, b: r.b + m }; });
+    // плашка-анонс – окремий прямокутник (від її правого краю залежить шлях каналу на 360)
+    var annR = rel(annEl.getBoundingClientRect(), hr), mA = m;
+    ex.push({ l: annR.l - mA, t: annR.t - mA, r: annR.r + mA, b: annR.b + mA });
+    var header = headR.height;
+    var proofTop = hero.querySelector(SEL.proof).getBoundingClientRect().top - hr.top;
+    var textRight = 0, textTop = H;
+    blocks.concat(text).forEach(function(r){ if (r.t > header) { textRight = Math.max(textRight, r.r); textTop = Math.min(textTop, r.t); } });
+    // Режим: «збоку» (є широка вільна смуга праворуч) або «згори» (вузькі екрани)
+    var side = (W - textRight) >= 300;
+    // праве поле контенту: на 1920 удар не йде в порожнє поле біля краю
+    var contentRight = 0; headItems.forEach(function(r){ contentRight = Math.max(contentRight, r.r); });
+    var ann = annR; all.push(annR);
+    var A = side ? { x: (textRight + W) / 2 + 40, y: header, rx: (W - textRight) * .95 + 80, ry: H * .62 }
+                 : { x: W * .78, y: header + 30, rx: W * .75, ry: Math.max(220, textTop - header + 170) };
+    // Нижня межа удару: збоку – за табло (воно непрозоре), згори – над лідом
+    var leadTop = hero.querySelector(SEL.lead).getBoundingClientRect().top - hr.top;
+    var bottom = side ? proofTop + 36 : leadTop - m - 6;
+    L = { mobile: mobile, m: m, ex: ex, text: all, header: header, proofTop: proofTop, bottom: bottom, textRight: textRight, side: side, A: A,
+          contentRight: contentRight, annBottom: ann.b + mA, annRight: ann.r + mA };
+  }
+  function blocked(x, y){
+    var ex = L.ex; for (var i = 0; i < ex.length; i++){ var r = ex[i]; if (x > r.l && x < r.r && y > r.t && y < r.b) return true; }
+    return false;
+  }
+  function segFree(x1, y1, x2, y2){
+    var d = Math.hypot(x2 - x1, y2 - y1), n = Math.max(1, Math.ceil(d / 5));
+    for (var i = 0; i <= n; i++){ var k = i / n; if (blocked(x1 + (x2 - x1) * k, y1 + (y2 - y1) * k)) return false; }
+    return true;
+  }
+
+  // ---- Хмари: темний шар (завжди) і підсвічений (для спалаху) ----
+  var cloudDark, cloudLit, cw, ch;
+  function buildClouds(){
+    var S = cloudScale(); cw = Math.ceil(W / S); ch = Math.ceil(H / S);
+    cloudDark = document.createElement('canvas'); cloudDark.width = cw; cloudDark.height = ch;
+    cloudLit = document.createElement('canvas'); cloudLit.width = cw; cloudLit.height = ch;
+    var dctx = cloudDark.getContext('2d'), lctx = cloudLit.getContext('2d');
+    var di = dctx.createImageData(cw, ch), li = lctx.createImageData(cw, ch), dd = di.data, ld = li.data;
+    var A = L.A, sc = L.mobile ? 120 : Math.max(170, Math.min(260, W * .14));
+    var dens = L.mobile ? 1.65 : 1, tone = L.mobile ? 1.22 : 1; // на телефоні хмари щільніші й світліші – між ударами екран не чорний
+    for (var y = 0; y < ch; y++){
+      for (var x = 0; x < cw; x++){
+        var px = x * S, py = y * S;
+        var dx = (px - A.x) / A.rx, dy = (py - A.y) / A.ry, e = 1 - (dx * dx + dy * dy);
+        var mask = sstep(0, .75, e);
+        if (mask <= 0) continue;
+        var n = fbm(px / sc, py / (sc * .62));
+        var d = Math.min(1, sstep(.38, .78, n * .85 + mask * .42) * mask * dens);
+        if (d <= .003) continue;
+        var n2 = fbm((px - 9) / sc, (py - 14) / (sc * .62));
+        var sh = Math.max(0, Math.min(1, (n - n2) * 6 + .5)); // «верх» хмари світліший
+        var i = (y * cw + x) * 4;
+        dd[i] = (16 + 20 * sh) * tone; dd[i + 1] = (18 + 22 * sh) * tone; dd[i + 2] = (36 + 38 * sh) * tone; dd[i + 3] = 255 * d * .92;
+        ld[i] = 150 + 80 * sh; ld[i + 1] = 158 + 74 * sh; ld[i + 2] = 255; ld[i + 3] = 255 * Math.min(1, d * (.45 + .75 * sh));
+      }
+    }
+    dctx.putImageData(di, 0, 0); lctx.putImageData(li, 0, 0);
+  }
+  function cloudScale(){ return W >= 1200 ? 4 : 3; } // хмари рахуються в 1/3–1/4 роздільності
+  function drawSky(){
+    sky.width = Math.round(W * DPR); sky.height = Math.round(H * DPR);
+    sctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    var A = L.A, g = sctx.createRadialGradient(A.x, A.y + A.ry * .25, 0, A.x, A.y + A.ry * .25, Math.max(A.rx, A.ry));
+    g.addColorStop(0, 'rgba(124,136,255,.10)'); g.addColorStop(.55, 'rgba(169,139,255,.04)'); g.addColorStop(1, 'rgba(5,6,11,0)');
+    sctx.fillStyle = g; sctx.fillRect(0, 0, W, H);
+    sctx.imageSmoothingQuality = 'high';
+    sctx.drawImage(cloudDark, 0, 0, W, H);
+  }
+
+  // ---- Геометрія удару ----
+  function walk(rnd, x, y, tx, ty, opt){
+    var pts = [[x, y]], dir = Math.atan2(ty - y, tx - x), steps = 0, hit = false;
+    while (steps++ < opt.maxSteps){
+      var to = Math.atan2(ty - y, tx - x), dist = Math.hypot(tx - x, ty - y);
+      if (opt.endY && y >= opt.endY) break;
+      if (dist < opt.sMax) { if (segFree(x, y, tx, ty)) pts.push([tx, ty]); break; }
+      var base = Math.atan2(Math.sin(dir) * .2 + Math.sin(to) * .8, Math.cos(dir) * .2 + Math.cos(to) * .8);
+      var ok = false;
+      for (var k = 0; k < 10; k++){
+        var big = rnd() < .18 ? 1.8 : 1;
+        var a = base + (rnd() - .5) * opt.jit * big * (1 + k * .15);
+        // останні кроки перед табло – не далі ±30° від вертикалі (без гачка вбік)
+        if (opt.endY && y > opt.endY - opt.sMax * 3) a = Math.max(Math.PI / 2 - .52, Math.min(Math.PI / 2 + .52, a));
+        // гілки завжди йдуть униз (не далі ±75° від вертикалі) – без горизонтальних «уламків»
+        if (opt.down) { var aa = Math.atan2(Math.sin(a), Math.cos(a)); if (aa < .26 || aa > Math.PI - .26) a = aa < -Math.PI / 2 || aa > Math.PI - .26 ? Math.PI - .26 : .26; }
+        var len = opt.sMin + rnd() * (opt.sMax - opt.sMin);
+        var nx = x + Math.cos(a) * len, ny = y + Math.sin(a) * len;
+        if (ny < opt.yMin || ny > opt.yMax || nx > (opt.xMax || W + 60)) continue;
+        if (segFree(x, y, nx, ny)) { x = nx; y = ny; dir = a; ok = true; break; }
+      }
+      if (!ok) { hit = true; break; }
+      pts.push([x, y]);
+      if (opt.budget && pathLen(pts) > opt.budget) break;
+    }
+    return { pts: pts, hit: hit, reached: Math.hypot(tx - x, ty - y) < opt.sMax * 1.5 || (opt.endY && y >= opt.endY) };
+  }
+  function pathLen(p){ var s = 0; for (var i = 1; i < p.length; i++) s += Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); return s; }
+
+  // дрібна ламаність: зміщення середини кожного відрізка (2 рівні), якщо це не заходить у заборонену зону
+  function detail(rnd, pts, amp){
+    for (var lvl = 0; lvl < 2; lvl++){
+      var out = [pts[0]];
+      for (var i = 1; i < pts.length; i++){
+        var a = pts[i - 1], b = pts[i], dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy);
+        if (len > 6){
+          var o = (rnd() - .5) * 2 * amp * len, mx = (a[0] + b[0]) / 2 - dy / len * o, my = (a[1] + b[1]) / 2 + dx / len * o;
+          if (!blocked(mx, my)) out.push([mx, my]);
+        }
+        out.push(b);
+      }
+      pts = out;
+    }
+    return pts;
+  }
+
+  var FADE_IN_LOW = 40;  // плавна поява каналу, що стартує нижче шапки (тип C)
+  function finish(rnd, pts, branches, sx, sy, best){
+    pts = detail(rnd, pts, .2);
+    branches.forEach(function(br){ br.pts = detail(rnd, br.pts, .14); });
+    var yEnd = 0, mainEnd = 0; pts.forEach(function(p){ mainEnd = Math.max(mainEnd, p[1]); });
+    yEnd = mainEnd; branches.forEach(function(b){ b.pts.forEach(function(p){ yEnd = Math.max(yEnd, p[1]); }); });
+    return { main: pts, branches: branches, sx: sx, sy: sy, ex: best.x, ey: best.y, yEnd: yEnd, mainEnd: mainEnd };
+  }
+
+  // Типи траєкторії на вузьких екранах, де плашка-анонс перекриває шлях униз (360 px):
+  // A – проміжок біля плашки, далі діагональ униз-ліворуч; B – прямо вниз біля краю до рівня ліду, гілки ліворуч;
+  // C – з основи хмари під плашкою, лівіше, діагональ униз-праворуч.
+  var TYPES = ['A', 'B', 'C'];
+  function makeBolt(rnd, type){
+    type = type || 'A';
+    var k = L.mobile ? .62 : 1;
+    var y0 = L.header + 10, bottom = L.bottom;  // старт – у затемненні під шапкою, нижче зони її кнопок
+    var xl = L.side ? Math.max(L.textRight + L.m, W * .5) : W * .5;
+    var xr = L.side ? Math.min(W - 70, L.contentRight + 80) : W - 24; // не в порожнє поле і не за край
+    var minLen = L.mobile || !L.side ? P.minLenNarrow : P.minLenWide;
+    var fallback = null;
+    for (var tries = 0; tries < 60; tries++){
+      // старт завжди в кадрі. Згори – з-під шапки; якщо там не пройти повз плашку-анонс (360 px),
+      // канал виходить з основи хмари одразу під плашкою.
+      var sx, sy = y0, wp = null, narrow = false;
+      if (L.side) sx = xl + (xr - xl) * (.2 + .7 * rnd());
+      else {
+        // згори: старт у кадрі (x від 55% ширини до W−24); якщо плашка-анонс перекриває шлях униз –
+        // канал іде через проміжок праворуч від неї (точка wp) і далі ламається в кишеню біля заголовка
+        var narrow = L.annRight > W * .55;
+        if (narrow && type === 'C') { sx = W * .58 + rnd() * W * .22; sy = L.annBottom + 4; }
+        else if (narrow) { var sl = L.annRight + 2; sx = sl + rnd() * Math.max(0, W - 18 - sl);
+          wp = [Math.min(W - 16, L.annRight + 3 + rnd() * 6), L.annBottom + 4]; }
+        else { sx = W * .55 + rnd() * (W * .45 - 24); }
+      }
+      if (blocked(sx, sy)) continue;
+      var ox = sx, oy = sy, pre = null;
+      if (wp){ if (blocked(wp[0], wp[1])) continue;
+        pre = walk(rnd, sx, sy, wp[0], wp[1], { sMin: 8 * k, sMax: 22 * k, jit: 1.1, maxSteps: 80, yMin: sy - 8, yMax: bottom, xMax: W - 12 });
+        if (!pre.reached) continue; sx = wp[0]; sy = wp[1]; }
+      // ціль: найдовша вільна пряма вниз
+      var best = null;
+      for (var c = 0; c < 160; c++){
+        var tx = xl + rnd() * (xr - xl), ty = sy + 90 * k + rnd() * (bottom - sy - 90 * k);
+        if (narrow && type === 'B') { tx = W - 48 + rnd() * 28; ty = bottom - 40 + rnd() * 40; }
+        if (blocked(tx, ty) || !segFree(sx, sy, tx, ty)) continue;
+        if (narrow && type === 'A' && tx > sx - 40) continue;   // A – униз-ліворуч
+        if (narrow && type === 'C' && tx < sx + 50) continue;   // C – униз-праворуч
+        // збоку – найглибший удар; згори – найдовша вільна діагональ
+        var score = L.side ? (ty - sy) + rnd() * 140 * k - Math.abs(tx - sx) * .15
+                  : narrow && type === 'B' ? ty + rnd() * 10
+                  : narrow && type === 'C' ? Math.hypot(tx - sx, ty - sy) + (ty - sy) * .6 + rnd() * 30
+                  : Math.hypot(tx - sx, ty - sy) + rnd() * 40;
+        if (!best || score > best.s) best = { x: tx, y: ty, s: score };
+      }
+      if (!best || (L.side ? best.y - sy : Math.hypot(best.x - sx, best.y - sy)) < 110 * k) continue;
+      var opt = { sMin: 10 * k, sMax: 34 * k, jit: 1.5, maxSteps: 400, yMin: sy - 8, yMax: bottom,
+                  endY: L.side && best.y > L.proofTop - 60 ? L.proofTop + 14 : 0 };
+      opt.xMax = L.side ? W + 60 : W - 12;
+      var main = walk(rnd, sx, sy, best.x, best.y, opt);
+      if (!main.reached) continue;
+      if (pre) { main.pts = pre.pts.concat(main.pts.slice(1)); sx = ox; sy = oy; }
+      var branches = [];
+      var pts = main.pts, total = pts.length;
+      if (total < 4) continue;
+      var want = 2 + Math.floor(rnd() * 3);    // 2–4 гілки від головного каналу
+      for (var i = 2, guard = 0; i < total * .85 && guard < 400; i = (i + 1 >= total * .85 && branches.length < want) ? 2 : i + 1, guard++){
+        if (branches.length >= want + 2 || rnd() > want / (total * .8)) continue;
+        var p = pts[i], q2 = pts[i - 1], md = Math.atan2(p[1] - q2[1], p[0] - q2[0]);
+        if (pre && p[1] < L.annBottom) continue;   // з проміжку біля плашки гілок не пускаємо
+        var side = narrow && type === 'B' ? (rnd() < .85 ? 1 : -1) : (rnd() < .5 ? -1 : 1), a = md + side * (.55 + rnd() * .65);
+        var remain = pathLen(pts.slice(i)), blen = remain * (.18 + rnd() * .32) + 30 * k;
+        var b = walk(rnd, p[0], p[1], p[0] + Math.cos(a) * blen * 1.4, p[1] + Math.sin(a) * blen * 1.4,
+          { sMin: 8 * k, sMax: 24 * k, jit: 1.5, maxSteps: 120, yMin: y0 - 8, yMax: bottom, budget: blen, xMax: opt.xMax, down: true });
+        if (b.pts.length > 2) {
+          branches.push({ pts: b.pts, w: .55 + rnd() * .2, depth: 1 });
+          if (rnd() < .45 && b.pts.length > 5){
+            var j = 2 + Math.floor(rnd() * (b.pts.length - 4)), bp = b.pts[j], a2 = a - side * (.4 + rnd() * .5), l2 = blen * (.3 + rnd() * .3);
+            var c2 = walk(rnd, bp[0], bp[1], bp[0] + Math.cos(a2) * l2 * 1.4, bp[1] + Math.sin(a2) * l2 * 1.4,
+              { sMin: 6 * k, sMax: 16 * k, jit: 1.5, maxSteps: 60, yMin: y0 - 8, yMax: bottom, budget: l2, xMax: opt.xMax, down: true });
+            if (c2.pts.length > 2) branches.push({ pts: c2.pts, w: .35, depth: 2 });
+          }
+        }
+      }
+      var mainLen = pathLen(pts);
+      var res = finish(rnd, pts, branches, sx, sy, best);
+      var low = sy > L.header + 20; res.low = low;
+      // видимий канал без зон плавної появи/згасання – не коротший за мінімум (тип C інакше виходить ~150 px)
+      var visLen = mainLen - (low ? FADE_IN_LOW / 2 : 0) - (L.side ? 0 : (L.mobile ? 40 : P.endFade) / 2);
+      if (visLen >= minLen && branches.length >= 2) return res;   // видимий канал і щонайменше 2 гілки
+      var sc = mainLen + branches.length * 60;
+      if (!fallback || sc > fallback.sc) { fallback = res; fallback.sc = sc; }
+    }
+    return fallback;
+  }
+
+  // Резервний удар: якщо за ліміт спроб не вдалося побудувати повноцінну форму (нестандартна ширина,
+  // довгий рядок заголовка) – короткий розряд з хмари у будь-якому вільному місці, щоб удар був завжди.
+  function shortBolt(rnd){
+    var k = L.mobile ? .62 : 1, best = null;
+    for (var tries = 0; tries < 120; tries++){
+      var sx = W * .4 + rnd() * (W * .6 - 16), sy = L.header + 6 + rnd() * Math.max(10, L.bottom - L.header - 60);
+      if (blocked(sx, sy)) continue;
+      var tgt = null;
+      for (var c = 0; c < 60; c++){
+        var tx = sx + (rnd() - .5) * 160 * k, ty = sy + 40 + rnd() * (L.bottom - sy - 40);
+        if (ty <= sy + 30 || tx < 8 || tx > W - 8 || blocked(tx, ty) || !segFree(sx, sy, tx, ty)) continue;
+        var sc = Math.hypot(tx - sx, ty - sy);
+        if (!tgt || sc > tgt.s) tgt = { x: tx, y: ty, s: sc };
+      }
+      if (!tgt) continue;
+      var main = walk(rnd, sx, sy, tgt.x, tgt.y, { sMin: 6 * k, sMax: 18 * k, jit: 1.4, maxSteps: 200, yMin: sy - 6, yMax: L.bottom, xMax: W - 8 });
+      if (main.pts.length < 3) continue;
+      var len = pathLen(main.pts);
+      if (!best || len > best.len) best = { pts: main.pts, len: len, sx: sx, sy: sy, t: tgt };
+      if (len >= 120) break;
+    }
+    if (!best) return null;
+    var branches = [], pts = best.pts;
+    for (var i = 1; i < pts.length - 1 && branches.length < 2; i++){
+      if (rnd() > .35) continue;
+      var a = Math.PI / 2 + (rnd() < .5 ? -1 : 1) * (.5 + rnd() * .5), bl = 24 + rnd() * 30;
+      var b = walk(rnd, pts[i][0], pts[i][1], pts[i][0] + Math.cos(a) * bl * 1.4, pts[i][1] + Math.sin(a) * bl * 1.4,
+        { sMin: 5 * k, sMax: 12 * k, jit: 1.4, maxSteps: 40, yMin: pts[i][1] - 4, yMax: L.bottom, budget: bl, xMax: W - 8, down: true });
+      if (b.pts.length > 2) branches.push({ pts: b.pts, w: .5, depth: 1 });
+    }
+    var res = finish(rnd, pts, branches, best.sx, best.sy, best.t);
+    res.short = true; res.low = best.sy > L.header + 20;
+    return res;
+  }
+
+  // ---- Рендер удару в офскрін-канви (один раз на удар) ----
+  var boltC = document.createElement('canvas'), litC = document.createElement('canvas');
+  // Світіння малюється в canvas у 1/4 роздільності (розмиття там у ~16 разів дешевше) і масштабується
+  // при виводі; у повній роздільності – лише тонкі лінії без тіней.
+  var GS = .25, glowC = document.createElement('canvas');
+  function stroke(ctx, pts, width, color, blur, glow){
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.lineWidth = width; ctx.strokeStyle = color; ctx.shadowBlur = blur ? blur * DPR * ctx.__gs : 0; ctx.shadowColor = glow || 'transparent'; ctx.stroke();
+  }
+  function taper(gc, c, pts, w, a, k){ // гілки тоншають і гаснуть до кінця
+    var n = 3, len = pts.length;
+    for (var s = 0; s < n; s++){
+      var seg = pts.slice(Math.floor(s * (len - 1) / n), Math.floor((s + 1) * (len - 1) / n) + 1);
+      if (seg.length < 2) continue;
+      var f = 1 - s / n * .75;
+      stroke(gc, seg, 7 * w * k, 'rgba(124,136,255,' + (.14 * a * f) + ')', 18 * k, 'rgba(169,139,255,.8)');
+      stroke(c, seg, 2.6 * w * k, 'rgba(190,197,255,' + (.35 * a * f) + ')', 0);
+      stroke(c, seg, Math.max(.6, 1.7 * w * k * f), 'rgba(255,255,255,' + (.9 * a * f) + ')', 0);
+    }
+  }
+  function fades(c, b){
+    // верх каналу виходить з хмари, а не обрізаний
+    c.globalCompositeOperation = 'destination-in';
+    // тип C (старт з основи хмари під плашкою): перші ~40 px проявляються плавно, а не обриваються
+    var g = c.createLinearGradient(0, b.sy, 0, b.sy + (b.short ? 24 : b.sy > L.header + 20 ? FADE_IN_LOW : 70));
+    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
+    c.fillStyle = g; c.fillRect(0, 0, W, H);
+    // знизу (360/768, де нема табло, за яке сховатись) – плавно гасне, а не обривається
+    if (!L.side){
+      var fe = L.mobile ? 40 : P.endFade;
+      var gb = c.createLinearGradient(0, b.mainEnd - fe, 0, b.mainEnd + 2);
+      gb.addColorStop(0, 'rgba(0,0,0,1)'); gb.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = gb; c.fillRect(0, 0, W, H); // destination-in: заливати все полотно, інакше зітре все поза прямокутником
+    }
+    c.globalCompositeOperation = 'source-over';
+  }
+  function renderBolt(b){
+    var k = L.mobile ? .8 : 1;
+    boltC.width = fx.width; boltC.height = fx.height;
+    glowC.width = Math.ceil(fx.width * GS); glowC.height = Math.ceil(fx.height * GS);
+    var c = boltC.getContext('2d'), gc = glowC.getContext('2d');
+    c.__gs = 1; gc.__gs = GS;
+    c.setTransform(DPR, 0, 0, DPR, 0, 0); gc.setTransform(DPR * GS, 0, 0, DPR * GS, 0, 0);
+    [c, gc].forEach(function(x){ x.lineJoin = 'round'; x.lineCap = 'round'; x.globalCompositeOperation = 'lighter'; });
+    // світіння (1/4 роздільності)
+    stroke(gc, b.main, 18 * k, 'rgba(124,136,255,.07)', 44 * k, 'rgba(124,136,255,.8)');
+    stroke(gc, b.main, 7 * k, 'rgba(124,136,255,.22)', 22 * k, 'rgba(169,139,255,1)');
+    stroke(gc, b.main, 3.5 * k, 'rgba(200,206,255,.6)', 8 * k, 'rgba(154,163,255,1)');
+    b.branches.forEach(function(br){ taper(gc, c, br.pts, br.w, br.depth === 1 ? .85 : .6, k); });
+    // ядро (повна роздільність, без тіней)
+    stroke(c, b.main, 4 * k, 'rgba(170,178,255,.28)', 0);
+    stroke(c, b.main, 2.6 * k, 'rgba(214,219,255,.55)', 0);
+    stroke(c, b.main, 1.8 * k, '#FFFFFF', 0);
+    gc.shadowBlur = 0;
+    fades(c, b); fades(gc, b);
+  }
+  function renderLit(b){
+    // підсвічені хмари навколо початку удару + сяйво вздовж каналу; текст – «вирізаний»
+    var S = cloudScale(); litC.width = cw; litC.height = ch;
+    var c = litC.getContext('2d');
+    if ('filter' in c) c.filter = 'blur(1.2px)';      // згладити сітку шуму (де підтримується)
+    c.drawImage(cloudLit, 0, 0);
+    if ('filter' in c) c.filter = 'none';
+    c.globalCompositeOperation = 'destination-in';
+    var r = (L.mobile ? 170 : 420) / S, cx = b.sx / S, cy = (b.sy + 30) / S;
+    var g = c.createRadialGradient(cx, cy, 0, cx, cy, r);
+    g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(.5, 'rgba(0,0,0,.55)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = g; c.fillRect(0, 0, cw, ch);
+    c.globalCompositeOperation = 'lighter';
+    if (b.low){ // тип C: хмара в точці старту світиться сильніше – розряд виходить із неї
+      var gs = c.createRadialGradient(b.sx / S, (b.sy + 4) / S, 0, b.sx / S, (b.sy + 4) / S, 46 / S);
+      gs.addColorStop(0, 'rgba(176,184,255,.42)'); gs.addColorStop(.6, 'rgba(140,150,255,.12)'); gs.addColorStop(1, 'rgba(124,136,255,0)');
+      c.globalCompositeOperation = 'lighter'; c.fillStyle = gs; c.fillRect(0, 0, cw, ch);
+    }
+    var mx = (b.sx + b.ex) / 2 / S, my = (b.sy + b.ey) / 2 / S, r2 = Math.max(80, (b.ey - b.sy) * .6) / S;
+    var g2 = c.createRadialGradient(mx, my, 0, mx, my, r2);
+    g2.addColorStop(0, 'rgba(124,136,255,.16)'); g2.addColorStop(1, 'rgba(124,136,255,0)');
+    c.fillStyle = g2; c.fillRect(0, 0, cw, ch);
+    var g3 = c.createRadialGradient(cx, cy, 0, cx, cy, r * .55);
+    g3.addColorStop(0, 'rgba(210,214,255,.45)'); g3.addColorStop(1, 'rgba(154,163,255,0)');
+    c.fillStyle = g3; c.fillRect(0, 0, cw, ch);
+    // вирізати м'які «дірки» під текстом і кнопками, щоб спалах не знижував контраст
+    c.globalCompositeOperation = 'destination-out';
+    c.shadowColor = 'rgba(0,0,0,1)'; c.shadowBlur = 26 / S;
+    L.text.forEach(function(t){ c.shadowOffsetX = cw * 2; c.fillStyle = '#000';
+      c.fillRect(t.l / S - 6 - cw * 2, t.t / S - 4, (t.r - t.l) / S + 12, (t.b - t.t) / S + 8); });
+    c.shadowBlur = 0; c.shadowOffsetX = 0;
+    // під шапкою спалаху немає: шар плавно гасне від низу шапки до самого верху
+    var gh = c.createLinearGradient(0, 0, 0, (L.header + 40) / S);
+    gh.addColorStop(0, 'rgba(0,0,0,1)'); gh.addColorStop(.55, 'rgba(0,0,0,1)'); gh.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = gh; c.fillRect(0, 0, cw, (L.header + 40) / S);
+    c.globalCompositeOperation = 'source-over';
+  }
+
+  // ---- Кадр ----
+  function frame(bolt, sky, reveal, b){
+    fctx.setTransform(1, 0, 0, 1, 0, 0);
+    fctx.clearRect(0, 0, fx.width, fx.height);
+    if (!b) return;
+    if (sky > .003){ fctx.globalAlpha = Math.min(1, sky); fctx.imageSmoothingQuality = 'high'; fctx.drawImage(litC, 0, 0, fx.width, fx.height); }
+    if (bolt > .003){
+      fctx.globalAlpha = Math.min(1, bolt);
+      fctx.save();
+      if (reveal < 1){ var yk = (b.sy + (b.yEnd - b.sy) * reveal) * DPR; fctx.beginPath(); fctx.rect(0, 0, fx.width, yk); fctx.clip(); }
+      fctx.globalCompositeOperation = 'lighter';
+      fctx.drawImage(glowC, 0, 0, fx.width, fx.height);
+      fctx.drawImage(boltC, 0, 0);
+      fctx.restore();
+    }
+    fctx.globalAlpha = 1;
+  }
+
+  // ---- Таймлайн удару ----
+  var lastType = null, cur = null, raf = 0, timer = 0, rndLive = mulberry((Math.random() * 1e9) | 0);
+  function plan(rnd){
+    var lead = P.leaderMin + rnd() * (P.leaderMax - P.leaderMin);
+    var n = rnd() < .5 ? 2 : 3, pulses = [{ at: lead, peak: 1 }], at = lead;
+    for (var i = 1; i < n; i++){ at += P.pulseGapMin + rnd() * (P.pulseGapMax - P.pulseGapMin); pulses.push({ at: at, peak: .85 - i * .17 + rnd() * .1 }); }
+    return { lead: lead, pulses: pulses, last: at, end: at + P.tail };
+  }
+  function levels(t, pl){
+    if (t < pl.lead) return { bolt: .35 + .25 * (t / pl.lead), sky: .06 * (t / pl.lead), reveal: t / pl.lead };
+    var env = 0;
+    pl.pulses.forEach(function(p){ if (t >= p.at) env = Math.max(env, p.peak * Math.exp(-(t - p.at) / P.tau)); });
+    var resid = t <= pl.last ? .3 : .3 * Math.exp(-(t - pl.last) / (P.tail / 3.2));
+    return { bolt: Math.min(1, env + resid), sky: env * P.skyMax, reveal: 1 };
+  }
+  function strike(rnd, b, type){
+    // якщо цей тип тут не будується (довгі рядки, нестандартна ширина) – інші типи, потім резервний короткий удар
+    if (!b) { b = makeBolt(rnd, type); for (var ti = 0; !b && ti < TYPES.length; ti++) if (TYPES[ti] !== type) b = makeBolt(rnd, TYPES[ti]); }
+    b = b || shortBolt(rnd); if (!b) return null;
+    renderBolt(b); renderLit(b);
+    hero.__stormBolt = b;   // для перевірок скриншотами (довжина, тип, старт)
+    return b;
+  }
+  function tick(now){
+    var t = now - cur.t0, lv = levels(t, cur.pl);
+    frame(lv.bolt, lv.sky, lv.reveal, cur.b);
+    if (t < cur.pl.end) raf = requestAnimationFrame(tick);
+    else { raf = 0; frame(0, 0, 1, null); cur = null; if (window.StormBus) StormBus.release('hero'); schedule(P.gapMin + rndLive() * (P.gapMax - P.gapMin)); }
+  }
+  function fire(){
+    timer = 0;
+    // НОВЕ (рух на всьому сайті): одна блискавка на екран – герой і фоновий шторм сторінки не б'ють одночасно
+    if (window.StormBus && !StormBus.claim('hero')) { schedule(1200); return; }
+    // тип траєкторії – щоразу інший, ніж минулого разу
+    var opts = TYPES.filter(function(t){ return t !== lastType; }); lastType = opts[Math.floor(rndLive() * opts.length)];
+    var b = strike(rndLive, null, lastType); if (!b) { if (window.StormBus) StormBus.release('hero'); schedule(P.gapMin); return; }
+    cur = { b: b, pl: plan(rndLive), t0: performance.now() };
+    raf = requestAnimationFrame(function(n){ cur.t0 = n; tick(n); });
+  }
+  function schedule(ms){ clearTimeout(timer); if (running()) timer = setTimeout(fire, ms); }
+  function stop(){ clearTimeout(timer); timer = 0; if (raf) cancelAnimationFrame(raf); raf = 0; if (cur && window.StormBus) StormBus.release('hero'); cur = null; frame(0, 0, 1, null); }
+  var inView = true;
+  function running(){ return started && MODE === 'live' && !reduceMQ.matches && !document.hidden && inView; }
+
+  // ---- Статичні режими ----
+  function renderStatic(){
+    if (MODE === 'calm') { frame(0, 0, 1, null); return; }
+    if (MODE === 'strike' || reduceMQ.matches){
+      var b = strike(mulberry(MODE === 'strike' ? SEED : 777), null, TYPES[(SEED - 20261117) % 3]);
+      if (MODE === 'strike') frame(1, .85 * P.skyMax, 1, b);   // мить одразу після головного спалаху
+      else frame(.8, .3, 1, b);                                                 // без руху – м'якший кадр
+    }
+  }
+
+  function sized() { return fx.width === Math.round(W * DPR) && fx.height === Math.round(H * DPR); }
+  function layout() {
+    measure(); buildClouds(); drawSky();
+    fx.width = Math.round(W * DPR); fx.height = Math.round(H * DPR);
+    stop();
+    if (MODE !== 'live' || reduceMQ.matches) renderStatic();
+    else schedule(P.firstDelay);
+  }
+  // Лише зони (шрифт довантажився, змінилась мова, ресайз без зміни розміру героя).
+  // Удар, що йде зараз, гаситься – його форма рахувалась за старими зонами.
+  function relayout() {
+    if (!started) return;
+    const hr = hero.getBoundingClientRect();
+    if (Math.round(hr.width) !== W || Math.round(hr.height) !== H) { layout(); return; }
+    measure();
+    if (!sized()) { layout(); return; }
+    if (MODE !== 'live' || reduceMQ.matches) { renderStatic(); return; }
+    if (cur || raf) { stop(); schedule(P.gapMin); }
+  }
+
+  // Хмари будуються один раз – після події load і document.fonts.ready (від шрифтів залежать зони тексту),
+  // але не пізніше ніж через 2,5 с. До завантаження CSS шрифтів document.fonts.status уже 'loaded',
+  // тому спершу чекаємо load. Якщо шрифт довантажився пізніше – перераховуємо лише зони.
+  let started = false;
+  function start() { if (!started) { started = true; layout(); } }
+  function afterLoad() { if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start(); }
+  if (document.readyState === 'complete') afterLoad(); else window.addEventListener('load', afterLoad);
+  setTimeout(start, 2500);
+  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', relayout);
+  let rt;
+  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(relayout, 180); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else if (running()) schedule(P.firstDelay); });
+  if ('IntersectionObserver' in window) new IntersectionObserver((e) => {
+    inView = e[0].isIntersecting; if (!inView) stop(); else if (running() && !timer && !raf) schedule(800);
+  }).observe(hero);
+  if (reduceMQ.addEventListener) reduceMQ.addEventListener('change', () => { if (started) layout(); });
+
+  return { relayout };
+}
+initStorm(document.querySelector('.hero'));
+</script>
+<script>
+
+// ===================================================================================
+// НОВЕ: «Шторм на фоні» – одна сцена на весь екран для всієї сторінки після першого екрана.
+// Хмари – статичний canvas по краях екрана (будується раз на розмір екрана). Блискавка – другий canvas,
+// requestAnimationFrame лише під час удару (~1,1 с). Між ударами – setTimeout.
+// Де бити: заборонені зони рахуються з розмітки в момент удару (рядки тексту, картки, кнопки, форми,
+// FAQ і контакт – повністю). Удар «прив'язаний» до сторінки: якщо людина гортає під час удару,
+// блискавка їде разом із блоком, а не лягає на текст.
+// ?strike – застиглий удар у видимому екрані (після кожної прокрутки), ?calm – без ударів.
+// ===================================================================================
+window.StormBus = window.StormBus || {
+  // одна блискавка на екран: герой і фон сторінки не б'ють одночасно і не підряд
+  owner: null, quietUntil: 0,
+  claim: function(who){ var n = performance.now(); if (this.owner || n < this.quietUntil) return false; this.owner = who; return true; },
+  release: function(who){ if (this.owner === who){ this.owner = null; this.quietUntil = performance.now() + 1500; } }
+};
+
+(function(){
+  var params = new URLSearchParams(location.search);
+  var MODE = params.has('strike') ? 'strike' : (params.has('calm') ? 'calm' : 'live');
+  var SEED = 9100 + (parseInt(params.get('strike'), 10) || 0);
+  var reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
+  var box = document.querySelector('.sky');
+  var cv = box.querySelector('.sky-clouds'), fx = box.querySelector('.sky-fx');
+  var cctx = cv.getContext('2d'), fctx = fx.getContext('2d');
+  var hero = document.querySelector('.hero'), header = document.querySelector('.header');
+
+  // ---- Параметри (ті самі – у design-brief.md, «Рух на всьому сайті») ----
+  var P = {
+    first: 2500,                 // перший удар – через 2,5 с після того, як перший екран пішов з поля зору
+    gapMin: 5000, gapMax: 9000,  // пауза між ударами, десктоп
+    gapMinM: 8000, gapMaxM: 14000, // телефон – рідше
+    idle: 350,                   // бити лише коли сторінка не гортається хоча б 350 мс
+    heroShare: .35,              // поки перший екран займає > 35% висоти екрана – б'є лише сцена героя
+    leaderMin: 60, leaderMax: 110, pulseGapMin: 170, pulseGapMax: 260, tau: 65, tail: 650, // як у героя
+    glowMax: .55,                // максимум підсвітки хмар/повітря
+    minLen: 260, minLenM: 150,   // мінімальний видимий канал
+    margin: 24, marginM: 14,     // відступ ядра від тексту і блоків
+    blockMargin: 40              // від секцій-«зон тиші» (FAQ, контакт)
+  };
+  // Що вважається блоком (обходиться цілим прямокутником). Текст поза блоками – по рядках.
+  var BLOCKS = '.surface, .b2, button, input, .funnel, .chart, .new-tag, .whatsnew .box, .faq-list, .extras, .counters, .demo-note';
+
+  function mulberry(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function hash(ix, iy){ var h = Math.imul(ix, 374761393) + Math.imul(iy, 668265263) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967295; }
+  function vnoise(x, y){ var ix = Math.floor(x), iy = Math.floor(y), u = x - ix, v = y - iy; u = u * u * (3 - 2 * u); v = v * v * (3 - 2 * v);
+    var a = hash(ix, iy), b = hash(ix + 1, iy), c = hash(ix, iy + 1), d = hash(ix + 1, iy + 1); return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v; }
+  function fbm(x, y){ var s = 0, amp = .5, f = 1; for (var o = 0; o < 4; o++){ s += amp * vnoise(x * f + o * 17.3, y * f - o * 9.1); f *= 2.03; amp *= .5; var t = x; x = x * .8 - y * .6; y = t * .6 + y * .8; } return s / .94; }
+  function sstep(a, b, x){ x = (x - a) / (b - a); x = x < 0 ? 0 : x > 1 ? 1 : x; return x * x * (3 - 2 * x); }
+
+  // ---- Розміри і хмари ----
+  var W = 0, H = 0, DPR = 1, mobile = false, side = 0, HH = 64, S = 4;
+  var cloudDark, cloudLit, cw, ch;
+  function contentEdge(){ // ліве поле контенту: від краю екрана до тексту секцій
+    var c = document.querySelector('#services .container'); if (!c) return 16;
+    var r = c.getBoundingClientRect(), pl = parseFloat(getComputedStyle(c).paddingLeft) || 0; return r.left + pl;
+  }
+  function build(){
+    W = innerWidth; H = innerHeight; mobile = W < 768; DPR = Math.min(devicePixelRatio || 1, mobile ? 1.5 : 2);
+    HH = header.getBoundingClientRect().height; side = contentEdge(); S = 4;
+    cw = Math.ceil(W / S); ch = Math.ceil(H / S);
+    cloudDark = document.createElement('canvas'); cloudLit = document.createElement('canvas');
+    cloudDark.width = cloudLit.width = cw; cloudDark.height = cloudLit.height = ch;
+    var dctx = cloudDark.getContext('2d'), lctx = cloudLit.getContext('2d');
+    var di = dctx.createImageData(cw, ch), li = lctx.createImageData(cw, ch), dd = di.data, ld = li.data;
+    var sc = mobile ? 110 : 190, band = mobile ? 84 : 120, edge = mobile ? 26 : Math.max(70, side + 30);
+    for (var y = 0; y < ch; y++) for (var x = 0; x < cw; x++){
+      var px = x * S, py = y * S;
+      // стеля під шапкою + хмари вздовж бічних країв (на телефоні – вузька смуга)
+      var top = 1 - sstep(HH + band * .25, HH + band, py);
+      var dx = Math.min(px, W - px), sideM = (1 - sstep(edge * .45, edge + 40, dx)) * (.55 + .45 * (1 - sstep(H * .2, H, py)));
+      var mask = Math.max(top * .95, sideM * (mobile ? .75 : 1));
+      if (mask <= .01) continue;
+      var n = fbm(px / sc, py / (sc * .62));
+      var d = Math.min(1, sstep(.40, .80, n * .85 + mask * .40) * mask);
+      if (d <= .004) continue;
+      var n2 = fbm((px - 9) / sc, (py - 14) / (sc * .62)), sh = Math.max(0, Math.min(1, (n - n2) * 6 + .5));
+      var i = (y * cw + x) * 4;
+      // темніші за хмари першого екрана: під ними може пройти текст секції (контраст – у брифі)
+      dd[i] = 12 + 12 * sh; dd[i + 1] = 13 + 14 * sh; dd[i + 2] = 26 + 26 * sh; dd[i + 3] = 255 * d * .9;
+      ld[i] = 150 + 80 * sh; ld[i + 1] = 158 + 74 * sh; ld[i + 2] = 255; ld[i + 3] = 255 * Math.min(1, d * (.45 + .75 * sh));
+    }
+    dctx.putImageData(di, 0, 0); lctx.putImageData(li, 0, 0);
+    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+    cctx.setTransform(1, 0, 0, 1, 0, 0); cctx.imageSmoothingQuality = 'high';
+    cctx.drawImage(cloudDark, 0, 0, cv.width, cv.height);
+    fx.width = Math.round(W * DPR); fx.height = Math.round(H * DPR);
+  }
+
+  // ---- Заборонені зони: сітка зайнятості 6 px ----
+  var G = 6, gw, gh, occ, rects = [];
+  function mark(l, t, r, b){ var x0 = Math.max(0, Math.floor(l / G)), x1 = Math.min(gw - 1, Math.floor(r / G)), y0 = Math.max(0, Math.floor(t / G)), y1 = Math.min(gh - 1, Math.floor(b / G));
+    for (var y = y0; y <= y1; y++) for (var x = x0; x <= x1; x++) occ[y * gw + x] = 1; }
+  function visible(r){ return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < H && r.right > 0 && r.left < W; }
+  function measure(){
+    gw = Math.ceil(W / G) + 1; gh = Math.ceil(H / G) + 1; occ = new Uint8Array(gw * gh); rects = [];
+    var m = mobile ? P.marginM : P.margin;
+    function add(r, mm){ rects.push({ l: r.left, t: r.top, r: r.right, b: r.bottom }); mark(r.left - mm, r.top - mm, r.right + mm, r.bottom + mm); }
+    mark(-9, -9, W + 9, HH + 6);                                         // шапка
+    var hr = hero.getBoundingClientRect(); if (hr.bottom > 0) mark(-9, -9, W + 9, hr.bottom + 30); // перший екран – його власна сцена
+    document.querySelectorAll('[data-storm="off"]').forEach(function(s){ var r = s.getBoundingClientRect(); if (visible(r)) mark(-9, r.top - P.blockMargin, W + 9, r.bottom + P.blockMargin); });
+    var blocks = [];
+    document.querySelectorAll(BLOCKS).forEach(function(el){ if (el.closest('.hero')) return; var r = el.getBoundingClientRect(); if (visible(r)) { add(r, m); blocks.push(el); } });
+    // текст поза блоками – кожен рядок окремо (вільне місце праворуч від коротких заголовків лишається)
+    document.querySelectorAll('main .sec, main .whatsnew').forEach(function(sec){
+      var sr = sec.getBoundingClientRect(); if (!visible(sr)) return;
+      var tw = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT), n, rg = document.createRange();
+      while ((n = tw.nextNode())){
+        if (!n.nodeValue.trim()) continue;
+        var pe = n.parentElement; if (!pe || pe.closest(BLOCKS)) continue;
+        var er = pe.getBoundingClientRect(); if (!visible(er)) continue;
+        rg.selectNodeContents(n); var rs = rg.getClientRects();
+        for (var i = 0; i < rs.length; i++) if (visible(rs[i])) add(rs[i], m);
+      }
+    });
+  }
+  function blocked(x, y){ if (x < 4 || x > W - 4 || y < 0 || y > H - 4) return true; var gx = Math.floor(x / G), gy = Math.floor(y / G); return occ[gy * gw + gx] === 1; }
+  function segFree(x1, y1, x2, y2){ var d = Math.hypot(x2 - x1, y2 - y1), n = Math.max(1, Math.ceil(d / 4)); for (var i = 0; i <= n; i++){ var k = i / n; if (blocked(x1 + (x2 - x1) * k, y1 + (y2 - y1) * k)) return false; } return true; }
+  function cloudAt(x, y){ // чи є хмара в точці старту (удар завжди виходить із хмари)
+    var px = Math.min(cw - 1, Math.max(0, Math.round(x / S))), py = Math.min(ch - 1, Math.max(0, Math.round(y / S)));
+    return cloudDark.getContext('2d').getImageData(px, py, 1, 1).data[3] / 255;
+  }
+
+  // ---- Форма ----
+  function walk(rnd, x, y, tx, ty, o){
+    var pts = [[x, y]], dir = Math.atan2(ty - y, tx - x), steps = 0;
+    while (steps++ < o.maxSteps){
+      var to = Math.atan2(ty - y, tx - x), dist = Math.hypot(tx - x, ty - y);
+      if (dist < o.sMax){ if (segFree(x, y, tx, ty)) pts.push([tx, ty]); break; }
+      var base = Math.atan2(Math.sin(dir) * .2 + Math.sin(to) * .8, Math.cos(dir) * .2 + Math.cos(to) * .8), ok = false;
+      for (var k = 0; k < 10; k++){
+        var a = base + (rnd() - .5) * o.jit * (rnd() < .18 ? 1.8 : 1) * (1 + k * .15);
+        if (o.down){ var aa = Math.atan2(Math.sin(a), Math.cos(a)); if (aa < .26 || aa > Math.PI - .26) a = aa < -Math.PI / 2 || aa > Math.PI - .26 ? Math.PI - .26 : .26; }
+        var len = o.sMin + rnd() * (o.sMax - o.sMin), nx = x + Math.cos(a) * len, ny = y + Math.sin(a) * len;
+        if (ny < o.yMin) continue;
+        if (segFree(x, y, nx, ny)){ x = nx; y = ny; dir = a; ok = true; break; }
+      }
+      if (!ok) break;
+      pts.push([x, y]);
+      if (o.budget && plen(pts) > o.budget) break;
+    }
+    return { pts: pts, reached: Math.hypot(tx - x, ty - y) < o.sMax * 1.5 };
+  }
+  function plen(p){ var s = 0; for (var i = 1; i < p.length; i++) s += Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); return s; }
+  function detail(rnd, pts, amp){
+    for (var l = 0; l < 2; l++){ var out = [pts[0]];
+      for (var i = 1; i < pts.length; i++){ var a = pts[i - 1], b = pts[i], dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy);
+        if (len > 6){ var o = (rnd() - .5) * 2 * amp * len, mx = (a[0] + b[0]) / 2 - dy / len * o, my = (a[1] + b[1]) / 2 + dx / len * o; if (!blocked(mx, my)) out.push([mx, my]); }
+        out.push(b); }
+      pts = out; }
+    return pts;
+  }
+  function makeBolt(rnd){
+    var k = mobile ? .62 : 1, minLen = mobile ? P.minLenM : P.minLen, best = null;
+    for (var tries = 0; tries < 90; tries++){
+      // джерело: стеля хмар під шапкою або (десктоп) бічні хмари в полях
+      // телефон: картки на всю ширину, тож удар живе в проміжках між блоками – входить з хмари на краю екрана
+      // і йде діагоналлю через вільну смугу; якщо смуги немає – удару немає (тому на телефоні рідше)
+      var sx, sy, fromSide = mobile ? rnd() < .7 : side > 56 && rnd() < .5, edgeM = mobile && fromSide;
+      if (edgeM){ var lft = rnd() < .5; sx = lft ? 5 + rnd() * 8 : W - 5 - rnd() * 8; sy = HH + 16 + rnd() * (H - HH - 140); }
+      else if (fromSide){ var left = rnd() < .5; sx = left ? 10 + rnd() * (side - 30) : W - 10 - rnd() * (side - 30); sy = HH + 14 + rnd() * (H - HH) * .4; }
+      else { sx = 12 + rnd() * (W - 24); sy = HH + 10 + rnd() * (mobile ? 26 : 40); }
+      if (blocked(sx, sy) || cloudAt(sx, sy) < (edgeM ? .04 : .12)) continue;
+      var tgt = null;
+      for (var c = 0; c < 140; c++){
+        var inward = fromSide && !mobile && (c & 1); // десктоп: з бічної хмари – або вздовж поля, або діагоналлю у вільну зону блоку
+        var spread = edgeM ? W : inward ? 560 : fromSide ? 70 : (mobile ? 150 : 380), drop = edgeM ? 50 : 110 * k;
+        var tx = sx + (rnd() - .5) * 2 * spread, ty = sy + drop + rnd() * (Math.min(H - 30, edgeM ? sy + 320 : H) - sy - drop);
+        if (Math.abs(tx - sx) > (ty - sy) * (edgeM ? 2.2 : inward ? 1.7 : 1.3) || blocked(tx, ty) || !segFree(sx, sy, tx, ty)) continue;
+        var sc = Math.hypot(tx - sx, ty - sy) + rnd() * 60;
+        if (!tgt || sc > tgt.s) tgt = { x: tx, y: ty, s: sc };
+      }
+      if (!tgt || tgt.s < minLen * .9) continue;
+      var main = walk(rnd, sx, sy, tgt.x, tgt.y, { sMin: 10 * k, sMax: 32 * k, jit: 1.5, maxSteps: 300, yMin: sy - 8 });
+      if (!main.reached || main.pts.length < 4) continue;
+      var pts = main.pts, branches = [], want = 2 + Math.floor(rnd() * 2);
+      for (var g = 0; g < 60 && branches.length < want; g++){
+        var i = 2 + Math.floor(rnd() * Math.max(1, pts.length * .75 - 2)), p = pts[i], q = pts[i - 1];
+        var md = Math.atan2(p[1] - q[1], p[0] - q[0]), sgn = rnd() < .5 ? -1 : 1, a = md + sgn * (.55 + rnd() * .6);
+        var bl = plen(pts.slice(i)) * (.18 + rnd() * .28) + 24 * k;
+        var br = walk(rnd, p[0], p[1], p[0] + Math.cos(a) * bl * 1.4, p[1] + Math.sin(a) * bl * 1.4, { sMin: 7 * k, sMax: 20 * k, jit: 1.5, maxSteps: 80, yMin: p[1] - 4, budget: bl, down: true });
+        if (br.pts.length > 2) branches.push({ pts: br.pts, w: .55 + rnd() * .2 });
+      }
+      var len = plen(pts);
+      if (len < minLen || branches.length < 2) { if (!best || len > best.len) best = { pts: pts, branches: branches, sx: sx, sy: sy, len: len }; continue; }
+      best = { pts: pts, branches: branches, sx: sx, sy: sy, len: len }; break;
+    }
+    if (!best || best.len < minLen * .8) return null;
+    var main2 = detail(rnd, best.pts, .2);
+    best.branches.forEach(function(b){ b.pts = detail(rnd, b.pts, .14); });
+    var yEnd = 0; main2.forEach(function(p){ yEnd = Math.max(yEnd, p[1]); });
+    var end = best.pts[best.pts.length - 1];
+    return { main: main2, branches: best.branches, sx: best.sx, sy: best.sy, ex: end[0], ey: end[1], yEnd: yEnd, len: best.len };
+  }
+
+  // ---- Рендер удару (раз на удар) ----
+  var boltC = document.createElement('canvas'), glowC = document.createElement('canvas'), litC = document.createElement('canvas'), GS = .25;
+  function line(c, pts, w, col, blur, glow, gs){ c.beginPath(); c.moveTo(pts[0][0], pts[0][1]); for (var i = 1; i < pts.length; i++) c.lineTo(pts[i][0], pts[i][1]);
+    c.lineWidth = w; c.strokeStyle = col; c.shadowBlur = blur ? blur * DPR * gs : 0; c.shadowColor = glow || 'transparent'; c.stroke(); }
+  function render(b){
+    var k = mobile ? .8 : 1;
+    boltC.width = fx.width; boltC.height = fx.height; glowC.width = Math.ceil(fx.width * GS); glowC.height = Math.ceil(fx.height * GS);
+    var c = boltC.getContext('2d'), gc = glowC.getContext('2d');
+    c.setTransform(DPR, 0, 0, DPR, 0, 0); gc.setTransform(DPR * GS, 0, 0, DPR * GS, 0, 0);
+    [c, gc].forEach(function(x){ x.lineJoin = 'round'; x.lineCap = 'round'; x.globalCompositeOperation = 'lighter'; });
+    line(gc, b.main, 18 * k, 'rgba(124,136,255,.07)', 44 * k, 'rgba(124,136,255,.8)', GS);
+    line(gc, b.main, 7 * k, 'rgba(124,136,255,.22)', 22 * k, 'rgba(169,139,255,1)', GS);
+    line(gc, b.main, 3.5 * k, 'rgba(200,206,255,.6)', 8 * k, 'rgba(154,163,255,1)', GS);
+    b.branches.forEach(function(br){ var n = 3, L = br.pts.length;
+      for (var s = 0; s < n; s++){ var seg = br.pts.slice(Math.floor(s * (L - 1) / n), Math.floor((s + 1) * (L - 1) / n) + 1); if (seg.length < 2) continue; var f = 1 - s / n * .75;
+        line(gc, seg, 7 * br.w * k, 'rgba(124,136,255,' + (.14 * f) + ')', 18 * k, 'rgba(169,139,255,.8)', GS);
+        line(c, seg, 2.6 * br.w * k, 'rgba(190,197,255,' + (.35 * f) + ')', 0, 0, 1);
+        line(c, seg, Math.max(.6, 1.7 * br.w * k * f), 'rgba(255,255,255,' + (.9 * f) + ')', 0, 0, 1); } });
+    line(c, b.main, 4 * k, 'rgba(170,178,255,.28)', 0, 0, 1); line(c, b.main, 2.6 * k, 'rgba(214,219,255,.55)', 0, 0, 1); line(c, b.main, 1.8 * k, '#FFFFFF', 0, 0, 1);
+    gc.shadowBlur = 0;
+    // канал виходить із хмари (верх проявляється) і гасне в повітрі (низ), без тупого обриву
+    [c, gc].forEach(function(x){ x.globalCompositeOperation = 'destination-in';
+      var g = x.createLinearGradient(0, b.sy, 0, b.sy + 60); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+      var e = mobile ? 40 : 60, g2 = x.createLinearGradient(0, b.yEnd - e, 0, b.yEnd + 2); g2.addColorStop(0, 'rgba(0,0,0,1)'); g2.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g2; x.fillRect(0, 0, W, H);
+      x.globalCompositeOperation = 'source-over'; });
+    // спалах: підсвічена хмара біля старту + слабке сяйво вздовж каналу; під текстом і блоками – «дірки»
+    litC.width = cw; litC.height = ch; var l = litC.getContext('2d');
+    l.drawImage(cloudLit, 0, 0); l.globalCompositeOperation = 'destination-in';
+    var r = (mobile ? 150 : 300) / S, cx = b.sx / S, cy = (b.sy + 20) / S, rg = l.createRadialGradient(cx, cy, 0, cx, cy, r);
+    rg.addColorStop(0, 'rgba(0,0,0,1)'); rg.addColorStop(.5, 'rgba(0,0,0,.5)'); rg.addColorStop(1, 'rgba(0,0,0,0)'); l.fillStyle = rg; l.fillRect(0, 0, cw, ch);
+    l.globalCompositeOperation = 'lighter';
+    for (var i = 0; i < b.main.length; i += 6){ var p = b.main[i], gg = l.createRadialGradient(p[0] / S, p[1] / S, 0, p[0] / S, p[1] / S, 60 / S);
+      gg.addColorStop(0, 'rgba(124,136,255,.07)'); gg.addColorStop(1, 'rgba(124,136,255,0)'); l.fillStyle = gg; l.fillRect(0, 0, cw, ch); }
+    l.globalCompositeOperation = 'destination-out'; l.shadowColor = '#000'; l.shadowBlur = 20 / S;
+    rects.forEach(function(t){ l.shadowOffsetX = cw * 2; l.fillStyle = '#000'; l.fillRect(t.l / S - 4 - cw * 2, t.t / S - 3, (t.r - t.l) / S + 8, (t.b - t.t) / S + 6); });
+    l.shadowBlur = 0; l.shadowOffsetX = 0;
+    var gh = l.createLinearGradient(0, 0, 0, (HH + 30) / S); gh.addColorStop(0, '#000'); gh.addColorStop(.6, '#000'); gh.addColorStop(1, 'rgba(0,0,0,0)'); l.fillStyle = gh; l.fillRect(0, 0, cw, (HH + 30) / S);
+    l.globalCompositeOperation = 'source-over';
+  }
+  // Малюємо лише прямокутник навколо удару (канал + ореол + спалах біля старту), а не весь екран
+  function bbox(b){ var x0 = b.sx, x1 = b.sx, y0 = b.sy, y1 = b.yEnd, R = mobile ? 150 : 300;
+    b.main.concat.apply(b.main, b.branches.map(function(r){ return r.pts; })).forEach(function(p){ x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); });
+    x0 = Math.max(0, Math.min(x0 - 70, b.sx - R)); x1 = Math.min(W, Math.max(x1 + 70, b.sx + R)); y0 = Math.max(0, Math.min(y0 - 70, b.sy - R)); y1 = Math.min(H, y1 + 90);
+    return { x: Math.floor(x0 / 4) * 4, y: Math.floor(y0 / 4) * 4, w: Math.ceil((x1 - x0) / 4) * 4 + 4, h: Math.ceil((y1 - y0) / 4) * 4 + 4 }; }
+  var prevBox = null;
+  function frame(bolt, sky, reveal, b, dy){
+    fctx.setTransform(1, 0, 0, 1, 0, 0);
+    if (prevBox) fctx.clearRect(prevBox.x - 2, prevBox.y - 2, prevBox.w + 4, prevBox.h + 4); else fctx.clearRect(0, 0, fx.width, fx.height);
+    prevBox = null; if (!b) return;
+    var oy = Math.round((dy || 0) * DPR), bb = b.box || (b.box = bbox(b));
+    var dx0 = bb.x * DPR, dy0 = bb.y * DPR, dw = bb.w * DPR, dh = bb.h * DPR;
+    prevBox = { x: dx0, y: dy0 + oy, w: dw, h: dh };
+    function part(src, k){ fctx.drawImage(src, bb.x * k, bb.y * k, bb.w * k, bb.h * k, dx0, dy0 + oy, dw, dh); }
+    if (sky > .003){ fctx.globalAlpha = Math.min(1, sky); part(litC, 1 / S); }
+    if (bolt > .003){ fctx.save(); fctx.globalAlpha = Math.min(1, bolt);
+      if (reveal < 1){ fctx.beginPath(); fctx.rect(0, 0, fx.width, (b.sy + (b.yEnd - b.sy) * reveal) * DPR + oy); fctx.clip(); }
+      fctx.globalCompositeOperation = 'lighter'; part(glowC, DPR * GS); part(boltC, DPR); fctx.restore(); }
+    fctx.globalAlpha = 1;
+  }
+
+  // ---- Таймлайн (як у героя: лідер → 2–3 спалахи → догоряння; ≤3 спалахи за секунду) ----
+  function plan(rnd){ var lead = P.leaderMin + rnd() * (P.leaderMax - P.leaderMin), n = rnd() < .5 ? 2 : 3, pulses = [{ at: lead, peak: 1 }], at = lead;
+    for (var i = 1; i < n; i++){ at += P.pulseGapMin + rnd() * (P.pulseGapMax - P.pulseGapMin); pulses.push({ at: at, peak: .85 - i * .17 + rnd() * .1 }); }
+    return { lead: lead, pulses: pulses, last: at, end: at + P.tail }; }
+  function levels(t, pl){ if (t < pl.lead) return { bolt: .35 + .25 * t / pl.lead, sky: .05 * t / pl.lead, reveal: t / pl.lead };
+    var env = 0; pl.pulses.forEach(function(p){ if (t >= p.at) env = Math.max(env, p.peak * Math.exp(-(t - p.at) / P.tau)); });
+    var resid = t <= pl.last ? .3 : .3 * Math.exp(-(t - pl.last) / (P.tail / 3.2)); return { bolt: Math.min(1, env + resid), sky: env * P.glowMax, reveal: 1 }; }
+
+  var rnd = mulberry((Math.random() * 1e9) | 0), timer = 0, raf = 0, cur = null, lastScroll = 0, built = false;
+  function heroDominant(){ var r = hero.getBoundingClientRect(); return r.bottom > H * P.heroShare; }
+  function running(){ return built && MODE === 'live' && !reduceMQ.matches && !document.hidden; }
+  function gap(){ return mobile ? P.gapMinM + rnd() * (P.gapMaxM - P.gapMinM) : P.gapMin + rnd() * (P.gapMax - P.gapMin); }
+  function schedule(ms){ clearTimeout(timer); timer = running() ? setTimeout(fire, ms) : 0; }
+  function stop(){ clearTimeout(timer); timer = 0; if (raf) cancelAnimationFrame(raf); raf = 0; if (cur) StormBus.release('page'); cur = null; frame(0, 0, 1, null); }
+  function fire(){
+    timer = 0; if (!running()) return;
+    if (heroDominant()) return schedule(1500);                 // перший екран – його сцена
+    if (performance.now() - lastScroll < P.idle) return schedule(500); // гортають – почекати
+    if (!StormBus.claim('page')) return schedule(1200);
+    measure(); var b = makeBolt(rnd);
+    if (!b){ StormBus.release('page'); return schedule(mobile ? 2500 : 1800); } // немає вільного місця – спробувати трохи згодом
+    render(b); window.__pageBolt = b;
+    cur = { b: b, pl: plan(rnd), y0: scrollY, t0: 0 };
+    raf = requestAnimationFrame(function(n){ cur.t0 = n; tick(n); });
+  }
+  function tick(n){
+    var t = n - cur.t0, lv = levels(t, cur.pl), dy = cur.y0 - scrollY;
+    if (Math.abs(dy) > H * .6) t = cur.pl.end;   // відгортали далеко – удар гасне
+    frame(lv.bolt, lv.sky, lv.reveal, cur.b, dy);
+    if (t < cur.pl.end) raf = requestAnimationFrame(tick);
+    else { raf = 0; frame(0, 0, 1, null); cur = null; StormBus.release('page'); schedule(gap()); }
+  }
+
+  // ---- ?strike: застиглий удар у видимому екрані (перераховується після прокрутки) ----
+  var st = 0;
+  function renderStatic(){
+    frame(0, 0, 1, null); window.__pageBolt = null;
+    if (MODE !== 'strike' || heroDominant()) return;
+    measure(); var b = null;
+    var base = SEED + Math.round(scrollY / 100) * 13; // детерміновано, але різна форма на різних екранах
+    for (var s = 0; !b && s < 12; s++) b = makeBolt(mulberry(base + s * 7));
+    if (!b) return; render(b); window.__pageBolt = b; frame(1, .85 * P.glowMax, 1, b, 0);
+  }
+
+  function start(){
+    build(); built = true;
+    if (MODE === 'strike') renderStatic(); else if (MODE === 'live') schedule(P.first);
+  }
+  addEventListener('scroll', function(){
+    lastScroll = performance.now();
+    header.classList.toggle('is-scrolled', scrollY > 40);
+    if (MODE === 'strike'){ clearTimeout(st); st = setTimeout(renderStatic, 200); }
+  }, { passive: true });
+  var rt, lastW = innerWidth, lastH = innerHeight;
+  addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){
+    // мобільний браузер змінює висоту, коли ховає адресний рядок: хмари перебудовуємо лише при помітній зміні
+    if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 140) return;
+    lastW = innerWidth; lastH = innerHeight; stop(); start(); }, 200); });
+  document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else schedule(P.first); });
+  reduceMQ.addEventListener && reduceMQ.addEventListener('change', function(){ stop(); if (!reduceMQ.matches) schedule(P.first); });
+  // старт – після load і шрифтів (від них залежать рядки тексту), не пізніше 2,5 с
+  var started = false; function go(){ if (!started){ started = true; start(); } }
+  if (document.readyState === 'complete') document.fonts.ready.then(go); else addEventListener('load', function(){ document.fonts.ready.then(go); });
+  setTimeout(go, 2500);
+  window.__pageStorm = { P: P, measure: function(){ measure(); return rects; }, blocked: function(x, y){ return blocked(x, y); } };
+})();
+</script>
+<script>
+
+// ===================================================================================
+// НОВЕ: живі елементи «у дусі воронки». Кожен працює лише поки видимий (IntersectionObserver),
+// без бібліотек; при prefers-reduced-motion – статичний кадр, що пояснює те саме.
+// ===================================================================================
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function onView(el, cb, th){ var io = new IntersectionObserver(function(e){ cb(e[0].isIntersecting); }, { threshold: th || .25 }); io.observe(el); }
+
+  // ---- 1. Послуги: імпульс «біль → рішення» ----
+  // Дріт іде від болю через картки; імпульс пробігає ним і по черзі «вмикає» картки та ціни.
+  document.querySelectorAll('[data-pain]').forEach(function(pain, gi){
+    var grid = pain.querySelector('.pain-grid'), cards = [].slice.call(grid.querySelectorAll('.card'));
+    var wire = document.createElement('span'), spark = document.createElement('span');
+    spark.className = 'spark'; wire.appendChild(spark); wire.setAttribute('aria-hidden', 'true'); grid.appendChild(wire);
+    var vis = false, t = 0, anim = null;
+    function vertical(){ return cards.length > 1 && cards[1].getBoundingClientRect().top > cards[0].getBoundingClientRect().bottom - 2; }
+    function setup(){ wire.className = 'wire ' + (vertical() ? 'v' : 'h'); }
+    function run(){
+      if (!vis) return; setup();
+      var v = vertical(), gr = grid.getBoundingClientRect(), dur = v ? 1700 : 1300;
+      var from = v ? -8 : -6, to = v ? gr.height : gr.width + 6;
+      // одна строка в 2 колонки (640–1099): імпульс іде по рядках зліва направо – беремо порядок карток
+      anim = spark.animate(v ? [{ transform: 'translate(0,' + from + 'px)', opacity: 0 }, { opacity: 1, offset: .06 }, { opacity: 1, offset: .94 }, { transform: 'translate(0,' + to + 'px)', opacity: 0 }]
+                             : [{ transform: 'translate(' + from + 'px,-12px)', opacity: 0 }, { opacity: 1, offset: .06 }, { opacity: 1, offset: .94 }, { transform: 'translate(' + to + 'px,-12px)', opacity: 0 }],
+                           { duration: dur, easing: 'cubic-bezier(.45,0,.55,1)' });
+      cards.forEach(function(c){ var r = c.getBoundingClientRect(), k = v ? (r.top + 30 - gr.top - from) / (to - from) : (r.left + 24 - gr.left - from) / (to - from);
+        setTimeout(function(){ c.classList.add('lit'); setTimeout(function(){ c.classList.remove('lit'); }, 650); }, Math.max(0, k) * dur); });
+      t = setTimeout(run, 5200 + gi * 900 + Math.random() * 1500);
+    }
+    if (reduce) { setup(); return; }
+    setup(); addEventListener('resize', setup);
+    onView(pain, function(v){ vis = v; clearTimeout(t); if (v) t = setTimeout(run, 400 + gi * 500); }, .35);
+  });
+
+  // ---- 2. «Чому так дешево»: конвеєр задача → ШІ → людина → результат ----
+  (function(){
+    var flow = document.querySelector('[data-flow]'); if (!flow) return;
+    var cv = flow.querySelector('canvas'), c = cv.getContext('2d');
+    var lis = [].slice.call(flow.querySelectorAll('.flow-steps li'));
+    var W, H, dpr, horiz, st = [], nodes = [], edges = [], parts = [], fill = 0, queue = [], gateT = 0, cycleT = 0, raf = 0, vis = false, last = 0, flash = 0;
+    var NEED = 8;              // скільки перевірених частин складає «результат»
+    function stationPos(li){ var r = li.getBoundingClientRect(), fr = flow.getBoundingClientRect(), b = li.querySelector('b').getBoundingClientRect();
+      return horiz ? { x: r.left + r.width / 2 - fr.left, y: 104 } : { x: 48, y: b.top + b.height / 2 - fr.top }; }
+    function layout(){
+      var r = flow.getBoundingClientRect(); dpr = Math.min(devicePixelRatio || 1, 2); W = r.width; H = r.height; horiz = W >= 860;
+      cv.width = W * dpr; cv.height = H * dpr; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      st = lis.map(stationPos);
+      // мережа ШІ: 3 шари по 4 вузли навколо станції «ШІ» (вздовж потоку – шари, поперек – вузли)
+      nodes = []; edges = [];
+      var a = st[1], span = horiz ? Math.min(150, (st[2].x - st[0].x) * .42) : Math.min(76, (st[2].y - st[0].y) * .34), across = horiz ? 34 : 18;
+      for (var l = 0; l < 3; l++) for (var n = 0; n < 4; n++){
+        var u = (l - 1) * span / 2, v = (n - 1.5) * across;
+        nodes.push({ l: l, x: horiz ? a.x + u : a.x + v, y: horiz ? a.y + v : a.y + u, heat: 0 });
+      }
+      function E(p, q){ edges.push({ a: p, b: q, heat: 0 }); return edges.length - 1; }
+      nodes.forEach(function(p, i){ if (p.l < 2) nodes.forEach(function(q, j){ if (q.l === p.l + 1) E(i, j); }); });
+      draw();
+    }
+    function pt(i){ return nodes[i]; }
+    function spawnTask(){ // одна задача = 10 частин роботи
+      for (var i = 0; i < 10; i++) parts.push({ stage: 0, t: -i * 70, path: [ (Math.random() * 4) | 0, 4 + ((Math.random() * 4) | 0), 8 + ((Math.random() * 4) | 0) ], x: st[0].x, y: st[0].y, back: false });
+    }
+    function lerp(a, b, k){ return { x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k }; }
+    function gatePos(){ return horiz ? { x: st[2].x - 26, y: st[2].y } : { x: st[2].x, y: st[2].y - 18 }; }
+    function step(dt){
+      cycleT -= dt; if (cycleT <= 0 && !parts.length && !queue.length){ spawnTask(); cycleT = 1e9; }
+      nodes.forEach(function(n){ n.heat *= Math.pow(.992, dt); }); edges.forEach(function(e){ e.heat *= Math.pow(.993, dt); });
+      flash = Math.max(0, flash - dt / 600);
+      var g = gatePos();
+      for (var i = parts.length - 1; i >= 0; i--){
+        var p = parts[i]; p.t += dt; if (p.t < 0) continue;
+        if (p.stage === 0){ // задача → перший шар (швидко)
+          var k = Math.min(1, p.t / 260), q = lerp(st[0], pt(p.path[0]), k); p.x = q.x; p.y = q.y;
+          if (k >= 1){ p.stage = 1; p.t = 0; pt(p.path[0]).heat = 1; }
+        } else if (p.stage === 1 || p.stage === 2){ // всередині мережі – дуже швидко («хвилини»)
+          var from = pt(p.path[p.stage - 1]), to = pt(p.path[p.stage]), k2 = Math.min(1, p.t / 110), q2 = lerp(from, to, k2); p.x = q2.x; p.y = q2.y;
+          if (k2 >= 1){ to.heat = 1; edges.forEach(function(e){ if (nodes[e.a] === from && nodes[e.b] === to) e.heat = 1; }); p.stage++; p.t = 0; }
+        } else if (p.stage === 3){ // до людини – черга перед перевіркою
+          var k3 = Math.min(1, p.t / 380), q3 = lerp(pt(p.path[2]), g, k3); p.x = q3.x; p.y = q3.y;
+          if (k3 >= 1){ p.stage = 4; queue.push(p); }
+        } else if (p.stage === 5){ // перевірено → результат
+          var k5 = Math.min(1, p.t / 420), q5 = lerp(g, st[3], k5); p.x = q5.x; p.y = q5.y;
+          if (k5 >= 1){ parts.splice(i, 1); fill++; if (fill >= NEED){ flash = 1; flow.classList.add('done-flash'); setTimeout(function(){ flow.classList.remove('done-flash'); }, 900); setTimeout(function(){ fill = 0; }, 1300); cycleT = 2200; } }
+        } else if (p.stage === 6){ // повернуто на доопрацювання – назад у мережу дугою
+          var k6 = Math.min(1, p.t / 700), a6 = lerp(g, pt(p.path[0]), k6), bow = Math.sin(k6 * Math.PI) * 34;
+          p.x = a6.x + (horiz ? 0 : bow); p.y = a6.y + (horiz ? -bow : 0);
+          if (k6 >= 1){ p.stage = 1; p.t = 0; p.path = [p.path[0], 4 + ((Math.random() * 4) | 0), 8 + ((Math.random() * 4) | 0)]; p.back = true; }
+        }
+      }
+      // людина перевіряє по одній частині – повільніше за ШІ
+      gateT -= dt;
+      if (gateT <= 0 && queue.length){ var q4 = queue.shift(); gateT = 300;
+        if (!q4.back && Math.random() < .2){ q4.stage = 6; q4.t = 0; } else { q4.stage = 5; q4.t = 0; } }
+      queue.forEach(function(p, i){ var off = (i + 1) * 9; p.x = g.x - (horiz ? off : 0); p.y = g.y - (horiz ? 0 : off); });
+    }
+    function draw(){
+      c.clearRect(0, 0, W, H);
+      // магістраль
+      c.lineWidth = 1; c.strokeStyle = 'rgba(124,136,255,.22)';
+      c.beginPath(); c.moveTo(st[0].x, st[0].y); nodes.slice(0, 4).forEach(function(n){ c.moveTo(st[0].x, st[0].y); c.lineTo(n.x, n.y); });
+      nodes.slice(8).forEach(function(n){ var g = gatePos(); c.moveTo(n.x, n.y); c.lineTo(g.x, g.y); });
+      var g = gatePos(); c.moveTo(g.x, g.y); c.lineTo(st[3].x, st[3].y); c.stroke();
+      edges.forEach(function(e){ var a = nodes[e.a], b = nodes[e.b]; c.strokeStyle = 'rgba(154,163,255,' + (.12 + .7 * e.heat) + ')'; c.lineWidth = .8 + e.heat * 1.2; c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); });
+      nodes.forEach(function(n){ c.beginPath(); c.arc(n.x, n.y, 3 + n.heat * 1.5, 0, 6.283); c.fillStyle = n.heat > .05 ? 'rgba(220,224,255,' + (.35 + .65 * n.heat) + ')' : '#3A3F6E'; c.fill(); });
+      // задача
+      c.beginPath(); c.arc(st[0].x, st[0].y, 7, 0, 6.283); c.strokeStyle = '#9AA3FF'; c.lineWidth = 2; c.stroke();
+      // людина: «ворота» з галочкою
+      c.strokeStyle = '#9AA3FF'; c.lineWidth = 2; c.beginPath();
+      if (horiz){ c.moveTo(g.x + 8, g.y - 22); c.lineTo(g.x + 8, g.y + 22); } else { c.moveTo(g.x - 22, g.y + 8); c.lineTo(g.x + 22, g.y + 8); } c.stroke();
+      var hx = st[2].x + (horiz ? 10 : 0), hy = st[2].y + (horiz ? 0 : 6);
+      c.beginPath(); c.moveTo(hx - 6, hy); c.lineTo(hx - 1, hy + 5); c.lineTo(hx + 8, hy - 6); c.lineWidth = 2.4; c.strokeStyle = '#5CE39A'; c.stroke();
+      // результат: блок, що наповнюється перевіреними частинами
+      var R = st[3], bw = 40, bh = 48, k = Math.min(1, fill / NEED);
+      c.strokeStyle = flash > 0 ? 'rgba(255,255,255,' + (.5 + .5 * flash) + ')' : '#9AA3FF'; c.lineWidth = 2; c.strokeRect(R.x - bw / 2, R.y - bh / 2, bw, bh);
+      c.fillStyle = 'rgba(124,136,255,' + (.35 + .5 * flash) + ')'; c.fillRect(R.x - bw / 2 + 3, R.y + bh / 2 - 3 - (bh - 6) * k, bw - 6, (bh - 6) * k);
+      if (flash > 0){ c.save(); c.shadowColor = 'rgba(154,163,255,1)'; c.shadowBlur = 24 * flash; c.strokeRect(R.x - bw / 2, R.y - bh / 2, bw, bh); c.restore(); }
+      // частини роботи
+      parts.forEach(function(p){ if (p.t < 0 && p.stage === 0) return; c.beginPath(); c.arc(p.x, p.y, p.stage === 6 ? 2.2 : 2.6, 0, 6.283);
+        c.fillStyle = p.stage === 6 ? 'rgba(163,167,191,.85)' : p.stage === 5 ? '#FFFFFF' : 'rgba(200,206,255,.95)'; c.fill(); });
+    }
+    function loop(n){ var dt = Math.min(50, n - (last || n)); last = n; step(dt); draw(); if (vis) raf = requestAnimationFrame(loop); }
+    addEventListener('resize', function(){ layout(); });
+    document.fonts.ready.then(function(){
+      layout();
+      if (reduce){ // статичний кадр: мережа частково підсвічена, результат наполовину готовий
+        edges.forEach(function(e, i){ e.heat = i % 5 === 0 ? .8 : 0; }); fill = 5; draw(); return; }
+      onView(flow, function(v){ vis = v; cancelAnimationFrame(raf); last = 0; if (v){ layout(); raf = requestAnimationFrame(loop); } }, .2);
+    });
+  })();
+
+  // ---- 3. Воронка «Трафік → заявки» – код сайту (src/funnel.js) без змін ----
+  (function(canvas){
+    var ctx = canvas.getContext('2d'), dpr = Math.min(devicePixelRatio || 1, 2), w = 0, h = 0, running = false, raf = 0, particles = [], N = 140;
+    function resize(){ var r = canvas.getBoundingClientRect(); w = r.width; h = r.height; canvas.width = w * dpr; canvas.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+    function spawn(p){ p.t = Math.random() * -0.3; p.x = Math.random(); p.speed = 0.0025 + Math.random() * 0.0035; p.lead = Math.random() < 0.08; p.size = 1.2 + Math.random() * 1.6; return p; }
+    for (var i = 0; i < N; i++) particles.push(Object.assign(spawn({}), { t: Math.random() }));
+    function width(t){ return 1 - 0.78 * (t < 0.55 ? Math.pow(t / 0.55, 1.5) : 1); }
+    function draw(){
+      ctx.clearRect(0, 0, w, h); ctx.beginPath();
+      for (var i = 0; i <= 40; i++){ var t = i / 40, x = w / 2 - width(t) * w * 0.45; i ? ctx.lineTo(x, t * h) : ctx.moveTo(x, t * h); }
+      for (var j = 40; j >= 0; j--){ var t2 = j / 40; ctx.lineTo(w / 2 + width(t2) * w * 0.45, t2 * h); }
+      ctx.closePath(); ctx.fillStyle = 'rgba(120, 130, 255, 0.04)'; ctx.fill(); ctx.strokeStyle = 'rgba(160, 170, 255, 0.16)'; ctx.lineWidth = 1; ctx.stroke();
+      particles.forEach(function(p){ if (!reduce) p.t += p.speed; if (p.t > 1.05) spawn(p); if (p.t < 0) return;
+        var half = width(p.t) * w * 0.45, x = w / 2 + (p.x - 0.5) * 2 * half * 0.92, y = p.t * h, bottom = p.t > 0.6, alpha = bottom ? (p.lead ? 1 : 0.25) : 0.7;
+        ctx.beginPath(); ctx.arc(x, y, bottom && p.lead ? p.size * 1.6 : p.size, 0, Math.PI * 2);
+        ctx.fillStyle = bottom && p.lead ? 'rgba(220, 226, 255, ' + alpha + ')' : 'rgba(150, 160, 255, ' + alpha + ')'; ctx.fill(); });
+      if (running && !reduce) raf = requestAnimationFrame(draw);
+    }
+    onView(canvas, function(v){ running = v; cancelAnimationFrame(raf); if (v){ resize(); draw(); } }, .1);
+    addEventListener('resize', function(){ if (running) resize(); });
+  })(document.querySelector('.funnel'));
+
+  // ---- 4. Факти: живі лічильники ----
+  var race = document.querySelector('[data-live="race"]'), timer = document.querySelector('[data-live="timer"]'), dial = document.querySelector('[data-live="dial"]');
+  if (!reduce){
+    onView(race, function(v){ race.classList.toggle('go', v); }, .5);
+    onView(timer, function(v){ timer.classList.toggle('go', v); }, .5);
+  }
+  (function(){ // доба: повідомлення приходять у будь-яку годину (точка на колі) – одразу відповідь (імпульс до центру)
+    var g = dial.querySelector('.msgs'), NS = 'http://www.w3.org/2000/svg', t = 0, vis = false;
+    function el(n, a){ var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
+    function msg(ang, still){
+      var x = 46 + Math.sin(ang) * 38, y = 46 - Math.cos(ang) * 38;
+      var dot = el('circle', { cx: x, cy: y, r: 4, fill: '#F2F3F8' }), ln = el('line', { x1: x, y1: y, x2: 46, y2: 46, stroke: '#9AA3FF', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-dasharray': 34, 'stroke-dashoffset': 34 });
+      g.appendChild(ln); g.appendChild(dot);
+      if (still){ ln.setAttribute('stroke-dashoffset', 0); ln.setAttribute('opacity', .5); return; }
+      dot.animate([{ r: 0, opacity: 0 }, { r: 5, opacity: 1, offset: .2 }, { r: 4, opacity: 1, offset: .7 }, { r: 4, opacity: 0 }], { duration: 2200, fill: 'forwards' });
+      ln.animate([{ strokeDashoffset: 34, opacity: 1, offset: 0 }, { strokeDashoffset: 34, offset: .22 }, { strokeDashoffset: 0, opacity: 1, offset: .38 }, { strokeDashoffset: 0, opacity: 0 }], { duration: 2200, fill: 'forwards' });
+      setTimeout(function(){ dot.remove(); ln.remove(); }, 2300);
+    }
+    function run(){ if (!vis) return; msg(Math.random() * Math.PI * 2); t = setTimeout(run, 700 + Math.random() * 900); }
+    if (reduce){ [0.6, 2.2, 3.6, 5.1].forEach(function(a){ msg(a, true); }); return; }
+    onView(dial, function(v){ vis = v; clearTimeout(t); if (v) run(); }, .4);
+  })();
+
+  // ---- 5. Кейси: мінісцени ----
+  (function(){
+    var chat = document.querySelector('[data-live="chat"]'), bubbles = [].slice.call(chat.querySelectorAll('.bubble')), typing = chat.querySelector('.typing'), t = [], vis = false;
+    function clear(){ t.forEach(clearTimeout); t = []; }
+    function play(){
+      if (!vis) return; bubbles.forEach(function(b){ b.classList.remove('show'); }); typing.classList.remove('show');
+      // клієнт пише → бот «друкує» 0,8 с → відповідає (бот відповідає за секунди)
+      var at = 400;
+      bubbles.forEach(function(b, i){
+        if (b.classList.contains('out')){ t.push(setTimeout(function(){ chat.insertBefore(typing, b); typing.classList.add('show'); }, at)); at += 900;
+          t.push(setTimeout(function(){ typing.classList.remove('show'); b.classList.add('show'); }, at)); at += 900; }
+        else { t.push(setTimeout(function(){ b.classList.add('show'); }, at)); at += 1100; }
+      });
+      t.push(setTimeout(play, at + 3500));
+    }
+    if (reduce){ bubbles.forEach(function(b){ b.classList.add('show'); }); }
+    else onView(chat, function(v){ vis = v; clear(); if (v) play(); else bubbles.forEach(function(b){ b.classList.add('show'); }); }, .4);
+
+    var land = document.querySelector('[data-live="landing"]'), cur = land.querySelector('.cursor'), btn = land.querySelector('.mock-btn'), chip = land.querySelector('.lead-chip'), lt = [], lv = false;
+    function playL(){
+      if (!lv) return; var pr = land.querySelector('.browser-page').getBoundingClientRect(), br = btn.getBoundingClientRect();
+      cur.style.transition = 'none'; cur.style.left = '82%'; cur.style.top = '92%'; cur.style.opacity = 0; chip.classList.remove('show'); void cur.offsetWidth; cur.style.transition = '';
+      lt.push(setTimeout(function(){ cur.style.opacity = 1; cur.style.left = (br.left - pr.left + br.width * .6) + 'px'; cur.style.top = (br.top - pr.top + br.height * .55) + 'px'; }, 300));
+      lt.push(setTimeout(function(){ btn.classList.add('press'); }, 1300));
+      lt.push(setTimeout(function(){ btn.classList.remove('press'); chip.classList.add('show'); }, 1500));
+      lt.push(setTimeout(function(){ cur.style.opacity = 0; }, 2600));
+      lt.push(setTimeout(playL, 5200));
+    }
+    if (reduce){ chip.classList.add('show'); }
+    else onView(land, function(v){ lv = v; lt.forEach(clearTimeout); lt = []; if (v) playL(); }, .4);
+  })();
+
+  // ---- 6. Заявка: «заряд» кроків + імпульс по рамці форми при відправці ----
+  (function(){
+    var f = document.getElementById('quiz'), panes = [].slice.call(f.querySelectorAll('fieldset')), i = 0;
+    var back = f.querySelector('.q-back'), next = f.querySelector('.q-next'), send = f.querySelector('.q-send'), bar = f.querySelector('.charge i'), curEl = f.querySelector('.q-cur'), status = f.querySelector('.quiz-status');
+    var trace = f.querySelector('.quiz-trace'), rect = trace.querySelector('rect');
+    function show(){ panes.forEach(function(p, k){ p.hidden = k !== i; }); back.hidden = i === 0; next.hidden = i === panes.length - 1; send.hidden = i !== panes.length - 1; bar.style.width = ((i + 1) / panes.length * 100) + '%'; curEl.textContent = i + 1; }
+    next.addEventListener('click', function(){ if (i < panes.length - 1){ i++; show(); } });
+    back.addEventListener('click', function(){ if (i > 0){ i--; show(); } });
+    f.addEventListener('submit', function(e){
+      e.preventDefault(); status.textContent = '';
+      if (reduce){ status.textContent = 'Дякуємо! Заявку отримали, відповімо протягом 15 хвилин у робочий час. (Демо: нічого не надсилається.)'; return; }
+      // імпульс: від кнопки по рамці форми вгору-праворуч – «заявка полетіла до команди»
+      var r = f.getBoundingClientRect(), w = r.width, h = r.height; trace.setAttribute('viewBox', '0 0 ' + (w + 2) + ' ' + (h + 2));
+      rect.setAttribute('width', w); rect.setAttribute('height', h);
+      var per = rect.getTotalLength(), dash = 150, arc = Math.PI * 14 / 2;
+      // контур rect іде за годинниковою стрілкою від верхнього лівого кута; кнопка – праворуч унизу.
+      // Імпульс рухається назад по контуру: від правого нижнього кута вгору правою стороною до верхнього правого кута.
+      var p1 = (w - 28) + arc + (h - 28) + arc * .6, p0 = (w - 28) - 40;
+      rect.style.strokeDasharray = dash + ' ' + per; rect.style.opacity = 1;
+      send.classList.remove('zap'); void send.offsetWidth; send.classList.add('zap');
+      rect.animate([{ strokeDashoffset: -(p1 - dash * .2), opacity: 0 }, { opacity: 1, offset: .12 }, { opacity: 1, offset: .75 }, { strokeDashoffset: -(p0 - dash), opacity: 0 }], { duration: 1150, easing: 'cubic-bezier(.35,0,.25,1)', fill: 'forwards' });
+      setTimeout(function(){ status.textContent = 'Дякуємо! Заявку отримали, відповімо протягом 15 хвилин у робочий час. (Демо: нічого не надсилається.)'; }, 650);
+    });
+    show();
+  })();
+})();
+</script>
+</body>
+</html>
