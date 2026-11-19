@@ -1,0 +1,267 @@
+<title>Анкета «Штурмової варти»</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap">
+<style>
+/* Лист-анкета у мові сайту: світлі картки, чорні пігулки, теплий градієнт лише в шапці */
+:root{
+  --bg:#F3F2EE; --card:#FFFFFF; --ink:#111111; --ink-2:#55534E; --line:#DEDAD2; --soft:#F6F4EF;
+  --pill:#111111; --pill-ink:#FFFFFF; --sel:#FFF4E0; --sel-line:#111111; --ok:#1F7A4A; --warn:#A8520F;
+  --g1:#FFE3A3; --g2:#FFC2A6; --g3:#C9D9FF;
+  --font:"Onest","Segoe UI",Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121211;--card:#1C1C1A;--ink:#F2F0EA;--ink-2:#B3AFA6;--line:#34322E;--soft:#232220;--pill:#F2F0EA;--pill-ink:#121211;--sel:#2E2618;--sel-line:#F2F0EA;--ok:#5FCB92;--warn:#F0A262;--g1:#5A4823;--g2:#5A3427;--g3:#2A3655;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121211;--card:#1C1C1A;--ink:#F2F0EA;--ink-2:#B3AFA6;--line:#34322E;--soft:#232220;--pill:#F2F0EA;--pill-ink:#121211;--sel:#2E2618;--sel-line:#F2F0EA;--ok:#5FCB92;--warn:#F0A262;--g1:#5A4823;--g2:#5A3427;--g3:#2A3655;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--font);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:0 120px}
+header.top{background:linear-gradient(120deg,var(--g1),var(--g2) 45%,var(--g3));}
+header.top .wrap{padding-block:28px 32px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px}
+.mark{width:36px;height:36px;border-radius:10px;background:var(--pill);color:var(--pill-ink);display:grid;place-items:center;font-weight:700;font-size:14px;letter-spacing:.02em}
+h1{font-size:clamp(28px,6vw,40px);line-height:1.1;margin:22px 0 10px;font-weight:600;text-wrap:balance;letter-spacing:-.01em}
+.lead{max-width:60ch;color:var(--ink);margin:0}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.bar .wrap{padding-block:12px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.prog{flex:1 1 220px;min-width:0}
+.prog .t{display:flex;justify-content:space-between;font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.track{height:6px;border-radius:6px;background:var(--line);margin-top:6px;overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--ink);border-radius:6px;transition:width .3s}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;user-select:none}
+.toggle input{width:18px;height:18px;accent-color:var(--ink)}
+.save{font-size:13px;color:var(--ink-2);min-width:0}
+.save.ok{color:var(--ok)}.save.warn{color:var(--warn)}
+section.sec{margin-top:36px}
+section.sec h2{font-size:22px;margin:0 0 4px;font-weight:600}
+.sec .note{color:var(--ink-2);font-size:15px;margin:4px 0 0;max-width:62ch}
+.q{background:var(--card);border-radius:18px;padding:18px;margin-top:14px;border:1px solid var(--line)}
+.q fieldset{border:0;margin:0;padding:0;min-width:0}
+.q legend{font-weight:600;font-size:17px;padding:0;display:flex;gap:10px;align-items:baseline}
+.q .id{font-variant-numeric:tabular-nums;color:var(--ink-2);font-weight:500;font-size:14px;flex:none}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.tag{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--ink-2);letter-spacing:.01em}
+.tag.req{background:var(--pill);color:var(--pill-ink)}
+.later{font-size:13px;color:var(--ink-2)}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);cursor:pointer;min-width:0}
+.opt:hover{border-color:var(--ink-2)}
+.opt input[type=radio],.opt input[type=checkbox]{width:20px;height:20px;margin:1px 0 0;flex:none;accent-color:var(--ink)}
+.opt.on{background:var(--sel);border-color:var(--sel-line)}
+.opt .lbl{min-width:0;flex:1}
+.opt .rec{display:inline-block;font-size:12px;font-weight:600;margin-left:6px;color:var(--ok)}
+.fill{display:block;width:100%;margin-top:8px;font:inherit;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.fill[hidden],.out[hidden]{display:none}
+.fill:focus,.opt input:focus-visible,.toggle input:focus-visible,.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.txt{display:grid;gap:6px;margin-top:4px}
+.txt label{font-size:14px;color:var(--ink-2)}
+.q .qn{font-size:14px;color:var(--ink-2);margin:10px 0 0}
+.q.miss{border-color:var(--warn)}
+.done{margin-top:40px;background:var(--card);border-radius:22px;padding:22px;border:1px solid var(--line)}
+.done h2{margin:0 0 6px;font-size:22px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{font:inherit;font-weight:600;border:0;border-radius:999px;padding:12px 20px;background:var(--pill);color:var(--pill-ink);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.out{width:100%;min-height:160px;margin-top:12px;font:13px/1.45 ui-monospace,Menlo,monospace;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--soft);color:var(--ink)}
+.hide-later .q[data-req="0"]{display:none}
+.hide-later .sec[data-hasreq="0"]{display:none}
+@media (prefers-reduced-motion:reduce){.track i{transition:none}}
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="brand"><span class="mark" aria-hidden="true">ШВ</span>Штурмова варта</div>
+  <h1>Анкета для запуску сайту</h1>
+  <p class="lead">Позначте варіант, а де є поле – допишіть. Якщо нічого не підходить, оберіть «Інше». Чого не знаєте зараз – пропустіть. Відповіді зберігаються самі, можна повертатися до анкети скільки завгодно разів.</p>
+</div></header>
+
+<div class="bar"><div class="wrap">
+  <div class="prog"><div class="t"><span id="p-req">Обов’язкові: 0 з 0</span><span id="p-all">Усього: 0 з 0</span></div><div class="track"><i id="p-bar"></i></div></div>
+  <label class="toggle"><input type="checkbox" id="only-req"> Лише обов’язкові</label>
+  <span class="save" id="save" role="status" aria-live="polite">Зберігаємо у браузері</span>
+</div></div>
+
+<main class="wrap" id="form"></main>
+
+<div class="wrap">
+  <section class="done" aria-labelledby="done-h">
+    <h2 id="done-h">Готово?</h2>
+    <p id="done-t">Відповіді вже збережено. Якщо анкета відкрита не з вашого акаунта, натисніть «Скопіювати відповіді» і надішліть текст нам у месенджер.</p>
+    <div class="btns">
+      <button class="btn" type="button" id="copy">Скопіювати відповіді</button>
+      <button class="btn ghost" type="button" id="show">Показати текст</button>
+    </div>
+    <textarea class="out" id="out" readonly hidden aria-label="Текст відповідей"></textarea>
+  </section>
+</div>
+
+<script>
+const DATA = [{"n": "1", "title": "Компанія і контакти", "qs": [{"id": "1.1", "text": "Точна юридична назва компанії (як у державному реєстрі)", "type": "один варіант", "req": true, "later": "", "opts": ["ТОВ «ОХОРОННА КОМПАНІЯ „ШТУРМОВА ВАРТА“»", "Товариство з обмеженою відповідальністю «Охоронна компанія „Штурмова варта“»"], "notes": []}, {"id": "1.2", "text": "Код ЄДРПОУ і чи показувати його внизу кожної сторінки сайту", "type": "текст + один варіант", "req": true, "later": "", "opts": ["Код: ___", "Показувати (рекомендуємо: для охоронної компанії це додає довіри)", "Не показувати"], "notes": []}, {"id": "1.3", "text": "Адреса офісу", "type": "один варіант", "req": false, "later": "без відповіді на сайті буде лише «Київ»", "opts": ["Є офіс, куди приходять клієнти – показуємо адресу на сайті і на Google Картах: ___ (вулиця, будинок)", "Офіс є, але клієнтів не приймаємо – на сайті лише «Київ», на картах адресу приховуємо", "Офісу немає, працюємо виїзно"], "notes": []}, {"id": "1.4", "text": "Де працюєте", "type": "один варіант", "req": false, "later": "без відповіді – «Київ»", "opts": ["Лише Київ", "Київ і Київська область", "Київ, область і інші регіони за домовленістю"], "notes": []}, {"id": "1.5", "text": "E-mail компанії для сайту", "type": "один варіант", "req": true, "later": "", "opts": ["Є: ___", "Створити на адресі сайту (наприклад, info@назва-сайту.ua)", "Без e-mail на сайті"], "notes": []}, {"id": "1.6", "text": "Соцмережі й месенджери компанії", "type": "кілька", "req": false, "later": "без відповіді прибираємо рядок «Ми в мережах» і кнопки месенджерів", "opts": ["Telegram: ___", "Viber: ___", "Facebook: ___", "Instagram: ___", "Поки немає"], "notes": ["Telegram і Viber з'являться на сайті кнопками «Написати», решта – посиланнями."]}, {"id": "1.7", "text": "З якого року компанія працює в охороні", "type": "текст", "req": false, "later": "", "opts": ["З ___ року"], "notes": []}, {"id": "1.8", "text": "Скільки об'єктів зараз під вашою охороною (приблизно)", "type": "один варіант", "req": false, "later": "", "opts": ["До 5", "5–20", "21–50", "Понад 50"], "notes": []}, {"id": "1.9", "text": "Що з цього можна показати на сайті", "type": "кілька", "req": false, "later": "без відповіді – нічого не публікуємо", "opts": ["Рік початку роботи (1.7)", "Кількість об'єктів (1.8)", "Нічого, це лише для нас"], "notes": []}, {"id": "1.10", "text": "Відгуки клієнтів", "type": "один варіант", "req": false, "later": "", "opts": ["Є відгуки, і клієнти згодні на публікацію – передамо: ___", "Поки немає", "Зберемо після перших замовлень із сайту"], "notes": []}], "notes": []}, {"n": "2", "title": "Ліцензія", "qs": [{"id": "2.1", "text": "Ліцензія на охоронну діяльність", "type": "один варіант + текст", "req": true, "later": "", "opts": ["Є: номер або рішення ___, дата ___, хто видав ___", "В процесі отримання, очікуємо ___"], "notes": []}, {"id": "2.2", "text": "Як показати ліцензію на сайті", "type": "один варіант", "req": true, "later": "", "opts": ["Номер, дата і посилання на запис у державному реєстрі ліцензій (рекомендуємо: клієнт може перевірити сам)", "Номер і дата", "Номер, дата і скан ліцензії"], "notes": ["Ліцензія буде внизу кожної сторінки і у відповіді на питання «Чи є у вас ліцензія?»."]}], "notes": []}, {"n": "3", "title": "Графік і строки", "qs": [{"id": "3.1", "text": "Коли працює телефон +380 67 549 5710", "type": "один варіант + текст", "req": true, "later": "", "opts": ["Цілодобово", "Щодня з ___ до ___", "Пн–пт з ___ до ___, сб–нд з ___ до ___"], "notes": []}, {"id": "3.2", "text": "За скільки менеджер передзвонює після заявки з сайту", "type": "один варіант", "req": true, "later": "", "opts": ["До 15 хв", "До 30 хв", "До 1 год у робочий час"], "notes": []}, {"id": "3.3", "text": "За скільки після домовленості охоронець може вийти на об'єкт", "type": "один варіант", "req": true, "later": "", "opts": ["У день звернення", "За 1–2 дні", "До тижня", "Залежить від об'єкта, строк узгоджуємо з клієнтом"], "notes": []}, {"id": "3.4", "text": "Мінімальне замовлення", "type": "один варіант + текст", "req": true, "later": "", "opts": ["Від ___ годин, разово", "Від доби", "Від місяця"], "notes": []}], "notes": []}, {"n": "4", "title": "Ціни й оплата", "qs": [{"id": "4.1", "text": "Чи показувати на сайті орієнтир ціни", "type": "один варіант + текст", "req": true, "later": "", "opts": ["Ні – ціну називаємо після заявки", "Так: «від ___ грн за годину роботи поста»", "Так: «від ___ грн за пост на місяць»"], "notes": []}, {"id": "4.2", "text": "Від чого залежить ціна", "type": "кілька", "req": true, "later": "", "opts": ["Тип об'єкта", "Кількість постів і охоронців", "Графік (день, ніч, цілодобово)", "Строк договору"], "notes": []}, {"id": "4.3", "text": "Як клієнти можуть платити", "type": "кілька", "req": true, "later": "", "opts": ["Рахунок для ТОВ і ФОП", "Картка", "Готівка"], "notes": []}, {"id": "4.4", "text": "ПДВ", "type": "один варіант", "req": false, "later": "", "opts": ["Платники ПДВ, ціни з ПДВ", "Не платники ПДВ"], "notes": []}, {"id": "4.5", "text": "Огляд об'єкта перед початком роботи", "type": "один варіант + текст", "req": false, "later": "без відповіді на сайті пишемо лише «менеджер уточнює деталі об'єкта»", "opts": ["Виїжджаємо безкоштовно, протягом ___ днів після заявки", "Виїжджаємо платно: ___ грн", "Без виїзду – за описом і фото від клієнта"], "notes": []}], "notes": []}, {"n": "5", "title": "Послуги", "qs": [{"id": "5.1", "text": "Супровід – що саме робите", "type": "кілька", "req": false, "later": "без відповіді «перевезення цінностей» прибираємо з сайту", "opts": ["Поїздки і зустрічі", "Переговори", "Перевезення цінностей (на сайті зараз є з позначкою – підтвердіть)"], "notes": []}, {"id": "5.2", "text": "Як називати на сайті охорону людей", "type": "один варіант", "req": false, "later": "без відповіді – «особиста охорона» і «охоронець»", "opts": ["«Особиста охорона» і «охоронець» (рекомендуємо)", "Можна також «тілоохоронець»"], "notes": []}, {"id": "5.3", "text": "Охорона магазинів і торгових центрів", "type": "один варіант", "req": false, "later": "", "opts": ["Так, як інші об'єкти", "Лише магазини, без торгових центрів", "Ні – прибрати з сайту"], "notes": []}, {"id": "5.4", "text": "Які заходи берете під охорону", "type": "кілька", "req": false, "later": "", "opts": ["Ділові заходи, корпоративи", "Концерти й публічні події", "Весілля, ювілеї, приватні свята"], "notes": []}, {"id": "5.5", "text": "Форма і спецзасоби", "type": "кілька", "req": false, "later": "без відповіді на сайті про це не пишемо", "opts": ["Охоронці у формі з логотипом", "Охоронці в цивільному (особиста охорона, заходи)", "Зі спецзасобами за ліцензією: ___", "Не писати про це на сайті"], "notes": []}, {"id": "5.6", "text": "Коли запустите пультову охорону, групу реагування і системи безпеки", "type": "один варіант + текст", "req": false, "later": "без відповіді лишаємо «незабаром»", "opts": ["До ___ (місяць)", "Не раніше ніж за пів року – поки прибрати з сайту", "Лишити «незабаром»"], "notes": []}, {"id": "5.7", "text": "Кабінет клієнта (зараз на сайті демо з позначкою «незабаром»)", "type": "один варіант + текст", "req": false, "later": "", "opts": ["Запускаємо до ___", "Не скоро – прибрати з головного меню, демо лишити нижче на сторінці", "Прибрати з сайту повністю"], "notes": []}, {"id": "5.8", "text": "Оплата онлайн у кабінеті клієнта", "type": "один варіант", "req": false, "later": "без відповіді прибираємо слова «оплата онлайн»", "opts": ["Буде разом із запуском кабінету", "Не плануємо – прибрати з сайту", "Ще не вирішили"], "notes": []}], "notes": []}, {"n": "6", "title": "Персонал і ветерани", "qs": [{"id": "6.1", "text": "Скільки співробітників на постах мають підтверджений статус – посвідчення учасника бойових дій або ветерана війни?", "type": "один варіант", "req": true, "later": "", "opts": ["Один", "2–5", "Понад 5", "Не знаю"], "notes": []}, {"id": "6.2", "text": "Чи можете показати ці документи, якщо надійде запит?", "type": "один варіант", "req": true, "later": "", "opts": ["Так", "Так, зі згодою працівників", "Ні"], "notes": ["Ці дані на сайті не публікуємо. Вони потрібні, щоб формулювання «ветерани та співробітники з бойовим досвідом» мало підставу. Якщо статус підтверджений в одного співробітника або відповідь «не знаю», формулювання переглянемо разом з вами до запуску."]}, {"id": "6.3", "text": "Що ще можна публікувати про ветеранів", "type": "один варіант + текст", "req": false, "later": "без відповіді – лише формулювання вище", "opts": ["Нічого більше – лише це формулювання", "Скільки їх або яка частка: ___ (як саме можна написати)", "Короткі історії конкретних людей – лише з їхньої письмової згоди"], "notes": []}, {"id": "6.4", "text": "Що проходить охоронець перед виходом на пост", "type": "кілька + текст", "req": false, "later": "без відповіді про відбір і навчання не пишемо", "opts": ["Співбесіду", "Перевірку документів і біографії", "Перевірку фізичної підготовки", "Навчання перед початком роботи", "Інструктаж на кожному новому об'єкті", "Регулярні тренування: ___ (як часто)"], "notes": []}, {"id": "6.5", "text": "Інструкція для поста (що робить охоронець на конкретному об'єкті)", "type": "один варіант", "req": false, "later": "", "opts": ["Погоджуємо з клієнтом і додаємо до договору", "Складаємо самі, клієнт отримує копію", "Окремої письмової інструкції немає"], "notes": []}, {"id": "6.6", "text": "Як контролюєте роботу на змінах", "type": "кілька", "req": true, "later": "", "opts": ["Обходи з фіксацією часу", "Журнал змін на об'єкті", "Охоронець звітує старшому зміни", "Перевірки старшим зміни або керівником на об'єкті"], "notes": []}, {"id": "6.7", "text": "Звіти клієнту", "type": "один варіант + текст", "req": false, "later": "без відповіді про звіти на сайті не пишемо", "opts": ["Повідомлення в месенджер після кожної зміни", "Звіт раз на ___ (тиждень, місяць)", "Клієнт може переглянути журнал змін на об'єкті", "Звітів клієнту не надаємо"], "notes": []}], "notes": ["Зараз на сайті буде лише: «На постах – ветерани та співробітники з бойовим досвідом». Більше нічого про людей ми не пишемо без вашого підтвердження."]}, {"n": "7", "title": "Відповіді на питання клієнтів на сайті", "qs": [{"id": "7.1", "text": "З ким укладаєте договір", "type": "один варіант", "req": true, "later": "", "opts": ["З ФОП, ТОВ і приватними особами", "Лише ФОП і ТОВ"], "notes": []}, {"id": "7.2", "text": "Чи можна замінити охоронця на об'єкті", "type": "один варіант + текст", "req": true, "later": "", "opts": ["Так, на першу вимогу клієнта", "Так, протягом ___ днів після звернення", "Так, на умовах договору"], "notes": []}, {"id": "7.3", "text": "Що відповідати на «Хто працює на постах?»", "type": "один варіант", "req": false, "later": "без відповіді – перший варіант", "opts": ["«Ветерани та співробітники з бойовим досвідом» – і все", "Додати, що проходить охоронець перед виходом на пост (з 6.4)"], "notes": []}], "notes": ["На сайті 9 питань. Більшість відповідей ми візьмемо з ваших відповідей вище, нижче – лише ті, яких ще немає. Питання, на які відповіді не буде, приберемо."]}, {"n": "8", "title": "Заявки з сайту", "qs": [{"id": "8.1", "text": "Куди надходять заявки", "type": "кілька + текст", "req": true, "later": "", "opts": ["У Telegram – у наявну групу менеджерів (рекомендуємо: найшвидше)", "У Telegram – створимо нову групу для заявок", "У Telegram одному менеджеру: ___", "На e-mail (з 1.5)"], "notes": []}, {"id": "8.2", "text": "Ми пропонуємо приймати заявки через безкоштовний сервіс: він пересилає заявку з сайту вам у Telegram. Акаунт створимо на пошту компанії і передамо вам доступ. Погоджуєтесь?", "type": "один варіант + текст", "req": true, "later": "", "opts": ["Так (рекомендуємо)", "Так, але на вашому акаунті – дамо доступ", "Ні, налаштує наш технічний спеціаліст: ___", "Обговорити"], "notes": ["Сервіс – Cloudflare. Його назву разом зі списком даних з форми ми передамо юристу для політики конфіденційності."]}, {"id": "8.3", "text": "Ми пропонуємо невидимий захист форми від ботів: людина нічого не помічає, а спам-заявки не доходять. Вмикаємо?", "type": "один варіант", "req": false, "later": "без відповіді – не вмикаємо, доки не з'явиться спам", "opts": ["Так, одразу (рекомендуємо)", "Увімкнути, якщо почнеться спам", "Не вмикати", "Обговорити"], "notes": []}], "notes": []}, {"n": "9", "title": "Юридичне", "qs": [{"id": "9.1", "text": "Хто готує політику конфіденційності і текст згоди на обробку даних", "type": "один варіант + текст", "req": true, "later": "", "opts": ["Юрист агенції, ви погоджуєте", "Ваш юрист – ми передамо, які дані збирає форма і через які сервіси вони проходять", "Є готовий текст: ___"], "notes": ["Юрист визначить і те, що потрібно для політики: як довго зберігаються заявки, хто ще отримує дані, як людина може їх змінити чи видалити."]}, {"id": "9.2", "text": "Куди людина може звернутися щодо своїх персональних даних", "type": "один варіант + текст", "req": true, "later": "", "opts": ["На e-mail компанії (з 1.5)", "Окремий e-mail: ___", "Телефоном +380 67 549 5710", "Листом на адресу: ___"], "notes": []}, {"id": "9.3", "text": "Чи потрібна у формі заявки окрема галочка «Погоджуюсь на обробку даних»", "type": "один варіант", "req": true, "later": "", "opts": ["Узгоджу з юристом (рекомендуємо)", "Так, потрібна", "Ні, достатньо тексту згоди під кнопкою «Надіслати»"], "notes": []}, {"id": "9.4", "text": "Якщо підключимо статистику відвідувань (11.1), на сайті може знадобитися вікно згоди на cookies. Як робимо?", "type": "один варіант", "req": false, "later": "", "opts": ["Узгоджу з юристом (рекомендуємо)", "Так, додати вікно згоди", "Ні, якщо юрист підтвердить, що не потрібно"], "notes": []}, {"id": "9.5", "text": "Російськомовна версія сайту", "type": "один варіант", "req": false, "later": "без відповіді – лише українська", "opts": ["Ні, лише українська (рекомендуємо на старті)", "Пізніше, після першого місяця роботи сайту", "Так, одразу – окремо погоджуємо з юристом"], "notes": []}], "notes": ["Політику конфіденційності і текст згоди перед запуском має перевірити юрист."]}, {"n": "10", "title": "Фото", "qs": [{"id": "10.1", "text": "Реальні фото", "type": "один варіант + текст", "req": false, "later": "без відповіді лишаємо ілюстративні", "opts": ["Є фото об'єктів і команди – передамо: ___", "Потрібна зйомка – організуємо", "Поки лишити ілюстративні"], "notes": []}, {"id": "10.2", "text": "Чи можна показувати охоронців на фото (сайт, соцмережі)", "type": "один варіант", "req": false, "later": "", "opts": ["Так, є співробітники, які погодяться письмово", "Лише без облич (зі спини, здалеку)", "Ні, жодних фото людей"], "notes": []}, {"id": "10.3", "text": "Фото об'єктів ваших клієнтів", "type": "один варіант", "req": false, "later": "", "opts": ["Можна, з дозволу клієнтів", "Лише без адрес і впізнаваних вивісок", "Ні"], "notes": []}], "notes": ["Зараз на сайті ілюстративні (згенеровані) фото з позначкою."]}, {"n": "11", "title": "Статистика й реклама", "qs": [{"id": "11.1", "text": "Ми пропонуємо підключити безкоштовну статистику Google: скільки людей заходить на сайт, звідки і скільки з них залишають заявку. Погоджуєтесь?", "type": "один варіант + текст", "req": false, "later": "", "opts": ["Так, створіть на пошту компанії (рекомендуємо)", "Так, акаунт уже є – дамо доступ: ___", "Ні", "Обговорити"], "notes": []}, {"id": "11.2", "text": "Чи плануєте рекламу найближчим часом", "type": "кілька", "req": false, "later": "", "opts": ["У Google", "У Facebook та Instagram (на сайт додамо код, який рахує заявки з цієї реклами – погодимо окремо)", "Поки без реклами"], "notes": []}, {"id": "11.3", "text": "Хто має доступ до рекламних кабінетів і статистики", "type": "кілька + текст", "req": false, "later": "", "opts": ["Власник компанії", "Маркетолог або менеджер: ___", "Агенція (за вашим дорученням)"], "notes": []}], "notes": []}, {"n": "12", "title": "Адреса сайту і розміщення", "qs": [{"id": "12.1", "text": "Адреса сайту в інтернеті (домен, наприклад shturmova-varta.ua)", "type": "один варіант + текст", "req": true, "later": "", "opts": ["Підберіть варіанти – агенція запропонує 3–5 вільних (рекомендуємо)", "Вже куплено: ___", "Купити такий: ___ (.ua / .com.ua / .com)"], "notes": []}, {"id": "12.2", "text": "На кого реєструвати адресу сайту", "type": "один варіант", "req": true, "later": "", "opts": ["На ТОВ (рекомендуємо: сайт лишається за компанією)", "На власника"], "notes": []}, {"id": "12.3", "text": "Ми пропонуємо розмістити сайт на безкоштовному сервісі – там само, де працює прийом заявок (8.2). Погоджуєтесь?", "type": "один варіант + текст", "req": false, "later": "обговоримо до запуску", "opts": ["Так (рекомендуємо)", "Ні, у нас є свій хостинг: ___", "Обговорити"], "notes": []}], "notes": []}, {"n": "13", "title": "Картка компанії на Google Картах", "qs": [{"id": "13.1", "text": "Чи є у компанії картка на Google Картах", "type": "один варіант + текст", "req": false, "later": "", "opts": ["Немає – створимо (рекомендуємо)", "Є – дамо доступ: ___", "Не знаємо"], "notes": []}, {"id": "13.2", "text": "Хто пройде підтвердження картки (Google може попросити відео, дзвінок або лист)", "type": "один варіант + текст", "req": false, "later": "", "opts": ["Власник", "Менеджер: ___"], "notes": ["Як показувати адресу на картах – з 1.3."]}], "notes": ["Картка показується над звичайними результатами пошуку, коли шукають «охорона Київ»."]}];
+const KEY = 'sv-anketa-v1';
+const DOC = 'anketa/vidpovidi';
+let A = {};           // {qid: {sel:[i], txt:{i:str}, other:str, fields:{i:str}}}
+let db = null, writing = false, dirty = false, timer = null;
+
+const kid = id => 'q' + id.replace('.', '_');
+const isMulti = t => t.startsWith('кілька');
+const isText = t => t === 'текст';
+const textFirst = t => t.startsWith('текст +');
+const hasBlank = s => s.includes('___');
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const recOf = s => /\(рекомендуємо[^)]*\)/.exec(s);
+
+function ans(id){ return A[kid(id)] || (A[kid(id)] = {sel:[], txt:{}, other:'', fields:{}}); }
+function answered(q){
+  const a = A[kid(q.id)]; if (!a) return false;
+  return a.sel.length > 0 || Object.values(a.fields||{}).some(v => v && v.trim()) || (a.other||'').trim() !== '';
+}
+
+function optLabel(s){
+  const r = recOf(s); let t = s.replace(/\s*\(рекомендуємо[^)]*\)/, '');
+  t = esc(t).replace(/___/g, '…');
+  return t + (r ? ' <span class="rec">' + esc(r[0].slice(1,-1)) + '</span>' : '');
+}
+
+function render(){
+  const root = document.getElementById('form'); let h = '';
+  DATA.forEach(sec => {
+    const hasReq = sec.qs.some(q => q.req) ? 1 : 0;
+    h += `<section class="sec" data-hasreq="${hasReq}" aria-labelledby="s${sec.n}"><h2 id="s${sec.n}">${esc(sec.title)}</h2>`;
+    sec.notes.forEach(n => h += `<p class="note">${esc(n)}</p>`);
+    sec.qs.forEach(q => {
+      const k = kid(q.id), multi = isMulti(q.type), type = multi ? 'checkbox' : 'radio';
+      h += `<div class="q" id="box-${k}" data-req="${q.req?1:0}"><fieldset><legend><span class="id">${q.id}</span><span>${esc(q.text)}</span></legend>`;
+      h += `<div class="tags">${q.req ? '<span class="tag req">Обов’язково до запуску</span>' : '<span class="tag">Можна пізніше</span>'}${q.later ? `<span class="later">Без відповіді: ${esc(q.later)}</span>` : ''}</div>`;
+      if (isText(q.type)) {
+        h += '<div class="txt">' + q.opts.map((o,i) => `<label for="${k}-f${i}">${optLabel(o)}</label><input class="fill" id="${k}-f${i}" data-q="${q.id}" data-field="${i}" type="text" autocomplete="off">`).join('') + '</div>';
+      } else {
+        h += '<div class="opts">';
+        q.opts.forEach((o,i) => {
+          if (textFirst(q.type) && i === 0 && hasBlank(o)) {
+            h += `<div class="txt"><label for="${k}-f${i}">${optLabel(o)}</label><input class="fill" id="${k}-f${i}" data-q="${q.id}" data-field="${i}" type="text" autocomplete="off"></div>`;
+            return;
+          }
+          h += `<label class="opt" id="${k}-l${i}"><input type="${type}" name="${k}" id="${k}-o${i}" data-q="${q.id}" data-i="${i}"><span class="lbl">${optLabel(o)}`;
+          if (hasBlank(o)) h += `<input class="fill" id="${k}-t${i}" data-q="${q.id}" data-t="${i}" type="text" placeholder="Допишіть" hidden autocomplete="off">`;
+          h += `</span></label>`;
+        });
+        h += `<label class="opt" id="${k}-l-o"><input type="${type}" name="${k}" id="${k}-oo" data-q="${q.id}" data-i="other"><span class="lbl">Інше<input class="fill" id="${k}-other" data-q="${q.id}" data-other="1" type="text" placeholder="Напишіть своє" hidden autocomplete="off"></span></label>`;
+        h += '</div>';
+      }
+      q.notes.forEach(n => h += `<p class="qn">${esc(n)}</p>`);
+      h += '</fieldset></div>';
+    });
+    h += '</section>';
+  });
+  root.innerHTML = h;
+}
+
+function paint(){
+  DATA.forEach(sec => sec.qs.forEach(q => {
+    const k = kid(q.id), a = A[k] || {sel:[], txt:{}, other:'', fields:{}};
+    document.querySelectorAll(`#box-${k} input[data-i]`).forEach(inp => {
+      const i = inp.dataset.i, on = a.sel.includes(i);
+      inp.checked = on; inp.closest('.opt').classList.toggle('on', on);
+      const t = i === 'other' ? document.getElementById(`${k}-other`) : document.getElementById(`${k}-t${i}`);
+      if (t) { t.hidden = !on; const v = i === 'other' ? (a.other||'') : ((a.txt||{})[i]||''); if (document.activeElement !== t) t.value = v; }
+    });
+    document.querySelectorAll(`#box-${k} input[data-field]`).forEach(inp => { if (document.activeElement !== inp) inp.value = (a.fields||{})[inp.dataset.field] || ''; });
+  }));
+  progress();
+}
+
+function progress(){
+  let all = 0, ok = 0, rq = 0, rok = 0;
+  DATA.forEach(s => s.qs.forEach(q => { all++; const d = answered(q); if (d) ok++; if (q.req) { rq++; if (d) rok++; } }));
+  document.getElementById('p-req').textContent = `Обов’язкові: ${rok} з ${rq}`;
+  document.getElementById('p-all').textContent = `Усього: ${ok} з ${all}`;
+  document.getElementById('p-bar').style.width = (rq ? rok / rq * 100 : 0) + '%';
+}
+
+function setSave(text, cls){ const el = document.getElementById('save'); el.textContent = text; el.className = 'save' + (cls ? ' ' + cls : ''); }
+
+function local(){ try { localStorage.setItem(KEY, JSON.stringify(A)); } catch (e) {} }
+function schedule(){ local(); progress(); dirty = true; clearTimeout(timer); timer = setTimeout(flush, 1200); if (db) setSave('Зберігаємо…'); }
+async function flush(){
+  if (!db || !dirty || writing) return;
+  writing = true; dirty = false;
+  try { await db.doc(DOC).set({a: A, updatedAt: new Date().toISOString()}); setSave('Збережено', 'ok'); }
+  catch (e) {
+    if (e && e.code === 'invalid_argument') { db = null; setSave('Немає доступу до спільного збереження – відповіді лишаються у браузері. Скопіюйте їх унизу', 'warn'); }
+    else { setSave('Не вдалося зберегти, спробуємо ще раз', 'warn'); dirty = true; }
+  }
+  writing = false;
+  if (dirty && db) { clearTimeout(timer); timer = setTimeout(flush, 1500); }
+}
+
+document.addEventListener('change', e => {
+  const t = e.target; if (!t.dataset.q || t.dataset.i === undefined) return;
+  const q = t.dataset.q, a = ans(q), i = t.dataset.i;
+  if (t.type === 'radio') a.sel = [i];
+  else a.sel = t.checked ? [...new Set([...a.sel, i])] : a.sel.filter(x => x !== i);
+  paint(); schedule();
+  if (t.checked) { const f = i === 'other' ? document.getElementById(kid(q)+'-other') : document.getElementById(kid(q)+'-t'+i); if (f) f.focus(); }
+});
+document.addEventListener('input', e => {
+  const t = e.target; if (!t.dataset.q) return;
+  const a = ans(t.dataset.q);
+  if (t.dataset.field !== undefined) (a.fields = a.fields || {})[t.dataset.field] = t.value;
+  else if (t.dataset.t !== undefined) (a.txt = a.txt || {})[t.dataset.t] = t.value;
+  else if (t.dataset.other) a.other = t.value;
+  else return;
+  schedule();
+});
+
+document.getElementById('only-req').addEventListener('change', e => {
+  document.body.classList.toggle('hide-later', e.target.checked);
+  try { localStorage.setItem(KEY + '-only', e.target.checked ? '1' : ''); } catch (er) {}
+});
+
+function summary(){
+  const lines = ['Анкета «Штурмова варта»', ''];
+  DATA.forEach(sec => {
+    lines.push(sec.n + '. ' + sec.title);
+    sec.qs.forEach(q => {
+      const a = A[kid(q.id)]; if (!a) { lines.push(`  ${q.id} – без відповіді`); return; }
+      const parts = [];
+      Object.entries(a.fields||{}).forEach(([i,v]) => { if (v && v.trim()) parts.push(q.opts[i].replace(/___/g, '…').replace(/\s*\(рекомендуємо[^)]*\)/, '') + ' → ' + v.trim()); });
+      a.sel.forEach(i => {
+        if (i === 'other') parts.push('Інше: ' + (a.other||'').trim());
+        else { let s = q.opts[i].replace(/\s*\(рекомендуємо[^)]*\)/, ''); const v = (a.txt||{})[i]; if (v && v.trim()) s += ' → ' + v.trim(); parts.push(s); }
+      });
+      lines.push(`  ${q.id} ${q.text}: ` + (parts.length ? parts.join('; ') : 'без відповіді'));
+    });
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+document.getElementById('show').addEventListener('click', () => { const o = document.getElementById('out'); o.value = summary(); o.hidden = !o.hidden; });
+document.getElementById('copy').addEventListener('click', async () => {
+  const o = document.getElementById('out'); o.value = summary();
+  try { await navigator.clipboard.writeText(o.value); setSave('Текст скопійовано', 'ok'); }
+  catch (e) { o.hidden = false; o.focus(); o.select(); setSave('Виділили текст – скопіюйте його вручну', 'warn'); }
+});
+
+render();
+try { A = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { A = {}; }
+try { if (localStorage.getItem(KEY + '-only')) { document.getElementById('only-req').checked = true; document.body.classList.add('hide-later'); } } catch (e) {}
+paint();
+
+(async () => {
+  if (!window.claude || !window.claude.use) return;
+  const d = await window.claude.use('db');
+  if (!d) { setSave('Зберігаємо у браузері. Щоб передати відповіді – скопіюйте їх унизу'); return; }
+  db = d; setSave('Завантажуємо збережене…');
+  const guard = setTimeout(() => setSave('Сховище не відповідає – відповіді зберігаються у браузері', 'warn'), 10000);
+  try {
+    const snap = await db.doc(DOC).get(); clearTimeout(guard);
+    if (snap.exists) {
+      const remote = (snap.data() || {}).a || {};
+      const hasLocal = Object.keys(A).length > 0;
+      A = hasLocal ? Object.assign({}, remote, A) : remote;
+      local(); paint();
+      if (hasLocal) { dirty = true; flush(); } else setSave('Збережено', 'ok');
+    } else if (Object.keys(A).length) { dirty = true; flush(); }
+    else setSave('Відповіді збережуться автоматично');
+  } catch (e) { clearTimeout(guard); setSave('Сховище недоступне – відповіді зберігаються у браузері', 'warn'); db = null; }
+})();
+</script>
