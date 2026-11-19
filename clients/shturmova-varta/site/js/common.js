@@ -69,7 +69,7 @@
     var a = e.target.closest && e.target.closest('a[href]'); if (!a) return;
     var h = a.getAttribute('href');
     if (/^tel:/.test(h)) track('click_call', { place: a.className || 'link' });
-    else if (/(^|\/)wizard\.html/.test(h)) track('click_wizard', { place: a.className || 'link', target: h });
+    else if (/^\/?wizard(\.html)?([?#]|$)/.test(h)) track('click_wizard', { place: a.className || 'link', target: h });
   });
 
   window.SV = { roving: roving, track: track, config: C };

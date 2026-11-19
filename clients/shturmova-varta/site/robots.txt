@@ -1,6 +1,5 @@
 # Домен-заглушка – [уточнити домен]; замінити: python3 tools/set-domain.py https://ваш-домен.ua
 User-agent: *
 Allow: /
-Disallow: /404.html
 
 Sitemap: https://shturmova-varta.example/sitemap.xml

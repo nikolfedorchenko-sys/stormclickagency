@@ -26,7 +26,7 @@
   function ph() { q.placeholder = innerWidth < 560 ? q.dataset.short : longPh; }
   ph(); addEventListener('resize', ph);
   // порожній пошук – просто відкриваємо майстер з першого кроку
-  q.form.addEventListener('submit', function (e) { if (!q.value.trim()) { e.preventDefault(); location.href = 'wizard.html'; } });
+  q.form.addEventListener('submit', function (e) { if (!q.value.trim()) { e.preventDefault(); location.href = '/wizard'; } });
 
   // пауза градієнта
   var aur = hero.querySelector('.aurora'), pb = hero.querySelector('.pause');

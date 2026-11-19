@@ -218,8 +218,9 @@ ul, ol { list-style: none; }
    ========================================================= */
 .hero { position: relative; min-height: 620px; height: 69vh; max-height: 760px; display: grid; place-items: center; text-align: center; color: var(--hero-fg); }
 .hero-in { position: relative; z-index: 2; width: 100%; max-width: 1120px; padding: 86px 16px 40px; }
-.hero h1 { font-size: var(--fs-h1); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
-.switch { display: inline-flex; gap: 12px; margin-top: 40px; }
+.hero h1 { font-size: var(--fs-h1); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
+.hero-sub { max-width: 640px; margin: 20px auto 0; font-size: 20px; line-height: 1.45; text-wrap: pretty; }
+.switch { display: inline-flex; gap: 12px; margin-top: 36px; }
 .switch button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px 0 16px; border-radius: var(--radius-pill); border: 0; background: transparent; font-size: 18px; font-weight: 500; cursor: pointer; transition: background var(--t-fast); }
 .switch button:hover { background: rgba(127, 127, 127, .18); }
 .switch button[aria-selected="true"] { background: var(--btn-bg); color: var(--btn-fg); }
@@ -250,7 +251,8 @@ ul, ol { list-style: none; }
   .hero { min-height: 600px; height: auto; max-height: none; }
   .hero-in { padding: 120px 16px 72px; }
   .hero h1 { line-height: 1.15; }
-  .switch { margin-top: 32px; gap: 4px; }
+  .hero-sub { margin-top: 14px; font-size: 17px; line-height: 1.5; }
+  .switch { margin-top: 28px; gap: 4px; }
   .switch button { font-size: 17px; padding: 0 16px 0 14px; min-height: 48px; }
   .search input { height: 52px; font-size: 16px; padding-left: 18px; }
   .search .round { top: 4px; right: 4px; }
@@ -382,6 +384,29 @@ ul, ol { list-style: none; }
 }
 
 /* =========================================================
+   10a. ХТО НА ПОСТАХ (після сітки послуг)
+   ========================================================= */
+.posts { padding: 96px 0 0; }
+.posts-head { display: grid; grid-template-columns: 1fr 1fr; gap: var(--col-gap); align-items: start; }
+.posts-lead { max-width: 560px; padding-top: 8px; font-size: 20px; line-height: 1.45; }
+.posts-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--col-gap); margin-top: 72px; }
+.posts-list li { position: relative; padding-top: 22px; font-size: 17px; line-height: 1.5; color: var(--fg-2); }
+.posts-list li::before { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 2px; background: var(--accent-line); }
+.posts-list b { font-weight: 500; color: var(--fg); }
+/* «Ситуації» йдуть одразу після – тонка лінія між двома білими блоками */
+.posts + .sit .wrap { border-top: 1px solid var(--line-soft); padding-top: 96px; }
+.posts + .sit { padding-top: 96px; }
+@media (max-width: 1100px) { .posts-list { grid-template-columns: 1fr 1fr; row-gap: 40px; } }
+@media (max-width: 640px) {
+  .posts { padding: 48px 0 0; }
+  .posts-head { grid-template-columns: 1fr; gap: 16px; }
+  .posts-lead { padding-top: 0; font-size: 17px; }
+  .posts-list { grid-template-columns: 1fr; gap: 24px; margin-top: 32px; }
+  .posts-list li { padding-top: 16px; font-size: 16px; }
+  .posts + .sit, .posts + .sit .wrap { padding-top: 48px; }
+}
+
+/* =========================================================
    11. КАБІНЕТ КЛІЄНТА (чорний блок, демо)
    ========================================================= */
 .cab { background: var(--night); color: var(--night-fg); padding: 88px 0 104px; }
@@ -404,7 +429,7 @@ ul, ol { list-style: none; }
 .demo-top .st { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--ok-bg); color: var(--ok-fg); font-weight: 500; font-size: 12px; white-space: nowrap; }
 .demo-top .st::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok-dot); }
 .demo-cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; padding-top: 14px; }
-.demo h4 { margin: 0 0 6px; font-size: 12px; font-weight: 500; color: var(--muted); }
+.demo .demo-h { display: block; margin: 0 0 6px; font-size: 12px; font-weight: 500; color: var(--muted); }
 .demo-log li { display: grid; grid-template-columns: 44px 1fr; gap: 8px; padding: 7px 0; border-top: 1px solid var(--line-soft); line-height: 1.3; font-size: 13px; }
 .demo-log time { font-weight: 600; }
 .demo-bill { border: 1px solid var(--line-soft); border-radius: 10px; padding: 12px; }
@@ -424,6 +449,33 @@ ul, ol { list-style: none; }
   .cab-items h3 { font-size: 17px; }
 }
 @media (max-width: 400px) { .cab-items { grid-template-columns: 1fr; } }
+
+/* =========================================================
+   11a. ПРО ПОСЛУГИ – текстовий блок перед «Питаннями» (спокійна типографіка)
+   ========================================================= */
+.about { padding: 104px 0 104px; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--col-gap); align-items: start; }
+.about-grid > .h2 { font-size: 40px; line-height: 1.08; letter-spacing: -.02em; max-width: 520px; }
+.about-body { max-width: 640px; }
+.about-body p { margin-top: 14px; font-size: 17px; line-height: 1.6; color: var(--fg-2); }
+.about-body p.about-lead { margin-top: 0; font-size: 20px; line-height: 1.5; color: var(--fg); }
+.about-body h3 { margin-top: 48px; font-size: var(--fs-h3); font-weight: 500; line-height: 1.15; letter-spacing: -.01em; }
+.about-body a { text-underline-offset: 3px; }
+.about-steps { margin-top: 16px; counter-reset: s; display: grid; }
+.about-steps li { counter-increment: s; display: flex; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line-soft); font-size: 17px; line-height: 1.55; color: var(--fg-2); }
+.about-steps li:last-child { border-bottom: 1px solid var(--line-soft); }
+.about-steps li::before { content: counter(s); flex: none; width: 16px; font-weight: 600; color: var(--fg); }
+.about-steps b { font-weight: 500; color: var(--fg); }
+.about-steps + p { margin-top: 20px; }
+@media (max-width: 1100px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } .about-grid > .h2 { max-width: 640px; } }
+@media (max-width: 640px) {
+  .about { padding: 48px 0 56px; }
+  .about-grid { gap: 20px; }
+  .about-grid > .h2 { font-size: 28px; }
+  .about-body p, .about-steps li { font-size: 16px; }
+  .about-body p.about-lead { font-size: 17px; }
+  .about-body h3 { margin-top: 36px; }
+}
 
 /* =========================================================
    12. ПИТАННЯ ТА ВІДПОВІДІ
@@ -454,7 +506,7 @@ ul, ol { list-style: none; }
    ========================================================= */
 .ftr { background: var(--night); color: var(--night-fg); padding: 88px 0 48px; border-top: 1px solid var(--night-line); }
 .ftr-top { display: grid; grid-template-columns: 1fr 1fr; gap: var(--col-gap); padding-bottom: 56px; border-bottom: 1px solid var(--night-line); }
-.ftr-top h3 { font-size: 17px; font-weight: 500; }
+.ftr-top .ftr-h { font-size: 17px; font-weight: 500; }
 .ftr-top ul { margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px 30px; }
 .ftr-top a { font-size: 14px; color: var(--night-muted); text-decoration: none; }
 .ftr-top a:hover, .ftr-mid a:hover { color: var(--night-fg); text-decoration: underline; text-underline-offset: 3px; }

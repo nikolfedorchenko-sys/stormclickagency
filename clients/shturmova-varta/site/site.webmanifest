@@ -1,8 +1,8 @@
 {
-  "name": "Штурмова варта – охорона об’єктів і людей",
+  "name": "Штурмова варта – охорона з бойовим досвідом",
   "short_name": "Штурмова варта",
   "lang": "uk",
-  "start_url": "/index.html",
+  "start_url": "/",
   "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#ffe07a",
