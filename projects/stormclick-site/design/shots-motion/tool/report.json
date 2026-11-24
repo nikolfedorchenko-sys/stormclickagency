@@ -1,0 +1,216 @@
+{
+  "url": "file:///home/user/stormclickagency/projects/stormclick-site/design/motion-concepts.html",
+  "takenAt": "2026-11-19T21:55:35.060Z",
+  "viewports": {
+    "mobile-360": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-01.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-02.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-03.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-04.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-05.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-06.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-07.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-08.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-09.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-10.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-11.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-part-12.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/mobile-360-full.png"
+      },
+      "warnings": [
+        "сторінка довша за 12 екранів – частини зняті лише для початку; решту дивіться на mobile-360-full.png"
+      ],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "StormClick – макет руху на всьому сайті",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 32,
+        "items": [
+          "li «Шторм на фоні всієї сторінки – хмари по » 14px",
+          "li «Послуги – імпульс «біль → рішення» пробі» 14px",
+          "li «Чому так дешево – конвеєр «задача → ШІ →» 14px",
+          "li «Факти – живі лічильники: години проти ти» 14px",
+          "li «Кейси – мінісцени: бот відповідає, на ле» 14px",
+          "li «Заявка – «заряд» кроків і імпульс по рам» 14px",
+          "p «Кожен новий елемент позначено «Новий рух» 14px",
+          "p.eyebrow «Що болить і що з цим робимо» 14px",
+          "p «Повідомлення в усіх месенджерах, пропуще» 15px",
+          "p «Відповідає 24/7 на базі ваших даних, зап» 14px",
+          "p «Приймає дзвінок, записує клієнта, надсил» 14px",
+          "p «Запис, підтвердження, нагадування за 2 г» 14px",
+          "p «Після візиту бот просить відгук, ШІ відп» 14px",
+          "p «Агенції просять тисячі доларів і місяці,» 15px",
+          "p «Кав’ярня, салон, майстер. До 5 екранів, » 14px"
+        ]
+      },
+      "fontFamiliesUsed": [
+        "Geologica"
+      ],
+      "pageHeightPx": 12754
+    },
+    "tablet-768": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-01.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-02.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-03.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-04.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-05.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-06.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-07.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-08.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-09.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-10.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-part-11.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/tablet-768-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "StormClick – макет руху на всьому сайті",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 32,
+        "items": [
+          "li «Шторм на фоні всієї сторінки – хмари по » 14px",
+          "li «Послуги – імпульс «біль → рішення» пробі» 14px",
+          "li «Чому так дешево – конвеєр «задача → ШІ →» 14px",
+          "li «Факти – живі лічильники: години проти ти» 14px",
+          "li «Кейси – мінісцени: бот відповідає, на ле» 14px",
+          "li «Заявка – «заряд» кроків і імпульс по рам» 14px",
+          "p «Кожен новий елемент позначено «Новий рух» 14px",
+          "p.eyebrow «Що болить і що з цим робимо» 14px",
+          "p «Повідомлення в усіх месенджерах, пропуще» 15px",
+          "p «Відповідає 24/7 на базі ваших даних, зап» 14px",
+          "p «Приймає дзвінок, записує клієнта, надсил» 14px",
+          "p «Запис, підтвердження, нагадування за 2 г» 14px",
+          "p «Після візиту бот просить відгук, ШІ відп» 14px",
+          "p «Агенції просять тисячі доларів і місяці,» 15px",
+          "p «Кав’ярня, салон, майстер. До 5 екранів, » 14px"
+        ]
+      },
+      "fontFamiliesUsed": [
+        "Geologica"
+      ],
+      "pageHeightPx": 10523
+    },
+    "desktop-1440": {
+      "screenshots": {
+        "firstScreen": "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-first-screen.png",
+        "parts": [
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-part-01.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-part-02.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-part-03.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-part-04.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-part-05.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-part-06.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-part-07.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-part-08.png",
+          "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-part-09.png"
+        ],
+        "fullPage": "/home/user/stormclickagency/projects/stormclick-site/design/shots-motion/tool/desktop-1440-full.png"
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "title": "StormClick – макет руху на всьому сайті",
+      "lang": "uk",
+      "h1Count": 1,
+      "contentWiderThanScreenPx": 0,
+      "canScrollSideways": false,
+      "wideElements": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoAlt": {
+        "count": 0,
+        "items": []
+      },
+      "imgNoSize": {
+        "count": 0,
+        "items": []
+      },
+      "imgBroken": {
+        "count": 0,
+        "items": []
+      },
+      "smallTapTargets": {
+        "count": 0,
+        "items": []
+      },
+      "smallText": {
+        "count": 0,
+        "items": []
+      },
+      "bodyTextUnder16": {
+        "count": 0,
+        "items": []
+      },
+      "fontFamiliesUsed": [
+        "Geologica"
+      ],
+      "pageHeightPx": 7940
+    }
+  }
+}

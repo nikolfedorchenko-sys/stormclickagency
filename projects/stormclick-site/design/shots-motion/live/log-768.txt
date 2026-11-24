@@ -1,0 +1,3 @@
+768 errs []
+ strikes 6 1.9s hero  | 14.2s page edge-left:794/w665 | 24.8s page edge-left:613/w520 | 34.7s page edge-right:632/w561 | 59.7s hero  | 73.9s page edge-left:688/w582
+ start-to-start 12.3, 10.6, 9.9, 25.0, 14.2
