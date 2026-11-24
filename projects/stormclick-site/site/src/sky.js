@@ -102,7 +102,13 @@ export function initSky() {
     cloudA = new Uint8Array(cw * ch); for (var a = 0; a < cw * ch; a++) cloudA[a] = dd[a * 4 + 3]; // альфа хмар – для cloudAt без getImageData
     cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
     cctx.setTransform(1, 0, 0, 1, 0, 0); cctx.imageSmoothingQuality = 'high';
+    // Розмиття хмар – один раз у самому canvas (як CSS blur(4px) у макеті, але без фільтра на повноекранному
+    // шарі: той перераховувався на кожному кадрі і на 1440 знижував прокрутку до ~28 fps)
+    // браузер без ctx.filter (старий Safari) – запасний CSS-blur на шарі (клас css-blur)
+    cv.classList.toggle('css-blur', !('filter' in cctx));
+    if ('filter' in cctx) cctx.filter = 'blur(' + (4 * DPR) + 'px)';
     cctx.drawImage(cloudDark, 0, 0, cv.width, cv.height);
+    if ('filter' in cctx) cctx.filter = 'none';
     fx.width = Math.round(W * DPR); fx.height = Math.round(H * DPR);
   }
 
@@ -133,7 +139,9 @@ export function initSky() {
     document.querySelectorAll('[data-storm="off"]').forEach(function(s){ var r = s.getBoundingClientRect(); if (visible(r)) mark(-9, r.top - P.blockMargin, W + 9, r.bottom + P.blockMargin); });
     var blocks = [];
     var fr = document.querySelector('.footer'); if (fr){ var frr = fr.getBoundingClientRect(); if (visible(frr)) mark(-9, frr.top - m, W + 9, H + 9); } // футер непрозорий – під ним удару не видно
-    document.querySelectorAll(BLOCKS).forEach(function(el){ if (el.closest('.hero') || el.closest('.header')) return; var r = el.getBoundingClientRect(); if (visible(r)) { add(r, m, el); blocks.push(el); } });
+    document.querySelectorAll(BLOCKS).forEach(function(el){ if (el.closest('.hero') || el.closest('.header')) return; var r = el.getBoundingClientRect();
+      // сховане через visibility (закрита панель асистента) – не блок: інакше його кнопки «ріжуть» проміжки
+      if (visible(r) && !(el.checkVisibility && !el.checkVisibility({ visibilityProperty: true }))) { add(r, m, el); blocks.push(el); } });
     // текст поза блоками – кожен рядок окремо (вільне місце праворуч від коротких заголовків лишається)
     document.querySelectorAll(SECTIONS).forEach(function(sec){
       var sr = sec.getBoundingClientRect(); if (!visible(sr)) return;

@@ -13,7 +13,7 @@ export function initFlow(flow) {
   const cv = flow.querySelector('canvas'); const c = cv.getContext('2d');
   const lis = [...flow.querySelectorAll('.flow-steps li')];
   let W; let H; let dpr; let horiz; let st = []; let nodes = []; let edges = []; let parts = []; let fill = 0; let queue = [];
-  let gateT = 0; let cycleT = 0; let raf = 0; let vis = false; let last = 0; let flash = 0; const timers = [];
+  let labelsX = 96; let gateT = 0; let cycleT = 0; let raf = 0; let vis = false; let last = 0; let flash = 0; const timers = [];
 
   function stationPos(li) {
     const r = li.getBoundingClientRect(); const fr = flow.getBoundingClientRect(); const b = li.querySelector('b').getBoundingClientRect();
@@ -26,6 +26,7 @@ export function initFlow(flow) {
     if (!W || !H) return;
     cv.width = W * dpr; cv.height = H * dpr; c.setTransform(dpr, 0, 0, dpr, 0, 0);
     st = lis.map(stationPos);
+    labelsX = lis[0].getBoundingClientRect().left - r.left;   // ліва межа колонки підписів (вертикальна схема)
     // мережа ШІ: 3 шари по 4 вузли навколо станції «ШІ» (вздовж потоку – шари, поперек – вузли)
     nodes = []; edges = [];
     const a = st[1];
@@ -77,6 +78,8 @@ export function initFlow(flow) {
       } else if (p.stage === 6) { // повернуто на доопрацювання – назад у мережу дугою
         const k = Math.min(1, p.t / 700); const a6 = lerp(g, pt(p.path[0]), k); const bow = Math.sin(k * Math.PI) * 34;
         p.x = a6.x + (horiz ? 0 : bow); p.y = a6.y + (horiz ? -bow : 0);
+        // вертикальна схема (телефон): дуга не залітає в колонку підписів праворуч
+        if (!horiz) p.x = Math.max(8, Math.min(labelsX - 10, p.x));
         if (k >= 1) { p.stage = 1; p.t = 0; p.path = [p.path[0], 4 + rand4(), 8 + rand4()]; p.back = true; }
       }
     }
@@ -126,7 +129,13 @@ export function initFlow(flow) {
   }
   function loop(n) { const dt = Math.min(50, n - (last || n)); last = n; step(dt); draw(); if (vis) raf = requestAnimationFrame(loop); }
   // статичний кадр: мережа частково підсвічена, результат наполовину готовий
-  function still() { edges.forEach((e, i) => { e.heat = i % 5 === 0 ? 0.8 : 0; }); fill = NEED / 2; draw(); }
+  function still() {
+    // кілька повних шляхів «вузол → вузол → вузол» крізь мережу, а не розрізнені смужки
+    const lit = [[1, 6, 9], [2, 5, 10]];
+    edges.forEach((e) => { e.heat = lit.some((p) => (p[0] === e.a && p[1] === e.b) || (p[1] === e.a && p[2] === e.b)) ? 0.85 : 0; });
+    nodes.forEach((n, i) => { n.heat = lit.some((p) => p.includes(i)) ? 0.7 : 0; });
+    fill = NEED / 2; draw();
+  }
 
   let rt = 0;
   const relayout = () => { layout(); if (reduce) still(); };

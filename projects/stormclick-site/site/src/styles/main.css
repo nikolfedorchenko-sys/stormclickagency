@@ -457,7 +457,8 @@ html.menu-open { overflow: hidden; }
 /* ---- Фоновий шторм сторінки (src/sky.js): один шар на весь екран, під усіма секціями ---- */
 .sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .sky canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
-.sky-clouds { filter: blur(4px); animation: sky-drift var(--sky-drift, 90s) ease-in-out infinite alternate; }
+.sky-clouds.css-blur { filter: blur(4px); }
+.sky-clouds { animation: sky-drift var(--sky-drift, 90s) ease-in-out infinite alternate; }
 @keyframes sky-drift { from { transform: translate3d(-10px, 0, 0); } to { transform: translate3d(10px, -6px, 0); } }
 main { position: relative; z-index: 1; }
 /* Відступи секцій – як у макеті руху (96 / 128 / 144): проміжки між секціями – це місце, куди на вузьких
@@ -465,6 +466,11 @@ main { position: relative; z-index: 1; }
 .section, .services { padding: 96px 0; }
 @media (min-width: 768px) { .section, .services { padding: 128px 0; } }
 @media (min-width: 1200px) { .section, .services { padding: 144px 0; } }
+/* Послуги на <1200: три «вікна» для фонової блискавки всередині довгого блоку – проміжок між групами болів
+   (01 → 02 → 03 → 04) 160 px: після відступів зон (2 × 14 px на телефоні, 2 × 24 px від 768) лишається смуга ≥ 108 px.
+   Між картками удару немає – лише між групами. На телефоні перед «Що болить…» теж 160 px (зона першого екрана +30 px). */
+@media (max-width: 1199px) { .pains { gap: 160px; } }
+@media (max-width: 767px) { .services { padding-top: 160px; } }
 /* Секції прозорі – під ними видно шторм; чергування – «смуги» з розтушованими краями (не ріжуть блискавку і хмари).
    Картки, форма, FAQ, плашки лишаються непрозорими поверхнями. */
 .band { background: linear-gradient(180deg, rgba(14, 16, 24, 0), var(--band-bg, rgba(14, 16, 24, .5)) var(--band-feather, 140px), var(--band-bg, rgba(14, 16, 24, .5)) calc(100% - var(--band-feather, 140px)), rgba(14, 16, 24, 0)); }
@@ -507,7 +513,7 @@ main { position: relative; z-index: 1; }
 @media (min-width: 560px) { .facts-grid { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 1100px) { .facts-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
 .fact { grid-template-rows: auto auto 1fr; gap: 8px; }
-.fact-static { grid-template-rows: none; align-content: center; }
+.fact-static { align-content: start; } /* та сама висота, що в сусідів; цифра й підпис угорі, як у них */
 .fact-live { align-self: end; margin-top: 16px; min-height: 92px; display: flex; align-items: flex-end; }
 .race { width: 100%; display: grid; gap: 12px; }
 .race-row { display: grid; grid-template-columns: 64px 1fr 58px; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); }

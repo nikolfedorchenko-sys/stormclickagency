@@ -114,7 +114,6 @@ export function initQuiz(form) {
       data.message ? `${t('quiz.comment')}: ${data.message}` : '',
     ].filter(Boolean);
     const text = lines.join('\n');
-    const delay = fly();
     if (CONFIG.apiBase) {
       // Заявка летить у Telegram-бот і на email через Worker
       submit.disabled = true;
@@ -123,12 +122,18 @@ export function initQuiz(form) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, service: label('service'), budget: label('budget'), timing: label('timing') }),
       })
-        .then((r) => { if (!r.ok) throw new Error(r.status); status.textContent = t('quiz.sent'); form.reset(); })
+        .then((r) => {
+          if (!r.ok) throw new Error(r.status);
+          // імпульс «заявка полетіла» – лише коли сервер її справді прийняв
+          const d = fly(); form.reset();
+          setTimeout(() => { status.textContent = t('quiz.sent'); }, d);
+        })
         .catch(() => { status.textContent = t('assistant.error'); })
         .finally(() => { submit.disabled = false; });
       return;
     }
     // Без Worker: відкриваємо Telegram із готовим текстом заявки
+    const delay = fly();
     window.open(`https://t.me/${CONFIG.telegram}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
     navigator.clipboard?.writeText(text).catch(() => {});
     setTimeout(() => { status.textContent = t('quiz.success'); }, delay);

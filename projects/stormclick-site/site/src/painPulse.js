@@ -21,12 +21,14 @@ function setupGroup(pain, gi) {
   const setup = () => { wire.className = `wire ${vertical() ? 'v' : 'h'}`; };
   function run() {
     if (!vis) return;
+    lit.forEach(clearTimeout); lit.length = 0;   // таймери попереднього проходу вже відпрацювали – не накопичуємо
     setup();
     const v = vertical(); const gr = grid.getBoundingClientRect(); const dur = v ? 1700 : 1300;
     const from = v ? -8 : -6; const to = v ? gr.height : gr.width + 6;
+    // іскра – дочірній елемент дроту: рухається по самому дроту (у макеті був зайвий зсув -12 px, і іскра йшла над ним)
     spark.animate(v
       ? [{ transform: `translate(0,${from}px)`, opacity: 0 }, { opacity: 1, offset: 0.06 }, { opacity: 1, offset: 0.94 }, { transform: `translate(0,${to}px)`, opacity: 0 }]
-      : [{ transform: `translate(${from}px,-12px)`, opacity: 0 }, { opacity: 1, offset: 0.06 }, { opacity: 1, offset: 0.94 }, { transform: `translate(${to}px,-12px)`, opacity: 0 }],
+      : [{ transform: `translate(${from}px,0)`, opacity: 0 }, { opacity: 1, offset: 0.06 }, { opacity: 1, offset: 0.94 }, { transform: `translate(${to}px,0)`, opacity: 0 }],
     { duration: dur, easing: 'cubic-bezier(.45,0,.55,1)' });
     // картка «вмикається», коли імпульс доходить до неї (2 колонки – по лівому краю, тобто по рядках зліва направо)
     cards.forEach((c) => {

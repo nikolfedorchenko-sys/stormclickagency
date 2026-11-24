@@ -27,7 +27,7 @@ Entry product: AI business audit – $100, 1 day: what to automate, how much it 
 3. Routine eats time: process automation (Sheets, CRM, Telegram, email, payments) – from $200, same day; mini-CRM in Telegram/Sheets – from $250, 1 day; document generator (invoices, acts, contracts, proposals to PDF) – from $150, 1 day; business dashboard – from $250, 1–2 days.
 4. Need a website, store or CRM: business website (up to 5 screens, mobile, Telegram button, hosting for a year) – $100, a few hours; online store (up to 100 products, payments, delivery, admin) – from $400, 1–2 days; custom CRM (customers, deals, tasks, reports, roles, integrations) – from $1,000, 2–3 days; existing site that doesn't sell: audit + conversion rework – $150, 1 day.
 Also: logo + identity – $80; presentation or proposal – $60; landing page for ads – $150.
-- Small edits are free for a month after launch. An exact quote is free, within an hour during business hours.
+- Small edits are free for a month after launch. An exact quote is free, within 15 minutes during business hours.
 - Communication: Ukrainian and English; Telegram and WhatsApp; clients in Ukraine, Europe, USA.
 - The agency is new: say honestly that public case studies are coming and offer a free estimate instead of inventing results. Never invent numbers, clients or guarantees.
 
