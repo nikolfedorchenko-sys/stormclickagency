@@ -88,7 +88,7 @@ ul { list-style: none; }
 html.menu-open { overflow: hidden; }
 
 /* Перший екран */
-.hero { position: relative; z-index: 1; min-height: 100svh; display: flex; flex-direction: column; isolation: isolate; overflow: hidden; background: var(--c-bg); color: var(--c-text); font: 400 var(--fs-body)/var(--lh-body) var(--f-body); }
+.hero { position: relative; z-index: 2; min-height: 100svh; display: flex; flex-direction: column; isolation: isolate; overflow: hidden; background: var(--c-bg); color: var(--c-text); font: 400 var(--fs-body)/var(--lh-body) var(--f-body); }
 /* Сцена шторму: хмари (статичний canvas) + блискавка (canvas, малюється лише під час удару) */
 .storm { position: absolute; z-index: -1; pointer-events: none; inset: 0; overflow: hidden; }
 .storm canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -195,8 +195,8 @@ html.menu-open { overflow: hidden; }
 }
 
 /* Секції */
-.section { position: relative; z-index: 1; padding: clamp(80px, 11vw, 140px) 0; background: var(--bg); }
-.services { position: relative; z-index: 1; background: var(--bg); padding: clamp(80px, 11vw, 140px) 0; }
+.section { position: relative; z-index: 1; padding: clamp(80px, 11vw, 140px) 0; background: transparent; }
+.services { position: relative; z-index: 1; background: transparent; padding: clamp(80px, 11vw, 140px) 0; }
 .services-head { margin-bottom: 40px; }
 /* Вхідний продукт */
 .entry-card { display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: center; padding: 28px 32px; border-radius: var(--radius); border: 1px solid #3a3f6e; background: linear-gradient(120deg, #1a1c33, #12131b); margin-bottom: 56px; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.25s ease-out; }
@@ -240,7 +240,6 @@ html.menu-open { overflow: hidden; }
 .card-link:hover { background: var(--surface-2); }
 
 /* ШІ-блок */
-.ai { background: var(--bg-2); }
 .ai-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .ai-card { position: relative; padding: 28px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.25s ease-out, border-color 0.3s; }
 .ai-card:hover { border-color: rgba(160, 170, 255, 0.4); }
@@ -307,7 +306,6 @@ html.menu-open { overflow: hidden; }
 .chart-tip { position: absolute; transform: translate(-50%, -140%); padding: 6px 10px; border-radius: 8px; background: #161a2c; border: 1px solid var(--line); font-size: 12px; white-space: nowrap; pointer-events: none; }
 
 /* Факти */
-.facts { background: var(--bg-2); }
 .facts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 48px; }
 .fact { padding: 28px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); display: grid; gap: 10px; min-width: 0; }
 .fact-num { font: 600 clamp(1.8rem, 4vw, 3.2rem)/1 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: -0.03em; color: #fff; overflow-wrap: anywhere; }
@@ -342,7 +340,7 @@ html.menu-open { overflow: hidden; }
 .bars-plot i:nth-child(2) { transition-delay: 0.08s; } .bars-plot i:nth-child(3) { transition-delay: 0.16s; } .bars-plot i:nth-child(4) { transition-delay: 0.24s; } .bars-plot i:nth-child(5) { transition-delay: 0.32s; } .bars-plot i:nth-child(6) { transition-delay: 0.4s; } .bars-plot i:nth-child(7) { transition-delay: 0.48s; }
 
 /* Інструменти */
-.tech { position: relative; z-index: 1; padding: 40px 0 64px; background: var(--bg); overflow: hidden; }
+.tech { position: relative; z-index: 1; padding: 40px 0 64px; background: transparent; overflow: hidden; }
 .tech .eyebrow { margin-bottom: 28px; }
 .marquee { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
 .marquee-track { display: flex; gap: 48px; width: max-content; animation: marquee 40s linear infinite; }
@@ -350,7 +348,6 @@ html.menu-open { overflow: hidden; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* Відгуки */
-.reviews { background: var(--bg-2); }
 .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .review { padding: 28px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); display: grid; gap: 18px; align-content: space-between; }
 .review p { font-size: 1.02rem; line-height: 1.55; }
@@ -371,13 +368,23 @@ html.menu-open { overflow: hidden; }
 .messengers { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .contact-email { margin-top: 20px; color: var(--muted); font-size: 14px; }
 .contact-email a { color: var(--text); }
-.quiz { padding: 32px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); display: grid; gap: 24px; }
+.quiz { position: relative; padding: 32px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); display: grid; gap: 24px; }
 .quiz.shake { animation: shake 0.4s; }
 @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 .quiz-progress { display: grid; gap: 10px; }
 .quiz-step { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-.quiz-bar { height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
-.quiz-bar i { display: block; height: 100%; width: 25%; background: var(--blue); transition: width 0.4s; }
+/* «Заряд» кроків: смуга прогресу з іскрою на кінці (мерехтить лише поки форма видима – клас .go з quiz.js) */
+.quiz-bar { position: relative; height: 4px; background: var(--c-line); border-radius: 2px; }
+.quiz-bar i { position: relative; display: block; height: 100%; width: 25%; border-radius: 2px; background: var(--c-accent); transition: width 0.6s var(--ease-out); }
+.quiz-bar i::after { content: ""; position: absolute; right: -4px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(154, 163, 255, .95), 0 0 14px 4px rgba(124, 136, 255, .6); }
+.quiz.go .quiz-bar i::after { animation: flicker 1.6s infinite; }
+@keyframes flicker { 0%, 100% { opacity: 1; } 45% { opacity: .55; } 50% { opacity: 1; } 70% { opacity: .75; } }
+/* Імпульс по рамці форми при відправці (quiz.js) */
+.quiz-trace { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); pointer-events: none; overflow: visible; z-index: 2; }
+.quiz-trace rect { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 0 6px rgba(124, 136, 255, .95)) drop-shadow(0 0 14px rgba(124, 136, 255, .6)); opacity: 0; }
+.quiz-submit svg { width: 11px; height: 15px; fill: currentColor; margin-right: 8px; flex: none; }
+.quiz-submit.zap svg { animation: zap .5s steps(2) 2; }
+@keyframes zap { 50% { filter: drop-shadow(0 0 6px #7C88FF); } }
 .quiz-pane { border: 0; display: grid; gap: 14px; }
 .quiz-pane[hidden] { display: none; }
 .quiz-pane legend { font: 600 1.3rem/1.25 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: -0.02em; margin-bottom: 16px; }
@@ -441,4 +448,133 @@ html.menu-open { overflow: hidden; }
   .assistant-toggle { padding: 0 14px; width: 52px; justify-content: center; }
   .assistant-panel { right: -4px; bottom: 62px; height: min(520px, calc(100vh - 160px)); }
   .footer { padding-bottom: 96px; }
+}
+
+/* =====================================================================
+   Рух на всьому сайті – за design/motion-concepts.html і design-brief.md, «Рух на всьому сайті».
+   ===================================================================== */
+
+/* ---- Фоновий шторм сторінки (src/sky.js): один шар на весь екран, під усіма секціями ---- */
+.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.sky canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+.sky-clouds.css-blur { filter: blur(4px); }
+.sky-clouds { animation: sky-drift var(--sky-drift, 90s) ease-in-out infinite alternate; }
+@keyframes sky-drift { from { transform: translate3d(-10px, 0, 0); } to { transform: translate3d(10px, -6px, 0); } }
+main { position: relative; z-index: 1; }
+/* Відступи секцій – як у макеті руху (96 / 128 / 144): проміжки між секціями – це місце, куди на вузьких
+   екранах б'є фонова блискавка (смуга ≥ 108 px без тексту і блоків; на 768–1199 ≥ 170 px – для крутіших ударів) */
+.section, .services { padding: 96px 0; }
+@media (min-width: 768px) { .section, .services { padding: 128px 0; } }
+@media (min-width: 1200px) { .section, .services { padding: 144px 0; } }
+/* Послуги на <1200: три «вікна» для фонової блискавки всередині довгого блоку – проміжок між групами болів
+   (01 → 02 → 03 → 04) 160 px: після відступів зон (2 × 14 px на телефоні, 2 × 24 px від 768) лишається смуга ≥ 108 px.
+   Між картками удару немає – лише між групами. На телефоні перед «Що болить…» теж 160 px (зона першого екрана +30 px). */
+@media (max-width: 1199px) { .pains { gap: 160px; } }
+@media (max-width: 767px) { .services { padding-top: 160px; } }
+/* Секції прозорі – під ними видно шторм; чергування – «смуги» з розтушованими краями (не ріжуть блискавку і хмари).
+   Картки, форма, FAQ, плашки лишаються непрозорими поверхнями. */
+.band { background: linear-gradient(180deg, rgba(14, 16, 24, 0), var(--band-bg, rgba(14, 16, 24, .5)) var(--band-feather, 140px), var(--band-bg, rgba(14, 16, 24, .5)) calc(100% - var(--band-feather, 140px)), rgba(14, 16, 24, 0)); }
+.faq-list { background: var(--bg); }
+
+/* ---- Послуги: імпульс «біль → рішення» (src/painPulse.js) ---- */
+.pain-grid { position: relative; }
+.wire { position: absolute; pointer-events: none; background: linear-gradient(90deg, rgba(124, 136, 255, 0), rgba(124, 136, 255, .35) 6%, rgba(124, 136, 255, .35) 94%, rgba(124, 136, 255, 0)); }
+.wire.h { height: 1px; left: 0; right: 0; top: -12px; }
+.wire.v { width: 1px; top: -8px; bottom: 0; left: -9px; background: linear-gradient(180deg, rgba(124, 136, 255, .35), rgba(124, 136, 255, .35) 90%, rgba(124, 136, 255, 0)); }
+.spark { position: absolute; left: 0; top: 0; width: 8px; height: 8px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(154, 163, 255, .95), 0 0 18px 6px rgba(124, 136, 255, .55); opacity: 0; pointer-events: none; }
+.spark::after { content: ""; position: absolute; top: 3px; right: 6px; width: 64px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(124, 136, 255, 0), rgba(200, 206, 255, .9)); }
+.wire.v .spark::after { top: auto; bottom: 6px; right: 3px; width: 2px; height: 56px; background: linear-gradient(180deg, rgba(124, 136, 255, 0), rgba(200, 206, 255, .9)); }
+.card::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--c-accent-hi), transparent); opacity: 0; transition: opacity .9s; pointer-events: none; }
+.card .card-price { transition: color .35s; }
+.card.lit { border-color: rgba(124, 136, 255, .55); transition: transform 0.25s ease-out, border-color .12s; }
+.card.lit::after { opacity: 1; transition: opacity .12s; }
+.card.lit .card-price { color: var(--c-accent-hi); transition: color .12s; }
+
+/* ---- «Чому так дешево»: конвеєр «Задача → ШІ → Людина → Результат» (src/flow.js) ---- */
+.flow { position: relative; margin-bottom: 40px; padding: var(--s-5) var(--s-4) var(--s-4) 96px; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); }
+.flow canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.flow-steps { position: relative; list-style: none; display: grid; gap: 0; }
+.flow-steps li { min-height: 118px; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 6px; }
+.flow-steps li:last-child { min-height: 84px; }
+.flow-steps b { font: 600 17px/1.3 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: -.02em; display: block; }
+.flow-steps span { color: var(--muted); font-size: 14px; line-height: 1.45; display: block; margin-top: 4px; max-width: 28ch; }
+.flow-steps .st-done b { transition: color .3s, text-shadow .3s; }
+.flow.done-flash .st-done b { color: #fff; text-shadow: 0 0 14px rgba(154, 163, 255, .9); }
+@media (min-width: 900px) {
+  .flow { padding: 212px var(--s-6) var(--s-6); }
+  .flow-steps { grid-template-columns: repeat(4, 1fr); column-gap: var(--s-5); }
+  .flow-steps li, .flow-steps li:last-child { min-height: 0; align-items: center; text-align: center; padding-top: 0; }
+  .flow-steps span { margin-left: auto; margin-right: auto; }
+}
+
+/* ---- Факти: живі лічильники (src/factsLive.js). На <560 px – один стовпець: картка з живим елементом
+   у 2 стовпці завузька. «$100» – статична, тієї ж висоти, що й сусідні; цифра й підпис по центру. ---- */
+.facts-grid { grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 560px) { .facts-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .facts-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+.fact { grid-template-rows: auto auto 1fr; gap: 8px; }
+.fact-static { align-content: start; } /* та сама висота, що в сусідів; цифра й підпис угорі, як у них */
+.fact-live { align-self: end; margin-top: 16px; min-height: 92px; display: flex; align-items: flex-end; }
+.race { width: 100%; display: grid; gap: 12px; }
+.race-row { display: grid; grid-template-columns: 64px 1fr 58px; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); }
+.race-row em { font-style: normal; }
+.race-row b { font-weight: 600; text-align: right; white-space: nowrap; }
+.race-us b { color: var(--text); }
+.race-bar { position: relative; height: 6px; border-radius: 3px; background: var(--c-surface-2); }
+.race-bar::after { content: ""; position: absolute; right: 0; top: -5px; bottom: -5px; width: 2px; border-radius: 1px; background: #4A4E68; } /* фініш – готовий сайт */
+.race-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 3px; }
+.race-us i { width: 100%; background: var(--c-accent); box-shadow: 0 0 10px rgba(124, 136, 255, .8); }
+.race-them i { width: 9%; background: #6A6F8C; }
+.race.go .race-us i { animation: race-us var(--race-cycle, 7s) cubic-bezier(.3, 0, .2, 1) infinite; }
+.race.go .race-them i { animation: race-them var(--race-cycle, 7s) linear infinite; }
+.race.go .race-us b { animation: race-lbl var(--race-cycle, 7s) infinite; }
+@keyframes race-us { 0% { width: 0; } 16% { width: 100%; filter: brightness(1.8); } 24%, 92% { width: 100%; filter: none; } 100% { width: 100%; opacity: .2; } }
+@keyframes race-them { 0% { width: 0; } 16% { width: 6%; } 92% { width: 9%; } 100% { width: 9%; opacity: .2; } }
+@keyframes race-lbl { 0%, 12% { opacity: .35; } 18%, 92% { opacity: 1; } 100% { opacity: .35; } }
+.dial, .timer { display: flex; align-items: center; gap: 16px; }
+.dial svg, .timer svg { width: 92px; height: 92px; flex: none; overflow: visible; }
+.dial .cap, .timer .cap { font-size: 14px; color: var(--muted); line-height: 1.45; }
+.dial .hand { transform-origin: 46px 46px; }
+.dial.go .hand { animation: dial-spin var(--dial-turn, 10s) linear infinite; }
+@keyframes dial-spin { to { transform: rotate(360deg); } }
+.timer .arc { fill: none; stroke: var(--c-accent); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 226; stroke-dashoffset: 0; transform: rotate(-90deg); transform-origin: 46px 46px; } /* поза екраном – кінцевий стан */
+.timer .ok { opacity: 1; transform-origin: 46px 46px; }
+.timer.go .arc { animation: timer-arc var(--timer-cycle, 5s) cubic-bezier(.4, 0, .2, 1) infinite; }
+.timer.go .ok { animation: timer-ok var(--timer-cycle, 5s) ease-out infinite; }
+@keyframes timer-arc { 0% { stroke-dashoffset: 226; } 46% { stroke-dashoffset: 0; } 88% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes timer-ok { 0%, 44% { opacity: 0; transform: scale(.6); } 52% { opacity: 1; transform: scale(1.12); } 58%, 88% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
+
+/* ---- Кейси: мінісцени (src/casesLive.js) ---- */
+.case-visual[data-live="chat"] { overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent, #000 44px); mask-image: linear-gradient(180deg, transparent, #000 44px); }
+@media (max-width: 559px) { .case-visual[data-live="chat"] { height: 280px; } }
+.case-visual .bubble { flex: none; }
+.case-visual.is-live .bubble:not(.show) { display: none; }
+.case-visual.is-live .bubble.show { animation: bub .35s var(--ease-out); }
+@keyframes bub { from { opacity: 0; transform: translateY(8px); } }
+.typing { flex: none; align-self: flex-end; display: none; gap: 4px; padding: 10px 12px; border-radius: 14px; background: #1c1e33; border: 1px solid #2d3050; }
+.typing.show { display: flex; }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--c-accent-hi); }
+.typing.show i { animation: blink 1s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; }
+.typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes blink { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.browser-page { position: relative; }
+.mock-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.mock-btn { transition: transform .15s; }
+.mock-btn.press { transform: scale(.94); }
+.lead-chip { font-size: 14px; font-weight: 600; color: var(--c-live); background: rgba(92, 227, 154, .1); border: 1px solid rgba(92, 227, 154, .3); border-radius: var(--r-pill); padding: 3px 10px; opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s; }
+.lead-chip.show { opacity: 1; transform: none; }
+@media (max-width: 559px) { .mock-row { flex-direction: column; align-items: flex-start; gap: 8px; } } /* «+ заявка» – під кнопкою */
+.cursor { position: absolute; left: 78%; top: 88%; width: 14px; height: 20px; opacity: 0; pointer-events: none; transition: left .9s cubic-bezier(.4, 0, .2, 1), top .9s cubic-bezier(.4, 0, .2, 1), opacity .3s; }
+.cursor svg { width: 14px; height: 20px; fill: #fff; stroke: #05060B; stroke-width: 1.2; }
+
+/* Мінісцени кейсів – текст 14 px, як у макеті руху (висота чату 240 / 280 px розрахована під нього) */
+.case-visual .bubble { font-size: 14px; }
+.case-visual .mock-btn { font-size: 14px; }
+
+/* ---- Без руху: статичний кадр, що пояснює те саме (і для ::before / ::after) ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .race .race-us i { width: 100%; } .race .race-them i { width: 9%; }
+  .timer .arc { stroke-dashoffset: 0; } .timer .ok { opacity: 1; }
 }

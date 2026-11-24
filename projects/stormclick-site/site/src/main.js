@@ -10,6 +10,11 @@ import Lenis from 'lenis';
 import { CONFIG } from './config.js';
 import { initI18n, onLangChange } from './i18n.js';
 import { initStorm } from './storm.js';
+import { initSky } from './sky.js';
+import { initPainPulse } from './painPulse.js';
+import { initFlow } from './flow.js';
+import { initFactsLive } from './factsLive.js';
+import { initCasesLive } from './casesLive.js';
 import { initProof } from './proof.js';
 import { initCursor } from './cursor.js';
 import { initFunnel } from './funnel.js';
@@ -137,6 +142,8 @@ async function boot() {
   // Сцена шторму стартує сама після load + шрифтів; при зміні мови – перерахунок заборонених зон
   const storm = initStorm(document.getElementById('hero'));
   onLangChange(() => requestAnimationFrame(storm.relayout));
+  // Фоновий шторм сторінки: зони рахуються в момент удару, тож при зміні мови нічого перераховувати не треба
+  const sky = initSky();
   initLinks();
   initMenu();
   initHeroState();
@@ -151,6 +158,7 @@ async function boot() {
     document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
   } else {
     initSmoothScroll();
+    sky.setLenis(lenis);   // зсув удару під час прокрутки – з реальної прокрутки Lenis
     initReveals();
     initTilt();
   }
@@ -159,7 +167,11 @@ async function boot() {
   initTilt();
   initFunnel(document.querySelector('.funnel'), { reducedMotion });
   initChart(document.querySelector('.chart'));
+  initPainPulse();       // до initServices: картки рендеряться там і повідомляють подією services:rendered
   initServices();
+  initFlow(document.querySelector('[data-flow]'));
+  initFactsLive(document.getElementById('facts'));
+  initCasesLive();
   initQuiz(document.getElementById('quiz'));
 
   ScrollTrigger.refresh();

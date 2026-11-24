@@ -1,3 +1,5 @@
+import { StormBus } from './sky.js';
+
 // Сцена шторму першого екрана: процедурні хмари + блискавка на canvas, без бібліотек.
 // Перенесено з design/mockup.html (див. design/design-brief.md, «Сцена шторму»).
 // ?strike – застиглий кадр удару (фіксований seed), ?strike=N – інший варіант (на 360: N mod 3 = A/B/C),
@@ -475,18 +477,20 @@ export function initStorm(hero) {
     var t = now - cur.t0, lv = levels(t, cur.pl);
     frame(lv.bolt, lv.sky, lv.reveal, cur.b);
     if (t < cur.pl.end) raf = requestAnimationFrame(tick);
-    else { raf = 0; frame(0, 0, 1, null); cur = null; schedule(P.gapMin + rndLive() * (P.gapMax - P.gapMin)); }
+    else { raf = 0; frame(0, 0, 1, null); cur = null; StormBus.release('hero'); schedule(P.gapMin + rndLive() * (P.gapMax - P.gapMin)); }
   }
   function fire(){
     timer = 0;
+    // одна блискавка на екран: герой і фоновий шторм сторінки (sky.js) не б'ють одночасно і не підряд
+    if (!StormBus.claim('hero')) { schedule(1200); return; }
     // тип траєкторії – щоразу інший, ніж минулого разу
     var opts = TYPES.filter(function(t){ return t !== lastType; }); lastType = opts[Math.floor(rndLive() * opts.length)];
-    var b = strike(rndLive, null, lastType); if (!b) { schedule(P.gapMin); return; }
+    var b = strike(rndLive, null, lastType); if (!b) { StormBus.release('hero'); schedule(P.gapMin); return; }
     cur = { b: b, pl: plan(rndLive), t0: performance.now() };
     raf = requestAnimationFrame(function(n){ cur.t0 = n; tick(n); });
   }
   function schedule(ms){ clearTimeout(timer); if (running()) timer = setTimeout(fire, ms); }
-  function stop(){ clearTimeout(timer); timer = 0; if (raf) cancelAnimationFrame(raf); raf = 0; cur = null; frame(0, 0, 1, null); }
+  function stop(){ clearTimeout(timer); timer = 0; if (raf) cancelAnimationFrame(raf); raf = 0; if (cur) StormBus.release('hero'); cur = null; frame(0, 0, 1, null); }
   var inView = true;
   function running(){ return started && MODE === 'live' && !reduceMQ.matches && !document.hidden && inView; }
 

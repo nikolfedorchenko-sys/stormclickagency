@@ -12,7 +12,32 @@ export function initQuiz(form) {
   const status = form.querySelector('.quiz-status');
   const bar = form.querySelector('.quiz-bar i');
   const current = form.querySelector('.quiz-current');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let step = 0;
+
+  // «Заряд» кроків: іскра на кінці смуги прогресу мерехтить, лише поки форма видима
+  if (!reduce && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => form.classList.toggle('go', e.isIntersecting), { threshold: 0.1 }).observe(form);
+  }
+  // Імпульс при відправці: блискавка на кнопці спалахує, яскравий імпульс біжить рамкою форми від кнопки
+  // вгору до правого верхнього кута (~1,15 с) – «заявка полетіла до команди». Поверх полів не йде.
+  const trace = form.querySelector('.quiz-trace');
+  const traceRect = trace && trace.querySelector('rect');
+  function fly() {
+    if (reduce || !traceRect || !traceRect.animate) return 0;
+    const r = form.getBoundingClientRect(); const w = r.width; const h = r.height;
+    trace.setAttribute('viewBox', `0 0 ${w + 2} ${h + 2}`);
+    traceRect.setAttribute('width', w); traceRect.setAttribute('height', h);
+    const per = traceRect.getTotalLength(); const dash = 150; const arc = Math.PI * 14 / 2;
+    // контур rect іде за годинниковою стрілкою від верхнього лівого кута; кнопка – праворуч унизу.
+    // Імпульс рухається назад по контуру: від правого нижнього кута вгору правою стороною до верхнього правого кута.
+    const p1 = (w - 28) + arc + (h - 28) + arc * 0.6; const p0 = (w - 28) - 40;
+    traceRect.style.strokeDasharray = `${dash} ${per}`;
+    submit.classList.remove('zap'); void submit.offsetWidth; submit.classList.add('zap');
+    traceRect.animate([{ strokeDashoffset: -(p1 - dash * 0.2), opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.75 }, { strokeDashoffset: -(p0 - dash), opacity: 0 }],
+      { duration: 1150, easing: 'cubic-bezier(.35,0,.25,1)', fill: 'forwards' });
+    return 650;   // статус – коли імпульс уже «долетів» до верху
+  }
 
   // Варіанти першого кроку: вхідний продукт + болі (деталізацію уточнить команда)
   const choices = form.querySelector('.choices-service');
@@ -97,15 +122,21 @@ export function initQuiz(form) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, service: label('service'), budget: label('budget'), timing: label('timing') }),
       })
-        .then((r) => { if (!r.ok) throw new Error(r.status); status.textContent = t('quiz.sent'); form.reset(); })
+        .then((r) => {
+          if (!r.ok) throw new Error(r.status);
+          // імпульс «заявка полетіла» – лише коли сервер її справді прийняв
+          const d = fly(); form.reset();
+          setTimeout(() => { status.textContent = t('quiz.sent'); }, d);
+        })
         .catch(() => { status.textContent = t('assistant.error'); })
         .finally(() => { submit.disabled = false; });
       return;
     }
     // Без Worker: відкриваємо Telegram із готовим текстом заявки
+    const delay = fly();
     window.open(`https://t.me/${CONFIG.telegram}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
     navigator.clipboard?.writeText(text).catch(() => {});
-    status.textContent = t('quiz.success');
+    setTimeout(() => { status.textContent = t('quiz.success'); }, delay);
   });
 
   show();

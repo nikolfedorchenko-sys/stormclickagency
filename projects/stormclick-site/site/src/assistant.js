@@ -5,7 +5,7 @@ import { t, getLang, onLangChange } from './i18n.js';
 // без нього – демо-режим зі сценарними відповідями, щоб показати механіку.
 const DEMO = {
   uk: [
-    [/@|\+?\d{9,}/, 'Дякую! Записав контакт. Команда надішле точний розрахунок протягом години в робочий час.'],
+    [/@|\+?\d{9,}/, 'Дякую! Записав контакт. Команда надішле точний розрахунок протягом 15 хвилин у робочий час.'],
     [/аудит/i, 'ШІ-аудит – $100 і один день: розбираємо ваш бізнес, кажемо, що автоматизувати першим, скільки це заощадить і з чого почати. Ці $100 зараховуємо в будь-який наступний проєкт. Який у вас бізнес?'],
     [/crm|срм|црм/i, 'CRM під ваш бізнес – від $1 000, готова за 2–3 дні: клієнти, угоди, задачі, звіти, ролі, інтеграція з сайтом і ботом. Якщо заявок небагато, міні-CRM у Telegram або Sheets – від $250 за день. Скільки людей працюватиме в системі?'],
     [/не встига|відповіда|повідомлен|дзвін|пропущ/i, 'Це наш головний профіль. ШІ-асистент у Telegram, Instagram і на сайті відповідає клієнтам 24/7 – від $300 за день. Пропущені дзвінки закриває ШІ-секретар – від $400 за 2 дні. Клієнти не приходять – бот запису з нагадуваннями, від $150 за годину. Що болить найбільше?'],
@@ -16,10 +16,10 @@ const DEMO = {
     [/кав|салон|візитівк|сайт|лендинг/i, 'Сайт для бізнесу – $100, готовий за кілька годин: до 5 екранів, мобільна версія, кнопка в Telegram, хостинг на рік. Якщо сайт уже є, але не продає – аудит і переробка за $150. Лишите контакт для розрахунку?'],
     [/бот|telegram|запис/i, 'Бот запису з нагадуваннями – від $150, готовий за годину. ШІ-асистент, що сам відповідає клієнтам – від $300 за день. Що з цього ближче?'],
     [/реклам|таргет|трафік/i, 'Запуск Meta або Google Ads – $150 плюс бюджет, старт того ж дня. ШІ готує креативи, ми масштабуємо ті, що дають заявки. Який продукт рекламуємо?'],
-    [/ціна|кошту|бюджет|скільки|дешев/i, 'Найдешевший старт – ШІ-аудит за $100. Сайт – $100, бот – від $150, ШІ-асистент – від $300, магазин – від $400, CRM – від $1 000. Усе залежить від ТЗ, точну ціну назвемо за годину. Що саме болить?'],
+    [/ціна|кошту|бюджет|скільки|дешев/i, 'Найдешевший старт – ШІ-аудит за $100. Сайт – $100, бот – від $150, ШІ-асистент – від $300, магазин – від $400, CRM – від $1 000. Усе залежить від ТЗ, точну ціну назвемо протягом 15 хвилин у робочий час. Що саме болить?'],
   ],
   en: [
-    [/@|\+?\d{9,}/, 'Thank you! Contact saved. The team will send an exact quote within an hour during business hours.'],
+    [/@|\+?\d{9,}/, 'Thank you! Contact saved. The team will send an exact quote within 15 minutes during business hours.'],
     [/audit/i, 'The AI audit is $100 and one day: we map your business, say what to automate first, how much it saves and where to start. The $100 counts towards any next project. What is your business?'],
     [/crm/i, 'A custom CRM is from $1,000, ready in 2–3 days: customers, deals, tasks, reports, roles, integrated with your site and bot. For fewer leads, a mini-CRM in Telegram or Sheets is from $250 in a day. How many people will use it?'],
     [/keep up|messag|reply|call|missed|no-show/i, 'That is our core. An AI assistant in Telegram, Instagram and on your site answers customers 24/7 from $300 in a day. Missed calls go to an AI receptionist from $400 in 2 days. No-shows: a booking bot with reminders from $150 in an hour. What hurts the most?'],
@@ -30,7 +30,7 @@ const DEMO = {
     [/coffee|salon|site|landing|website/i, 'A business website is $100, ready in a few hours: up to 5 screens, mobile, Telegram button, hosting for a year. If you already have a site that doesn\'t sell, an audit and rework is $150. Leave a contact for the quote?'],
     [/bot|telegram|book/i, 'A booking bot with reminders is from $150, ready in an hour. An AI assistant that answers customers itself is from $300 in a day. Which is closer?'],
     [/ads|target|traffic/i, 'A Meta or Google Ads launch is $150 plus budget, live the same day. AI drafts creatives, we scale the ones that bring leads. What are we promoting?'],
-    [/price|cost|budget|how much|cheap/i, 'The cheapest start is the $100 AI audit. Website $100, bot from $150, AI assistant from $300, store from $400, CRM from $1,000. It all depends on the brief; exact price within an hour. What hurts?'],
+    [/price|cost|budget|how much|cheap/i, 'The cheapest start is the $100 AI audit. Website $100, bot from $150, AI assistant from $300, store from $400, CRM from $1,000. It all depends on the brief; exact price within 15 minutes during business hours. What hurts?'],
   ],
 };
 
