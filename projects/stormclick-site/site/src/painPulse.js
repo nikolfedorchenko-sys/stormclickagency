@@ -5,7 +5,8 @@
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let groups = [];
 
-function setupGroup(pain, gi) {
+function setupGroup(pain, i) {
+  const gi = i % 3;   // зсув фази: сусідні групи розсинхронізовані, а остання з шести не чекає старту 3 с
   const grid = pain.querySelector('.pain-grid');
   const cards = [...grid.querySelectorAll('.card')];
   if (!cards.length) return null;

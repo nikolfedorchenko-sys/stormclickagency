@@ -1,7 +1,10 @@
 import { PAINS, ENTRY, EXTRAS } from './pricing.js';
 import { getLang, onLangChange } from './i18n.js';
 
-// Рендерить вхідний продукт, чотири болі з послугами і рядок «також»
+// Рендерить вхідний продукт, болі з послугами (з pricing.js) і рядок «також».
+// Група з 5–6 і 9 карток стає в 3 колонки (без «сиріт»), решта – у 4.
+const cols3 = (n) => n > 4 && n % 4 !== 0 && n % 3 === 0;
+
 export function initServices() {
   const entry = document.getElementById('entry');
   const pains = document.getElementById('pains');
@@ -26,10 +29,10 @@ export function initServices() {
     pains.innerHTML = PAINS.map((p, i) => `
       <section class="pain">
         <header class="pain-head">
-          <span class="pain-num">0${i + 1}</span>
+          <span class="pain-num">${String(i + 1).padStart(2, '0')}</span>
           <div><h3>${p[lang].pain}</h3><p>${p[lang].hint}</p></div>
         </header>
-        <div class="pain-grid">
+        <div class="pain-grid${cols3(p.items.length) ? ' cols-3' : ''}">
           ${p.items.map((it) => {
             const [t, d, pr, tm] = it[lang];
             return `<article class="card" data-tilt>

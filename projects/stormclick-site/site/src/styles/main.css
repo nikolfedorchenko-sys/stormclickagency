@@ -211,6 +211,9 @@ html.menu-open { overflow: hidden; }
 .pain-head h3 { font: 600 clamp(1.3rem, 2.2vw, 1.75rem)/1.2 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: -0.025em; }
 .pain-head p { color: var(--muted); margin-top: 6px; }
 .pain-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+/* Група з 6 карток: 3 колонки × 2 ряди, без «сиріт». Нижче 1000 px усі групи – 2 колонки, нижче 720 – одна */
+.pain-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.pain-grid.cols-3 .card { min-height: 210px; }
 .extras { margin-top: 40px; color: var(--muted); font-size: 14px; }
 
 /* Картки послуг */
@@ -227,7 +230,9 @@ html.menu-open { overflow: hidden; }
 .card > * { position: relative; }
 .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .card-num { color: var(--blue); font: 500 13px var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: 0.1em; }
-.card-time { font-size: 12px; font-weight: 600; color: var(--green); background: rgba(92, 227, 154, 0.1); border: 1px solid rgba(92, 227, 154, 0.25); border-radius: 999px; padding: 4px 10px; }
+.card-time { font-size: 12px; font-weight: 600; color: var(--green); background: rgba(92, 227, 154, 0.1); border: 1px solid rgba(92, 227, 154, 0.25); border-radius: 13px; padding: 4px 10px; line-height: 1.35; }
+/* 13 px = повна «пігулка» для одного рядка; довгий термін («2–3 тижні + перевірка в магазинах») у вузькій картці
+   переноситься на другий рядок і лишається охайною плашкою */
 .card-foot { margin-top: 18px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .card-price { font: 600 1.35rem/1 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: -0.02em; color: #fff; }
 .card-icon { width: 40px; height: 40px; margin-bottom: 20px; display: grid; place-items: center; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
@@ -389,7 +394,7 @@ html.menu-open { overflow: hidden; }
 .quiz-pane[hidden] { display: none; }
 .quiz-pane legend { font: 600 1.3rem/1.25 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: -0.02em; margin-bottom: 16px; }
 .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.choices label { position: relative; display: block; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.02); cursor: pointer; font-size: 14px; transition: border-color 0.2s, background 0.2s; }
+.choices label { position: relative; display: flex; align-items: center; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.02); cursor: pointer; font-size: 14px; transition: border-color 0.2s, background 0.2s; }
 .choices input { position: absolute; opacity: 0; }
 .choices label:hover { border-color: rgba(160, 170, 255, 0.4); }
 .choices label:has(input:checked) { border-color: #8ea2ff; background: rgba(77, 107, 255, 0.14); }
@@ -426,7 +431,7 @@ html.menu-open { overflow: hidden; }
   .traffic-viz { grid-template-columns: 1fr; }
   .facts-grid { grid-template-columns: repeat(2, 1fr); }
   .cases-grid, .reviews-grid { grid-template-columns: 1fr; }
-  .pain-grid { grid-template-columns: 1fr 1fr; }
+  .pain-grid, .pain-grid.cols-3 { grid-template-columns: 1fr 1fr; }
   .entry-card { grid-template-columns: 1fr; }
   .entry-side { justify-items: start; text-align: left; }
   .ai-grid { grid-template-columns: 1fr 1fr; }
@@ -440,7 +445,7 @@ html.menu-open { overflow: hidden; }
   .counters { gap: 24px; }
   .sticky-cta { display: flex; transition: transform 0.4s, opacity 0.4s; position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 40; box-shadow: var(--glow-accent), 0 8px 24px rgba(0, 0, 0, .4); }
   .in-hero .sticky-cta { opacity: 0; transform: translateY(20px); pointer-events: none; }
-  .ai-grid, .pain-grid { grid-template-columns: 1fr; }
+  .ai-grid, .pain-grid, .pain-grid.cols-3 { grid-template-columns: 1fr; }
   .pains { gap: 36px; }
   .assistant { right: 12px; bottom: 84px; }
   .in-hero .assistant { bottom: 16px; }
@@ -466,8 +471,8 @@ main { position: relative; z-index: 1; }
 .section, .services { padding: 96px 0; }
 @media (min-width: 768px) { .section, .services { padding: 128px 0; } }
 @media (min-width: 1200px) { .section, .services { padding: 144px 0; } }
-/* Послуги на <1200: три «вікна» для фонової блискавки всередині довгого блоку – проміжок між групами болів
-   (01 → 02 → 03 → 04) 160 px: після відступів зон (2 × 14 px на телефоні, 2 × 24 px від 768) лишається смуга ≥ 108 px.
+/* Послуги на <1200: «вікна» для фонової блискавки всередині довгого блоку – проміжок між групами болів
+   (01 → 02 → … → 06) 160 px: після відступів зон (2 × 14 px на телефоні, 2 × 24 px від 768) лишається смуга ≥ 108 px.
    Між картками удару немає – лише між групами. На телефоні перед «Що болить…» теж 160 px (зона першого екрана +30 px). */
 @media (max-width: 1199px) { .pains { gap: 160px; } }
 @media (max-width: 767px) { .services { padding-top: 160px; } }

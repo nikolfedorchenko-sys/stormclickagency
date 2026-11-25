@@ -1,5 +1,6 @@
-// Єдине джерело прайсу: з нього рендеряться картки послуг, варіанти квізу
-// і відповіді демо-асистента. Промпт сервера (worker/src/index.js) дублює ці цифри.
+// Єдине джерело прайсу: з нього рендеряться картки послуг, варіанти квізу і табло першого екрана.
+// Ці цифри дублюють промпт сервера (worker/src/index.js) і сценарій демо-асистента (src/assistant.js) –
+// після зміни прайсу онови їх теж.
 // Ціни орієнтовні, фінальна залежить від технічного завдання.
 
 export const PAINS = [
@@ -16,13 +17,26 @@ export const PAINS = [
   },
   {
     id: 'content',
-    uk: { pain: 'Не встигаю з контентом і рекламою', hint: 'Соцмережі простоюють, відео дорого, у Google вас не знаходять' },
-    en: { pain: 'No time for content and ads', hint: 'Social media stalls, video is expensive, Google can\'t find you' },
+    uk: { pain: 'Не встигаю з контентом', hint: 'Соцмережі простоюють, відео дорого, на статті й банери немає часу' },
+    en: { pain: 'No time for content', hint: 'Social media stalls, video is expensive, no time for articles and banners' },
     items: [
       { id: 'smm', uk: ['Автопостинг соцмереж', 'Контент-план, 12 постів і 8 сторіс на місяць, редактура людиною.', '$120 / міс', 'старт за день'], en: ['Social media on autopilot', 'Content plan, 12 posts and 8 stories a month, edited by a human.', '$120 / mo', 'starts in a day'] },
       { id: 'video', uk: ['Reels і Shorts зі ШІ', '8 роликів на місяць: сценарій, озвучка, монтаж, субтитри.', '$150 / міс', 'тиждень'], en: ['Reels and Shorts with AI', '8 videos a month: script, voice-over, editing, captions.', '$150 / mo', 'a week'] },
+      { id: 'blog', uk: ['Блог зі ШІ', '8 статей на місяць під пошукові запити. Кожну вичитує людина.', '$120 / міс', 'старт за 2 дні'], en: ['AI-assisted blog', '8 articles a month for search queries. A human edits every one.', '$120 / mo', 'starts in 2 days'] },
+      { id: 'creatives', uk: ['Пакет креативів', '12 банерів і коротких відео під тест реклами, у форматах Meta і TikTok.', '$80', '1 день'], en: ['Ad creative pack', '12 banners and short videos for ad testing, in Meta and TikTok formats.', '$80', '1 day'] },
+    ],
+  },
+  {
+    id: 'leads',
+    uk: { pain: 'Заявок мало або вони дорогі', hint: 'Реклама зливає бюджет, сайт не видно в пошуку, клієнти не повертаються' },
+    en: { pain: 'Too few leads, or they cost too much', hint: 'Ads burn the budget, search can\'t see your site, customers don\'t come back' },
+    items: [
       { id: 'ads', uk: ['Запуск реклами Meta / Google', 'ШІ готує креативи, ми масштабуємо ті, що дають заявки. Плюс бюджет.', '$150', 'того ж дня'], en: ['Meta / Google ads launch', 'AI drafts creatives, we scale the ones that bring leads. Plus ad budget.', '$150', 'same day'] },
+      { id: 'adsmgmt', uk: ['Ведення реклами', 'Meta, Google, TikTok: щотижня нові креативи, вимикаємо те, що не дає заявок, звіт раз на місяць. Плюс бюджет.', 'від $200 / міс', 'старт за день'], en: ['Ad management', 'Meta, Google, TikTok: new creatives weekly, we switch off what brings no leads, a report every month. Plus ad budget.', 'from $200 / mo', 'starts in a day'] },
+      { id: 'adsaudit', uk: ['Аудит рекламного кабінету', 'Показуємо, куди йде бюджет, які кампанії вимкнути і що запустити замість них.', '$60', '1 день'], en: ['Ad account audit', 'We show where the budget goes, which campaigns to switch off and what to launch instead.', '$60', '1 day'] },
+      { id: 'seo', uk: ['SEO сайту', 'Технічні помилки, структура, тексти під запити. Звіт про позиції щомісяця.', 'від $200 / міс', 'перші правки за 3 дні'], en: ['Website SEO', 'Technical errors, structure, copy for search queries. A ranking report every month.', 'from $200 / mo', 'first fixes in 3 days'] },
       { id: 'local', uk: ['Google Business Profile + локальне SEO', 'Щоб вас знаходили на мапі й у пошуку, збір відгуків.', '$120', '2 дні'], en: ['Google Business Profile + local SEO', 'So people find you on the map and in search, plus review collection.', '$120', '2 days'] },
+      { id: 'mailing', uk: ['Розсилки', 'Email, Telegram, Viber: ланцюжки для нових клієнтів і тих, хто давно не купував.', 'від $150', '2 дні'], en: ['Email and messenger campaigns', 'Email, Telegram, Viber: sequences for new customers and for those who haven\'t bought in a while.', 'from $150', '2 days'] },
     ],
   },
   {
@@ -45,6 +59,17 @@ export const PAINS = [
       { id: 'shop', uk: ['Інтернет-магазин', 'До 100 товарів, оплата, доставка, адмінка, Instagram-каталог.', 'від $400', '1–2 дні'], en: ['Online store', 'Up to 100 products, payments, delivery, admin panel, Instagram catalog.', 'from $400', '1–2 days'] },
       { id: 'crm', uk: ['CRM під ваш бізнес', 'Клієнти, угоди, задачі, звіти, ролі. Інтеграція з сайтом, ботом і платіжками.', 'від $1 000', '2–3 дні'], en: ['Custom CRM', 'Customers, deals, tasks, reports, roles. Integrated with site, bot and payments.', 'from $1,000', '2–3 days'] },
       { id: 'fix', uk: ['Сайт є, але не продає', 'Аудит, переробка на конверсію, пікселі й аналітика.', '$150', '1 день'], en: ['Your site doesn\'t sell', 'Audit, conversion rework, pixels and analytics.', '$150', '1 day'] },
+    ],
+  },
+  {
+    id: 'apps',
+    uk: { pain: 'Потрібен додаток або гра', hint: 'Студії рахують місяцями, а клієнти вже сидять у телефоні й Telegram' },
+    en: { pain: 'I need an app or a game', hint: 'Studios quote months, while your customers already live in their phones and Telegram' },
+    items: [
+      { id: 'tma', uk: ['Telegram Mini App', 'Магазин, запис або бонусна картка прямо в Telegram. Без встановлення.', 'від $600', '3–5 днів'], en: ['Telegram Mini App', 'A store, booking or a loyalty card right inside Telegram. Nothing to install.', 'from $600', '3–5 days'] },
+      { id: 'mobile', uk: ['Мобільний додаток', 'Перша версія для iOS і Android: вхід, каталог або запис, оплата, сповіщення.', 'від $2 500', '2–3 тижні + перевірка в магазинах'], en: ['Mobile app', 'First version for iOS and Android: sign-in, catalog or booking, payments, notifications.', 'from $2,500', '2–3 weeks + store review'] },
+      { id: 'minigame', uk: ['Рекламна міні-гра', 'Колесо призів, скретч-картка або вікторина. Гравець лишає контакт, щоб забрати приз.', 'від $250', '1–2 дні'], en: ['Promo mini-game', 'Prize wheel, scratch card or quiz. The player leaves a contact to claim the prize.', 'from $250', '1–2 days'] },
+      { id: 'loyalty', uk: ['Гейміфікація лояльності', 'Рівні, завдання і бонуси в боті або додатку. Клієнти повертаються за наступною нагородою.', 'від $400', '2–3 дні'], en: ['Gamified loyalty', 'Levels, quests and bonuses in a bot or an app. Customers come back for the next reward.', 'from $400', '2–3 days'] },
     ],
   },
 ];

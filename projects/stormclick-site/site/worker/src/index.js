@@ -7,9 +7,11 @@ const MAX_CHARS = 2000;
 const SERVICES = {
   audit: 'ШІ-аудит бізнесу / AI audit',
   clients: 'Клієнти та відповіді: ШІ-асистент, секретар, бот запису, відгуки',
-  content: 'Контент і реклама: автопостинг, відео, Meta/Google, Google Business',
+  content: 'Контент: автопостинг, відео, блог, креативи',
+  leads: 'Заявки: запуск і ведення реклами, аудит кабінету, SEO, Google Business, розсилки',
   routine: 'Рутина: автоматизація, міні-CRM, документи, дашборд',
   build: 'Розробка: сайт, магазин, CRM, переробка сайту',
+  apps: 'Додатки та ігри: Telegram Mini App, мобільний додаток, міні-гра, гейміфікація',
   other: 'Інше / Other',
 };
 
@@ -23,9 +25,11 @@ Positioning: we are a team of professionals working with AI tools, so we deliver
 Price list (indicative; the final price depends on the brief, always say so). Grouped by the client's pain:
 Entry product: AI business audit – $100, 1 day: what to automate, how much it saves, where to start; the $100 counts towards any next project. Offer it when the visitor is unsure.
 1. Can't keep up with customers: AI assistant in Telegram/Instagram/site (answers 24/7 from their data, books, collects leads) – from $300, 1 day; AI phone receptionist – from $400, 2 days; booking bot with reminders (fewer no-shows) – from $150, about an hour; automatic review collection – $100, an hour.
-2. No time for content and ads: social media on autopilot (plan, 12 posts + 8 stories, human-edited) – $120/month; Reels/Shorts with AI, 8 videos – $150/month; Meta/Google ads launch – $150 + ad budget, same day; Google Business Profile + local SEO – $120, 2 days.
-3. Routine eats time: process automation (Sheets, CRM, Telegram, email, payments) – from $200, same day; mini-CRM in Telegram/Sheets – from $250, 1 day; document generator (invoices, acts, contracts, proposals to PDF) – from $150, 1 day; business dashboard – from $250, 1–2 days.
-4. Need a website, store or CRM: business website (up to 5 screens, mobile, Telegram button, hosting for a year) – $100, a few hours; online store (up to 100 products, payments, delivery, admin) – from $400, 1–2 days; custom CRM (customers, deals, tasks, reports, roles, integrations) – from $1,000, 2–3 days; existing site that doesn't sell: audit + conversion rework – $150, 1 day.
+2. No time for content: social media on autopilot (plan, 12 posts + 8 stories, human-edited) – $120/month, starts in a day; Reels/Shorts with AI, 8 videos – $150/month, a week; AI-assisted blog, 8 articles a month for search queries, each edited by a human – $120/month, starts in 2 days; ad creative pack, 12 banners and short videos for ad testing in Meta and TikTok formats – $80, 1 day.
+3. Too few leads, or they cost too much: Meta/Google ads launch – $150 + ad budget, same day; ad management (Meta, Google, TikTok: new creatives weekly, we switch off what brings no leads, monthly report) – from $200/month + ad budget, starts in a day; ad account audit (where the budget goes, which campaigns to switch off, what to launch instead) – $60, 1 day; website SEO (technical errors, structure, copy for search queries, monthly ranking report) – from $200/month, first fixes in 3 days; Google Business Profile + local SEO – $120, 2 days; email and messenger campaigns (Email, Telegram, Viber: sequences for new customers and for those who haven't bought in a while) – from $150, 2 days.
+4. Routine eats time: process automation (Sheets, CRM, Telegram, email, payments) – from $200, same day; mini-CRM in Telegram/Sheets – from $250, 1 day; document generator (invoices, acts, contracts, proposals to PDF) – from $150, 1 day; business dashboard – from $250, 1–2 days.
+5. Need a website, store or CRM: business website (up to 5 screens, mobile, Telegram button, hosting for a year) – $100, a few hours; online store (up to 100 products, payments, delivery, admin) – from $400, 1–2 days; custom CRM (customers, deals, tasks, reports, roles, integrations) – from $1,000, 2–3 days; existing site that doesn't sell: audit + conversion rework – $150, 1 day.
+6. Need an app or a game: Telegram Mini App (a store, booking or a loyalty card inside Telegram, nothing to install) – from $600, 3–5 days; mobile app, first version for iOS and Android (sign-in, catalog or booking, payments, notifications) – from $2,500, 2–3 weeks plus App Store / Google Play review; promo mini-game (prize wheel, scratch card or quiz; the player leaves a contact to claim the prize) – from $250, 1–2 days; gamified loyalty (levels, quests and bonuses in a bot or an app) – from $400, 2–3 days.
 Also: logo + identity – $80; presentation or proposal – $60; landing page for ads – $150.
 - Small edits are free for a month after launch. An exact quote is free, within 15 minutes during business hours.
 - Communication: Ukrainian and English; Telegram and WhatsApp; clients in Ukraine, Europe, USA.
