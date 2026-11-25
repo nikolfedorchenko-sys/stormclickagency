@@ -29,7 +29,7 @@ export const PAINS = [
   {
     id: 'leads',
     uk: { pain: 'Заявок мало або вони дорогі', hint: 'Реклама зливає бюджет, сайт не видно в пошуку, клієнти не повертаються' },
-    en: { pain: 'Too few leads, or they cost too much', hint: 'Ads burn the budget, search can\'t see your site, customers don\'t come back' },
+    en: { pain: 'Too few leads, or they cost too much', hint: 'Ads burn the budget, your site doesn\'t show up in search, customers don\'t come back' },
     items: [
       { id: 'ads', uk: ['Запуск реклами Meta / Google', 'ШІ готує креативи, ми масштабуємо ті, що дають заявки. Плюс бюджет.', '$150', 'того ж дня'], en: ['Meta / Google ads launch', 'AI drafts creatives, we scale the ones that bring leads. Plus ad budget.', '$150', 'same day'] },
       { id: 'adsmgmt', uk: ['Ведення реклами', 'Meta, Google, TikTok: щотижня нові креативи, вимикаємо те, що не дає заявок, звіт раз на місяць. Плюс бюджет.', 'від $200 / міс', 'старт за день'], en: ['Ad management', 'Meta, Google, TikTok: new creatives weekly, we switch off what brings no leads, a report every month. Plus ad budget.', 'from $200 / mo', 'starts in a day'] },
@@ -52,8 +52,8 @@ export const PAINS = [
   },
   {
     id: 'build',
-    uk: { pain: 'Потрібен сайт, магазин або CRM', hint: 'Агенції просять тисячі доларів і місяці, фрилансери зникають' },
-    en: { pain: 'I need a website, a store or a CRM', hint: 'Agencies ask for thousands and months, freelancers vanish' },
+    uk: { pain: 'Потрібен сайт, магазин або\u00a0CRM', hint: 'Агенції просять тисячі доларів і місяці, фрилансери зникають' },
+    en: { pain: 'I need a website, a store or a\u00a0CRM', hint: 'Agencies ask for thousands and months, freelancers vanish' },
     items: [
       { id: 'site', uk: ['Сайт для бізнесу', 'Кав\'ярня, салон, майстер. До 5 екранів, мобільна версія, кнопка в Telegram, хостинг на рік.', '$100', 'кілька годин'], en: ['Business website', 'Coffee shop, salon, freelancer. Up to 5 screens, mobile, Telegram button, hosting for a year.', '$100', 'a few hours'] },
       { id: 'shop', uk: ['Інтернет-магазин', 'До 100 товарів, оплата, доставка, адмінка, Instagram-каталог.', 'від $400', '1–2 дні'], en: ['Online store', 'Up to 100 products, payments, delivery, admin panel, Instagram catalog.', 'from $400', '1–2 days'] },
@@ -69,7 +69,7 @@ export const PAINS = [
       { id: 'tma', uk: ['Telegram Mini App', 'Магазин, запис або бонусна картка прямо в Telegram. Без встановлення.', 'від $600', '3–5 днів'], en: ['Telegram Mini App', 'A store, booking or a loyalty card right inside Telegram. Nothing to install.', 'from $600', '3–5 days'] },
       { id: 'mobile', uk: ['Мобільний додаток', 'Перша версія для iOS і Android: вхід, каталог або запис, оплата, сповіщення.', 'від $2 500', '2–3 тижні + перевірка в магазинах'], en: ['Mobile app', 'First version for iOS and Android: sign-in, catalog or booking, payments, notifications.', 'from $2,500', '2–3 weeks + store review'] },
       { id: 'minigame', uk: ['Рекламна міні-гра', 'Колесо призів, скретч-картка або вікторина. Гравець лишає контакт, щоб забрати приз.', 'від $250', '1–2 дні'], en: ['Promo mini-game', 'Prize wheel, scratch card or quiz. The player leaves a contact to claim the prize.', 'from $250', '1–2 days'] },
-      { id: 'loyalty', uk: ['Гейміфікація лояльності', 'Рівні, завдання і бонуси в боті або додатку. Клієнти повертаються за наступною нагородою.', 'від $400', '2–3 дні'], en: ['Gamified loyalty', 'Levels, quests and bonuses in a bot or an app. Customers come back for the next reward.', 'from $400', '2–3 days'] },
+      { id: 'loyalty', uk: ['Гейміфікація лояльності', 'Рівні, завдання і бонуси в боті або додатку. Щоб клієнти поверталися за наступною нагородою.', 'від $400', '2–3 дні'], en: ['Gamified loyalty', 'Levels, quests and bonuses in a bot or an app. So customers come back for the next reward.', 'from $400', '2–3 days'] },
     ],
   },
 ];

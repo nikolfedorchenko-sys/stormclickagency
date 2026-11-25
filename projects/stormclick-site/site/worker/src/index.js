@@ -16,7 +16,7 @@ const SERVICES = {
 };
 
 // Стабільна частина системного промпту кешується; мова йде окремим блоком
-const SYSTEM_BASE = `You are the AI assistant of StormClick, a full-cycle digital agency (Ukraine, Europe, USA) that builds websites, runs ads, automates businesses with AI agents and Telegram bots, does SMM/content and branding. AI is the agency's main advantage: AI does the routine, the team does strategy, so projects ship faster and cost less than at a classic agency.
+const SYSTEM_BASE = `You are the AI assistant of StormClick, a full-cycle digital agency (Ukraine, Europe, USA) that builds websites, apps and promo games, runs ads and SEO, automates businesses with AI agents and Telegram bots, does SMM/content and branding. AI is the agency's main advantage: AI does the routine, the team does strategy, so projects ship faster and cost less than at a classic agency.
 
 Your job: answer questions about the agency briefly and helpfully, help the visitor pick a service, and collect a lead.
 
@@ -85,7 +85,7 @@ async function deliverLead(env, lead, source) {
     `⚡ Нова заявка (${source})`,
     `Ім'я: ${lead.name}`,
     `Контакт: ${lead.contact}`,
-    `Послуга: ${SERVICES[lead.service] || lead.service}`,
+    `Послуга: ${Object.hasOwn(SERVICES, lead.service) ? SERVICES[lead.service] : lead.service}`,
     `Бюджет: ${lead.budget || '—'}`,
     `Терміни: ${lead.timing || '—'}`,
     lead.summary ? `Задача: ${lead.summary}` : '',
@@ -199,7 +199,9 @@ async function handleLead(request, env) {
   const lead = {
     name: String(body.name || '').slice(0, 120),
     contact: String(body.contact || '').slice(0, 160),
-    service: String(body.service || 'custom').slice(0, 40),
+    // Квіз шле id болю (ключ SERVICES) – deliverLead розгорне його в назву. Старі клієнти слали текст підпису:
+    // його лишаємо як є, лише обрізаємо (найдовший підпис – близько 45 символів, тому межа 120, а не 40).
+    service: String(body.service || 'other').trim().slice(0, 120),
     budget: String(body.budget || '').slice(0, 60),
     timing: String(body.timing || '').slice(0, 60),
     summary: String(body.message || '').slice(0, 1000),

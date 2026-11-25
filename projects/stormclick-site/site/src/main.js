@@ -61,6 +61,10 @@ function initHeroState() {
   document.body.classList.add('in-hero');
   if (!hero || !('IntersectionObserver' in window)) return;
   new IntersectionObserver(([e]) => document.body.classList.toggle('in-hero', e.isIntersecting)).observe(hero);
+  // Те саме в секції квізу: липка кнопка веде сюди ж, а на телефоні вона й кнопка асистента
+  // перекривали «Далі» (стилі .in-quiz діють лише до 720 px)
+  const contact = document.getElementById('contact');
+  if (contact) new IntersectionObserver(([e]) => document.body.classList.toggle('in-quiz', e.isIntersecting)).observe(contact);
 }
 
 // Події аналітики: клік по елементу з data-track. Лічильники (GA4 / Meta / TikTok) на сайті ще не

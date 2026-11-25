@@ -2,8 +2,11 @@ import { PAINS, ENTRY, EXTRAS } from './pricing.js';
 import { getLang, onLangChange } from './i18n.js';
 
 // Рендерить вхідний продукт, болі з послугами (з pricing.js) і рядок «також».
-// Група з 5–6 і 9 карток стає в 3 колонки (без «сиріт»), решта – у 4.
-const cols3 = (n) => n > 4 && n % 4 !== 0 && n % 3 === 0;
+// Групу до 4 карток ставимо в один ряд із 4 колонок. Більшу – у 3 або 4 колонки: беремо ту сітку,
+// де останній ряд заповнений більше, тож картка-«сирота» не лишається сама (5 → 3+2, 6 → 3+3, 7 → 4+3,
+// 9 → 3+3+3, 10 → 4+4+2). Виняток – 13 карток: там один зайвий ряд в обох сітках.
+const lastRow = (n, cols) => (n % cols || cols) / cols;
+const cols3 = (n) => n > 4 && lastRow(n, 3) > lastRow(n, 4);
 
 export function initServices() {
   const entry = document.getElementById('entry');

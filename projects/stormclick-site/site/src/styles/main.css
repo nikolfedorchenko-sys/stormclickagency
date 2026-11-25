@@ -211,8 +211,9 @@ html.menu-open { overflow: hidden; }
 .pain-head h3 { font: 600 clamp(1.3rem, 2.2vw, 1.75rem)/1.2 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: -0.025em; }
 .pain-head p { color: var(--muted); margin-top: 6px; }
 .pain-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-/* Група з 6 карток: 3 колонки × 2 ряди, без «сиріт». Нижче 1000 px усі групи – 2 колонки, нижче 720 – одна */
-.pain-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+/* Група в 3 колонки (напр. 6 карток – 3 × 2, вибір сітки – у services.js), ряди однакової висоти.
+   Нижче 1000 px усі групи – 2 колонки, нижче 720 – одна */
+.pain-grid.cols-3 { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; }
 .pain-grid.cols-3 .card { min-height: 210px; }
 .extras { margin-top: 40px; color: var(--muted); font-size: 14px; }
 
@@ -287,6 +288,10 @@ html.menu-open { overflow: hidden; }
 .assistant-toggle { transition: transform 0.3s, border-color 0.3s, opacity 0.3s, visibility 0.3s; }
 /* На першому екрані плаваюча кнопка прихована – асистент уже є в діях героя; панель, відкрита з героя, видна */
 .in-hero .assistant:not(.is-open) .assistant-toggle { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(12px); }
+/* У секції квізу кнопка асистента налазить на картку квізу й «Далі», доки екран вужчий за 1600 px – ховаємо її там так само */
+@media (max-width: 1599px) {
+  .in-quiz .assistant:not(.is-open) .assistant-toggle { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(12px); }
+}
 
 /* Трафік */
 .traffic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
@@ -393,7 +398,7 @@ html.menu-open { overflow: hidden; }
 .quiz-pane { border: 0; display: grid; gap: 14px; }
 .quiz-pane[hidden] { display: none; }
 .quiz-pane legend { font: 600 1.3rem/1.25 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: -0.02em; margin-bottom: 16px; }
-.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 10px; }
 .choices label { position: relative; display: flex; align-items: center; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.02); cursor: pointer; font-size: 14px; transition: border-color 0.2s, background 0.2s; }
 .choices input { position: absolute; opacity: 0; }
 .choices label:hover { border-color: rgba(160, 170, 255, 0.4); }
@@ -437,18 +442,20 @@ html.menu-open { overflow: hidden; }
   .ai-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 720px) {
-  .card { min-height: 0; }
+  .card, .pain-grid.cols-3 .card { min-height: 0; }
+  .pain-grid.cols-3, .choices { grid-auto-rows: auto; }
   .facts-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
   .fact { padding: 20px; }
   .choices { grid-template-columns: 1fr; }
   .quiz { padding: 22px; }
   .counters { gap: 24px; }
   .sticky-cta { display: flex; transition: transform 0.4s, opacity 0.4s; position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 40; box-shadow: var(--glow-accent), 0 8px 24px rgba(0, 0, 0, .4); }
-  .in-hero .sticky-cta { opacity: 0; transform: translateY(20px); pointer-events: none; }
+  /* у героєві й у секції квізу липка кнопка зайва: вона сама веде в квіз і перекривала б «Далі» */
+  .in-hero .sticky-cta, .in-quiz .sticky-cta { opacity: 0; transform: translateY(20px); pointer-events: none; }
   .ai-grid, .pain-grid, .pain-grid.cols-3 { grid-template-columns: 1fr; }
   .pains { gap: 36px; }
   .assistant { right: 12px; bottom: 84px; }
-  .in-hero .assistant { bottom: 16px; }
+  .in-hero .assistant, .in-quiz .assistant { bottom: 16px; }
   .assistant-toggle span { display: none; }
   .assistant-toggle { padding: 0 14px; width: 52px; justify-content: center; }
   .assistant-panel { right: -4px; bottom: 62px; height: min(520px, calc(100vh - 160px)); }

@@ -120,7 +120,9 @@ export function initQuiz(form) {
       fetch(`${CONFIG.apiBase}/lead`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, service: label('service'), budget: label('budget'), timing: label('timing') }),
+        // service – id болю (audit, clients, …, other): Worker сам розгортає його в назву через SERVICES,
+        // тож підпис не залежить від мови сайту й не обрізається
+        body: JSON.stringify({ ...data, budget: label('budget'), timing: label('timing') }),
       })
         .then((r) => {
           if (!r.ok) throw new Error(r.status);

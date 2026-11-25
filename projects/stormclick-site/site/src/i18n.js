@@ -1,7 +1,7 @@
 const DICT = {
   uk: {
     'meta.title': 'StormClick – digital-агенція повного циклу',
-    'meta.description': 'Сайти, реклама, автоматизація, SMM і брендинг. Від логотипу до заявок.',
+    'meta.description': 'Сайти, реклама, SEO, автоматизація, додатки та ігри, SMM і брендинг. Від логотипу до заявок.',
     'preloader.label': 'Заряджаємо шторм',
     'nav.services': 'Послуги',
     'nav.cases': 'Кейси',
@@ -212,7 +212,7 @@ const DICT = {
   },
   en: {
     'meta.title': 'StormClick – full-cycle digital agency',
-    'meta.description': 'Websites, ads, automation, SMM and branding. From logo to leads.',
+    'meta.description': 'Websites, ads, SEO, automation, apps and games, SMM and branding. From logo to leads.',
     'preloader.label': 'Charging the storm',
     'nav.services': 'Services',
     'nav.cases': 'Cases',
