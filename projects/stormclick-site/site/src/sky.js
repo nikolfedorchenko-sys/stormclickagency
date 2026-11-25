@@ -25,7 +25,7 @@ if (typeof window !== 'undefined') window.StormBus = StormBus;
 
 // Що вважається блоком (обходиться цілим прямокутником). Текст поза блоками – по рядках.
 const BLOCKS = '.card, .entry-card, .ai-card, .ai-try, .flow, .fact, .case, .review, .quiz, .chart, .funnel, .btn, button, input, textarea, '
-  + '.faq-list, .marquee, .assistant-toggle, .assistant.is-open .assistant-panel, .sticky-cta, .extras, .counters, .demo-note';
+  + '.faq-list, .marquee, .pain-nav, .assistant-toggle, .assistant.is-open .assistant-panel, .sticky-cta, .extras, .counters, .demo-note';
 // Секції, у яких текст обходиться по рядках
 const SECTIONS = 'main > section:not(.hero)';
 

@@ -14,6 +14,24 @@ export function initQuiz(form) {
   const current = form.querySelector('.quiz-current');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let step = 0;
+  let errKey = '';   // ключ i18n показаної помилки ('' – помилки немає)
+
+  // Помилка кроку – текстом у рядку статусу (role="status"), а не лише тремтінням форми
+  const setError = (key) => { errKey = key; status.textContent = key ? t(key) : ''; status.classList.toggle('is-error', Boolean(key)); };
+  const clearError = () => {
+    if (errKey) setError('');
+    form.querySelectorAll('[aria-invalid]').forEach((f) => f.removeAttribute('aria-invalid'));
+  };
+  onLangChange(() => { if (errKey) status.textContent = t(errKey); });
+  form.addEventListener('input', (e) => {
+    if (!errKey) return;
+    if (e.target.type === 'radio') { clearError(); return; }
+    if (!e.target.value.trim()) return;
+    e.target.removeAttribute('aria-invalid');
+    // лишилось інше порожнє обов'язкове поле – підказка перемикається на нього
+    const left = form.querySelector('[aria-invalid]');
+    if (left) setError(left.name === 'contact' ? 'quiz.err.contact' : 'quiz.err.name'); else setError('');
+  });
 
   // «Заряд» кроків: іскра на кінці смуги прогресу мерехтить, лише поки форма видима
   if (!reduce && 'IntersectionObserver' in window) {
@@ -72,6 +90,7 @@ export function initQuiz(form) {
     bar.style.width = `${((step + 1) / panes.length) * 100}%`;
     current.textContent = step + 1;
     form.classList.remove('shake');
+    clearError();
   };
 
   const valid = () => {
@@ -86,6 +105,13 @@ export function initQuiz(form) {
     if (dir > 0 && !valid()) {
       form.classList.add('shake');
       setTimeout(() => form.classList.remove('shake'), 500);
+      const empty = [...panes[step].querySelectorAll('input[required]:not([type=radio]), textarea[required]')].filter((f) => !f.value.trim());
+      if (!empty.length) { setError('quiz.err.choice'); return; }
+      empty.forEach((f) => f.setAttribute('aria-invalid', 'true'));
+      // головне – контакт: без нього нікуди надіслати розрахунок
+      const first = empty.find((f) => f.name === 'contact') || empty[0];
+      setError(first.name === 'contact' ? 'quiz.err.contact' : 'quiz.err.name');
+      first.focus();
       return;
     }
     step = Math.max(0, Math.min(panes.length - 1, step + dir));
@@ -100,6 +126,7 @@ export function initQuiz(form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!valid()) { go(1); return; }
+    clearError(); status.classList.remove('is-error');
     const data = Object.fromEntries(new FormData(form));
     if (data.website) return; // honeypot
 
@@ -130,7 +157,7 @@ export function initQuiz(form) {
           const d = fly(); form.reset();
           setTimeout(() => { status.textContent = t('quiz.sent'); }, d);
         })
-        .catch(() => { status.textContent = t('assistant.error'); })
+        .catch(() => { status.textContent = t('assistant.error'); status.classList.add('is-error'); })
         .finally(() => { submit.disabled = false; });
       return;
     }

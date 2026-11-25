@@ -64,8 +64,20 @@ function initHeroState() {
   // Те саме, поки на екрані форма квізу: липка кнопка (до 720 px) веде сюди ж і перекривала б «Далі»,
   // а кнопка асистента (до 1600 px) налазить на картку квізу. Стежимо за самою формою, а не за секцією
   // #contact: секція починається текстом і кнопками месенджерів, і на екрані FAQ кнопка дії має лишатися.
+  // Спрацьовує не з першого пікселя форми, а коли її верх доходить до плаваючих кнопок: кнопка асистента
+  // стоїть на 20 px від низу й має 52 px (верх – 72 px), на телефоні вона над липкою кнопкою (верх – 136 px).
+  // Раніше кнопки зникали, щойно в екрані з'являлося 20 px форми, – на 1440 ще на екрані FAQ.
   const quiz = document.getElementById('quiz');
-  if (quiz) new IntersectionObserver(([e]) => document.body.classList.toggle('in-quiz', e.isIntersecting)).observe(quiz);
+  if (!quiz) return;
+  const narrow = matchMedia('(max-width: 720px)');
+  let io = null;
+  const watch = () => {
+    if (io) io.disconnect();
+    io = new IntersectionObserver(([e]) => document.body.classList.toggle('in-quiz', e.isIntersecting), { rootMargin: `0px 0px -${narrow.matches ? 140 : 76}px 0px` });
+    io.observe(quiz);
+  };
+  watch();
+  narrow.addEventListener('change', watch);
 }
 
 // Події аналітики: клік по елементу з data-track. Лічильники (GA4 / Meta / TikTok) на сайті ще не
@@ -92,6 +104,17 @@ function initSmoothScroll() {
     // відступ – висота фіксованої шапки (64 / 80), щоб заголовок секції не ховався під нею
     lenis.scrollTo(target, { offset: -document.querySelector('.header').offsetHeight });
   }));
+  // Якорі груп послуг (рядок під заголовком секції) рендерить services.js, і заново при зміні мови, –
+  // тому слухаємо на документі. Відступ під шапку задає scroll-margin-top групи (Lenis його враховує).
+  // Фокус переносимо на групу, щоб наступний Tab ішов у її картки, а не назад у рядок якорів.
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('.pain-nav a');
+    const group = a && document.getElementById(a.getAttribute('href').slice(1));
+    if (!group) return;
+    e.preventDefault();
+    lenis.scrollTo(group);
+    group.focus({ preventScroll: true });
+  });
   return lenis;
 }
 

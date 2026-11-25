@@ -79,6 +79,26 @@ function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json', ...headers } });
 }
 
+// Чищення полів заявки – одне для квізу (/lead) і для заявки з чату (submit_lead).
+// Беремо лише рядки й скінченні числа: об'єкт, масив чи значення з битим toString дають порожній рядок, а не виняток.
+const str = (v) => (typeof v === 'string' ? v : typeof v === 'number' && Number.isFinite(v) ? String(v) : '');
+// Однорядкові поля – без переносів рядка, щоб у заявці в Telegram не можна було підробити сусідні рядки
+const line = (v, max) => str(v).replace(/\s+/g, ' ').trim().slice(0, max);
+function cleanLead(raw) {
+  const src = raw && typeof raw === 'object' ? raw : {};
+  return {
+    name: line(src.name, 120),
+    contact: line(src.contact, 160),
+    // Квіз шле id болю (ключ SERVICES) – deliverLead розгорне його в назву. Старі клієнти слали текст підпису:
+    // його лишаємо як є, лише обрізаємо (найдовший підпис – близько 45 символів, тому межа 120, а не 40).
+    service: line(src.service, 120) || 'other',
+    budget: line(src.budget, 60),
+    timing: line(src.timing, 60),
+    // квіз шле message, асистент – summary
+    summary: (str(src.message) || str(src.summary)).slice(0, 1000),
+  };
+}
+
 // Доставка заявки: Telegram обов'язково, email – якщо налаштований Resend
 async function deliverLead(env, lead, source) {
   const lines = [
@@ -172,7 +192,10 @@ async function handleChat(request, env) {
 
         let result;
         try {
-          const delivery = await deliverLead(env, toolUse.input, 'ШІ-асистент');
+          // поля від моделі – через те саме чищення, що й квіз; без імені чи контакту заявку не шлемо, модель перепитає
+          const lead = cleanLead(toolUse.input);
+          if (!lead.name || !lead.contact) throw new Error('name and contact required');
+          const delivery = await deliverLead(env, lead, 'ШІ-асистент');
           result = { ok: true, delivery };
           await send('lead', { ok: true });
         } catch (err) {
@@ -198,18 +221,7 @@ async function handleLead(request, env) {
   try { body = await request.json(); } catch { return json({ error: 'bad json' }, 400, headers); }
   if (!body || typeof body !== 'object') return json({ error: 'bad json' }, 400, headers);
   if (body.website) return json({ ok: true }, 200, headers); // honeypot
-  // Однорядкові поля – без переносів рядка, щоб у заявці в Telegram не можна було підробити сусідні рядки
-  const line = (v, max) => String(v || '').replace(/\s+/g, ' ').trim().slice(0, max);
-  const lead = {
-    name: line(body.name, 120),
-    contact: line(body.contact, 160),
-    // Квіз шле id болю (ключ SERVICES) – deliverLead розгорне його в назву. Старі клієнти слали текст підпису:
-    // його лишаємо як є, лише обрізаємо (найдовший підпис – близько 45 символів, тому межа 120, а не 40).
-    service: line(body.service, 120) || 'other',
-    budget: line(body.budget, 60),
-    timing: line(body.timing, 60),
-    summary: String(body.message || '').slice(0, 1000),
-  };
+  const lead = cleanLead(body);
   if (!lead.name || !lead.contact) return json({ error: 'name and contact required' }, 400, headers);
   const delivery = await deliverLead(env, lead, 'квіз на сайті');
   return json({ ok: true, delivery }, 200, headers);

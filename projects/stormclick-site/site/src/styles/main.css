@@ -1,5 +1,6 @@
 /* Чорна студія: графіт, скло, холодне біле світло; електричний акцент лише в кнопках і склі. */
 :root {
+  --err: #ff9aa8;                   /* помилка у формі: текст підказки й рамка поля – 9.6:1 на --surface */
   --bg: #0a0b10;
   --bg-2: #0e0f17;
   --surface: #0f1018;
@@ -197,7 +198,32 @@ html.menu-open { overflow: hidden; }
 /* Секції */
 .section { position: relative; z-index: 1; padding: clamp(80px, 11vw, 140px) 0; background: transparent; }
 .services { position: relative; z-index: 1; background: transparent; padding: clamp(80px, 11vw, 140px) 0; }
-.services-head { margin-bottom: 40px; }
+.services-head { margin-bottom: 28px; }
+/* Якорі груп болів: рядок кнопок «01 Клієнти … 06 Додатки та ігри» під заголовком секції (рендер – services.js).
+   Телефон – один рядок із гортанням убік; 768–1023 – сітка 3 × 2 (в один ряд не влазить); від 1024 – один ряд. */
+.pain-nav { position: relative; margin-bottom: 32px; }
+.pain-nav-list { display: flex; gap: 8px; }
+.pain-nav a { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px 0 14px; border-radius: var(--radius); border: 1px solid var(--line); background: rgba(19, 20, 31, .78); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05), 0 10px 24px -18px rgba(0, 0, 0, .9); font: 600 15px/1.2 var(--font-body); white-space: nowrap; color: var(--text); transition: transform .2s var(--ease-out), border-color .2s, background .2s; }
+.pain-nav-num { color: var(--blue); font: 500 13px/1 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: .1em; }
+.pain-nav a:hover { border-color: rgba(160, 170, 255, .45); background: rgba(26, 29, 43, .92); transform: translateY(-1px); }
+.pain-nav a:focus-visible { outline: 2px solid var(--c-accent-hi); outline-offset: 2px; }
+.pain-nav a:active { transform: scale(.97); border-color: var(--blue); background: rgba(111, 125, 255, .16); }
+/* Група, до якої веде якір: заголовок стає під фіксованою шапкою з відступом 24 px */
+.pain { scroll-margin-top: calc(var(--header-h) + 24px); }
+.pain:focus { outline: none; }
+@media (max-width: 767px) {
+  /* рядок на всю ширину екрана: кнопки виїжджають за поле, край затемнено там, де є ще кнопки */
+  .pain-nav { margin-left: calc(-1 * var(--gutter)); margin-right: calc(-1 * var(--gutter)); --fade-l: 0px; --fade-r: 0px; }
+  .pain-nav.can-left { --fade-l: 20px; }
+  .pain-nav.can-right { --fade-r: 40px; }
+  .pain-nav-list { overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter); padding: 4px var(--gutter) 12px; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent); mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent); }
+  .pain-nav-list::-webkit-scrollbar { display: none; }
+  .pain-nav-list li { flex: none; scroll-snap-align: start; }
+  .pain-nav { margin-bottom: 20px; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pain-nav-list { display: grid; grid-template-columns: repeat(3, 1fr); }
+}
 /* Вхідний продукт */
 .entry-card { display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: center; padding: 28px 32px; border-radius: var(--radius); border: 1px solid #3a3f6e; background: linear-gradient(120deg, #1a1c33, #12131b); margin-bottom: 56px; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.25s ease-out; }
 .entry-body h3 { font: 600 1.5rem/1.2 var(--font-display); font-variation-settings: var(--fvs-display); letter-spacing: -0.02em; margin: 14px 0 10px; }
@@ -260,7 +286,11 @@ html.menu-open { overflow: hidden; }
 @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.15); } }
 
 /* ШІ-асистент */
-.assistant { position: fixed; right: 20px; bottom: 20px; z-index: 60; }
+/* Обгортка сама кліків не ловить: коли кнопку сховано (.in-hero, .in-quiz), її прямокутник лишався поверх сторінки
+   й з'їдав кліки по «Далі» / «Надіслати» у квізі та по посиланнях футера. Клікаються лише кнопка і відкрита панель. */
+.assistant { position: fixed; right: 20px; bottom: 20px; z-index: 60; pointer-events: none; }
+.assistant-toggle, .assistant-panel { pointer-events: auto; }
+.assistant:not(.is-open) .assistant-panel { pointer-events: none; }
 .assistant-toggle { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 20px 0 14px; border-radius: 14px; border: 1px solid #2b2d3c; background: rgba(18, 19, 27, 0.9); backdrop-filter: blur(14px); color: var(--text); font: 600 14px var(--font-body); cursor: pointer; box-shadow: 0 10px 40px -10px var(--glow); transition: transform 0.3s, border-color 0.3s; }
 .assistant-toggle:hover { transform: translateY(-2px); border-color: rgba(160, 170, 255, 0.5); }
 .assistant-toggle svg { width: 14px; height: 20px; fill: #8ea2ff; filter: drop-shadow(0 0 8px var(--glow)); }
@@ -408,11 +438,15 @@ html.menu-open { overflow: hidden; }
 .field { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
 .field input, .field textarea { font: inherit; font-size: 15px; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; width: 100%; }
 .field input:focus, .field textarea:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
+.field input[aria-invalid="true"], .field textarea[aria-invalid="true"] { border-color: var(--err); box-shadow: 0 0 0 3px rgba(255, 154, 168, .14); }
+.field input[aria-invalid="true"]:focus { outline-color: var(--err); }
 .field textarea { resize: vertical; }
 .hp { position: absolute; left: -9999px; }
 .quiz-nav { display: flex; justify-content: space-between; gap: 12px; }
 .quiz-nav .btn-primary { margin-left: auto; }
-.quiz-status { min-height: 1.5em; font-size: 14px; color: #c9d2ff; }
+/* підказка про помилку не змінює висоту картки: на телефоні вона у два рядки – там місце зарезервовано під два (блок ≤720 нижче) */
+.quiz-status { min-height: 1.5em; font-size: 14px; line-height: 1.5; color: #c9d2ff; }
+.quiz-status.is-error { color: var(--err); }
 
 /* Футер */
 .footer { position: relative; z-index: 1; border-top: 1px solid var(--line); padding: 28px 0; color: var(--muted); font-size: 13px; background: var(--bg); }
@@ -450,12 +484,12 @@ html.menu-open { overflow: hidden; }
   .fact { padding: 20px; }
   .choices { grid-template-columns: 1fr; }
   .quiz { padding: 22px; }
+  .quiz-status { min-height: 3em; }
   .counters { gap: 24px; }
   .sticky-cta { display: flex; transition: transform 0.4s, opacity 0.4s; position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 40; box-shadow: var(--glow-accent), 0 8px 24px rgba(0, 0, 0, .4); }
   /* у героєві й поки видно форму квізу липка кнопка зайва: вона сама веде в квіз і перекривала б «Далі» */
   .in-hero .sticky-cta, .in-quiz .sticky-cta { opacity: 0; transform: translateY(20px); pointer-events: none; }
   .ai-grid, .pain-grid, .pain-grid.cols-3 { grid-template-columns: 1fr; }
-  .pains { gap: 36px; }
   .assistant { right: 12px; bottom: 84px; }
   .in-hero .assistant, .in-quiz .assistant { bottom: 16px; }
   .assistant-toggle span { display: none; }
@@ -481,10 +515,13 @@ main { position: relative; z-index: 1; }
 @media (min-width: 768px) { .section, .services { padding: 128px 0; } }
 @media (min-width: 1200px) { .section, .services { padding: 144px 0; } }
 /* Послуги на <1200: «вікна» для фонової блискавки всередині довгого блоку – проміжок між групами болів
-   (01 → 02 → … → 06) 160 px: після відступів зон (2 × 14 px на телефоні, 2 × 24 px від 768) лишається смуга ≥ 108 px.
-   Між картками удару немає – лише між групами. На телефоні перед «Що болить…» теж 160 px (зона першого екрана +30 px). */
+   (01 → 02 → … → 06). Удар на вузькому екрані будується лише в смузі ≥ 108 px без тексту і блоків (sky.js, freeBands),
+   а зони відступають від карток і заголовка на 14 px (телефон) або 24 px (від 768) з кожного боку, плюс сітка зон 6 px.
+   Тому найменший проміжок, у якому удар ще є: 144 px на телефоні (смуга 108–114 px, перевірено на 320–540 px)
+   і 160 px на 768–1199 (смуга 108 px). За 96 px смуги немає на жодній ширині – блискавка в послугах зникає зовсім.
+   Між картками удару немає – лише між групами. На телефоні перед «Що болить…» 160 px (зона першого екрана +30 px). */
 @media (max-width: 1199px) { .pains { gap: 160px; } }
-@media (max-width: 767px) { .services { padding-top: 160px; } }
+@media (max-width: 767px) { .pains { gap: 144px; } .services { padding-top: 160px; } }
 /* Секції прозорі – під ними видно шторм; чергування – «смуги» з розтушованими краями (не ріжуть блискавку і хмари).
    Картки, форма, FAQ, плашки лишаються непрозорими поверхнями. */
 .band { background: linear-gradient(180deg, rgba(14, 16, 24, 0), var(--band-bg, rgba(14, 16, 24, .5)) var(--band-feather, 140px), var(--band-bg, rgba(14, 16, 24, .5)) calc(100% - var(--band-feather, 140px)), rgba(14, 16, 24, 0)); }

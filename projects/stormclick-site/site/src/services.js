@@ -1,7 +1,8 @@
 import { PAINS, ENTRY, EXTRAS } from './pricing.js';
 import { getLang, onLangChange } from './i18n.js';
 
-// Рендерить вхідний продукт, болі з послугами (з pricing.js) і рядок «також».
+// Рендерить рядок якорів груп, вхідний продукт, болі з послугами (з pricing.js) і рядок «також».
+// Якорі – звичайні посилання #pain-<id>; плавну прокрутку через Lenis додає main.js (initSmoothScroll).
 // Групу до 4 карток ставимо в один ряд із 4 колонок. Більшу – у 3 або 4 колонки: беремо ту сітку,
 // де останній ряд заповнений більше, тож картка-«сирота» не лишається сама (5 → 3+2, 6 → 3+3, 7 → 4+3,
 // 9 → 3+3+3, 10 → 4+4+2). За рівного заповнення беремо 4 колонки (8 → 4+4, 12 → 4+4+4).
@@ -13,6 +14,8 @@ export function initServices() {
   const entry = document.getElementById('entry');
   const pains = document.getElementById('pains');
   const extras = document.getElementById('extras');
+  const nav = document.getElementById('pain-nav');
+  let fade = () => {};
 
   const render = () => {
     const lang = getLang();
@@ -30,8 +33,21 @@ export function initServices() {
         </div>
       </div>`;
 
+    if (nav) {
+      nav.innerHTML = `<ul class="pain-nav-list">${PAINS.map((p, i) => `<li><a href="#pain-${p.id}"><span class="pain-nav-num" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>${p[lang].short}</a></li>`).join('')}</ul>`;
+      // телефон: рядок гортається вбік – затемнення показує, з якого боку є ще кнопки
+      const list = nav.firstElementChild;
+      fade = () => {
+        const max = list.scrollWidth - list.clientWidth;
+        nav.classList.toggle('can-left', list.scrollLeft > 4);
+        nav.classList.toggle('can-right', list.scrollLeft < max - 4);
+      };
+      list.addEventListener('scroll', fade, { passive: true });
+      fade();
+    }
+
     pains.innerHTML = PAINS.map((p, i) => `
-      <section class="pain">
+      <section class="pain" id="pain-${p.id}" tabindex="-1">
         <header class="pain-head">
           <span class="pain-num">${String(i + 1).padStart(2, '0')}</span>
           <div><h3>${p[lang].pain}</h3><p>${p[lang].hint}</p></div>
@@ -54,4 +70,6 @@ export function initServices() {
 
   render();
   onLangChange(render);
+  addEventListener('resize', () => fade(), { passive: true });
+  document.fonts?.ready.then(() => fade());
 }
