@@ -61,10 +61,11 @@ function initHeroState() {
   document.body.classList.add('in-hero');
   if (!hero || !('IntersectionObserver' in window)) return;
   new IntersectionObserver(([e]) => document.body.classList.toggle('in-hero', e.isIntersecting)).observe(hero);
-  // Те саме в секції квізу: липка кнопка веде сюди ж, а на телефоні вона й кнопка асистента
-  // перекривали «Далі» (стилі .in-quiz діють лише до 720 px)
-  const contact = document.getElementById('contact');
-  if (contact) new IntersectionObserver(([e]) => document.body.classList.toggle('in-quiz', e.isIntersecting)).observe(contact);
+  // Те саме, поки на екрані форма квізу: липка кнопка (до 720 px) веде сюди ж і перекривала б «Далі»,
+  // а кнопка асистента (до 1600 px) налазить на картку квізу. Стежимо за самою формою, а не за секцією
+  // #contact: секція починається текстом і кнопками месенджерів, і на екрані FAQ кнопка дії має лишатися.
+  const quiz = document.getElementById('quiz');
+  if (quiz) new IntersectionObserver(([e]) => document.body.classList.toggle('in-quiz', e.isIntersecting)).observe(quiz);
 }
 
 // Події аналітики: клік по елементу з data-track. Лічильники (GA4 / Meta / TikTok) на сайті ще не
@@ -134,10 +135,12 @@ function initTilt() {
 }
 
 function initHeader() {
-  ScrollTrigger.create({
-    start: 80,
-    onToggle: (self) => document.querySelector('.header').classList.toggle('is-scrolled', self.isActive),
-  });
+  // Фон шапки – за умовою «прокручено більше 80 px». ScrollTrigger без end тут не годиться:
+  // у самому низу сторінки він стає неактивним, і шапка знову прозора.
+  const header = document.querySelector('.header');
+  const update = () => header.classList.toggle('is-scrolled', window.scrollY > 80);
+  window.addEventListener('scroll', update, { passive: true });
+  update();
 }
 
 async function boot() {

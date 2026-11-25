@@ -157,7 +157,7 @@ const DICT = {
     'contact.email': 'Email',
 
     'quiz.step': 'Крок',
-    'quiz.of': 'з',
+    'quiz.of': 'із',
     'quiz.q1': 'Що болить найбільше?',
     'quiz.q2': 'Орієнтовний бюджет',
     'quiz.q3': 'Коли потрібно запуститись?',

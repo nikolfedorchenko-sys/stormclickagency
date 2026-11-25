@@ -86,8 +86,8 @@ async function deliverLead(env, lead, source) {
     `Ім'я: ${lead.name}`,
     `Контакт: ${lead.contact}`,
     `Послуга: ${Object.hasOwn(SERVICES, lead.service) ? SERVICES[lead.service] : lead.service}`,
-    `Бюджет: ${lead.budget || '—'}`,
-    `Терміни: ${lead.timing || '—'}`,
+    `Бюджет: ${lead.budget || '–'}`,
+    `Терміни: ${lead.timing || '–'}`,
     lead.summary ? `Задача: ${lead.summary}` : '',
   ].filter(Boolean);
   const text = lines.join('\n');
@@ -129,6 +129,7 @@ async function handleChat(request, env) {
   const headers = cors(env, request);
   let body;
   try { body = await request.json(); } catch { return json({ error: 'bad json' }, 400, headers); }
+  if (!body || typeof body !== 'object') return json({ error: 'bad json' }, 400, headers);
   const messages = sanitizeMessages(body.messages);
   if (!messages) return json({ error: 'bad messages' }, 400, headers);
   const lang = body.lang === 'en' ? 'en' : 'uk';
@@ -195,15 +196,18 @@ async function handleLead(request, env) {
   const headers = cors(env, request);
   let body;
   try { body = await request.json(); } catch { return json({ error: 'bad json' }, 400, headers); }
+  if (!body || typeof body !== 'object') return json({ error: 'bad json' }, 400, headers);
   if (body.website) return json({ ok: true }, 200, headers); // honeypot
+  // Однорядкові поля – без переносів рядка, щоб у заявці в Telegram не можна було підробити сусідні рядки
+  const line = (v, max) => String(v || '').replace(/\s+/g, ' ').trim().slice(0, max);
   const lead = {
-    name: String(body.name || '').slice(0, 120),
-    contact: String(body.contact || '').slice(0, 160),
+    name: line(body.name, 120),
+    contact: line(body.contact, 160),
     // Квіз шле id болю (ключ SERVICES) – deliverLead розгорне його в назву. Старі клієнти слали текст підпису:
     // його лишаємо як є, лише обрізаємо (найдовший підпис – близько 45 символів, тому межа 120, а не 40).
-    service: String(body.service || 'other').trim().slice(0, 120),
-    budget: String(body.budget || '').slice(0, 60),
-    timing: String(body.timing || '').slice(0, 60),
+    service: line(body.service, 120) || 'other',
+    budget: line(body.budget, 60),
+    timing: line(body.timing, 60),
     summary: String(body.message || '').slice(0, 1000),
   };
   if (!lead.name || !lead.contact) return json({ error: 'name and contact required' }, 400, headers);
